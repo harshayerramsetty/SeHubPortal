@@ -1,0 +1,336 @@
+﻿
+@{
+    ViewBag.Title = "StaffInfo";
+    Layout = "~/Views/Shared/_ManagementLayout.cshtml";
+}
+
+@model SeHubPortal.ViewModel.StaffEditInformationViewModel
+<html lang="en">
+<head>
+    <title>Staff Info</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <style>
+        #ManagementClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #managementBtn {
+            color: black;
+            font-weight: 600;
+        }
+
+        #MyStaffLink {
+            color: black;
+            font-weight: 700;
+        }
+
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .heading {
+            margin: 10px 0px 0px 0px;
+        }
+
+            .heading h2 {
+                margin-top: 8px;
+            }
+
+        .card-header {
+            background-color: #cde8ca;
+        }
+
+            .card-header h6 {
+                color: black;
+            }
+
+        /*.heading {
+            text-align: left;
+            background-color: darkgray;
+            margin: 0px 0px 0px 0px;
+        }*/
+
+        .firstrow {
+            margin: 10px 0px 0px 0px;
+        }
+
+        .EmployeeButtons {
+            margin: 0px 0px 0px 0px;
+           text-align:end
+        }
+
+        .EmpTransBtns {
+            margin: 0px 0px 0px 0px;
+            border-radius: 5px;
+            width: 90px;
+            height: 35px;
+        }
+    </style>
+</head>
+<body>
+    <div class="row heading">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
+                    <li class="breadcrumb-item"><a href="@Url.Action("MyStaff", "Management")">Management</a></li>
+                    <li class="breadcrumb-item " aria-current="page">My Staff</li>
+                </ol>
+            </nav>
+        </div>
+        <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+            <i class="fa fa-bars" style="font-size:25px"></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+    @using (Html.BeginForm("StaffInfoSave", "Management", FormMethod.Post))
+    {
+        <div class="card shadow-sm flex-fill grow" style="margin:10px 20px 20px 20px;">           
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="form-check form-check-inline col-md-4">
+                            @*<input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" checked>*@
+                            @Html.CheckBoxFor(model => model.active_status, new { htmlAttributes = new { @class = "form-check-input", @type = "checkbox" } })
+                            <label class="form-check-label" for="inlineCheckbox1">Active</label>
+                        </div>
+
+                        <div class="form-check form-check-inline col-md-6">
+                            @Html.CheckBoxFor(model => model.monitor_status, new { htmlAttributes = new { @class = "form-check-input", @type = "checkbox" } })
+                            <label class="form-check-label" for="inlineCheckbox2">Monitor Employee</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 offset-md-7 EmployeeButtons">
+                        <a href="@Url.Action("MyStaff", "Management")">
+                            <input type="button" class="btn btn-secondary EmpTransBtns " style="visibility:visible" value="Back" />
+                        </a>
+
+                        &nbsp;
+                        <a>
+                            <input type="button" onclick="EditClicked()" class="btn btn-danger EmpTransBtns" style="visibility:visible" value="Edit" />
+                        </a>
+
+                        &nbsp;
+                        <input type="submit" class="btn btn-success EmpTransBtns" style="visibility:visible" value="Save" />
+
+                        @*&nbsp;
+                        <a href="#">
+                            <input type="button" class="btn btn-info EmpTransBtns" style="visibility:visible" value="Payroll" />
+                        </a>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+        <form id="staffForm">
+            <div class="card shadow-sm flex-fill grow" style="margin:10px 20px 0px 20px;">
+                <div class="card-header">
+                    <h6 class="card-title mb-0 d-inline-block">Employee Work Information</h6>
+                    <a href="#" class="d-inline-block float-right text-primary"></a>
+                </div>
+                <div class="card-body ">
+                    <div class="form-row firstrow">
+                        <div class="form-group col-md-2">
+                            <label>First Name</label>
+                            @*<input type="text" class="form-control">*@
+                            @Html.EditorFor(model => model.StaffWorkDetails.first_name, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label>Middle Name</label>
+                            @*<input type="text" class="form-control">*@
+                            @Html.EditorFor(model => model.StaffWorkDetails.middle_initial, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>Last Name</label>
+                            @*<input type="text" class="form-control">*@
+                            @Html.EditorFor(model => model.StaffWorkDetails.last_name, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Employee ID</label>
+                            @*<input type="text" class="form-control">*@
+                            @Html.EditorFor(model => model.StaffWorkDetails.employee_id, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                            @Html.HiddenFor(model => model.StaffWorkDetails.employee_id)
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label>Sales ID</label>
+                            @*<input type="text" class="form-control">*@
+                            @Html.EditorFor(model => model.StaffWorkDetails.sales_id, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label>Location ID</label>
+                            @*<input type="text" class="form-control">*@
+                            @Html.EditorFor(model => model.StaffWorkDetails.loc_ID, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Date of Birth</label>
+                            @*<input type="text" class="form-control">*@
+                            @Html.EditorFor(model => model.StaffWorkDetails.Date_of_birth, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                        </div>
+
+                    </div>
+                    <div class="form-row firstrow firstrow">
+                        <div class="form-group col-md-3">
+                            <label>Work Email</label>
+                            @*<input type="text" class="form-control">*@
+                            @Html.EditorFor(model => model.StaffWorkDetails.cta_email, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Position</label>
+                            @*<input type="text" class="form-control">*@
+                            @Html.EditorFor(model => model.StaffWorkDetails.cta_position, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Work Number</label>
+                            @*<input type="text" class="form-control">*@
+                            @Html.EditorFor(model => model.StaffWorkDetails.cta_cell, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Work Number</label>
+                            @*<input type="text" class="form-control">*@
+                            @Html.EditorFor(model => model.StaffWorkDetails.cta_direct_phone, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                        </div>
+                    </div>
+                </div>
+            </div>     
+            <div class="card shadow-sm flex-fill grow" style="margin:10px 20px 20px 20px;">
+                <div class="card-header">
+                    <h6 class="card-title mb-0 d-inline-block">Employee Personal Information</h6>
+                    <a href="#" class="d-inline-block float-right text-primary"></a>
+                </div>
+                <div class="card-body ">
+                    <div class="form-row firstrow firstrow">
+                        <div class="form-group col-md-4">
+                            <label>Personal Email</label>
+                            @*<input type="email" class="form-control">*@
+                            @Html.EditorFor(model => model.StaffPersonalDetails.personal_email, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Primary Phone No#</label>
+                            @*<input type="text" class="form-control">*@
+                            @Html.EditorFor(model => model.StaffPersonalDetails.primary_phone, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Secondary Phone No#</label>
+                            @*<input type="text" class="form-control">*@
+                            @Html.EditorFor(model => model.StaffPersonalDetails.secondary_phone, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Address 1</label>
+                            @*<input type="text" class="form-control">*@
+                            @Html.EditorFor(model => model.StaffPersonalDetails.home_street1, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Address 2</label>
+                            @*<input type="text" class="form-control">*@
+                            @Html.EditorFor(model => model.StaffPersonalDetails.home_street2, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                        </div>
+
+                    </div>
+                    <div class="form-row firstrow">
+                        <div class="form-group col-md-3">
+                            <label>Emergency Contact Name</label>
+                            @*<input type="text" class="form-control">*@
+                            @Html.EditorFor(model => model.StaffPersonalDetails.emergency_contact_name, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Phone No#</label>
+                            @*<input type="text" class="form-control">*@
+                            @Html.EditorFor(model => model.StaffPersonalDetails.emergency_contact_number, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="inputCity">City</label>
+                            @*<input type="text" class="form-control" id="inputCity">*@
+                            @Html.EditorFor(model => model.StaffPersonalDetails.city, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="inputCity">Province</label>
+                            @*<input type="text" class="form-control" id="inputCity">*@
+                            @Html.EditorFor(model => model.StaffPersonalDetails.province, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="inputCity">Zip Code</label>
+                            @*<input type="text" class="form-control" id="inputCity">*@
+                            @Html.EditorFor(model => model.StaffPersonalDetails.postal_code, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="inputCity">Country</label>
+                            @*<input type="text" class="form-control" id="inputCity">*@
+                            @Html.EditorFor(model => model.StaffPersonalDetails.country, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                        </div>
+
+                    </div>
+                   
+                </div>
+            </div>
+          
+           
+
+        </form>
+    }
+
+    <script>
+        document.getElementById("StaffWorkDetails_first_name").readOnly = true;
+        document.getElementById("StaffWorkDetails_middle_initial").readOnly = true;
+        document.getElementById("StaffWorkDetails_last_name").readOnly = true;
+        document.getElementById("StaffWorkDetails_employee_id").readOnly = true;
+        document.getElementById("StaffWorkDetails_loc_ID").readOnly = true;
+        document.getElementById("StaffWorkDetails_cta_position").readOnly = true;
+        document.getElementById("StaffWorkDetails_cta_email").readOnly = true;
+        document.getElementById("StaffWorkDetails_cta_cell").readOnly = true;
+        document.getElementById("StaffWorkDetails_Date_of_birth").readOnly = true;
+        document.getElementById("StaffWorkDetails_sales_id").readOnly = true;
+        document.getElementById("StaffPersonalDetails_personal_email").readOnly = true;
+        document.getElementById("StaffPersonalDetails_primary_phone").readOnly = true;
+        document.getElementById("StaffPersonalDetails_secondary_phone").readOnly = true;
+        document.getElementById("StaffPersonalDetails_emergency_contact_name").readOnly = true;
+        document.getElementById("StaffPersonalDetails_emergency_contact_number").readOnly = true;
+        document.getElementById("StaffPersonalDetails_home_street1").readOnly = true;
+        document.getElementById("StaffPersonalDetails_home_street2").readOnly = true;
+        document.getElementById("StaffPersonalDetails_city").readOnly = true;
+        document.getElementById("StaffPersonalDetails_province").readOnly = true;
+        document.getElementById("StaffPersonalDetails_postal_code").readOnly = true;
+        document.getElementById("StaffPersonalDetails_country").readOnly = true;
+        document.getElementById("StaffWorkDetails_cta_direct_phone").readOnly = true;
+
+        
+        function EditClicked() {
+            document.getElementById("StaffWorkDetails_first_name").readOnly = false;
+            document.getElementById("StaffWorkDetails_middle_initial").readOnly = false;
+            document.getElementById("StaffWorkDetails_last_name").readOnly = false;
+            document.getElementById("StaffWorkDetails_employee_id").readOnly = false;
+            document.getElementById("StaffWorkDetails_loc_ID").readOnly = false;
+            document.getElementById("StaffWorkDetails_cta_position").readOnly = false;
+            document.getElementById("StaffWorkDetails_cta_email").readOnly = false;
+            document.getElementById("StaffWorkDetails_cta_cell").readOnly = false;
+            document.getElementById("StaffWorkDetails_Date_of_birth").readOnly = false;
+            document.getElementById("StaffWorkDetails_sales_id").readOnly = false;
+            document.getElementById("StaffPersonalDetails_personal_email").readOnly = false;
+            document.getElementById("StaffPersonalDetails_secondary_phone").readOnly = false;
+            document.getElementById("StaffPersonalDetails_primary_phone").readOnly = false;
+            document.getElementById("StaffPersonalDetails_emergency_contact_name").readOnly = false;
+            document.getElementById("StaffPersonalDetails_emergency_contact_number").readOnly = false;
+            document.getElementById("StaffPersonalDetails_home_street1").readOnly = false;
+            document.getElementById("StaffPersonalDetails_home_street2").readOnly = false;
+            document.getElementById("StaffPersonalDetails_city").readOnly = false;
+            document.getElementById("StaffPersonalDetails_province").readOnly = false;
+            document.getElementById("StaffPersonalDetails_postal_code").readOnly = false;
+            document.getElementById("StaffPersonalDetails_country").readOnly = false;
+            document.getElementById("StaffWorkDetails_cta_direct_phone").readOnly = false;
+        }
+        $(document).ready(function () {
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+
+        });
+    </script>
+</body>
+
+</html>

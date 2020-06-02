@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewBag.Title = "Newsletter";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+<style>
+    body {
+        background-color: #f0f2f5;
+    }
+</style>
+
+<h2>Newsletter</h2>
+
+
+@using (Html.BeginForm("Newsletter", "Main",FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <input type="file" name="reportName" />
+    <input type="submit" />
+}
+
+    <script>
+    $(document).ready(function () {
+        $("#mainButton").css({ "background-color": "#f0f2f5", "color": "black", "font-weight": "600" })
+        $("#NewsletterClicked").css({ "color": "black", "font-weight": "700" })
+    });
+    </script>

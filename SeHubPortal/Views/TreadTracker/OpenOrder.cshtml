@@ -1,0 +1,543 @@
+﻿
+@{
+    ViewBag.Title = "OpenOrder";
+    Layout = "~/Views/Shared/_TreadTrackerLayout.cshtml";
+}
+@*@model SeHubPortal.ViewModel.OpenOrderModel*@
+@*@model IEnumerable<SeHubPortal.Models.tbl_treadtracker_barcode>*@
+@model SeHubPortal.ViewModel.ViewWorkOrderModel
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/NewOrder.css" rel="stylesheet" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style type="text/css">
+
+        #treadTrackereClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #treadTrackerButton {
+            color: black;
+            font-weight: 600;
+        }
+
+        #OpenOrderLink {
+            color: black;
+            font-weight: 700;
+        }
+        .card-header {
+            background-color: #cde8ca;
+        }
+
+       .card-header h6 {
+             color: black;
+         }
+
+        body {
+            background-color: #f0f2f5;
+        }
+        .heading {
+            margin: 10px 0px 0px 0px;
+        }
+
+            .heading h2 {
+                margin-top: 8px;
+            }
+        .orderMainBody {
+            margin: 15px 15px 0px 15px;
+            /*background-color:antiquewhite;*/
+        }
+
+        .subHeading {
+            text-align: center;
+            background-color: #e9ecef;
+            margin: 15px 0px 0px 0px;
+            color: gray;
+        }
+
+        .subTables {
+            margin: 0px 0px 0px 0px;
+        }
+
+        .tableBorders {
+            border-style: solid;
+            border-width: thin;
+            margin: 0px 0px 0px 0px;
+            border-color: #e9ecef;
+            color: black;
+        }
+        thead th {
+            /*font-size: 1em;*/
+            padding: 1px !important;
+            height: 25px;
+            font-size:13px;
+        }
+        .mainTable {
+            margin: 5px 0px 0px 0px;
+        }
+
+        .textFields {
+            text-align: center;
+        }
+
+        input {
+            text-align: center;
+           
+        }
+
+        .lineStyle {
+            width: 60px;
+            visibility: visible;
+        }
+
+        select {
+            color: black;
+            visibility: hidden;
+        }
+
+        .commentsHeader {
+            background-color: #343a40;
+            margin: 0px 0px 0px 0px;
+            font-size: 1em;
+            padding: 1px !important;
+            height: 25px;
+        }
+        .TableTransactions {
+            margin: 0px 0px 10px 0px;
+        }
+
+            .TableTransactions button {
+                margin: 0px 0px 0px 10px;
+            }
+
+        .transcationButtons {
+            margin: 0px 0px 0px 0px;
+            border-radius: 5px;
+            width: 90px;
+            height:35px;
+        }
+
+        .commentsSection {
+            margin: 10px 0px 0px 0px;
+        }
+
+        #comments {
+            width: 100%;
+            height: 80px;
+            box-sizing: border-box;
+        }
+
+        #NewOrderSubmit {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            background-color: #343a40;
+            border-color: #343a40;
+        }
+
+        .SearchInputs {
+            width: 100%;
+            visibility: visible;
+            border-color: black;
+            border-width: 2px;
+        }
+
+        .generateBtn {
+            width: 100%;
+            border-radius: 5px;
+            visibility: visible;
+        }
+
+        #CustId {
+            visibility: visible;
+        }
+
+       
+        .progress
+        {
+            margin-top:4px;
+            background-color:darkgray;
+        }
+        .TextStyle {
+            vertical-align: middle;
+            color: black;
+        }
+        .fieldStyle {
+            width: 100%;
+            visibility: visible;
+            border-color: gray;
+            border-width: 1px;
+            height: 35px;
+        }
+       
+    </style>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-12">
+            <div>
+               
+                <div class="row heading">
+                    <div class="col">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
+                                <li class="breadcrumb-item"><a href="@Url.Action("OpenOrder", "TreadTracker")">Tread Tracker</a></li>
+                                <li class="breadcrumb-item " aria-current="page">Open Order</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+                        <i class="fa fa-bars" style="font-size:25px"></i>
+                        <span class="sr-only">Toggle Menu</span>
+                    </button>
+                </div>
+                <div class="orderMainBody">
+                    @using (Html.BeginForm("ViewOrder", "TreadTracker", FormMethod.Post))
+                    {<div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
+                                <div class="card-header">
+                                    <h6 class="card-title mb-0 d-inline-block">Open Tread Order</h6>
+                                    <a href="#" class="d-inline-block float-right text-primary"></a>
+                                </div>
+                                <div class="card-body ">
+                                    <div class="row justify-content-between">
+                                        <div class="col-md-5">
+                                            <div class="container">
+                                                <div class="row subTables">
+                                                    <div class="col-5 ">
+                                                        <text class="TextStyle">Retread Work Order</text>
+                                                    </div>
+                                                    <div class="col-7 ">
+                                                        @* <input type="text" class="SearchInputs" id="workOrderNumberSearch" name="workOrderNumberSearch" maxlength="7">*@
+                                                        @Html.TextBoxFor(m => m.WorkOrderNumber, new { @class = "fieldStyle", @type = "text", @maxlength = "6", @onkeypress = "return onlyNumberKey(event)" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-5">
+                                            <div class="container">
+                                                <div class="row subTables">
+                                                    <div class="col-5 ">
+                                                        <text class="TextStyle">Retread Barcode</text>
+                                                    </div>
+                                                    <div class="col-7">
+                                                        @*<input type="text" class="SearchInputs" id="customerSearch" name="customerSearch" maxlength="7">*@
+                                                        @Html.TextBoxFor(m => m.Barcode, new { @class = "fieldStyle", @type = "text", @maxlength = "8", @onkeypress = "return onlyNumberKey(event)" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input id="GenerateClicked" class="generateBtn btn btn-success" type="submit" value="Generate" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                       
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    @if ((@Model.WorkOrderNumber != "" && @Model.workOrderInfo!=null)|| (@Model.Barcode!= "" && @Model.workOrderInfo != null))
+    {
+    <div class="row">
+        <div class="col-md-12">
+            <div>   @*class="shadow-lg p-1 mb-1 bg-white rounded"*@
+                <div class="orderMainBody">
+                    @*here i remove class - container*@
+                    <div class="row justify-content-between">
+                        <div class="col-md-6">
+
+                            <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
+                                <div class="card-header">
+                                    <h6 class="card-title mb-0 d-inline-block">Order Information</h6>
+                                    <a href="#" class="d-inline-block float-right text-primary"></a>
+                                </div>
+                                <div class="card-body ">
+                                    <div class="container">
+                                        <div class="row subTables">
+                                            <div class="col-5 ">
+                                                Retread Work Order
+                                            </div>
+                                            <div class="col-7 ">
+                                                @Model.workOrderInfo.retread_workorder
+                                            </div>
+                                        </div>
+                                        <div class="row subTables">
+                                            <div class="col-5 ">
+                                                Work Order Date
+                                            </div>
+                                            <div class="col-7 ">
+                                                @Model.workOrderInfo.creation_date
+                                            </div>
+                                        </div>
+                                        <div class="row subTables">
+                                            <div class="col-5">
+                                                Employee
+                                            </div>
+                                            <div class="col-7">
+                                                @Model.workOrderInfo.employee_Id
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
+                                <div class="card-header">
+                                    <h6 class="card-title mb-0 d-inline-block">Customer Information</h6>
+                                    <a href="#" class="d-inline-block float-right text-primary"></a>
+                                </div>
+                                <div class="card-body ">
+                                    <div class="container ">
+                                        <div class="row subTables">
+                                            <div class="col-5 ">
+                                                Customer Name
+                                            </div>
+                                            <div class="col-7 ">
+                                                @Model.custInfo.cust_name
+                                            </div>
+                                        </div>
+                                        <div class="row subTables">
+                                            <div class="col-5 ">
+                                                Account Number
+                                            </div>
+                                            <div class="col-7 ">
+                                                @Model.custInfo.cust_us1
+                                            </div>
+                                        </div>
+                                        <div class="row subTables">
+                                            <div class="col-5">
+                                                Customer Address
+                                            </div>
+                                            <div class="col-7">
+                                                @Model.custInfo.cust_city,@Model.custInfo.cust_state,@Model.custInfo.cust_zip
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0 d-inline-block">Order Status</h6>
+                            <a href="#" class="d-inline-block float-right text-primary"></a>
+                        </div>
+                        <div class="card-body ">
+                            <div class="row justify-content-end TableTransactions">
+                                <a href="#">
+                                    <input type="button" class="btn btn-primary transcationButtons" style="visibility:visible" value="Print" />
+                                </a>
+                                &nbsp;
+                                <a href="#">
+                                    <input type="button" class="btn btn-primary transcationButtons" style="visibility:visible" id="emailButton" value="Email" />
+                                </a>
+                                &nbsp;
+                                <a href="@Url.Action("EditOrder", "TreadTracker", new { orderNumber =@Model.WorkOrderNumber})">
+                                    <input type="button" class="btn btn-primary transcationButtons" style="visibility:visible" value="Edit" />
+                                </a>
+                            </div>
+                            <div class="row mainTable">
+                                <table class="table table-striped">
+                                    <thead class="thead-dark">
+                                        <tr class="textFields">
+                                            <th scope="col">#</th>
+                                            <th scope="col">Line</th>
+                                            <th scope="col">BarCode</th>
+                                            <th scope="col">Serial/DOT</th>
+                                            <th scope="col">Size</th>
+                                            <th scope="col">Brand</th>
+                                            <th scope="col">Tread</th>
+                                            <th scope="col">Unit ID</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Production Progress</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="textFields">
+                                        @{
+                                            var incVal = 0;
+                                        }
+                                        @foreach (var barcodes in Model.barcodeInformation)
+                                        {
+                                            <tr>
+                                                <th scope="row">@(++incVal)</th>
+                                                <td>
+                                                    @barcodes.line_code
+                                                </td>
+                                                <td>
+                                                    @barcodes.barcode
+                                                </td>
+                                                <td>
+                                                    @barcodes.serial_dot.ToUpper()
+                                                </td>
+                                                <td>
+                                                    @barcodes.casing_size
+                                                </td>
+                                                <td>
+                                                    @barcodes.casing_brand
+                                                </td>
+                                                <td>
+                                                    @barcodes.retread_design.ToUpper()
+                                                </td>
+                                                <td>
+                                                    @barcodes.unit_ID
+                                                </td>
+                                                <td>
+                                                    @if (@barcodes.final_inspection_result == null)
+                                                    {
+                                                        if (@barcodes.buffer_builder_result == null)
+                                                        {
+                                                            if (@barcodes.ndt_machine_result == null)
+                                                            {
+                                                                @barcodes.preliminary_inspection_result
+                                                            }
+                                                            else
+                                                            {
+                                                                @barcodes.ndt_machine_result
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            @barcodes.buffer_builder_result
+                                                        }
+
+                                                    }
+                                                    else
+                                                    {
+                                                        @barcodes.final_inspection_result
+                                                    }
+
+                                                </td>
+                                                <td>
+                                                    @if (@barcodes.final_inspection_result == null)
+                                                    {
+                                                        if (@barcodes.buffer_builder_result == null)
+                                                        {
+                                                            if (@barcodes.ndt_machine_result == null)
+                                                            {
+                                                                if (@barcodes.preliminary_inspection_result.ToUpper() == "GOOD")
+                                                                {
+                                                                    <div class="progress">
+                                                                        <div class="progress-bar bg-success  progress-bar-animated" role="progressbar" style="width:25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    </div>
+
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="progress">
+                                                                        <div class="progress-bar bg-danger  progress-bar-animated" role="progressbar" style="width:25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                if (@barcodes.ndt_machine_result.ToUpper() == "GOOD")
+                                                                {
+                                                                    <div class="progress">
+                                                                        <div class="progress-bar bg-success  progress-bar-animated" role="progressbar" style="width:50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="progress">
+                                                                        <div class="progress-bar bg-danger  progress-bar-animated" role="progressbar" style="width:50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            if (@barcodes.buffer_builder_result.ToUpper() == "GOOD")
+                                                            {
+                                                                <div class="progress">
+                                                                    <div class="progress-bar bg-success  progress-bar-animated" role="progressbar" style="width:75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="progress">
+                                                                    <div class="progress-bar bg-danger  progress-bar-animated" role="progressbar" style="width:75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                </div>
+                                                            }
+
+                                                        }
+
+                                                    }
+                                                    else
+                                                    {
+                                                        if (@barcodes.final_inspection_result.ToUpper() == "GOOD")
+                                                        {
+                                                            <div class="progress">
+                                                                <div class="progress-bar bg-success progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="progress">
+                                                                <div class="progress-bar bg-danger progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                                            </div>
+                                                        }
+
+                                                    }
+
+                                                </td>
+                                            </tr>
+
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0 d-inline-block">Comments</h6>
+                        </div>
+                        <div class="card-body ">
+                            <div style="width:100%">
+                                <textarea id="comments"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    }
+    <script>
+        function onlyNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode != 46 && charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+
+        $(document).ready(function () {           
+            
+
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+

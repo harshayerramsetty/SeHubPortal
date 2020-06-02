@@ -1,0 +1,55 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Styles.Render("~/Content/sidebar/sidebar.css")
+@Scripts.Render("~/Content/sidebar/sidebar.js")
+<style>
+    #sidebar {
+        background-color: white;
+        color: black
+    }
+
+        #sidebar ul li a {
+            color: black;
+            border-bottom: 2px solid #f0f2f5;
+            border-right: 1px solid #f0f2f5;
+        }
+
+        #sidebar ul li.active > a {
+            color: black;
+            border-bottom: 2px solid #f0f2f5;
+        }
+</style>
+<div class="wrapper d-flex align-items-stretch">
+    <nav id="sidebar" >
+        @*<div class="custom-menu" >
+            <button type="button" id="sidebarCollapse" class="btn btn-primary" >
+                <i class="fa fa-bars"></i>
+                <span class="sr-only">Toggle Menu</span>
+            </button>
+           
+        </div>*@
+        <ul class="list-unstyled components mb-5">
+            <li class="active" id="NewOrderLink">
+                <a id="NewOrderClicked" href="@Url.Action("NewOrder", "TreadTracker", new { values = ""})"><span class="fa fa-home mr-3"></span> New Order</a>
+            </li>
+            @*<li>
+                <a id="EditOrderClicked" href="@Url.Action("EditOrder", "TreadTracker")"><span class="fa fa-user mr-3"></span> Edit Order</a>
+            </li>*@
+            <li class="active" id="OpenOrderLink">
+                <a id="OpenOrderClicked" href="@Url.Action("OpenOrder", "TreadTracker", new { id = "",barcode="" })"><span class="fa fa-sticky-note mr-3"></span> Open Order</a>
+            </li>
+        </ul>
+
+    </nav>
+
+    <!-- Page Content  -->
+    <div id="content">    @*class="p-md-4 pt-5"*@
+        <div id="TreadTrackerArea">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+
+<script src="~/Content/sidebar/sidebar.js"></script>

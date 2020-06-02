@@ -1,0 +1,489 @@
+﻿
+@{
+    ViewBag.Title = "EditOrder";
+    Layout = "~/Views/Shared/_TreadTrackerLayout.cshtml";
+}
+@model SeHubPortal.ViewModel.EditOrderModel
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/NewOrder.css" rel="stylesheet" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style type="text/css">
+        #treadTrackereClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #treadTrackerButton {
+            color: black;
+            font-weight: 600;
+        }
+
+        #OpenOrderLink {
+            color: black;
+            font-weight: 700;
+        }
+
+        .card-header {
+            background-color: #cde8ca;
+        }
+        .card-header h6 {
+                color: black;
+            }
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .heading {
+            margin: 10px 0px 0px 0px;
+        }
+            .heading h2 {
+                margin-top: 8px;
+            }
+        .orderMainBody {
+            margin: 0px 15px 0px 15px;
+        }
+
+        .subHeading {
+            text-align: center;
+            background-color: #e9ecef;
+            margin: 15px 0px 0px 0px;
+            color: gray;
+        }
+
+        .subTables {
+            margin: 0px 0px 0px 0px;
+        }
+
+        .tableBorders {
+            border-style: solid;
+            border-width: thin;
+            margin: 0px 0px 0px 0px;
+            border-color: #e9ecef;
+            color: black;
+        }
+        thead th {
+            /*font-size: 1em;*/
+            padding: 1px !important;
+            height: 25px;
+            font-size: 13px;
+        }
+        .mainTable {
+            margin: 5px 0px 0px 0px;
+        }
+
+        .textFields {
+            text-align: center;
+        }
+
+        input {
+            text-align: center;
+            visibility: visible;
+            height: 32px;
+        }
+
+        .lineStyle {
+            width: 60px;
+            visibility: visible;
+            height: 32px;
+        }
+        .LineValues {
+            width: 60px;
+        }
+        .SerialValues {
+            text-transform: uppercase;
+        }
+        select {
+            color: black;
+            visibility: visible;
+            height: 32px;
+        }
+
+        input, select {
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+
+        .commentsHeader {
+            background-color: #343a40;
+            margin: 0px 0px 0px 0px;
+            font-size: 1em;
+            padding: 1px !important;
+            height: 25px;
+        }
+
+        .TableTransactions {
+            margin: 0px 0px 0px 0px;
+        }
+
+            .TableTransactions button {
+                margin: 0px 0px 0px 10px;
+            }
+
+        .transcationButtons {
+            margin: 0px 0px 0px 0px;
+            border-radius: 5px;
+            width: 90px;
+            height: 35px;
+        }
+
+        .commentsSection {
+            margin: 10px 0px 0px 0px;
+        }
+
+        #comments {
+            width: 100%;
+            height: 80px;
+            box-sizing: border-box;
+        }
+
+        #NewOrderSubmit {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            background-color: #343a40;
+            border-color: #343a40;
+        }
+
+        .SearchInputs {
+            width: 100%;
+            visibility: visible;
+            border-color: black;
+            border-width: 2px;
+        }
+
+        .generateBtn {
+            width: 100%;
+            visibility: visible;
+        }
+
+        #CustId {
+            visibility: visible;
+        }
+
+        #WorkOrderNumber {
+            width: 100%;
+            visibility: visible;
+            border-color: black;
+            border-width: 2px;
+        }
+        #DropDownClass
+        {
+            border-color:transparent;
+            background-color:transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-12">
+            <div>
+                @*class="shadow-lg p-3 mb-5 bg-white rounded"*@
+                <div class="row heading">
+                    <div class="col">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
+                                <li class="breadcrumb-item"><a href="@Url.Action("OpenOrder", "TreadTracker")">Tread Tracker</a></li>
+                                <li class="breadcrumb-item " aria-current="page">Edit Order</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+                        <i class="fa fa-bars" style="font-size:25px"></i>
+                        <span class="sr-only">Toggle Menu</span>
+                    </button>
+                </div>
+                <div class="orderMainBody">
+                    @*here i remove class - container*@
+                    @using (Html.BeginForm("SubmitEditOrder", "TreadTracker", FormMethod.Post))
+                    {
+                        <div class="row justify-content-between">
+                            <div class="col-md-6">
+                                <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
+                                    <div class="card-header">
+                                        <h6 class="card-title mb-0 d-inline-block">Order Information</h6>
+                                    </div>
+                                    <div class="card-body ">
+                                        <div class="container">
+                                            <div class="row subTables">
+                                                <div class="col-5 ">
+                                                    Retread Work Order
+                                                </div>
+                                                <div class="col-7 ">
+                                                    @*@Model.WorkOrderInfo.retread_workorder*@
+                                                    @Html.DisplayFor(m => m.WorkOrderInfo.retread_workorder)
+                                                    @Html.HiddenFor(m => m.WorkOrderInfo.retread_workorder)
+                                                </div>
+                                            </div>
+                                            <div class="row subTables">
+                                                <div class="col-5 ">
+                                                    Work Order Date
+                                                </div>
+                                                <div class="col-7 ">
+                                                    @*@Model.WorkOrderInfo.creation_date*@
+                                                    @Html.DisplayFor(m => m.WorkOrderInfo.creation_date)
+                                                </div>
+                                            </div>
+                                            <div class="row subTables">
+                                                <div class="col-5">
+                                                    Employee
+                                                </div>
+                                                <div class="col-7">
+                                                    @*@Model.WorkOrderInfo.employee_Id*@
+                                                    @Html.DisplayFor(m => m.WorkOrderInfo.employee_Id)
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
+                                    <div class="card-header">
+                                        <h6 class="card-title mb-0 d-inline-block">Customer Information</h6>
+                                        <a href="#" class="d-inline-block float-right text-primary"></a>
+                                    </div>
+                                    <div class="card-body ">
+                                        <div class="container">
+                                            <div class="row subTables">
+                                                <div class="col-5 ">
+                                                    Customer Name
+                                                </div>
+                                                <div class="col-7 ">
+                                                    @*@Model.CustomerInfo.cust_name*@
+                                                    @*@Html.DisplayFor(m => m.CustomerInfo.cust_name)*@
+                                                    @Html.HiddenFor(m => m.CustomerInfo.cust_name)
+                                                    @Html.HiddenFor(m => m.CustomerInfo.cust_us1)
+                                                    @Html.HiddenFor(m => m.CustomerInfo.cust_add1)
+                                                    @Html.DropDownListFor(m => m.ChangedCustomerId, Model.CustomersList, "Please select")
+                                                </div>
+                                            </div>
+                                            <div id="CustomerInfoDivClick">
+
+                                            </div>
+                                            <div id="CustomerInfoDiv">
+                                                <div class="row subTables">
+                                                    <div class="col-5 ">
+                                                        Account Number
+                                                    </div>
+                                                    <div class="col-7 ">
+                                                        @*@Model.CustomerInfo.cust_us1*@
+                                                        @Html.DisplayFor(m => m.CustomerInfo.cust_us1)
+                                                    </div>
+                                                </div>
+                                                <div class="row subTables">
+                                                    <div class="col-5">
+                                                        Customer Address
+                                                    </div>
+                                                    <div class="col-7">
+                                                        @*@Model.CustomerInfo.cust_add1, @Model.CustomerInfo.cust_state, @Model.CustomerInfo.cust_zip*@
+                                                        @Html.DisplayFor(m => m.CustomerInfo.cust_add1)
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
+                            <div class="card-header">
+                                <h6 class="card-title mb-0 d-inline-block">Order Details</h6>                            
+                            </div>
+                            <div class="card-body ">
+                                <div class="row justify-content-end TableTransactions">
+                                    <input type="submit" class="btn btn-success transcationButtons" style="visibility:visible" value="Save" />
+                                    &nbsp;
+                                    <a href="@Url.Action("CanceEditOrderOrder", "TreadTracker", new { values=@Model.WorkOrderInfo.retread_workorder.ToString()})">
+                                        <input type="button" class="btn btn-danger transcationButtons" style="visibility:visible" value="Cancel" />
+                                    </a>
+                                </div>
+                                <div class="row mainTable">
+                                    <table class="table table-striped">
+                                        @*removing class   table-bordered*@
+                                        <thead class="thead-dark">
+                                            <tr class="textFields">
+                                                <th scope="col">#</th>
+                                                <th scope="col">Line</th>
+                                                <th scope="col">Barcode</th>
+                                                <th scope="col">Serial/DOT</th>
+                                                <th scope="col">Size</th>
+                                                <th scope="col">Brand</th>
+                                                <th scope="col">Tread</th>
+                                                <th scope="col">Unit ID</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="textFields">
+                                            @{
+                                                var incVal = 0;
+                                            }
+                                            @*@foreach (var barcodes in Model.BarcodeInformation)*@
+                                            @for (int i = 0; i < Model.BarcodeInformation.Count; i++)
+                                            {
+                                                if (Model.BarcodeInformation[i].ndt_machine_result is null)
+                                                {
+                                                    <tr>
+                                                        <th scope="row">@(++incVal)</th>
+                                                        <td>
+                                                            @*<input type="text" id="line1" name="line1" maxlength="2" onkeypress="return onlyNumberKey(event)" class="lineStyle" onfocusout="line1Out()">*@
+                                                            @*@Html.EditorFor(modelItem => barcodes.line_code)*@
+                                                            @Html.EditorFor(m => m.BarcodeInformation[i].line_code, new { htmlAttributes = new { @class = "LineValues", @type = "text", @maxlength = "2", @onkeypress = "return onlyNumberKey(event)" } })
+                                                        </td>
+                                                        <td>
+                                                            @*<input type="text" id="barcode1" name="barcode1" maxlength="8" onkeypress="return onlyNumberKey(event)">*@
+                                                            @*@Html.EditorFor(modelItem => barcodes.barcode)*@
+                                                            @Html.EditorFor(m => m.BarcodeInformation[i].barcode, new { htmlAttributes = new { @maxlength = "8", @onkeypress = "return onlyNumberKey(event)" } })
+                                                        </td>
+                                                        <td>
+                                                            @*<input type="text" id="serial1" name="serial1" maxlength="8" style="text-transform:uppercase">*@
+                                                            @*@Html.EditorFor(modelItem => barcodes.serial_dot)*@
+                                                            @Html.EditorFor(m => m.BarcodeInformation[i].serial_dot, new { htmlAttributes = new { @class = "SerialValues" } })
+                                                        </td>
+                                                        <td>
+                                                            @*<div id="casing1Div"></div>*@
+                                                            @*@Html.DropDownListFor(modelItem => barcodes.casing_size, new SelectList(ViewBag.CasingSizeList, "size_id", "casing_size", barcodes.size_id))*@
+                                                            @Html.DropDownListFor(m => m.BarcodeInformation[i].casing_size, new SelectList(ViewBag.CasingSizeList, "size_id", "casing_size", Model.BarcodeInformation[i].size_id))
+                                                        </td>
+
+                                                        <td>
+                                                            @*<div id="Brand1Div"></div>*@
+                                                            @*@Html.EditorFor(modelItem => barcodes.casing_brand)*@
+                                                            @*@Html.DropDownListFor(modelItem => barcodes.casing_brand, new SelectList(ViewBag.CasingBrandList, "brand_id", "casing_brand", barcodes.brand_id))*@
+                                                            @Html.DropDownListFor(m => m.BarcodeInformation[i].casing_brand, new SelectList(ViewBag.CasingBrandList, "brand_id", "casing_brand", Model.BarcodeInformation[i].brand_id))
+                                                        </td>
+                                                        <td>
+                                                            @*<div id="Tread1Div"></div>*@
+                                                            @*@Html.EditorFor(modelItem => barcodes.retread_design)*@
+                                                            @*@Html.DropDownListFor(modelItem => barcodes.retread_design, new SelectList(ViewBag.CasingTreadList, "tread_id", "tread_design", barcodes.tread_id))*@
+                                                            @Html.DropDownListFor(m => m.BarcodeInformation[i].retread_design, new SelectList(ViewBag.CasingTreadList, "tread_id", "tread_design", Model.BarcodeInformation[i].tread_id))
+                                                        </td>
+                                                        <td>
+                                                            @*<input type="text" id="unit1" name="unit1" onkeypress="return onlyNumberKey(event)">*@
+                                                            @*@Html.EditorFor(modelItem => barcodes.unit_ID)*@
+                                                            @Html.EditorFor(m => m.BarcodeInformation[i].unit_ID, new { htmlAttributes = new { @onkeypress = "return onlyNumberKey(event)" } })
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                else
+                                                {
+                                                    <tr>
+                                                        <th scope="row">@(++incVal)</th>
+                                                        <td>
+                                                            @*<input type="text" id="line1" name="line1" maxlength="2" onkeypress="return onlyNumberKey(event)" class="lineStyle" onfocusout="line1Out()">*@
+                                                            @*@Html.EditorFor(modelItem => barcodes.line_code)*@
+                                                            @Html.DisplayFor(m => m.BarcodeInformation[i].line_code, new { htmlAttributes = new { @class = "LineValues", @type = "text", @maxlength = "2", @onkeypress = "return onlyNumberKey(event)" } })
+                                                        </td>
+                                                        <td>
+                                                            @*<input type="text" id="barcode1" name="barcode1" maxlength="8" onkeypress="return onlyNumberKey(event)">*@
+                                                            @*@Html.EditorFor(modelItem => barcodes.barcode)*@
+                                                            @Html.DisplayFor(m => m.BarcodeInformation[i].barcode, new { htmlAttributes = new { @maxlength = "8", @onkeypress = "return onlyNumberKey(event)" } })
+                                                        </td>
+                                                        <td>
+                                                            @*<input type="text" id="serial1" name="serial1" maxlength="8" style="text-transform:uppercase">*@
+                                                            @*@Html.EditorFor(modelItem => barcodes.serial_dot)*@
+                                                            @Html.DisplayFor(m => m.BarcodeInformation[i].serial_dot, new { htmlAttributes = new { @class = "SerialValues" } })
+                                                        </td>
+                                                        <td>
+                                                            @*<div id="casing1Div"></div>*@
+                                                            @*@Html.DropDownListFor(modelItem => barcodes.casing_size, new SelectList(ViewBag.CasingSizeList, "size_id", "casing_size", barcodes.size_id))*@
+                                                            @Html.HiddenFor(m => m.BarcodeInformation[i].size_id)
+                                                            @Html.DropDownListFor(m => m.BarcodeInformation[i].casing_size, new SelectList(ViewBag.CasingSizeList, "size_id", "casing_size", Model.BarcodeInformation[i].size_id), new { @disabled = "disabled", @id = "DropDownClass" })
+                                                        </td>
+
+                                                        <td>
+                                                            @*<div id="Brand1Div"></div>*@
+                                                            @*@Html.EditorFor(modelItem => barcodes.casing_brand)*@
+                                                            @*@Html.DropDownListFor(modelItem => barcodes.casing_brand, new SelectList(ViewBag.CasingBrandList, "brand_id", "casing_brand", barcodes.brand_id))*@
+                                                            @Html.HiddenFor(m => m.BarcodeInformation[i].brand_id)
+                                                            @Html.DropDownListFor(m => m.BarcodeInformation[i].casing_brand, new SelectList(ViewBag.CasingBrandList, "brand_id", "casing_brand", Model.BarcodeInformation[i].brand_id), new { @disabled = "disabled", @id = "DropDownClass" })
+                                                        </td>
+                                                        <td>
+                                                            @*<div id="Tread1Div"></div>*@
+                                                            @*@Html.EditorFor(modelItem => barcodes.retread_design)*@
+                                                            @*@Html.DropDownListFor(modelItem => barcodes.retread_design, new SelectList(ViewBag.CasingTreadList, "tread_id", "tread_design", barcodes.tread_id))*@
+                                                            @Html.HiddenFor(m => m.BarcodeInformation[i].tread_id)
+                                                            @Html.DropDownListFor(m => m.BarcodeInformation[i].retread_design, new SelectList(ViewBag.CasingTreadList, "tread_id", "tread_design", Model.BarcodeInformation[i].tread_id), new { @disabled = "disabled", @id = "DropDownClass" })
+                                                        </td>
+                                                        <td>
+                                                            @*<input type="text" id="unit1" name="unit1" onkeypress="return onlyNumberKey(event)">*@
+                                                            @*@Html.EditorFor(modelItem => barcodes.unit_ID)*@
+                                                            @Html.DisplayFor(m => m.BarcodeInformation[i].unit_ID, new { htmlAttributes = new { @onkeypress = "return onlyNumberKey(event)" } })
+                                                        </td>
+                                                    </tr>
+                                                }
+
+                                            }
+                                        </tbody>
+
+                                    </table>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        @*//Here begin form*@
+                       
+                        <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
+                            <div class="card-header">
+                                <h6 class="card-title mb-0 d-inline-block">Comments</h6>
+                            </div>
+                            <div class="card-body ">
+                                <div style="width:100%">
+                                    <textarea id="comments"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script>
+
+        function onlyNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode != 46 && charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+         $(document).ready(function () {          
+            
+             //$("#treadTrackerButton").css({ "background-color": "#fff", "color": "black" })
+             //$("#OpenOrderLink").css({ "background-color": "#00A4EF" });
+             $('#clickThis').on('click', function () {
+                 $('#sidebar').toggleClass('active');
+             });
+
+             $('#ChangedCustomerId').on('change', function () {
+                 //alert("Selected");
+                 var workOrderNumber = this.value;
+                 $("#CustomerInfoDiv").hide();
+                 $("CustomerInfoDivClick").show();
+                $.ajax({
+                            url: '@Url.Action("ShowEditCustInfo", "TreadTracker")',
+                            data: { value: workOrderNumber },
+                            type: 'POST',
+                            success: function (data) {
+                                $("#CustomerInfoDivClick").html(data);
+                            }
+                 });
+
+             });
+
+
+
+        });
+
+      
+    </script>
+</body>
+</html>

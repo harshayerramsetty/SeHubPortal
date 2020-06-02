@@ -1,0 +1,50 @@
+﻿@model SeHubPortal.ViewModel.NewOrderSearchCriteria
+<style type="text/css">
+ 
+    input {
+        text-align: center;
+        visibility: visible;
+    }
+
+
+
+    .generateButton {
+        text-align: center;
+        height: 35px;
+        width: 80px;
+        display: block;
+    }
+
+    #MatchedNoId {
+        visibility: visible;
+    }
+    .TextStyle {
+        vertical-align: middle;
+        color: black;
+    }
+
+    .fieldStyle {
+        width: 100%;
+        visibility: visible;
+        border-color: gray;
+        border-width: 1px;
+    }
+
+</style>
+
+
+@using (Html.BeginForm("SearchWithName", "TreadTracker", FormMethod.Post))
+{
+
+        <div class="row subTables">
+            <div class="col-4">
+                <text class="TextStyle">  Related Search  </text>
+            </div>
+            <div class="col-6">
+                @Html.DropDownListFor(m => m.MatchedNameId, Model.MatchedNames, "Please select", new { @class = "fieldStyle" })
+            </div>
+            <div class="col-2">
+                <input class="generateButton btn btn-info" type="submit" value="Go" />
+            </div>
+        </div>
+}

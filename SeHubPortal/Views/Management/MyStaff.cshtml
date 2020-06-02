@@ -1,0 +1,280 @@
+﻿
+@{
+    ViewBag.Title = "MyStaff";
+    Layout = "~/Views/Shared/_ManagementLayout.cshtml";
+}
+
+@model SeHubPortal.ViewModel.MyStaffViewModel
+<html lang="en">
+<head>   
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">*@
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <style>
+        #ManagementClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #managementBtn {
+            color: black;
+            font-weight: 600;
+        }
+
+        #MyStaffLink {
+            color: black;
+            font-weight: 700;
+        }
+
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .heading {
+            margin: 10px 0px 0px 0px;
+        }
+
+            .heading h2 {
+                margin-top: 8px;
+            }
+
+        .card-header {
+            background-color: #cde8ca;
+        }
+
+            .card-header h6 {
+                color: black;
+            }
+        
+        .imageClass {
+            width: 100%;
+            height: 80%;
+            border-radius: 50%;
+        }
+
+        .card {
+            border: 1px solid #ededed;
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+
+        .card {
+            position: relative;
+            display: -ms-flexbox;
+            display: flex;
+            height:auto;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid rgba(0,0,0,.125);
+            border-radius: .25rem;
+        }
+        p{
+            font-size:14px;
+        }
+        #MatchedStaffLocID{
+            height:30px;
+            width:100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="row heading">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
+                    <li class="breadcrumb-item"><a href="@Url.Action("MyStaff", "Management")">Management</a></li>
+                    <li class="breadcrumb-item " aria-current="page">My Staff</li>
+                </ol>
+            </nav>
+        </div>
+        <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+            <i class="fa fa-bars" style="font-size:25px"></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+    <div class="row">
+        <div class="card shadow-sm flex-fill grow" style="margin:10px 20px 0px 20px;">
+            <div class="card-header">
+                <h6 class="card-title mb-0 d-inline-block">Employees : 101</h6>
+            </div>
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-md-3">
+                        @using (Html.BeginForm("MyStaff", "Management", FormMethod.Post))
+                        {
+                            <span style="margin-right:5px;margin-top:10px; font-size:15px;color:black;">Change Location:</span>
+                            @Html.DropDownListFor(m => m.MatchedStaffLocID, Model.MatchedStaffLocs, "All", new { @onChange = "this.form.submit()" })
+                            <noscript> <input class="btn btn-success" type="submit" value="Search" /></noscript>
+                        }
+                    </div>
+                    <div class="col-md-9">
+                        <a href="@Url.Action("AddStaff", "Management")">
+                            <input type="button" class="btn btn-secondary EmpTransBtns " value="Add" style="width:80px;float:right;margin-right:5px;" />
+                        </a>
+                    </div>
+
+                </div>
+
+                <div class="row" style="margin:20px 0px 0px 0px;">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" style="color:black;width:200px;text-align:center;border:1px solid green" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Active</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " id="profile-tab" style="color:black;width:200px;text-align:center;border:1px solid orangered" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">In-Active</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent" style="border:1px solid #cde8ca">
+                        <div class="tab-pane fade  show bg-white active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="card-body">
+
+                                <!--Content tab-->
+                                <div class="row people-grid-row">
+
+                                    @foreach (var employee in Model.employeeDetails)
+                                    {
+                                        if (employee.status == 1)
+                                        {
+                                            string base64ProfilePic = "";
+                                            if (@employee.profile_pic is null)
+                                            {
+                                                base64ProfilePic = "";
+                                            }
+                                            else
+                                            {
+                                                base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(@employee.profile_pic);
+                                            }
+                                            <div class="col-md-6 col-lg-6 col-xl-4">
+                                                <div class="card shadow-sm">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-4 text-center">
+                                                                <a href="@Url.Action("StaffInfo", "Management", new { values = @employee.employee_id})" class="booking-doc-img">
+                                                                    @*<img src="~/Content/profilepic.jpg" alt="User Image">*@
+
+                                                                    @if (base64ProfilePic == "")
+                                                                    {
+                                                                        <img class="imageClass" src="~/Content/profilepic.jpg" alt="ProfilePic" />
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <img class="imageClass" alt="profilePic" src="@base64ProfilePic" />
+                                                                    }
+
+                                                                </a>
+
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <h6 style="font-size:18px;"><a href="@Url.Action("StaffInfo", "Management", new { values = @employee.employee_id})" class="text-primary">@employee.full_name</a></h6>
+                                                                <div>
+                                                                    <p class="mb-0"><b>@employee.cta_position</b></p>
+                                                                    <p class="mb-0 ctm-text-sm">@employee.employee_id</p>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade bg-white" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            <div class="card-body">
+
+                                <!--Content tab-->
+                                <div class="row people-grid-row">
+
+                                    @foreach (var employee in Model.employeeDetails)
+                                    {
+                                        if (employee.status == 0)
+                                        {
+                                            string base64ProfilePic = "";
+                                            if (@employee.profile_pic is null)
+                                            {
+                                                base64ProfilePic = "";
+                                            }
+                                            else
+                                            {
+                                                base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(@employee.profile_pic);
+                                            }
+                                            <div class="col-md-6 col-lg-6 col-xl-4">
+                                                <div class="card shadow-sm">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-4 text-center">
+                                                                <a href="@Url.Action("StaffInfo", "Management", new { values = @employee.employee_id})" class="booking-doc-img">
+                                                                    @*<img src="~/Content/profilepic.jpg" alt="User Image">*@
+
+                                                                    @if (base64ProfilePic == "")
+                                                                    {
+                                                                        <img class="imageClass" src="~/Content/profilepic.jpg" alt="ProfilePic" />
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <img class="imageClass" alt="profilePic" src="@base64ProfilePic" />
+                                                                    }
+
+                                                                </a>
+
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <h6 style="font-size:18px;"><a href="@Url.Action("StaffInfo", "Management", new { values = @employee.employee_id})" class="text-primary">@employee.full_name</a></h6>
+                                                                <div>
+                                                                    <p class="mb-0" ><b>@employee.cta_position</b></p>
+                                                                    <p class="mb-0 ctm-text-sm">@employee.employee_id</p>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+    <script>
+        $(document).ready(function () {
+            $('#home-tab').css("font-weight", "bold");
+            $('#home-tab').on("click", function () {
+                $('#profile-tab').css("font-weight", "normal");
+                $('#home-tab').css("font-weight", "bold");
+            })
+
+            $('#profile-tab').on("click", function () {
+                $('#profile-tab').css("font-weight", "bold");
+                $('#home-tab').css("font-weight", "normal");
+            })
+
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+
+        });
+
+    </script>
+</body>
+</html>
+
+

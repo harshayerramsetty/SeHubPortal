@@ -1,0 +1,499 @@
+﻿@model SeHubPortal.ViewModel.ModifyEmployeePermissions
+
+
+
+<style type="text/css">
+    #EmployeeCredentials_password, #EmployeeCredentials_password365, #empDetails_rfid_number, #empDetails_loc_ID {
+        text-align: center;
+    }
+</style>
+
+
+@using (Html.BeginForm("ManageEmployeePermisssions", "Management", FormMethod.Post))
+{
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle"><b>@Model.empDetails.full_name</b> - <b>@Model.empDetails.employee_id</b></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            @*<div class="row" style="margin-left:0px;height:30px;background-color:#cde8ca;color:black;margin-bottom:5px;">
+            <h6 style="padding:5px;">Employee Credentials:</h6>
+        </div>*@
+            @Html.HiddenFor(m => m.EmployeeCredentials.employee_id)
+            @Html.HiddenFor(m => m.empDetails.employee_id)
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label style="margin-right:58px">SEHUB</label>
+                    @Html.TextBoxFor(m => m.EmployeeCredentials.password, new { htmlAttributes = new { @class = "form-control" } })
+                    @*@Html.HiddenFor(m => m.EmployeeCredentials.password)*@
+                </div>
+                <div class="form-group col-md-6">
+                    <label style="margin-right:23px">RFID</label>
+                    @Html.TextBoxFor(m => m.empDetails.rfid_number, new { htmlAttributes = new { @class = "form-control" } })
+                    @*@Html.HiddenFor(m => m.EmployeeCredentials.password365)*@
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label style="margin-right:15px">Outlook-365</label>
+                    @Html.TextBoxFor(m => m.EmployeeCredentials.password365, new { htmlAttributes = new { @class = "form-control" } })
+                    @*@Html.HiddenFor(m => m.EmployeeCredentials.password)*@
+                </div>
+                <div class="form-group col-md-6">
+                    <label style="margin-right:10px">Loc ID</label>
+                    @Html.TextBoxFor(m => m.empDetails.loc_ID, new { htmlAttributes = new { @class = "form-control" } })
+                    @*@Html.HiddenFor(m => m.EmployeeCredentials.password365)*@
+                </div>
+            </div>
+
+            <div class="row" style="margin-left:0px;height:30px;background-color:#cde8ca;color:black;margin-top:10px ;margin-bottom:5px;">
+                <h6 style="padding:5px;">Application Access:</h6>
+            </div>
+            @*<div class="row" style="margin-top:10px;">
+            <div class="col-md-4">
+
+            </div>
+            <div class="col-md-7">
+                <div class="row">
+                    <div class="col-md-2">
+                        <p>No</p>
+                    </div>
+                    <div class="col-md-3">
+                        <p>View</p>
+                    </div>
+                    <div class="col-md-2" style="margin-left:4px;">
+                        <p>Edit</p>
+                    </div>
+                    <div class="col-md-2" style="margin-left:4px;">
+                        <p>New</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1">
+
+            </div>
+        </div>*@
+            <div class="row" style="margin-top:10px;font-style:italic;font-size:13px;color:darkgray">
+                <div class="col-md-3">
+
+                </div>
+                <div class="col-md-2">
+                    <text><b style="margin-right:3px;">0</b>-No Access</text>
+                </div>
+                <div class="col-md-2">
+                    <text><b style="margin-right:3px;">1</b>-Read Only</text>
+                </div>
+                <div class="col-md-2">
+                    <text style="margin-left:10px;"><b style="margin-right:3px;">2</b>-Edit</text>
+                </div>
+                <div class="col-md-2">
+                    <text><b style="margin-right:3px;">3</b>-New</text>
+                </div>
+                <div class="col-md-1">
+
+                </div>
+            </div>
+            <hr style="border:1px thin gray" />
+            <div class="row">
+                <div class="col-md-2" style="position:relative">
+                    <div class="row">
+                        <img src="~/Content/home64.png" style="position:absolute;top:0;bottom:0;left:0;right:0;margin:auto" />
+                    </div>
+                    <div class="row">
+                        @*<p style="margin-left:45px;margin-top:100px;">Home</p>*@
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <text>Sehub Access</text>
+                        </div>
+                        <div class="col-md-7">
+                            @Html.EditorFor(m => m.SehubAccess.app_access, new { htmlAttributes = new { @class = "custom-range", type = "range", @min = "0", @max = "3", @step = "1", @id = "slider1", @value = @Model.SehubAccess.app_access } })
+                        </div>
+                        <div class="col-md-2">
+                            <span id="slider1Val"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <text>Dashboard</text>
+                        </div>
+                        <div class="col-md-7">
+                            @Html.EditorFor(m => m.SehubAccess.dashboard, new { htmlAttributes = new { @class = "custom-range", type = "range", @min = "0", @max = "3", @step = "1", @id = "slider2", @value = @Model.SehubAccess.dashboard } })
+                        </div>
+                        <div class="col-md-2">
+                            <span id="slider2Val"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <text>Calendar</text>
+                        </div>
+                        <div class="col-md-7">
+                            @Html.EditorFor(m => m.SehubAccess.calendar, new { htmlAttributes = new { @class = "custom-range", type = "range", @min = "0", @max = "3", @step = "1", @id = "slider3", @value = @Model.SehubAccess.calendar } })
+                        </div>
+                        <div class="col-md-2">
+                            <span id="slider3Val"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <text>News Letter</text>
+                        </div>
+                        <div class="col-md-7">
+                            @Html.EditorFor(m => m.SehubAccess.newsletter, new { htmlAttributes = new { @class = "custom-range", type = "range", @min = "0", @max = "3", @step = "1", @id = "slider4", @value = @Model.SehubAccess.newsletter } })
+                        </div>
+                        <div class="col-md-2">
+                            <span id="slider4Val"></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <hr style="border:1px thin gray" />
+            <div class="row">
+                <div class="col-md-2" style="position:relative">
+                    <div class="row">
+                        <img src="~/Content/Tire64.png" style="position:absolute;top:0;bottom:0;left:0;right:0;margin:auto" />
+                    </div>
+                    <div class="row">
+
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <text>New Order</text>
+                        </div>
+                        <div class="col-md-7">
+                            @Html.EditorFor(m => m.SehubAccess.neworder, new { htmlAttributes = new { @class = "custom-range", type = "range", @min = "0", @max = "3", @step = "1", @id = "slider5", @value = @Model.SehubAccess.neworder } })
+                        </div>
+                        <div class="col-md-2">
+                            <span id="slider5Val"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <text>Open Order</text>
+                        </div>
+                        <div class="col-md-7">
+                            @Html.EditorFor(m => m.SehubAccess.openorder, new { htmlAttributes = new { @class = "custom-range", type = "range", @min = "0", @max = "3", @step = "1", @id = "slider6", @value = @Model.SehubAccess.openorder } })
+                        </div>
+                        <div class="col-md-2">
+                            <span id="slider6Val"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <text>Mfg Plant</text>
+                        </div>
+                        <div class="col-md-7">
+                            @Html.EditorFor(m => m.SehubAccess.manufacturing_plant, new { htmlAttributes = new { @class = "custom-range", type = "range", @min = "0", @max = "3", @step = "1", @id = "slider16", @value = @Model.SehubAccess.manufacturing_plant } })
+                        </div>
+                        <div class="col-md-2">
+                            <span id="slider16Val"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <hr style="border:1px thin gray" />
+
+            <div class="row">
+                <div class="col-md-2" style="position:relative">
+                    <div class="row">
+                        <img src="~/Content/Management64.png" style="position:absolute;top:0;bottom:0;left:0;right:0;margin:auto" />
+                    </div>
+                    <div class="row">
+
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <text>My Staff</text>
+                        </div>
+                        <div class="col-md-7">
+                            @Html.EditorFor(m => m.SehubAccess.my_staff, new { htmlAttributes = new { @class = "custom-range", type = "range", @min = "0", @max = "3", @step = "1", @id = "slider7", @value = @Model.SehubAccess.my_staff } })
+                        </div>
+                        <div class="col-md-2">
+                            <span id="slider7Val"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <text>Payroll</text>
+                        </div>
+                        <div class="col-md-7">
+                            @Html.EditorFor(m => m.SehubAccess.payroll, new { htmlAttributes = new { @class = "custom-range", type = "range", @min = "0", @max = "3", @step = "1", @id = "slider8", @value = @Model.SehubAccess.payroll } })
+                        </div>
+                        <div class="col-md-2">
+                            <span id="slider8Val"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <text>Attendance</text>
+                        </div>
+                        <div class="col-md-7">
+                            @Html.EditorFor(m => m.SehubAccess.attendance, new { htmlAttributes = new { @class = "custom-range", type = "range", @min = "0", @max = "3", @step = "1", @id = "slider9", @value = @Model.SehubAccess.attendance } })
+                        </div>
+                        <div class="col-md-2">
+                            <span id="slider9Val"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <text>Vacation Schedule</text>
+                        </div>
+                        <div class="col-md-7">
+                            @Html.EditorFor(m => m.SehubAccess.vacation_schedule, new { htmlAttributes = new { @class = "custom-range", type = "range", @min = "0", @max = "3", @step = "1", @id = "slider11", @value = @Model.SehubAccess.vacation_schedule } })
+                        </div>
+                        <div class="col-md-2">
+                            <span id="slider11Val"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <text>Asset Control</text>
+                        </div>
+                        <div class="col-md-7">
+                            @Html.EditorFor(m => m.SehubAccess.asset_control, new { htmlAttributes = new { @class = "custom-range", type = "range", @min = "0", @max = "3", @step = "1", @id = "slider12", @value = @Model.SehubAccess.asset_control } })
+                        </div>
+                        <div class="col-md-2">
+                            <span id="slider12Val"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr style="border:1px thin gray" />
+            <div class="row">
+                <div class="col-md-2" style="position:relative">
+                    <div class="row">
+                        <img src="~/Content/Wrench64.png" style="position:absolute;top:0;bottom:0;left:0;right:0;margin:auto" />
+                    </div>
+                    <div class="row">
+
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <text>Calculator</text>
+                        </div>
+                        <div class="col-md-7">
+                            @Html.EditorFor(m => m.SehubAccess.calculator, new { htmlAttributes = new { @class = "custom-range", type = "range", @min = "0", @max = "3", @step = "1", @id = "slider13", @value = @Model.SehubAccess.calculator } })
+                        </div>
+                        <div class="col-md-2">
+                            <span id="slider13Val"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <text>Fuel Log</text>
+                        </div>
+                        <div class="col-md-7">
+                            @Html.EditorFor(m => m.SehubAccess.fuel_log, new { htmlAttributes = new { @class = "custom-range", type = "range", @min = "0", @max = "3", @step = "1", @id = "slider14", @value = @Model.SehubAccess.fuel_log } })
+                        </div>
+                        <div class="col-md-2">
+                            <span id="slider14Val"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <text>User Management</text>
+                        </div>
+                        <div class="col-md-7">
+                            @Html.EditorFor(m => m.SehubAccess.user_management, new { htmlAttributes = new { @class = "custom-range", type = "range", @min = "0", @max = "3", @step = "1", @id = "slider17", @value = @Model.SehubAccess.user_management } })
+                        </div>
+                        <div class="col-md-2">
+                            <span id="slider17Val"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <text>CRM</text>
+                        </div>
+                        <div class="col-md-7">
+                            @Html.EditorFor(m => m.SehubAccess.customer_reporting, new { htmlAttributes = new { @class = "custom-range", type = "range", @min = "0", @max = "3", @step = "1", @id = "slider18", @value = @Model.SehubAccess.customer_reporting } })
+                        </div>
+                        <div class="col-md-2">
+                            <span id="slider18Val"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <hr style="border:1px thin gray" />
+            <div class="row" style="height:80px">
+                <div class="col-md-2" style="position:relative">
+                    <div class="row">
+                        <img src="~/Content/Book64.png" style="position:absolute;top:0;bottom:0;left:0;right:0;margin:auto" />
+                    </div>
+                    <div class="row">
+
+                    </div>
+                </div>
+                <div class="col-md-10">
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <text>Library Access</text>
+                        </div>
+                        <div class="col-md-7">
+                            @Html.EditorFor(m => m.SehubAccess.library_access, new { htmlAttributes = new { @class = "custom-range", type = "range", @min = "0", @max = "3", @step = "1", @id = "slider15", @value = @Model.SehubAccess.library_access } })
+                        </div>
+                        <div class="col-md-2">
+                            <span id="slider15Val"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <text>New Hire Package</text>
+                        </div>
+                        <div class="col-md-7">
+                            @Html.EditorFor(m => m.SehubAccess.new_hire_package, new { htmlAttributes = new { @class = "custom-range", type = "range", @min = "0", @max = "3", @step = "1", @id = "slider10", @value = @Model.SehubAccess.new_hire_package } })
+                        </div>
+                        <div class="col-md-2">
+                            <span id="slider10Val"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal" style="width:100px;">Cancel</button>
+
+            <input type="submit" class="btn btn-success" value="Save" style="width:100px;" />
+        </div>
+    </div>
+}
+
+<script>
+
+
+    $(document).ready(function () {
+
+        $('#slider1').on('change', function (e) {
+            var id = e.target.value;
+            document.getElementById("slider1Val").innerHTML = id;
+        });
+        $('#slider1').change();
+
+        $('#slider2').on('change', function (e) {
+            var id = e.target.value;
+            document.getElementById("slider2Val").innerHTML = id;
+        });
+        $('#slider2').change();
+
+        $('#slider3').on('change', function (e) {
+            var id = e.target.value;
+            document.getElementById("slider3Val").innerHTML = id;
+        });
+        $('#slider3').change();
+
+        $('#slider4').on('change', function (e) {
+            var id = e.target.value;
+            document.getElementById("slider4Val").innerHTML = id;
+        });
+        $('#slider4').change();
+
+        $('#slider5').on('change', function (e) {
+            var id = e.target.value;
+            document.getElementById("slider5Val").innerHTML = id;
+        });
+        $('#slider5').change();
+
+        $('#slider6').on('change', function (e) {
+            var id = e.target.value;
+            document.getElementById("slider6Val").innerHTML = id;
+        });
+        $('#slider6').change();
+
+        $('#slider7').on('change', function (e) {
+            var id = e.target.value;
+            document.getElementById("slider7Val").innerHTML = id;
+        });
+        $('#slider7').change();
+
+        $('#slider8').on('change', function (e) {
+            var id = e.target.value;
+            document.getElementById("slider8Val").innerHTML = id;
+        });
+        $('#slider8').change();
+
+        $('#slider9').on('change', function (e) {
+            var id = e.target.value;
+            document.getElementById("slider9Val").innerHTML = id;
+        });
+        $('#slider9').change();
+
+        $('#slider10').on('change', function (e) {
+            var id = e.target.value;
+            document.getElementById("slider10Val").innerHTML = id;
+        });
+        $('#slider10').change();
+
+        $('#slider11').on('change', function (e) {
+            var id = e.target.value;
+            document.getElementById("slider11Val").innerHTML = id;
+        });
+        $('#slider11').change();
+
+        $('#slider12').on('change', function (e) {
+            var id = e.target.value;
+            document.getElementById("slider12Val").innerHTML = id;
+        });
+        $('#slider12').change();
+
+        $('#slider13').on('change', function (e) {
+            var id = e.target.value;
+            document.getElementById("slider13Val").innerHTML = id;
+        });
+        $('#slider13').change();
+
+        $('#slider14').on('change', function (e) {
+            var id = e.target.value;
+            document.getElementById("slider14Val").innerHTML = id;
+        });
+        $('#slider14').change();
+
+        $('#slider15').on('change', function (e) {
+            var id = e.target.value;
+            document.getElementById("slider15Val").innerHTML = id;
+        });
+        $('#slider15').change();
+
+        $('#slider16').on('change', function (e) {
+            var id = e.target.value;
+            document.getElementById("slider16Val").innerHTML = id;
+        });
+        $('#slider16').change();
+        $('#slider17').on('change', function (e) {
+            var id = e.target.value;
+            document.getElementById("slider17Val").innerHTML = id;
+        });
+        $('#slider17').change();
+        $('#slider18').on('change', function (e) {
+            var id = e.target.value;
+            document.getElementById("slider18Val").innerHTML = id;
+        });
+        $('#slider18').change();
+
+    });
+</script>

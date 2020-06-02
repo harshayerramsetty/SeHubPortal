@@ -1,0 +1,72 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Styles.Render("~/Content/sidebar/sidebar.css")
+@Scripts.Render("~/Content/sidebar/sidebar.js")
+<style>
+    #sidebar {
+        background-color: white;
+        color: black
+    }
+
+        #sidebar ul li a {
+            color: black;
+            border-bottom: 2px solid #f0f2f5;
+            border-right: 1px solid #f0f2f5;
+        }
+
+        #sidebar ul li.active > a {
+            color: black;
+            border-bottom: 2px solid #f0f2f5;
+        }
+</style>
+<div class="wrapper d-flex align-items-stretch">
+    <nav id="sidebar">
+        @*<div class="custom-menu">
+            <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                <i class="fa fa-bars"></i>
+                <span class="sr-only">Toggle Menu</span>
+            </button>
+        </div>*@
+
+        <ul class="list-unstyled components mb-5">
+            <li class="active" id="QuickGuideLink">
+                <a id="QuickGuideClicked" href="@Url.Action("QuickGuide", "Management", new { values = ""})"><span class="fa fa-home mr-3"></span> Quick Guide</a>
+            </li>
+            <li class="active" id="MyStaffLink">
+                <a id="MyStaffClicked" href="@Url.Action("MyStaff", "Management", new { LocId=""})"><span class="fa fa-sticky-note mr-3"></span> My Staff</a>
+            </li>
+            @*<li class="active" id="PayrollLink">
+            <a id="PayrollClicked" href="@Url.Action("Payroll", "Management", new { locId = "",employeeId="",payrollID="" })"><span class="fa fa-sticky-note mr-3"></span> Payroll</a>
+        </li>*@
+            <li class="active" id="AttendanceLink">
+                <a id="AttendanceClicked" href="@Url.Action("Attendance", "Management", new { locId = "",employeeId=""})"><span class="fa fa-sticky-note mr-3"></span> Attendance</a>
+            </li>
+            <li class="active" id="NewHirePackageLink">
+                <a id="NewHireClicked" href="@Url.Action("NewHire", "Management", new { id = "",barcode="" })"><span class="fa fa-sticky-note mr-3"></span> New Hire Package</a>
+            </li>
+            <li class="active" id="VacationScheduleLink">
+                <a id="VacationScheduleClicked" href="@Url.Action("VacationSchedule", "Management", new { id = "",barcode="" })"><span class="fa fa-sticky-note mr-3"></span>Leave Schedule</a>
+            </li>
+            <li class="active" id="AssetControlLink">
+                <a id="AssertControlClicked" href="@Url.Action("AssetControl", "Management", new { values=""})"><span class="fa fa-sticky-note mr-3"></span>Asset Control</a>
+            </li>
+            <li class="active" id="EmployeePermissionsLink">
+                <a id="EmployeePermissionsClicked" href="@Url.Action("EmployeePermissions", "Management", new { locId=""})"><span class="fa fa-sticky-note mr-3"></span>Manage Permissions</a>
+            </li>
+            <li class="active" id="EmployeePermissionsLink">
+                <a id="EmployeePermissionsClicked" href="@Url.Action("EmployeePermissions", "Management", new { locId=""})"><span class="fa fa-sticky-note mr-3"></span>Manage Permissions</a>
+            </li>
+        </ul>
+
+    </nav>
+
+    <!-- Page Content  -->
+    <div id="content">
+        <div id="ManagemnetArea">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+<script src="~/Content/sidebar/sidebar.js"></script>
+

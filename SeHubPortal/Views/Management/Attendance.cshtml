@@ -1,0 +1,767 @@
+﻿
+@{
+    ViewBag.Title = "Attendance";
+    Layout = "~/Views/Shared/_ManagementLayout.cshtml";
+}
+
+@*@model List<SeHubPortal.ViewModel.EmployeeAttendanceListModel>*@
+@model SeHubPortal.ViewModel.AttendanceModel
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    @*<link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">*@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/1.7.0/d3-legend.min.js"></script>
+    <style type="text/css">
+        #ManagementClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #managementBtn {
+            color: black;
+            font-weight: 600;
+        }
+
+        #AttendanceLink {
+            color: black;
+            font-weight: 700;
+        }
+
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .heading {
+            margin: 10px 0px 0px 0px;
+        }
+
+            .heading h2 {
+                margin-top: 8px;
+            }
+
+        .card-header {
+            background-color: #cde8ca;
+        }
+
+            .card-header h6 {
+                color: black;
+            }
+
+
+        .payRollMainBody {
+            margin: 0px 15px 0px 20px;
+            height: 100%;
+        }
+        /*.card-header {
+            background-color: #5f76e8;
+        }
+        .card-title
+        {
+            color:#fff;
+        }*/
+        .wrap {
+            width: 100%;
+            overflow: auto;
+        }
+
+        .fleft {
+            float: left;
+            width: 20%;
+            /*background: blue;*/
+            height: 100vh;
+        }
+
+        .fright {
+            float: right;
+            /*background: pink;*/
+            height: 100vh;
+            width: 80%;
+            margin: 0px 0px 0px 0px;
+        }
+
+        .SerachLoc {
+            text-align: center;
+            height: 35px;
+            width: 100%;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .fieldStyle {
+            width: 100%;
+            height: 35px;
+            visibility: visible;
+            border-color: gray;
+            border-width: 1px;
+            margin-bottom: 5px;
+        }
+        #MatchedLocID {
+            width: 80px;
+            height:30px;
+            font-size:18px;
+        }
+
+
+
+
+
+
+
+
+
+
+        .title {
+            color: grey;
+            font-size: 18px;
+        }
+
+        button:hover, a:hover {
+            opacity: 0.7;
+        }
+
+        .EmpDetailsHeader {
+            height: 100px;
+            margin: 0px 0px 0px 10px;
+        }
+
+        .time-list {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        .dash-stats-list {
+            align-items: center;
+            display: flex;
+            flex-flow: column wrap;
+            flex-grow: 1;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+        /*//Stackedbarchart*/
+        .toolTip {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            position: absolute;
+            display: none;
+            width: auto;
+            height: auto;
+            background: none repeat scroll 0 0 white;
+            border: 0 none;
+            border-radius: 8px 8px 8px 8px;
+            box-shadow: -3px 3px 15px #888888;
+            color: black;
+            font: 12px sans-serif;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .legend {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 60%;
+        }
+
+        text {
+            font: 10px sans-serif;
+        }
+
+
+
+        .axis path {
+            fill: none;
+            stroke: #000;
+        }
+
+        .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+
+        .x.axis path {
+            display: none;
+        }
+
+        /*//AttendanceBarChart*/
+        .AttendanceBarChart {
+            margin: 0px 25px;
+        }
+
+        text,
+        .axis text {
+            font-size: 15px;
+        }
+
+        rect:hover {
+            fill: orange;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="row" id="mainRow">
+        <div class="col-md-12">
+            <div>
+                <div class="row heading">
+                    <div class="col">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
+                                <li class="breadcrumb-item"><a href="@Url.Action("Attendance", "Management")">Management</a></li>
+                                <li class="breadcrumb-item " aria-current="page">Attendance</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+                        <i class="fa fa-bars" style="font-size:25px"></i>
+                        <span class="sr-only">Toggle Menu</span>
+                    </button>
+                </div>
+                <div class="payRollMainBody">
+                    <div>
+                        <div class="fleft ">                          
+                            <div class="row bg-secondary" style="height:47px; padding-top:8px; margin-left:2px;margin-right:1px;">
+                                <div class="col-md-7">
+                                    <h5 style="color:white;font-size:19px;margin-top:6px">Employee List</h5>
+                                </div>
+                                @using (Html.BeginForm("ChangeLocAttendance", "Management", FormMethod.Post))
+                                {
+                                <div class="col-md-5">
+                                    @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "Select", new { @onChange = "this.form.submit()" })
+                                    <noscript> <input class="btn btn-success" type="submit" value="Search" /></noscript>
+                                </div>
+                                }
+                            </div>
+                            <ul class="list-group shadow-lg  bg-white rounded">
+                                @foreach (var items in Model.employeeList)
+                                {
+                                    if (items.atWork == "True")
+                                    {
+                                        <li class="list-group-item" onclick="location.href='@Url.Action("Attendance", "Management", new { locId = Model.MatchedLocID,employeeId=@items.employeeId})';">
+                                            <img style="vertical-align:middle" src="~/Content/like3.png" alt="">
+                                            <span style="vertical-align:middle">@items.fullName</span>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="list-group-item" onclick="location.href='@Url.Action("Attendance", "Management", new { locId = Model.MatchedLocID,employeeId=@items.employeeId})';">
+                                            <img style="vertical-align:middle" src="~/Content/dislike.png" alt="">
+                                            <span style="vertical-align:middle">@items.fullName</span>
+                                        </li>
+                                    }
+
+
+                                }
+
+                            </ul>
+
+                        </div>
+                        <div class="fright">
+                            <div id="divLoader" style="text-align:center;margin-top:230px;"> <img src="~/Content/blueloader.gif" alt="Loader" /> </div>
+                            <div id="AttendanceRightBody" style="display:none">
+                                @if (Model.SelectedEmployeeId is null)
+                                {
+
+                                }
+                                else
+                                {
+                                    <div style="margin:0px 0px 0px 10px;">
+                                        <div class="card shadow-sm flex-fill grow" style="margin:0px 0px 0px 0px;">
+                                            <div class="card-body ">
+                                                <div class="row EmpDetailsHeader">
+                                                    <div class="col-lg-10 col-md-6">
+                                                        <div class="row" style="height:40px;">
+                                                            <text style="font-size:xx-large; font-weight:bold;">@ViewData["EmployeeName"]</text>
+                                                        </div>
+                                                        <div class="row" style="height:30px;">
+                                                            <text style="font-size:medium; margin:10px 0px 0px 0px"> @ViewData["Position"]</text>
+                                                        </div>
+                                                        <div class="row" style="height:30px;">
+                                                            <text style="font-size:medium; ">Employee Id : @ViewData["EmployeeId"] </text>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-2 col-md-6" style="text-align:right; display: flex;justify-content: center;align-items: center;overflow: hidden">
+                                                        @*<img src="~/Content/mahesh.jpg" alt="ProfilePic" style="width:85%; height:85%; border-radius:50%;">*@
+
+                                                        @if (@ViewData["ProfileImage"].ToString() == "data:image/png;base64,")
+                                                        {
+                                                            <img src="~/Content/profilepic.jpg" alt="ProfilePic" style="width:65%; height:75%; border-radius:50%;">
+                                                        }
+                                                        else
+                                                        {
+                                                            <img alt="profilePic" src=" @ViewData["ProfileImage"]" style="width:65%; height:75%; border-radius:50%;" />
+                                                        }
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div style="margin:20px 0px 0px 10px;">
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12 d-flex">
+                                                <div class="card shadow-sm flex-fill grow">
+                                                    <div class="card-header">
+                                                        <h6 class="card-title mb-0 d-inline-block">Attendance Summary</h6>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        @* <svg class="barChart" data-bar-chart data-data="23,43,10,13,10,20,30,23,43,10,13,10,20,30" data-bar-width="15"></svg>*@
+                                                        <div class="AttendanceBarChart">
+                                                            <div class="row ">
+                                                                <div class="col-lg-8">
+                                                                    <div class="row subTables">
+                                                                        <div class="col-md-2" style="background-color:#007bff">
+                                                                            <text style="color:white; font-size:14px">Date:</text>
+                                                                        </div>
+                                                                        <div class="col-md-2" style="border:1px solid #007bff">
+                                                                            <text><span id="city" style=" font-size:14px"></span></text>
+                                                                        </div>
+
+                                                                        &nbsp;
+                                                                        &nbsp;
+                                                                        <div class="col-md-2" style="background-color:#007bff">
+                                                                            <text style="color:white;font-size:14px">Hours:</text>
+                                                                        </div>
+                                                                        <div class="col-md-2" style="border:1px solid #007bff">
+                                                                            <text><span id="inches" style=" font-size:14px"></span></text>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-3  ml-auto">
+                                                                    <div class="row subTables">
+                                                                        <div class="col-md-8" style="background-color:#b0b4b8">
+                                                                            <text style="color:white; font-size:14px">Working Hours:</text>
+                                                                        </div>
+                                                                        <div class="col-md-4" style="border:1px solid #b0b4b8">
+                                                                            <text style=" font-size:14px">@ViewData["BiweekHours"]</text>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                @*&nbsp;
+                                            &nbsp;
+                                            <div class="col-lg-2">
+                                                <div class="row subTables">
+                                                    <div class="col-md-8" style="background-color:#007bff">
+                                                        <text style="color:white;">Hours:</text>
+                                                    </div>
+                                                    <div class="col-md-4" style="border:1px solid #007bff">
+                                                        <text><span id="inches"></span></text>
+                                                    </div>
+                                                </div>
+                                            </div>*@
+                                                                @*<p><span id="city"></span> - <span id="inches"></span></p>*@
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div style="margin:20px 0px 0px 10px;">
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-12 d-flex">
+                                                <div class="card shadow-sm flex-fill grow">
+                                                    <div class="card-header">
+                                                        <h6 class="card-title mb-0 d-inline-block">Average In</h6>
+                                                        <a href="#" class="d-inline-block float-right text-primary"></a>
+                                                    </div>
+                                                    <div class="card-body text-center">
+                                                        <div class="time-list">
+                                                            <div class="dash-stats-list">
+                                                                <span class="btn btn-outline-primary" style="font-size:30px;">@ViewData["avgInHoursOverall"]</span>
+                                                                @*<span class="btn btn-outline-primary">7:45 AM</span>*@
+                                                                <p class="mb-0">Year</p>
+                                                            </div>
+                                                            <div class="dash-stats-list">
+                                                                <span class="btn btn-outline-primary" style="font-size:30px;"> @ViewData["avgInHoursCurrent"]</span>
+                                                                @*<span class="btn btn-outline-primary">7:35 AM</span>*@
+                                                                <p class="mb-0">Bi-Week</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-12 d-flex">
+                                                <div class="card shadow-sm flex-fill grow">
+                                                    <div class="card-header">
+                                                        <h6 class="card-title mb-0 d-inline-block">Average Out</h6>
+                                                        <a href="#" class="d-inline-block float-right text-primary"></a>
+                                                    </div>
+                                                    <div class="card-body text-center">
+                                                        <div class="time-list">
+                                                            <div class="dash-stats-list">
+                                                                <span class="btn btn-outline-primary" style="font-size:30px;">@ViewData["avgOutHoursOverall"]</span>
+                                                                @*<span class="btn btn-outline-primary">17:25 PM</span>*@
+                                                                <p class="mb-0">Year</p>
+                                                            </div>
+                                                            <div class="dash-stats-list">
+                                                                <span class="btn btn-outline-primary" style="font-size:30px;">@ViewData["avgOutHoursCurrent"]</span>
+                                                                @*<span class="btn btn-outline-primary">17:55 PM</span>*@
+                                                                <p class="mb-0">Bi-Week</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div style="margin:20px 0px 20px 10px;">
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-12 d-flex">
+                                                <div class="card shadow-sm flex-fill grow">
+                                                    <div class="card-header">
+                                                        <h6 class="card-title mb-0 d-inline-block">Attendance Usage</h6>
+                                                    </div>
+                                                    <div class="card-body text-center">
+                                                        @*<svg id="chart" preserveAspectRatio="xMinYMin meet" viewBox="0 0 200 200"></svg>*@
+                                                        <div id="chartBar" style=" height: 400px;width:400px;position: relative;">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-12 d-flex">
+                                                <div class="card shadow-sm flex-fill grow">
+                                                    <div class="card-header">
+                                                        <h6 class="card-title mb-0 d-inline-block">Employee Leave Summary</h6>
+                                                    </div>
+                                                    <div class="card-body text-center">
+                                                        @*<div id="my_dataviz"></div>*@
+                                                        <table class="table">
+                                                            <thead class="thead-light">
+                                                                <tr>
+                                                                    <th scope="col">Type</th>
+                                                                    <th scope="col">Days</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>Pay Period</td>
+                                                                    <td>2008</td>
+
+                                                                </tr>
+                                                                <tr>
+
+                                                                    <td>Sick Days Used</td>
+                                                                    <td>0</td>
+
+                                                                </tr>
+                                                                <tr>
+
+                                                                    <td>Vaction Days Used</td>
+                                                                    <td>0</td>
+                                                                </tr>
+                                                                <tr>
+
+                                                                    <td>Split Days Used</td>
+                                                                    <td>0</td>
+                                                                </tr>
+                                                                <tr>
+
+                                                                    <td>Off Days Used</td>
+                                                                    <td>0</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                }
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(window).on('load', function () {
+            $('#AttendanceRightBody').css('display', 'block');
+            $('#divLoader').css('display', 'none');
+        });
+
+        $(document).ready(function () {
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+         
+        });
+
+    StackedBarChart()
+    function wrap(text, width) {
+        text.each(function () {
+            var text = d3.select(this),
+                words = text.text().split(/\s+/).reverse(),
+                word,
+                line = [],
+                lineNumber = 0,
+                lineHeight = 1.1, // ems
+                y = text.attr("y"),
+                dy = parseFloat(text.attr("dy")),
+                tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+            while (word = words.pop()) {
+                line.push(word);
+                tspan.text(line.join(" "));
+                if (tspan.node().getComputedTextLength() > width) {
+                    line.pop();
+                    tspan.text(line.join(" "));
+                    line = [word];
+                    tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+                }
+            }
+        });
+    }
+    function colores_google(n) {
+        var colores_g = ["#3366cc", "#dc3912", "#ff9900"];
+        return colores_g[n % colores_g.length];
+    }
+    function StackedBarChart() {
+
+        var ClockInFob =  @Html.Raw(Json.Encode(ViewData["StackedClockInFob"]));
+        var ClockInManual =@Html.Raw(Json.Encode(ViewData["StackedClockInManual"]));
+        var ClockOutFob =@Html.Raw(Json.Encode(ViewData["StackedClockOutFob"]));
+        var ClockOutManual =@Html.Raw(Json.Encode(ViewData["StackedClockOutManual"]));
+        var ClockOutAuto =@Html.Raw(Json.Encode(ViewData["StackedClockOutAuto"]));
+        console.log(ClockInFob);
+        console.log(ClockInManual);
+        console.log(ClockOutFob);
+        console.log(ClockOutManual);
+        console.log(ClockOutAuto);
+        dataset = [
+            { label: "Clock-In", "Fob": ClockInFob, "Manual": ClockInManual, "Auto": 0 },
+            { label: "Clock-Out", "Fob": ClockOutFob, "Manual": ClockOutManual, "Auto": ClockOutAuto },
+        ];
+
+        
+        var margin = { top: (parseInt(d3.select('#chartBar').style('height'), 10) / 20), right: (parseInt(d3.select('#chartBar').style('width'), 10) / 20), bottom: (parseInt(d3.select('#chartBar').style('height'), 10) / 6), left: (parseInt(d3.select('#chartBar').style('width'), 15) / 20) },
+            width = parseInt(d3.select('#chartBar').style('width'), 10) - margin.left - margin.right,
+            height = parseInt(d3.select('#chartBar').style('height'), 10) - margin.top - margin.bottom;
+        var x = d3.scale.ordinal()
+            .rangeRoundBands([0, width], .1, .3);
+        var y = d3.scale.linear()
+            .rangeRound([height, 0]);
+        var colorRange = d3.scale.category20();
+        var color = d3.scale.ordinal()
+            .range(["#4682b4", "#c9cdd1","#dc3912"]);
+        console.log(color)
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .orient("bottom");
+        var yAxis = d3.svg.axis()
+            .scale(y)
+            .orient("left")
+            .tickFormat(d3.format(".2s"));
+        var svg = d3.select("#chartBar").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        var divTooltip = d3.select("#chartBar").append("div").attr("class", "toolTip");
+        color.domain(d3.keys(dataset[0]).filter(function (key) { return key !== "label"; }));
+        dataset.forEach(function (d) {
+            var y0 = 0;
+            d.values = color.domain().map(function (name) { return { name: name, y0: y0, y1: y0 += +d[name] }; });
+            d.total = d.values[d.values.length - 1].y1;
+        });
+        x.domain(dataset.map(function (d) { return d.label; }));
+        y.domain([0, d3.max(dataset, function (d) { return d.total; })]);
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 9)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text("Usage %");
+        var bar = svg.selectAll(".label")
+            .data(dataset)
+            .enter().append("g")
+            .attr("class", "g")
+            .attr("transform", function (d) { return "translate(" + x(d.label) + ",0)"; });
+        svg.selectAll(".x.axis .tick text")
+            .call(wrap, x.rangeBand());
+
+        var bar_enter = bar.selectAll("rect")
+            .data(function (d) { return d.values; })
+            .enter();
+
+        bar_enter.append("rect")
+            .attr("width", x.rangeBand())
+            .attr("y", function (d) { return y(d.y1); })
+            .attr("height", function (d) { return y(d.y0) - y(d.y1); })
+            .style("fill", function (d) { return color(d.name); });
+
+        bar_enter.append("text")
+            .text(function (d) { return d3.format(".2s")(d.y1 - d.y0) + "%"; })
+            .attr("y", function (d) { return y(d.y1) + (y(d.y0) - y(d.y1)) / 2; })
+            .attr("x", x.rangeBand() / 3)
+            .style("fill", '#ffffff');
+
+        svg.append("g")
+            .attr("class", "legendLinear")
+            .attr("transform", "translate(0," + (height + 30) + ")");
+        var legend = d3.legend.color()
+            .shapeWidth(height / 4)
+            .shapePadding(10)
+            .orient('horizontal')
+            .scale(color);
+        svg.select(".legendLinear")
+            .call(legend);
+    }
+
+
+    function renderAttendanceBarChart() {
+        // Golden Snowglobe totals (as of 2/5/15)
+        const barChartVals = @Html.Raw(Json.Encode(ViewData["BarChartValues"]));
+         const barChartDates = @Html.Raw(Json.Encode(ViewData["BarChartDates"]));
+        barChartVals.forEach(element => console.log(element));
+        barChartDates.forEach(element => console.log(element));
+        console.log(barChartDates.length);
+        var dataset = []
+        for (i = 0; i < barChartDates.length; i++) {
+            dataset.push({ "day": barChartDates[i], "hours": barChartVals[i] });
+        }
+        
+        
+        // Dimensions for the chart: height, width, and space b/t the bars
+        var margins = { top: 30, right: 50, bottom: 30, left: 50 }
+        var height = 400 - margins.left - margins.right,
+            width = 700 - margins.top - margins.bottom,
+            barPadding = 5
+
+        // Create a scale for the y-axis based on data
+        // >> Domain - min and max values in the dataset
+        // >> Range - physical range of the scale (reversed)
+        var yScale = d3.scale.linear()
+            .domain([0, d3.max(dataset, function (d) {
+                return d.hours;
+            })])
+            .range([height, 0]);
+
+        // Implements the scale as an actual axis
+        // >> Orient - places the axis on the left of the graph
+        // >> Ticks - number of points on the axis, automated
+        var yAxis = d3.svg.axis()
+            .scale(yScale)
+            .orient('left')
+            .ticks(5);
+
+        // Creates a scale for the x-axis based on city names
+        var xScale = d3.scale.ordinal()
+            .domain(dataset.map(function (d) {
+                return d.day;
+            }))
+            .rangeRoundBands([0, width], .1);
+
+        // Creates an axis based off the xScale properties
+        var xAxis = d3.svg.axis()
+            .scale(xScale)
+            .orient('bottom');
+
+        // Creates the initial space for the chart
+        // >> Select - grabs the empty <div> above this script
+        // >> Append - places an <svg> wrapper inside the div
+        // >> Attr - applies our height & width values from above
+        var chart = d3.select('.AttendanceBarChart')
+            .append('svg')
+            .attr('width', width + margins.left + margins.right)
+            .attr('height', height + margins.top + margins.bottom)
+            .append('g')
+            .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')');
+
+        // For each value in our dataset, places and styles a bar on the chart
+
+        // Step 1: selectAll.data.enter.append
+        // >> Loops through the dataset and appends a rectangle for each value
+        chart.selectAll('rect')
+            .data(dataset)
+            .enter()
+            .append('rect')
+
+            // Step 2: X & Y
+            // >> X - Places the bars in horizontal order, based on number of
+            //        points & the width of the chart
+            // >> Y - Places vertically based on scale
+            .attr('x', function (d, i) {
+                return xScale(d.day);
+            })
+            .attr('y', function (d) {
+                return yScale(d.hours);
+            })
+
+            // Step 3: Height & Width
+            // >> Width - Based on barpadding and number of points in dataset
+            // >> Height - Scale and height of the chart area
+            .attr('width', (width / dataset.length) - barPadding)
+            .attr('height', function (d) {
+                return height - yScale(d.hours);
+            })
+            .attr('fill', 'steelblue')
+
+            // Step 4: Info for hover interaction
+            .attr('class', function (d) {
+                return d.day;
+            })
+            .attr('id', function (d) {
+                return d.hours;
+            });
+
+        // Renders the yAxis once the chart is finished
+        // >> Moves it to the left 10 pixels so it doesn't overlap
+        chart.append('g')
+            .attr('class', 'axis')
+            .attr('transform', 'translate(-10, 0)')
+            .call(yAxis);
+
+        // Appends the yAxis
+        chart.append('g')
+            .attr('class', 'axis')
+            .attr('transform', 'translate(0,' + (height + 10) + ')')
+            .call(xAxis);
+
+        // Adds yAxis title
+        chart.append('text')
+            .text('Hours')
+            .attr('transform', 'translate(-50, -10)');
+    }
+
+    renderAttendanceBarChart()
+
+    $('rect').mouseenter(function () {
+        $('#city').html(this.className.animVal);
+        $('#inches').html($(this).attr('id'));
+    });
+
+
+
+    </script>
+</body>
+</html>
+
+

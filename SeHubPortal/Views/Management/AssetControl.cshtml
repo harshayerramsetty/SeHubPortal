@@ -1,0 +1,315 @@
+﻿
+@{
+    ViewBag.Title = "AssetControl";
+    Layout = "~/Views/Shared/_ManagementLayout.cshtml";
+}
+
+
+@model IEnumerable<SeHubPortal.Models.tbl_vehicle_info>
+<html lang="en">
+<head>
+    <title>Vehicle Info</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <style>
+        #ManagementClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #managementBtn {
+            color: black;
+            font-weight: 600;
+        }
+
+        #AssetControlLink {
+            color: black;
+            font-weight: 700;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            padding-right: 0 !important;
+        }
+
+        .heading {
+            margin: 10px 0px 0px 0px;
+        }
+
+            .heading h2 {
+                margin-top: 8px;
+            }
+
+        .card-header {
+            background-color: #cde8ca;
+        }
+
+            .card-header h6 {
+                color: black;
+            }
+      
+        .imageClass {
+            width: 100%;
+            height: 90%;
+            border-radius: 10%;
+        }
+
+        .card {
+            border: 1px solid #ededed;
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+
+        .card {
+            position: relative;
+            display: -ms-flexbox;
+            display: flex;
+            height: 330px;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid rgba(0,0,0,.125);
+            border-radius: .25rem;
+        }
+
+        p {
+            font-size: 14px;
+        }
+
+        .dash-stats-list {
+            display: flex;
+            flex-flow: column wrap;
+            flex-grow: 1;
+            padding-left: 5px;
+            background-color: #007bff;
+            margin-right: 5px;
+            border-radius: 10px;
+            color: white;
+        }
+
+        .btn-outline-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .transcationButtons {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="row heading">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
+                    <li class="breadcrumb-item"><a href="@Url.Action("QuickGuide", "Management")">Management</a></li>
+                    <li class="breadcrumb-item " aria-current="page">Asset Control</li>
+                </ol>
+            </nav>
+        </div>
+        <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+            <i class="fa fa-bars" style="font-size:25px"></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+    <div class="row" style="margin:20px">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" style="color:black;width:200px;text-align:center" id="vehicle-tab" data-toggle="tab" href="#home" role="tab" aria-controls="vehicle" aria-selected="true">Vehicles</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " id="profile-tab" style="color:black;width:200px;text-align:center" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Option2</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " id="profile-tab" style="color:black;width:200px;text-align:center" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Option3</a>
+            </li>
+
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade shadow-sm show bg-white active" id="vehicle" role="tabpanel" aria-labelledby="vehicle-tab">
+
+                <div class="card-body">
+                    <!--Content tab-->
+                    <div class="row justify-content-md-start" style="margin-left:0px; margin-bottom:20px;">
+                        <button type="button" id="AddVehicleBtn" class="btn btn-success transcationButtons" data-toggle="modal" data-target="#addModal">
+                            Add
+                        </button>
+
+                        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div id="AddVehicleModal">
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row people-grid-row">
+
+                        @foreach (var vehicle in Model)
+                        {
+                            if (vehicle.vehicle_status == 1)
+                            {
+                                string base64ProfilePic = "";
+                                if (@vehicle.vehicle_image is null)
+                                {
+                                    base64ProfilePic = "";
+                                }
+                                else
+                                {
+                                    base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(@vehicle.vehicle_image);
+                                }
+                                <div class="col-md-6 col-lg-6 col-xl-6">
+                                    <div class="card shadow-sm">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6 text-center">
+                                                    <a class="booking-doc-img">
+                                                        @*<img src="~/Content/profilepic.jpg" alt="User Image">*@
+
+                                                        @if (base64ProfilePic == "")
+                                                        {
+                                                            <img class="imageClass" src="~/Content/jordancar.png" alt="ProfilePic" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <img class="imageClass" alt="profilePic" src="@base64ProfilePic" />
+                                                        }
+
+                                                    </a>
+
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <text style="font-size:34px;font-weight:bold">@vehicle.vehicle_short_id </text>
+                                                    <button data-id="@vehicle.VIN" class="EditVehicleBtn" data-toggle="modal" data-target="#editVehicleModal" style="background-color:transparent;border:1px solid transparent;float:right"><i class="fa fa-edit" style="font-size:20px;color:black;float:right"></i></button>
+
+                                                    <div class="modal fade" id="editVehicleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div id="EditVehicleModalDiv">
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row" style="margin-bottom:5px;margin-left:0px;">
+                                                        <p class="mb-0" style="font-size:14px;font-style:italic">@vehicle.vehicle_long_id</p>
+                                                    </div>
+                                                    <div class="row" style="margin-bottom:1px;margin-left:0px;">
+                                                        <p class="mb-0" style="font-size:18px;"><b>VIN:</b> @vehicle.VIN</p>
+                                                    </div>
+                                                    <div class="row" style="margin-bottom:1px;margin-left:0px;">
+                                                        <p class="mb-0" style="font-size:18px;"><b>Plate:</b> @vehicle.vehicle_plate</p>
+                                                    </div>
+                                                    <div class="row" style="margin-bottom:1px;margin-left:0px;">
+                                                        <p class="mb-0" style="font-size:18px;"><b> Year:</b>   @vehicle.vehicle_year</p>
+                                                    </div>
+                                                    <div class="row" style="margin-bottom:1px;margin-left:0px;">
+                                                        <p class="mb-0" style="font-size:18px;"><b>Manufacturer:</b>   @vehicle.vehicle_manufacturer</p>
+                                                    </div>
+                                                    <div class="row" style="margin-bottom:0px;margin-left:0px;">
+                                                        <p class="mb-0" style="font-size:18px;"><b>Model:</b>   @vehicle.vehicle_model</p>
+                                                    </div>
+
+
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+                                        <div class="card-footer">
+                                            <div class="row">
+                                                <div class="dash-stats-list">
+
+                                                    <span class="btn" style="font-size:22px; color:white;">@Convert.ToDateTime(vehicle.inspection_due_date).ToString("yyyy-MMM")</span>
+
+                                                    <p class="mb-0 " style="text-align:center; border-top: 1px solid white; padding-bottom:4px;">REGISTRATION</p>
+                                                </div>
+                                                <div class="dash-stats-list">
+                                                    <span class="btn" style="font-size:22px; color:white;"> @vehicle.current_milage</span>
+
+                                                    <p class="mb-0" style="text-align:center; border-top: 1px solid white; padding-bottom:4px;">KM</p>
+                                                </div>
+                                                <div class="dash-stats-list">
+                                                    <span class="btn " style="font-size:22px; color:white;">  @vehicle.efficiency_price</span>
+
+                                                    <p class="mb-0 " style="text-align:center; border-top: 1px solid white; padding-bottom:4px;">$/KM</p>
+                                                </div>
+                                                <div class="dash-stats-list">
+                                                    <span class="btn " style="font-size:22px; color:white;">  @vehicle.efficiency_liter</span>
+
+                                                    <p class="mb-0" style="text-align:center; border-top: 1px solid white; padding-bottom:4px;">L/100KM</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade shadow-sm bg-white" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <div class="card-body">
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+   
+
+    <script>
+        $(document).ready(function () {
+
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+
+         $('#AddVehicleBtn').click(function () {
+                $.ajax({
+                            url: '@Url.Action("AddNewVehicle", "Management")',
+                            data: { value: "" },
+                            type: 'GET',
+                            success: function (data) {
+                                $("#AddVehicleModal").html(data);
+                            }
+                });
+         });
+
+         $('.EditVehicleBtn').click(function () {
+                var id = $(this).data('id');
+                $.ajax({
+                            url: '@Url.Action("EditVehicleInfo", "Management")',
+                            data: { value: id },
+                            type: 'GET',
+                            success: function (data) {
+                                $("#EditVehicleModalDiv").html(data);
+                    }
+                });
+         });
+
+
+      });
+
+    </script>
+
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,109 @@
+﻿
+@model SeHubPortal.ViewModel.AddNewVehicleViewModel
+<style type="text/css">
+</style>
+
+
+@using (Html.BeginForm("EditVehicleInfo", "Management", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Edit Vehicle</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4">VIN</label>
+                    @Html.EditorFor(m => m.VehicleInfo.VIN, new { htmlAttributes = new { @class = "form-control" , @readonly = "readonly" } })
+                    @Html.HiddenFor(m => m.VehicleInfo.VIN)
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4">Vehicle ID</label>
+                    @Html.EditorFor(m => m.VehicleInfo.vehicle_long_id, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4">Plate#</label>
+                    @Html.EditorFor(m => m.VehicleInfo.vehicle_plate, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4">Year</label>
+                    @Html.EditorFor(m => m.VehicleInfo.vehicle_year, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4">Manufacturer</label>
+                    @Html.EditorFor(m => m.VehicleInfo.vehicle_manufacturer, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4">Model</label>
+                    @Html.EditorFor(m => m.VehicleInfo.vehicle_model, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-5">
+                    <label for="inputEmail4">Location ID</label>
+                    @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "Please select", new { @class = "form-control" })
+                </div>
+                <div class="form-group col-md-7">
+                    <label for="inputEmail4">Assigned To</label>
+                    <button id="editEmployeeId" type="button" style="background-color:transparent;border:1px solid transparent;float:right"><i class="fa fa-edit" style="font-size:15px;color:#007bff;"></i></button>
+                    @Html.EditorFor(m => m.MatchedEmployeeName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+ 
+                    @Html.DropDownListFor(model => model.MatchedEmployeeID, new SelectList(" "),"Branch", new { @class = "form-control" })
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4">Registration Due Date</label>
+                    @Html.EditorFor(m => m.VehicleInfo.inspection_due_date, new { htmlAttributes = new { @class = "form-control", type = "date", @selectedDate= Convert.ToDateTime(Model.VehicleInfo.inspection_due_date).ToString("yyyy-MM-dd"), @Value = Convert.ToDateTime(Model.VehicleInfo.inspection_due_date).ToString("yyyy-MM-dd")} })
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4">Upload Image</label>
+                    <input type="file" name="vehicleImage" />
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+
+            <input type="submit" class="btn btn-success" value="Save" />
+        </div>
+    </div>
+}
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $("#MatchedEmployeeID").hide();
+        $("#MatchedEmployeeName").show();
+
+        $("#MatchedLocID").change(function () {
+            $.get("/Management/GetEmployeeList", { locationId: $("#MatchedLocID").val() }, function (data) {
+                $("#MatchedEmployeeID").empty();
+                $.each(data, function (index, row) {
+                    console.log(row.employee_id)
+                    $("#MatchedEmployeeID").append("<option value='" + row.employee_id + "'>" + row.full_name + "</option>")
+                });
+            });
+        })
+
+        $("#editEmployeeId").click(function () {
+            $("#MatchedEmployeeID").show(); 
+            $("#MatchedEmployeeName").hide();
+        })
+
+
+    });
+</script>

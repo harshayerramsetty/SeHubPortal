@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <style>
+        #TabLinks {
+            margin-left: 7%;
+        }
+
+        .tabLinksSpace {
+            margin-left: 40px;
+        }
+        #mainButton:focus {
+            box-shadow: none;
+        }
+        #libraryBtn:focus {
+            box-shadow: none;
+        }
+        #treadTrackerButton:focus {
+            box-shadow: none;
+        }
+        #managementBtn:focus {
+            box-shadow: none;
+        }
+        #toolsBtn:focus {
+            box-shadow: none;
+        }
+        #payrollBtn:focus {
+            box-shadow: none;
+        }
+       
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-light bg-white" style="border:2px solid  #f0f2f5">
+        @*<a href="#" class="navbar-brand">City Tire</a>*@
+        <img src="~/Content/smallLogo.png" class="navbar-brand"/>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav" id="TabLinks">
+                <a id="mainClicked" href="@Url.Action("Dashboard", "Main")" class="btn">
+                    @*class="nav-item nav-link active tabLinksSpace"*@
+                    @*<img src="~/Content/home-run.png">*@
+                    <img src="~/Content/home.png" />
+                    <input type="button" id="mainButton" class="btn btn-outline my-2 my-sm-0" style="visibility:visible;border-color:transparent;color:black;font-size:18px;" value="Main">
+                </a>
+                <a id="libraryClicked" href="@Url.Action("Documents", "Library")" class="btn tabLinksSpace">
+                    <img src="~/Content/book.png" />
+                    <input type="button" id="libraryBtn" class="btn btn-outline my-2 my-sm-0" style="visibility:visible;font-size:18px;border-color:transparent;color:black;" value="Library" />
+                </a>
+                <a id="treadTrackereClicked" href="@Url.Action("NewOrder", "TreadTracker")" class="btn tabLinksSpace">
+                    <img src="~/Content/tire.png" />
+                    <input type="button" id="treadTrackerButton" class="btn btn-outline my-2 my-sm-0" style="font-size:18px;visibility:visible;border-color:transparent;color:black;" value="Tread Tracker" />
+                </a>
+                <a id="ManagementClicked" href="@Url.Action("QuickGuide", "Management")" class="btn tabLinksSpace">
+                    <img src="~/Content/man.png" />
+                    <input type="button" id="managementBtn" class="btn btn-outline my-2 my-sm-0" style="visibility:visible;border-color:transparent;font-size:18px;color:black;" value="Management" />
+                </a>
+                <a id="ToolsClicked" href="@Url.Action("Calculator", "Tools")" class="btn tabLinksSpace">
+                    <img src="~/Content/wrench.png" />
+                    <input type="button" id="toolsBtn" class="btn btn-outline my-2 my-sm-0" style="visibility:visible;border-color:transparent;color:black;font-size:18px;" value="Tools" />
+                </a>
+                <a id="PayrollClicked" href="@Url.Action("Payroll", "Management")" class="btn tabLinksSpace">
+                  
+                    <img src="~/Content/payroll.png" />
+                    <input type="button" id="payrollBtn" class="btn btn-outline my-2 my-sm-0" style="visibility:visible;border-color:transparent;font-size:18px;color:black;" value="Payroll" />
+                </a>
+            </div>
+            <div class="navbar-nav ml-auto">
+                
+                <a href="@Url.Action("LogOut", "Main")" class="btn">
+                    <img src="~/Content/power.png" />
+                </a>
+            </div>
+        </div>
+    </nav>
+    <div id="MainDiv">
+        @RenderBody()
+    </div>
+    <script>
+     
+    </script>
+    @Scripts.Render("~/bundles/jquery")   @*I commented this line because datatables in the fuel log page is not working properly. please uncomment if you face any issue with other pages*@
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Styles.Render("~/Content/sidebar/sidebar.css")
+@Scripts.Render("~/Content/sidebar/sidebar.js")
+<style>
+    #sidebar {
+        background-color: white;
+        color: black
+    }
+
+        #sidebar ul li a {
+            color: black;
+            border-bottom: 2px solid #f0f2f5;
+            border-right: 1px solid #f0f2f5;
+        }
+
+        #sidebar ul li.active > a {
+            color: black;
+            border-bottom: 2px solid #f0f2f5;
+        }
+</style>
+<div class="wrapper d-flex align-items-stretch">
+    <nav id="sidebar" style="border-color:black;border-width:10px;">
+        @*<div class="custom-menu">
+            <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                <i class="fa fa-bars"></i>
+                <span class="sr-only">Toggle Menu</span>
+            </button>
+        </div>*@
+
+        <ul class="list-unstyled components mb-5">
+            <li class="active" id="CalculatorLink">
+                <a id="CalculatorClicked" href="@Url.Action("Calculator", "Tools", new { values = ""})"><span class="fa fa-home mr-3"></span>Calculator</a>
+            </li>
+            @*<li>
+                    <a id="EditOrderClicked" href="@Url.Action("EditOrder", "TreadTracker")"><span class="fa fa-user mr-3"></span> Edit Order</a>
+                </li>*@
+            <li class="active" id="FuelLogLink">
+                <a id="FuelClicked" href="@Url.Action("FuelLog", "Tools", new { VIN="" })"><span class="fa fa-sticky-note mr-3"></span>Fuel Log</a>
+            </li>
+        </ul>
+
+    </nav>
+
+    <!-- Page Content  -->
+    <div id="content">
+        <div id="ToolsArea">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+<script src="~/Content/sidebar/sidebar.js"></script>

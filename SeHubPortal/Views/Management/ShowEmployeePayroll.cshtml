@@ -1,0 +1,2086 @@
+﻿@*<link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">*@
+
+@model SeHubPortal.ViewModel.PayRollViewModel
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/1.7.0/d3-legend.min.js"></script>
+<style type="text/css">
+    html, body {
+        height: 100%;
+    }
+
+    .title {
+        color: grey;
+        font-size: 18px;
+    }
+
+    button {
+        border: none;
+        outline: 0;
+        display: inline-block;
+        padding: 8px;
+        color: white;
+        background-color: #000;
+        text-align: center;
+        cursor: pointer;
+        width: 100%;
+        font-size: 18px;
+    }
+
+        /*a {
+            text-decoration: none;
+            font-size: 22px;
+            color: black;
+        }*/
+
+        button:hover, a:hover {
+            opacity: 0.7;
+        }
+
+    .EmpDetailsHeader {
+        height: 100px;
+        margin: 0px 0px 0px 10px;
+        width:100%;
+    }
+
+    .lineStyle {
+        width: 50px;
+        height: 32px;
+        text-align: center;
+    }
+
+    select {
+        width: 50px;
+        height: 32px;
+        text-align: center;
+    }
+
+    .tdProperties {
+        /*height:50px;*/
+        line-height: 6px;
+        text-align: center;
+        font-size: 16px;
+        color: black;
+
+          
+        /*border-color:#fff;*/
+    }
+
+    .tdPropertiesMain {
+        text-align: center;
+        color: lightcoral;
+    }
+
+    .tdPropertiesSummary {
+        line-height: 5px;
+        text-align: center;
+        font-size: 14px;
+        width: 50px;
+        background-color: transparent;
+        border-color: transparent;    
+    }
+
+    .tdPropertiesSummaryMain {
+        line-height: 5px;
+        text-align: center;
+        font-size: 14px;
+        width: 50px;
+        background-color: transparent;
+        border-color: transparent;
+        font-size: 24px;
+        color: white;
+        font-weight: bold;
+        text-align: center
+    }
+    .tdPropertiesSummaryText {
+        line-height: 5px;
+        text-align: left;
+        font-size: 14px;
+        width: 180px;
+        background-color: transparent;
+        border-color: transparent;
+    }
+    /*.table-dark td, .table-dark th, .table-dark thead th {
+        border-color: #fff;
+    }*/
+    table > thead > tr > th {
+        text-align: center;
+    }
+
+    /*table > tbody > tr {
+        border: 1px solid gray;
+    }*/
+
+    table {
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    td {
+        width: 25%;
+    }
+    .TableTransactions {
+        margin: 25px 0px 0px 20px;
+    }
+
+    
+    .transcationButtons {
+        margin: 0px 0px 0px 0px;
+        border-radius: 5px;
+        width: 90px;
+        text-align:center;
+       
+    }
+
+    .time-list {
+        display: flex;
+        flex-grow: 1;
+    }
+
+    .dash-stats-list {
+        align-items: center;
+        display: flex;
+        flex-flow: column wrap;
+        flex-grow: 1;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    .dash-stats-list span{
+        width:110px;
+        font-size:20px;
+    }
+    .dash-stats-list p{
+        font-size:12px;
+    }
+
+    .progress-group .progress-text {
+        font-weight: 600;
+        text-align:left;
+    }
+    .progress-group .progress-number {
+        float: right;
+    }
+    .progress.sm, .progress-sm, .progress.sm .progress-bar, .progress-sm .progress-bar {
+        border-radius: 1px;
+    }
+    .progress.sm, .progress-sm {
+        height: 10px;
+        margin-top:2px;
+    }
+    .progress.lg, .progress-lg {
+        height: 15px;
+        margin-top: 4px;
+    }
+    .progress.lg-summary {
+        height: 15px;
+        margin-top: 30px;
+
+    }
+    .progress, .progress > .progress-bar {
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+    .progress {
+        height: 20px;
+        margin-bottom: 20px;
+        overflow: hidden;
+        background-color: #f5f5f5;
+        border-radius: 4px;
+        -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+        box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+    }
+    .progress-bar-reg {
+        background-color: #73d428;
+    }
+    .progress-bar-ot {
+        background-color: #fa7161;
+    }
+    .progress-bar-vac {
+        background-color: #00c0ef;
+    }
+    .progress-bar-sic {
+        background-color: #ebeb38;
+    }
+    .progress-bar-brv {
+        background-color: #e695d4;
+    }
+    .progress-bar-stat {
+        background-color: #f07e05;
+    }
+    .progress-bar-spt {
+        background-color: #9fa2ab;
+    }
+    .progress-bar-gi {
+        background-color: #ab8feb;
+    }
+    .progress-bar-ei {
+        background-color: #9deddc;
+    }
+    .progress-bar-wc {
+        background-color: #edd732;
+    }
+
+    .info-box {
+        display: block;
+        min-height: 80px;
+        height: 90px;
+        background: #fff;
+        width: 100%;
+        box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+        border: 1px solid rgba(0,0,0,0.1);
+        border-radius: 2px;
+        margin-bottom: 15px;
+    }
+    .info-box-icon {
+        border-top-left-radius: 2px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 2px;
+        display: block;
+        float: left;
+        height: 80px;
+        width: 90px;
+        text-align: center;
+        font-size: 45px;
+        line-height: 90px;
+        margin: 5px;
+    }
+    .info-box-content {
+        margin-top:5px;
+        margin-right:40px;
+        margin-left: 120px;
+
+    }
+    .info-box-number {
+        float: right;
+        font-size: 14px;
+    }
+    .info-box-number-summary {
+        float: right;
+        font-size: 14px;
+        margin-left:40px;
+        margin-bottom:10px;
+    }
+    .info-box-text
+    {
+        text-align:left;
+        font-size:14px;
+    }
+    .spacingHistory {
+        margin-top: 3px;
+    }
+    .Info-Main-Text
+    {
+        text-align:left;
+        font-size:17px;
+        font-weight:bold;
+    }
+</style>
+<div class="container" style="margin:0px 0px 0px 10px;">
+    @*class="container shadow-sm" style="margin:0px 0px 0px 10px;border: 2px solid #ededed;background-color: #fff;"*@
+
+    <div class="row EmpDetailsHeader">
+        <div class="col-lg-10 col-md-6">
+            <div class="row" style="height:40px;">
+                <text style="font-size:xx-large; font-weight:bold;">@ViewData["EmployeeName"]</text>
+            </div>
+            <div class="row" style="height:30px;">
+                <text style="font-size:medium; margin:10px 0px 0px 0px"> @ViewData["Position"]</text>
+            </div>
+            <div class="row" style="height:30px;">
+                <text style="font-size:medium; ">Employee Id : @ViewData["EmployeeId"] </text>
+            </div>
+        </div>
+
+        <div class="col-lg-2 col-md-6" style="float:right;  display: flex;justify-content: center;align-items: center;overflow: hidden">
+            @*<img src="~/Content/mahesh.jpg" alt="ProfilePic" style="width:85%; height:85%; border-radius:50%;">*@
+
+            @if (@ViewData["ProfileImage"].ToString() == "data:image/png;base64,")
+            {
+                <img src="~/Content/profilepic.jpg" alt="ProfilePic" style="width:55%; height:65%; border-radius:50%;">
+            }
+            else
+            {
+                <img alt="profilePic" src=" @ViewData["ProfileImage"]" style="width:55%; height:65%; border-radius:50%;" />
+            }
+
+
+        </div>
+    </div>
+
+</div>
+<hr style="margin:0px 0px 0px 20px;border: 0.5px solid gray" />
+<div id="PayrollContent">
+    @using (Html.BeginForm("SubmitEmployeePayroll", "Management", FormMethod.Post))
+    {
+        @Html.HiddenFor(m => m.payBiweek.employee_id)
+        @Html.HiddenFor(m => m.payBiweek.payroll_id)
+        <div class="TableTransactions">
+            <div class="row">
+                <div class="col-md-8">
+                    &nbsp;
+                    <div style="display: inline-block">
+                        <select id="cars" style="width:60px">
+                            <option value="volvo">2001</option>
+                            <option value="saab">2002</option>
+                            <option value="mercedes">2003</option>
+                            <option value="audi">2004</option>
+                            <option value="audi">2005</option>
+                            <option value="audi">2006</option>
+                            <option value="audi">2007</option>
+                            <option value="audi">2008</option>
+                            <option value="audi">2009</option>
+                            <option value="audi">2010</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4" style="text-align:right;">
+                    <input type="submit" class="btn btn-success transcationButtons" style="visibility:visible" value="Save" />
+                    &nbsp;
+                    <a href="#">
+                        <input type="button" class="btn btn-danger transcationButtons" style="visibility:visible" value="Back" />
+                    </a>
+                    &nbsp;
+                    <a href="#">
+                        <input type="button" class="btn btn-info transcationButtons" style="visibility:visible" value="Print" />
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 20px;">
+            <div class="card-header">
+                <div style="display: inline-block">
+                    <h6>Payroll #09</h6>
+                </div>
+                &nbsp;
+                &nbsp;
+                <div style="display: inline-block">
+                    <h6>April 18, 2020</h6>
+                </div>
+                &nbsp;
+                &nbsp;
+                <div style="display: inline-block">
+                    <h6>To</h6>
+                </div>
+                &nbsp;
+                &nbsp;
+                <div style="display: inline-block">
+                    <h6>May 01, 2020</h6>
+                </div>
+            </div>
+            <div class="card-body text-center">
+                <div class="time-list">
+                    <div class="row">
+                        <div class="col-lg-1 col-sm-12">
+                            <table class="table" style="margin-top:24px;">
+                                <thead>
+                                    <tr>
+                                        @*<th scope="col" style="background-color:#dee2e6;border-color:#dee2e6;color:#007bff"># 2009</th>*@
+                                        <th scope="col" style="border-color:transparent"></th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="height:57px;border-top:transparent;">Regular</td>
+
+                                    </tr>
+                                    <tr style="border-top:thin" class="table-secondary">
+                                        <td style="height:114px;color:white;padding-top:40px; border-top:transparent;color:BLACK;">Others</td>
+
+                                    </tr>
+                                    @*<tr>
+                                            <td style="height:57px;border-top:transparent;color:gray">Category</td>
+
+                                        </tr>*@
+                                    <tr style="border-top:thin">
+                                        <td style="height:25px;border-top:transparent;">Total</td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-lg-11 col-sm-12">
+                            <table class="table table-responsive-sm">
+                                <thead class="">
+                                    <tr>
+                                        <th scope="col" style="border-top:transparent;text-align:center;align-content:center">
+                                            <div class="row" style="margin-left:14px;">
+                                                Sat
+                                            </div>
+                                            <div class="row"  style="font-weight:lighter;font-size:12px;margin-left:8px;">
+                                                @ViewData["sat_1_date"]
+                                            </div>
+                                        </th>
+                                        <th scope="col" style="border-top:transparent;text-align:center;align-content:center">
+                                            <div class="row" style="margin-left:14px;">
+                                                Sun
+                                            </div>
+                                            <div class="row"  style="font-weight:lighter;font-size:12px;margin-left:8px;">
+                                                @ViewData["sun_1_date"]
+                                            </div>
+                                        </th>
+                                        <th scope="col" style="border-top:transparent;text-align:center;align-content:center">
+                                            <div class="row" style="margin-left:14px;">
+                                                Mon
+                                            </div>
+                                            <div class="row"  style="font-weight:lighter;font-size:12px;margin-left:8px;">
+                                                @ViewData["mun_1_date"]
+                                            </div>
+                                        </th>
+                                        <th scope="col" style="border-top:transparent;text-align:center;align-content:center">
+                                            <div class="row" style="margin-left:14px;">
+                                                Tues
+                                            </div>
+                                            <div class="row"  style="font-weight:lighter;font-size:12px;margin-left:8px;">
+                                                @ViewData["tues_1_date"]
+                                            </div>
+                                        </th>
+                                        <th scope="col" style="border-top:transparent;text-align:center;align-content:center">
+                                            <div class="row" style="margin-left:14px;">
+                                                Wed
+                                            </div>
+                                            <div class="row"  style="font-weight:lighter;font-size:12px;margin-left:8px;">
+                                                @ViewData["wed_1_date"]
+                                            </div>
+                                        </th>
+                                        <th scope="col" style="border-top:transparent;text-align:center;align-content:center">
+                                            <div class="row" style="margin-left:14px;">
+                                                Thrs
+                                            </div>
+                                            <div class="row"  style="font-weight:lighter;font-size:12px;margin-left:8px;">
+                                                @ViewData["thur_1_date"]
+                                            </div>
+                                        </th>
+                                        <th scope="col" style="border-top:transparent;text-align:center;align-content:center">
+                                            <div class="row" style="margin-left:14px;">
+                                                Fri
+                                            </div>
+                                            <div class="row"  style="font-weight:lighter;font-size:12px;margin-left:8px;">
+                                                @ViewData["fri_1_date"]
+                                            </div>
+                                        </th>
+                                        <th scope="col" style="border-top:transparent;text-align:center;align-content:center">
+                                            <div class="row" style="margin-left:14px;">
+                                                Sat
+                                            </div>
+                                            <div class="row"  style="font-weight:lighter;font-size:12px;margin-left:8px;">
+                                                @ViewData["sat_2_date"]
+                                            </div>
+                                        </th>
+                                        <th scope="col" style="border-top:transparent;text-align:center;align-content:center">
+                                            <div class="row" style="margin-left:14px;">
+                                                Sun
+                                            </div>
+                                            <div class="row"  style="font-weight:lighter;font-size:12px;margin-left:8px;">
+                                                @ViewData["sun_2_date"]
+                                            </div>
+                                        </th>
+                                        <th scope="col" style="border-top:transparent;text-align:center;align-content:center">
+                                            <div class="row" style="margin-left:14px;">
+                                                Mon
+                                            </div>
+                                            <div class="row"  style="font-weight:lighter;font-size:12px;margin-left:8px;">
+                                                @ViewData["mon_2_date"]
+                                            </div>
+                                        </th>
+                                        <th scope="col" style="border-top:transparent;text-align:center;align-content:center">
+                                            <div class="row" style="margin-left:14px;">
+                                                Tues
+                                            </div>
+                                            <div class="row"  style="font-weight:lighter;font-size:12px;margin-left:8px;">
+                                                @ViewData["tues_2_date"]
+                                            </div>
+                                        </th>
+                                        <th scope="col" style="border-top:transparent;text-align:center;align-content:center">
+                                            <div class="row" style="margin-left:14px;">
+                                                Wed
+                                            </div>
+                                            <div class="row"  style="font-weight:lighter;font-size:12px;margin-left:8px;">
+                                                @ViewData["wed_2_date"]
+                                            </div>
+                                        </th>
+                                        <th scope="col" style="border-top:transparent;text-align:center;align-content:center">
+                                            <div class="row" style="margin-left:14px;">
+                                                Thur
+                                            </div>
+                                            <div class="row"  style="font-weight:lighter;font-size:12px;margin-left:8px;">
+                                                @ViewData["thurs_2_date"]
+                                            </div>
+                                        </th>
+                                        <th scope="col" style="border-top:transparent;">
+                                            <div class="row" style="margin-left:14px;">
+                                                Fri
+                                            </div>
+                                            <div class="row" style="font-weight:lighter;font-size:12px;margin-left:8px;">
+                                                @ViewData["fri_2_date"]
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            @Html.EditorFor(m => m.payBiweek.sat_1_reg, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutSat1Reg()" } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(m => m.payBiweek.sun_1_reg, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutSun1Reg()" } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(m => m.payBiweek.mon_1_reg, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutMon1Reg()" } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(m => m.payBiweek.tues_1_reg, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutTues1Reg()" } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(m => m.payBiweek.wed_1_reg, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutWed1Reg()" } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(m => m.payBiweek.thurs_1_reg, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutThurs1Reg()" } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(m => m.payBiweek.fri_1_reg, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutFri1Reg()" } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(m => m.payBiweek.sat_2_reg, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutSat2Reg()" } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(m => m.payBiweek.sun_2_reg, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutSun2Reg()" } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(m => m.payBiweek.mon_2_reg, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutMon2Reg()" } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(m => m.payBiweek.tues_2_reg, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutTues2Reg()" } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(m => m.payBiweek.wed_2_reg, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutWed2Reg()" } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(m => m.payBiweek.thurs_2_reg, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutThurs2Reg()" } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(m => m.payBiweek.fri_2_reg, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutFri2Reg()" } })
+                                        </td>
+                                    </tr>
+                                    <tr class="table-secondary">
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.sat_1_opt, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutSat1Opt()" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.sun_1_opt, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutSun1Opt()" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.mon_1_opt, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutMon1Opt()" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.tues_1_opt, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutTues1Opt()" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.wed_1_opt, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutWed1Opt()" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.thurs_1_opt, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutThurs1Opt()" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.fri_1_opt, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutFri1Opt()" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.sat_2_opt, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutSat2Opt()" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.sun_2_opt, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutSun2Opt()" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.mon_2_opt, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutMon2Opt()" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.tues_2_opt, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutTues2Opt()" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.wed_2_opt, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutWed2Opt()" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.thurs_2_opt, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutThurs2Opt()" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.fri_2_opt, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "focusOutFri2Opt()" } })
+                                        </td>
+                                    </tr>
+                                    <tr class="table-secondary">
+                                        <td style="border-top:transparent">
+                                            @*<text>@Model.payBiweek.sat_1_sel_id</text>*@
+                                            @Html.DropDownListFor(Model => Model.payBiweek.sat_1_sel_id, new SelectList(ViewBag.TypeSelectionList, "category_id", "category", Model.payBiweek.sat_1_sel_id), new { @onchange = "Sat1Selection()" })
+                                        </td>
+                                        <td style="border-top:transparent">
+                                            @Html.DropDownListFor(Model => Model.payBiweek.sun_1_sel_id, new SelectList(ViewBag.TypeSelectionList, "category_id", "category", Model.payBiweek.sun_1_sel_id), new { @onchange = "Sun1Selection()" })
+                                        </td>
+                                        <td style="border-top:transparent">
+                                            @Html.DropDownListFor(Model => Model.payBiweek.mon_1_sel_id, new SelectList(ViewBag.TypeSelectionList, "category_id", "category", Model.payBiweek.mon_1_sel_id), new { @onchange = "Mon1Selection()" })
+                                        </td>
+                                        <td style="border-top:transparent">
+                                            @Html.DropDownListFor(Model => Model.payBiweek.tues_1_sel_id, new SelectList(ViewBag.TypeSelectionList, "category_id", "category", Model.payBiweek.tues_1_sel_id), new { @onchange = "Tues1Selection()" })
+                                        </td>
+                                        <td style="border-top:transparent">
+                                            @Html.DropDownListFor(Model => Model.payBiweek.wed_1_sel_id, new SelectList(ViewBag.TypeSelectionList, "category_id", "category", Model.payBiweek.wed_1_sel_id), new { @onchange = "Wed1Selection()" })
+                                        </td>
+                                        <td style="border-top:transparent">
+                                            @Html.DropDownListFor(Model => Model.payBiweek.thurs_1_sel_id, new SelectList(ViewBag.TypeSelectionList, "category_id", "category", Model.payBiweek.thurs_1_sel_id), new { @onchange = "Thurs1Selection()" })
+                                        </td>
+                                        <td style="border-top:transparent">
+                                            @Html.DropDownListFor(Model => Model.payBiweek.fri_1_sel_id, new SelectList(ViewBag.TypeSelectionList, "category_id", "category", Model.payBiweek.fri_1_sel_id), new { @onchange = "Fri1Selection()" })
+
+                                        </td>
+                                        <td style="border-top:transparent">
+                                            @Html.DropDownListFor(Model => Model.payBiweek.sat_2_sel_id, new SelectList(ViewBag.TypeSelectionList, "category_id", "category", Model.payBiweek.sat_2_sel_id), new { @onchange = "Sat2Selection()" })
+                                        </td>
+                                        <td style="border-top:transparent">
+                                            @Html.DropDownListFor(Model => Model.payBiweek.sun_2_sel_id, new SelectList(ViewBag.TypeSelectionList, "category_id", "category", Model.payBiweek.sun_2_sel_id), new { @onchange = "Sun2Selection()" })
+                                        </td>
+                                        <td style="border-top:transparent">
+                                            @Html.DropDownListFor(Model => Model.payBiweek.mon_2_sel_id, new SelectList(ViewBag.TypeSelectionList, "category_id", "category", Model.payBiweek.mon_2_sel_id), new { @onchange = "Mon2Selection()" })
+                                        </td>
+                                        <td style="border-top:transparent">
+                                            @Html.DropDownListFor(Model => Model.payBiweek.tues_2_sel_id, new SelectList(ViewBag.TypeSelectionList, "category_id", "category", Model.payBiweek.tues_2_sel_id), new { @onchange = "Tues2Selection()" })
+                                        </td>
+                                        <td style="border-top:transparent">
+                                            @Html.DropDownListFor(Model => Model.payBiweek.wed_2_sel_id, new SelectList(ViewBag.TypeSelectionList, "category_id", "category", Model.payBiweek.wed_2_sel_id), new { @onchange = "Wed2Selection()" })
+                                        </td>
+                                        <td style="border-top:transparent">
+                                            @Html.DropDownListFor(Model => Model.payBiweek.thurs_2_sel_id, new SelectList(ViewBag.TypeSelectionList, "category_id", "category", Model.payBiweek.thurs_2_sel_id), new { @onchange = "Thurs2Selection()" })
+                                        </td>
+                                        <td style="border-top:transparent">
+                                            @Html.DropDownListFor(Model => Model.payBiweek.fri_2_sel_id, new SelectList(ViewBag.TypeSelectionList, "category_id", "category", Model.payBiweek.fri_2_sel_id), new { @onchange = "Fri2Selection()" })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.sat_1_sum, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.sun_1_sum, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.mon__1_sum, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.tues_1_sum, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.wed_1_sum, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.thurs_1_sum, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.fri_1_sum, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.sat_2_sum, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.sun_2_sum, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.mon_2_sum, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.tues_2_sum, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.wed_2_Sum, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.thurs_2_Sum, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)" } })
+                                        </td>
+                                        <td style="border-top:thin">
+                                            @Html.EditorFor(m => m.payBiweek.fri_2_sum, new { htmlAttributes = new { @class = "lineStyle", @onkeypress = "return onlyNumberKey(event)" } })
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 20px;">
+            <div class="card-header">
+                <h6 class="card-title mb-0 d-inline-block">Attendance Helper</h6>
+                <a href="#" class="d-inline-block float-right text-primary"></a>
+            </div>
+            <div class="card-body text-center">
+                <div class="time-list">
+                    <div class="row">
+                        <div class="col-md-1">
+                            <table class="table" style="margin-top:0px">
+                                <tbody>
+
+                                    <tr>
+                                        <td class="tdProperties" style="border-color:#fff;font-size:12px">ClockIn</td>
+
+                                    </tr>
+                                    <tr>
+                                        <td class="tdProperties" style="border-color:#fff;font-size:12px">ClockOut  </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td class="tdProperties" style="border-color:#fff;font-size:12px">Total</td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-11">
+                            <table class="table table-responsive-sm">
+                                <tbody>
+                                    <tr>
+                                        <td class="tdProperties" style="border-top:transparent;">@ViewData["IN1"]</td>
+                                        <td class="tdProperties" style="border-top:transparent">@ViewData["IN2"]</td>
+                                        <td class="tdProperties" style="border-top:transparent">@ViewData["IN3"]</td>
+                                        <td class="tdProperties" style="border-top:transparent">@ViewData["IN4"]</td>
+                                        <td class="tdProperties" style="border-top:transparent">@ViewData["IN5"]</td>
+                                        <td class="tdProperties" style="border-top:transparent">@ViewData["IN6"]</td>
+                                        <td class="tdProperties" style="border-top:transparent">@ViewData["IN7"]</td>
+                                        <td class="tdProperties" style="border-top:transparent">@ViewData["IN8"]</td>
+                                        <td class="tdProperties" style="border-top:transparent">@ViewData["IN9"]</td>
+                                        <td class="tdProperties" style="border-top:transparent">@ViewData["IN10"]</td>
+                                        <td class="tdProperties" style="border-top:transparent">@ViewData["IN11"]</td>
+                                        <td class="tdProperties" style="border-top:transparent">@ViewData["IN12"]</td>
+                                        <td class="tdProperties" style="border-top:transparent">@ViewData["IN13"]</td>
+                                        <td class="tdProperties" style="border-top:transparent">@ViewData["IN14"]</td>
+                                    </tr>
+                                    <tr>
+
+                                        <td class="tdProperties">@ViewData["OUT1"]</td>
+                                        <td class="tdProperties">@ViewData["OUT2"]</td>
+                                        <td class="tdProperties">@ViewData["OUT3"]</td>
+                                        <td class="tdProperties">@ViewData["OUT4"]</td>
+                                        <td class="tdProperties">@ViewData["OUT5"]</td>
+                                        <td class="tdProperties">@ViewData["OUT6"]</td>
+                                        <td class="tdProperties">@ViewData["OUT7"]</td>
+                                        <td class="tdProperties">@ViewData["OUT8"]</td>
+                                        <td class="tdProperties">@ViewData["OUT9"]</td>
+                                        <td class="tdProperties">@ViewData["OUT10"]</td>
+                                        <td class="tdProperties">@ViewData["OUT11"]</td>
+                                        <td class="tdProperties">@ViewData["OUT12"]</td>
+                                        <td class="tdProperties">@ViewData["OUT13"]</td>
+                                        <td class="tdProperties">@ViewData["OUT14"]</td>
+                                    </tr>
+
+                                    <tr>
+
+                                        <td class="tdProperties">@ViewData["TOT1"]</td>
+                                        <td class="tdProperties">@ViewData["TOT2"]</td>
+                                        <td class="tdProperties">@ViewData["TOT3"]</td>
+                                        <td class="tdProperties">@ViewData["TOT4"]</td>
+                                        <td class="tdProperties">@ViewData["TOT5"]</td>
+                                        <td class="tdProperties">@ViewData["TOT6"]</td>
+                                        <td class="tdProperties">@ViewData["TOT7"]</td>
+                                        <td class="tdProperties">@ViewData["TOT8"]</td>
+                                        <td class="tdProperties">@ViewData["TOT9"]</td>
+                                        <td class="tdProperties">@ViewData["TOT10"]</td>
+                                        <td class="tdProperties">@ViewData["TOT11"]</td>
+                                        <td class="tdProperties">@ViewData["TOT12"]</td>
+                                        <td class="tdProperties">@ViewData["TOT3"]</td>
+                                        <td class="tdProperties">@ViewData["TOT14"]</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 20px;">
+            <div class="card-header">
+                <h6 class="card-title mb-0 d-inline-block">Comments</h6>
+                <a href="#" class="d-inline-block float-right text-primary"></a>
+            </div>
+            <div class="card-body text-center">
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+            </div>
+        </div>
+        @*<div class="row justify-content-between" style="margin:20px 0px 20px 0px; ">
+            <div class="col-lg-6" style="border-radius:20px">
+                <div class="card shadow-sm flex-fill grow">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0 d-inline-block">Summary</h6>
+                        <a href="#" class="d-inline-block float-right text-primary"></a>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="time-list">
+                            <table class="table table-striped">
+                                <thead class="table-success">
+                                    <tr>
+                                        <th scope="col" class="tdPropertiesSummary">Type</th>
+                                        <th scope="col" class="tdPropertiesSummary">Hours</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="Regular Hours" readonly class="tdPropertiesSummaryText" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            @Html.EditorFor(m => m.paySummary.regular, new { htmlAttributes = new { @class = "tdPropertiesSummary", @readonly = true } })
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="Over Time (OT)" readonly class="tdPropertiesSummaryText" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            @Html.EditorFor(m => m.paySummary.ot, new { htmlAttributes = new { @class = "tdPropertiesSummary", @readonly = true } })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">Vacation (Va)</td>
+                                        <td class="tdPropertiesSummary">
+                                            @Html.EditorFor(m => m.paySummary.vac, new { htmlAttributes = new { @class = "tdPropertiesSummary", @readonly = true } })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">Sick (Si)</td>
+                                        <td class="tdPropertiesSummary">
+                                            @Html.EditorFor(m => m.paySummary.sick, new { htmlAttributes = new { @class = "tdPropertiesSummary", @readonly = true } })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">Bereavement (Br)</td>
+                                        <td class="tdPropertiesSummary">
+                                            @Html.EditorFor(m => m.paySummary.brev, new { htmlAttributes = new { @class = "tdPropertiesSummary", @readonly = true } })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">Statutory (St)</td>
+                                        <td class="tdPropertiesSummary">
+                                            @Html.EditorFor(m => m.paySummary.stat, new { htmlAttributes = new { @class = "tdPropertiesSummary", @readonly = true } })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">Split (Sp)</td>
+                                        <td class="tdPropertiesSummary">
+                                            @Html.EditorFor(m => m.paySummary.split, new { htmlAttributes = new { @class = "tdPropertiesSummary", @readonly = true } })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">Group Insurance (GI)</td>
+                                        <td class="tdPropertiesSummary">
+                                            @Html.EditorFor(m => m.paySummary.gen_ins, new { htmlAttributes = new { @class = "tdPropertiesSummary", @readonly = true } })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">Employment Insurance(EI)</td>
+                                        <td class="tdPropertiesSummary">
+                                            @Html.EditorFor(m => m.paySummary.emp_ins, new { htmlAttributes = new { @class = "tdPropertiesSummary", @readonly = true } })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">Workers Compensation(WC)</td>
+                                        <td class="tdPropertiesSummary">
+                                            @Html.EditorFor(m => m.paySummary.workers_comp, new { htmlAttributes = new { @class = "tdPropertiesSummary", @readonly = true } })
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-6" style="border-radius:20px;margin-left:0px;">
+                <div class="card shadow-sm flex-fill grow">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0 d-inline-block">Leave History</h6>
+                        <a href="#" class="d-inline-block float-right text-primary"></a>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="time-list">
+                            <table class="table table-striped">
+                                <thead class="table-success">
+                                    <tr>
+                                        <th scope="col" class="tdPropertiesSummary">Type</th>
+                                        <th scope="col" class="tdPropertiesSummary">Allocatd(Days)</th>
+                                        <th scope="col" class="tdPropertiesSummary">Earned(Days)</th>
+                                        <th scope="col" class="tdPropertiesSummary">Used(Days)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="Vacation Days(Va)" readonly class="tdPropertiesSummaryText" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            0
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="Sick Days(Si)" readonly class="tdPropertiesSummaryText" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            0
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="Split Days (Sp)" readonly class="tdPropertiesSummaryText" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            0
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="Off Days" readonly class="tdPropertiesSummaryText" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="Bereavement (Br)" readonly class="tdPropertiesSummaryText" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            0
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="Statutory (St)" readonly class="tdPropertiesSummaryText" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            0
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="Group Insurance (GI)" readonly class="tdPropertiesSummaryText" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            0
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="Employment Insurance(EI)" readonly class="tdPropertiesSummaryText" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            0
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="Workers Compensation(WC)" readonly class="tdPropertiesSummaryText" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            0
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="" readonly class="tdPropertiesSummaryText" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        </div>*@
+      
+
+        <div class="row justify-content-between" style="margin:20px 0px 20px 0px; ">
+            <div class="col-lg-6" style="border-radius:20px">
+                <div class="card shadow-sm flex-fill grow">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0 d-inline-block">Summary</h6>
+                        <a href="#" class="d-inline-block float-right text-primary"></a>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="row" style="margin-top:20px;">
+                                    <div style="background-color:white;border:1px solid #b3b7bb;margin-left:100px; width:120px;padding-bottom:5px;">
+                                        <text style="color:black;font-weight:bold; font-size:14px;">Regular</text>
+                                        <br />
+                                        <text style="color:black;font-weight:bold; font-size:14px;">Hours</text>
+                                    </div>
+                                    <div style="border:1px solid #b3b7bb;width:50px;padding-top:7px;background-color:#b3b7bb">
+                                        <text><span style="font-size:24px;color:white;font-weight:bold; text-align:center;margin-top:140px;">@Html.EditorFor(m => m.paySummary.regular, new { htmlAttributes = new { @class = "tdPropertiesSummaryMain", @readonly = true } })</span></text>
+                                    </div>
+
+                                    <div style="background-color:white;border:1px solid #b3b7bb;margin-left:100px; width:120px;padding-bottom:5px;">
+                                        <text style="color:black;font-weight:bold; font-size:14px;">Over Time</text>
+                                        <br />
+                                        <text style="color:black;font-weight:bold; font-size:14px;">(OT)</text>
+                                    </div>
+                                    <div style="border:1px solid #b3b7bb;width:50px;padding-top:7px;background-color:#b3b7bb">
+                                        <text><span style="font-size:24px;color:white;font-weight:bold; text-align:center;margin-top:140px;"> @Html.EditorFor(m => m.paySummary.ot, new { htmlAttributes = new { @class = "tdPropertiesSummaryMain", @readonly = true } })</span></text>
+                                    </div>
+
+                                </div>
+                                <div class="row" style="margin-top:40px;">
+                                    <div style="background-color:white;border:1px solid #b3b7bb;margin-left:100px; width:120px;padding-bottom:5px;">
+                                        <text style="color:black;font-weight:bold; font-size:14px;">Vacation</text>
+                                        <br />
+                                        <text style="color:black;font-weight:bold; font-size:14px;">(Va)</text>
+                                    </div>
+                                    <div style="border:1px solid #b3b7bb;width:50px;padding-top:7px;background-color:#b3b7bb">
+                                        <text><span style="font-size:24px;color:white;font-weight:bold; text-align:center;margin-top:140px;">   @Html.EditorFor(m => m.paySummary.vac, new { htmlAttributes = new { @class = "tdPropertiesSummaryMain", @readonly = true } })</span></text>
+                                    </div>
+                                    <div style="background-color:white;border:1px solid #b3b7bb;margin-left:100px; width:120px;padding-bottom:5px;">
+                                        <text style="color:black;font-weight:bold; font-size:14px;">Sick</text>
+                                        <br />
+                                        <text style="color:black;font-weight:bold; font-size:14px;">(Si)</text>
+                                    </div>
+                                    <div style="border:1px solid #b3b7bb;width:50px;padding-top:7px;background-color:#b3b7bb">
+                                        <text><span style="font-size:24px;color:white;font-weight:bold; text-align:center;margin-top:140px;">  @Html.EditorFor(m => m.paySummary.sick, new { htmlAttributes = new { @class = "tdPropertiesSummaryMain", @readonly = true } })</span></text>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:40px;">
+                                    <div style="background-color:white;border:1px solid #b3b7bb;margin-left:100px; width:120px;padding-bottom:5px;">
+                                        <text style="color:black;font-weight:bold; font-size:14px;">Statutory</text>
+                                        <br />
+                                        <text style="color:black;font-weight:bold; font-size:14px;">(St)</text>
+                                    </div>
+                                    <div style="border:1px solid #b3b7bb;width:50px;padding-top:7px;background-color:#b3b7bb">
+                                        <text><span style="font-size:24px;color:white;font-weight:bold; text-align:center;margin-top:140px;">  @Html.EditorFor(m => m.paySummary.stat, new { htmlAttributes = new { @class = "tdPropertiesSummaryMain", @readonly = true } })</span></text>
+                                    </div>
+                                    <div style="background-color:white;border:1px solid #b3b7bb;margin-left:100px; width:120px;padding-bottom:5px;">
+                                        <text style="color:black;font-weight:bold; font-size:14px;">Split Day</text>
+                                        <br />
+                                        <text style="color:black;font-weight:bold; font-size:14px;">(Sp)</text>
+                                    </div>
+                                    <div style="border:1px solid #b3b7bb;width:50px;padding-top:7px;background-color:#b3b7bb">
+                                        <text><span style="font-size:24px;color:white;font-weight:bold; text-align:center;margin-top:140px;">  @Html.EditorFor(m => m.paySummary.split, new { htmlAttributes = new { @class = "tdPropertiesSummaryMain", @readonly = true } })</span></text>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:40px;">
+                                    <div style="background-color:white;border:1px solid #b3b7bb;margin-left:100px; width:120px;padding-bottom:5px;">
+                                        <text style="color:black;font-weight:bold; font-size:14px;">Workers Comp</text>
+                                        <br />
+                                        <text style="color:black;font-weight:bold; font-size:14px;">(WC)</text>
+                                    </div>
+                                    <div style="border:1px solid #b3b7bb;width:50px;padding-top:7px;background-color:#b3b7bb">
+                                        <text><span style="font-size:24px;color:white;font-weight:bold; text-align:center;margin-top:140px;">  @Html.EditorFor(m => m.paySummary.workers_comp, new { htmlAttributes = new { @class = "tdPropertiesSummaryMain", @readonly = true } })</span></text>
+                                    </div>
+
+
+                                    <div style="background-color:white;border:1px solid #b3b7bb;margin-left:100px; width:120px;padding-bottom:5px;">
+                                        <text style="color:black;font-weight:bold; font-size:14px;">Bereavement </text>
+                                        <br />
+                                        <text style="color:black;font-weight:bold; font-size:14px;">(Br)</text>
+                                    </div>
+                                    <div style="border:1px solid #b3b7bb;width:50px;padding-top:7px;background-color:#b3b7bb">
+                                        <text><span style="font-size:24px;color:white;font-weight:bold; text-align:center;margin-top:140px;">  @Html.EditorFor(m => m.paySummary.brev, new { htmlAttributes = new { @class = "tdPropertiesSummaryMain", @readonly = true } })</span></text>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:40px;margin-bottom:38px;">
+
+                                    <div style="background-color:white;border:1px solid #b3b7bb;margin-left:100px; width:120px;padding-bottom:5px;">
+                                        <text style="color:black;font-weight:bold; font-size:14px;">Group Ins</text>
+                                        <br />
+                                        <text style="color:black;font-weight:bold; font-size:14px;">(GI)</text>
+                                    </div>
+                                    <div style="border:1px solid #b3b7bb;width:50px;padding-top:7px;background-color:#b3b7bb">
+                                        <text><span style="font-size:24px;color:white;font-weight:bold; text-align:center;margin-top:140px;">  @Html.EditorFor(m => m.paySummary.gen_ins, new { htmlAttributes = new { @class = "tdPropertiesSummaryMain", @readonly = true } })</span></text>
+                                    </div>
+
+
+                                    <div style="background-color:white;border:1px solid #b3b7bb;margin-left:100px; width:120px;padding-bottom:5px;">
+                                        <text style="color:black;font-weight:bold; font-size:14px;">Employment Ins</text>
+                                        <br />
+                                        <text style="color:black;font-weight:bold; font-size:14px;">(EI)</text>
+                                    </div>
+                                    <div style="border:1px solid #b3b7bb;width:50px;padding-top:7px;background-color:#b3b7bb">
+                                        <text><span style="font-size:24px;color:white;font-weight:bold; text-align:center;margin-top:140px;"> @Html.EditorFor(m => m.paySummary.emp_ins, new { htmlAttributes = new { @class = "tdPropertiesSummaryMain", @readonly = true } })</span></text>
+                                    </div>
+
+
+                                </div>
+                                
+                                
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-6" style="border-radius:20px;margin-left:0px;">
+                <div class="card shadow-sm flex-fill grow">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0 d-inline-block">Leave History (Year to Date)</h6>
+                        <a href="#" class="d-inline-block float-right text-primary"></a>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="time-list">
+                            <table class="table table-striped">
+                                <thead class="table-success">
+                                    <tr>
+                                        <th scope="col" class="tdPropertiesSummary">Type</th>
+                                        <th scope="col" class="tdPropertiesSummary">Allocatd(Days)</th>
+                                        <th scope="col" class="tdPropertiesSummary">Earned(Days)</th>
+                                        <th scope="col" class="tdPropertiesSummary">Used(Days)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="Vacation Days(Va)"  readonly class="tdPropertiesSummaryText" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            0
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="Sick Days(Si)" readonly class="tdPropertiesSummaryText" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            0
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="Split Days (Sp)" readonly class="tdPropertiesSummaryText" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            0
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="Off Days" readonly class="tdPropertiesSummaryText" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="Bereavement (Br)" readonly class="tdPropertiesSummaryText" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            0
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="Statutory (St)" readonly class="tdPropertiesSummaryText" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            0
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="Group Insurance (GI)" readonly class="tdPropertiesSummaryText" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            0
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="Employment Insurance(EI)" readonly class="tdPropertiesSummaryText" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            0
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="Workers Compensation(WC)" readonly class="tdPropertiesSummaryText" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            <input type="text" value="0" readonly class="tdPropertiesSummary" />
+                                        </td>
+                                        <td class="tdPropertiesSummary">
+                                            0
+                                        </td>
+                                    </tr>
+                                   
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+        //this code is for that images wuth icons leave page
+        @*<div class="row" style="margin:20px 0px 20px 0px; ">
+            <div class="col-md-6">
+                <div class="card shadow-sm flex-fill grow">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0 d-inline-block">Average In</h6>
+                        <a href="#" class="d-inline-block float-right text-primary"></a>
+                    </div>
+                    <div class="card-body" style="background-color:#f9fbfd">
+                        <div class="info-box">
+                            <img class="info-box-icon" alt="profilePic" src="~/Content/regular.png" />
+                            <div class="info-box-content">
+                                <span class="Info-Main-Text">Regular Hours</span>
+                                <div class="progress-group spacingHistory">
+                                    <span class="info-box-number-summary"> 80/80</span>
+                                    <div class="progress lg-summary">
+                                        <div class="progress-bar bg-primary" style="width: 70%;">70 hours</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <div class="info-box">
+                            <img class="info-box-icon" alt="profilePic" src="~/Content/overtime.png" />
+                            <div class="info-box-content">
+                                <span class="Info-Main-Text">Over Time</span>
+                                <div class="progress-group spacingHistory">
+                                    <span class="info-box-number-summary">10/80</span>
+                                    <div class="progress lg-summary">
+                                        <div class="progress-bar bg-primary" style="width: 30%;">10 hours</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <div class="info-box">
+                            <img class="info-box-icon" alt="profilePic" src="~/Content/vac.png" />
+                            <div class="info-box-content">
+                                <span class="Info-Main-Text">Vacation Hours</span>
+                                <div class="progress-group spacingHistory">
+                                    <span class="info-box-number-summary">20/80</span>
+                                    <div class="progress lg-summary">
+                                        <div class="progress-bar bg-primary" style="width: 20%;">20 hours</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+
+                        <div class="info-box">
+                            <img class="info-box-icon" alt="profilePic" src="~/Content/sic.png" />
+                            <div class="info-box-content">
+                                <span class="Info-Main-Text">Sick Hours</span>
+                                <div class="progress-group spacingHistory">
+                                    <span class="info-box-number-summary">8/80</span>
+                                    <div class="progress lg-summary">
+                                        <div class="progress-bar bg-primary" style="width: 40%;">8 hours</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <div class="info-box">
+                            <img class="info-box-icon" alt="profilePic" src="~/Content/split.png" />
+                            <div class="info-box-content">
+                                <span class="Info-Main-Text">Split</span>
+                                <div class="progress-group spacingHistory">
+                                    <span class="info-box-number-summary">16/80</span>
+                                    <div class="progress lg-summary">
+                                        <div class="progress-bar bg-primary" style="width: 50%;">16 hours</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+
+
+                        <div class="info-box">
+                            <img class="info-box-icon" alt="profilePic" src="~/Content/brv.png" />
+                            <div class="info-box-content">
+                                <span class="Info-Main-Text">Bereavement</span>
+                                <div class="progress-group spacingHistory">
+                                    <span class="info-box-number-summary">20/80</span>
+                                    <div class="progress lg-summary">
+                                        <div class="progress-bar bg-primary" style="width: 20%;">20 hours</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <div class="info-box">
+                            <img class="info-box-icon" alt="profilePic" src="~/Content/stat.png" />
+                            <div class="info-box-content">
+                                <span class="Info-Main-Text">Statutory </span>
+                                <div class="progress-group spacingHistory">
+                                    <span class="info-box-number-summary">0/80</span>
+                                    <div class="progress lg-summary">
+                                        <div class="progress-bar bg-primary" style="width: 0%;">0 hours</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <div class="info-box">
+                            <img class="info-box-icon" alt="profilePic" src="~/Content/grpins.png" />
+                            <div class="info-box-content">
+                                <span class="Info-Main-Text">Group Insurance</span>
+                                <div class="progress-group spacingHistory">
+                                    <span class="info-box-number-summary">0/80</span>
+                                    <div class="progress lg-summary">
+                                        <div class="progress-bar bg-primary" style="width: 0%;">0 hours</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <div class="info-box">
+                            <img class="info-box-icon" alt="profilePic" src="~/Content/empins.png" />
+                            <div class="info-box-content">
+                                <span class="Info-Main-Text">Employment Insurance</span>
+                                <div class="progress-group spacingHistory">
+                                    <span class="info-box-number-summary">0/80</span>
+                                    <div class="progress lg-summary">
+                                        <div class="progress-bar bg-primary" style="width: 0%;">0 hours</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+
+                        <div class="info-box">
+                            <img class="info-box-icon" alt="profilePic" src="~/Content/workcomp.png" />
+                            <div class="info-box-content">
+                                <span class="Info-Main-Text">Workers Compensation</span>
+                                <div class="progress-group spacingHistory">
+                                    <span class="info-box-text">  </span>
+                                    <span class="info-box-number-summary">0/80</span>
+                                    <div class="progress lg-summary">
+                                        <div class="progress-bar bg-primary" style="width: 0%;">0 hours</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card shadow-sm flex-fill grow">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0 d-inline-block">Average In</h6>
+                        <a href="#" class="d-inline-block float-right text-primary"></a>
+                    </div>
+                    <div class="card-body" style="background-color:#f9fbfd">
+                        <div class="info-box">
+                            <img class="info-box-icon" alt="profilePic" src="~/Content/vac.png" />
+                            <div class="info-box-content">
+                                <span class="Info-Main-Text">Vacation Days</span>
+                                <div class="progress-group spacingHistory">
+                                    <span class="info-box-text">Allocated-10</span>
+                                    <span class="info-box-number">Earned-5</span>
+                                    <div class="progress lg">
+                                        <div class="progress-bar bg-primary" style="width: 20%;">2 days</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+
+                        <div class="info-box">
+                            <img class="info-box-icon" alt="profilePic" src="~/Content/sic.png" />
+                            <div class="info-box-content">
+                                <span class="Info-Main-Text">Sick Days</span>
+                                <div class="progress-group spacingHistory">
+                                    <span class="info-box-text">Allocated-10</span>
+                                    <span class="info-box-number">Earned-5</span>
+                                    <div class="progress lg">
+                                        <div class="progress-bar bg-primary" style="width: 40%;">3 days</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <div class="info-box">
+                            <img class="info-box-icon" alt="profilePic" src="~/Content/split.png" />
+                            <div class="info-box-content">
+                                <span class="Info-Main-Text">Split Days</span>
+                                <div class="progress-group spacingHistory">
+                                    <span class="info-box-text">Allocated-10</span>
+                                    <span class="info-box-number">Earned-5</span>
+                                    <div class="progress lg">
+                                        <div class="progress-bar bg-primary" style="width: 50%;">3 days</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+
+                        <div class="info-box">
+                            <img class="info-box-icon" alt="profilePic" src="~/Content/off.png" />
+                            <div class="info-box-content">
+                                <span class="Info-Main-Text">Off Days</span>
+                                <div class="progress-group spacingHistory">
+                                    <span class="info-box-text">Allocated-10</span>
+                                    <span class="info-box-number">Earned-8</span>
+                                    <div class="progress lg">
+                                        <div class="progress-bar bg-primary" style="width: 70%;">6 days</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <div class="info-box">
+                            <img class="info-box-icon" alt="profilePic" src="~/Content/brv.png" />
+                            <div class="info-box-content">
+                                <span class="Info-Main-Text">Bereavement</span>
+                                <div class="progress-group spacingHistory">
+                                    <span class="info-box-text">Allocated-10</span>
+                                    <span class="info-box-number">Earned-5</span>
+                                    <div class="progress lg">
+                                        <div class="progress-bar bg-primary" style="width: 20%;">2 days</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <div class="info-box">
+                            <img class="info-box-icon" alt="profilePic" src="~/Content/stat.png" />
+                            <div class="info-box-content">
+                                <span class="Info-Main-Text">Statutory </span>
+                                <div class="progress-group spacingHistory">
+                                    <span class="info-box-text">Allocated-10</span>
+                                    <span class="info-box-number">Earned-5</span>
+                                    <div class="progress lg">
+                                        <div class="progress-bar bg-primary" style="width: 20%;">2 days</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <div class="info-box">
+                            <img class="info-box-icon" alt="profilePic" src="~/Content/grpins.png" />
+                            <div class="info-box-content">
+                                <span class="Info-Main-Text">Group Insurance</span>
+                                <div class="progress-group spacingHistory">
+                                    <span class="info-box-text">Allocated-10</span>
+                                    <span class="info-box-number">Earned-5</span>
+                                    <div class="progress lg">
+                                        <div class="progress-bar bg-primary" style="width: 20%;">2 days</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <div class="info-box">
+                            <img class="info-box-icon" alt="profilePic" src="~/Content/empins.png" />
+                            <div class="info-box-content">
+                                <span class="Info-Main-Text">Employment Insurance</span>
+                                <div class="progress-group spacingHistory">
+                                    <span class="info-box-text">Allocated-10</span>
+                                    <span class="info-box-number">Earned-5</span>
+                                    <div class="progress lg">
+                                        <div class="progress-bar bg-primary" style="width: 20%;">2 days</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+
+                        <div class="info-box">
+                            <img class="info-box-icon" alt="profilePic" src="~/Content/workcomp.png" />
+                            <div class="info-box-content">
+                                <span class="Info-Main-Text">Workers Compensation</span>
+                                <div class="progress-group spacingHistory">
+                                    <span class="info-box-text">Allocated-10</span>
+                                    <span class="info-box-number">Earned-5</span>
+                                    <div class="progress lg">
+                                        <div class="progress-bar bg-primary" style="width: 20%;">2 days</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+
+
+    }
+</div>
+
+
+
+<script>
+
+
+    function onlyNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode != 46 && charCode > 31
+            && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+    function ElementCalculation(selectionId, regularElemId, optionalElemId, sumElemId) {
+        var x = document.getElementById(selectionId);
+        var opt = x.options[x.selectedIndex];
+        if (opt.text == "St" || opt.text == "Sp" || opt.text == "EI") {
+
+            document.getElementById(regularElemId).value = "0";
+            document.getElementById(optionalElemId).value = "8";
+            document.getElementById(regularElemId).disabled = true;
+            document.getElementById(optionalElemId).disabled = true;
+
+        }
+        else {
+            document.getElementById(regularElemId).disabled = false;
+            document.getElementById(optionalElemId).disabled = false;
+            if (opt.text == "" || opt.text == null) {
+                document.getElementById(optionalElemId).value = "0";
+            }
+        }
+        var sat1_reg_Val = document.getElementById(regularElemId).value;
+        var sat1_opt_Val = document.getElementById(optionalElemId).value;
+        if (sat1_reg_Val != "" && sat1_opt_Val != "") {
+
+            var val1 = parseFloat(sat1_reg_Val);
+            var val2 = parseFloat(sat1_opt_Val);
+            if (opt.text == "OT" || opt.text == "St" || opt.text == "Sp" || opt.text == "EI") {
+
+                var total = val1 + val2;
+                document.getElementById(sumElemId).value = total.toString();
+            }
+            else {
+                if (val1 + val2 > 8) {
+                    var val = 8 - val2;
+                    if (val < 0) {
+                        document.getElementById(regularElemId).value = (0).toString();
+                    }
+                    else {
+                        document.getElementById(regularElemId).value = (8 - val2).toString();
+                    }
+                }
+                var val11 = parseFloat(document.getElementById(regularElemId).value);
+                var val21 = parseFloat(document.getElementById(optionalElemId).value);
+                document.getElementById(sumElemId).value = (val11 + val21).toString();
+            }
+
+        }
+        else {
+            document.getElementById(regularElemId).disabled = false;
+            document.getElementById(optionalElemId).disabled = false;
+            document.getElementById(optionalElemId).value = "";
+            if (document.getElementById(regularElemId).value != "") {
+                var val11 = parseFloat(document.getElementById(regularElemId).value);
+                document.getElementById(sumElemId).value = (val11).toString();
+            }
+        }
+        summary();
+    }
+
+    function ElementFocusOut(ElementID) {
+        if (document.getElementById(ElementID).value != "") {
+            var val1 = parseFloat(document.getElementById(ElementID).value);
+            val1 = val1 * 2;
+            val1 = Math.round(val1);
+            val1 = val1 / 2;
+            document.getElementById(ElementID).value = (val1).toString();
+        }
+        summary();
+    }
+    function Sat1Selection() {
+        ElementCalculation("payBiweek_sat_1_sel_id", "payBiweek_sat_1_reg", "payBiweek_sat_1_opt", "payBiweek_sat_1_sum");
+    }
+    function focusOutSat1Reg() {
+        ElementFocusOut("payBiweek_sat_1_reg");
+        ElementCalculation("payBiweek_sat_1_sel_id", "payBiweek_sat_1_reg", "payBiweek_sat_1_opt", "payBiweek_sat_1_sum");
+
+        compareEnterWithAttendance("payBiweek_sat_1_reg", @Html.Raw(Json.Encode(ViewData["TOT1"])));
+
+    }
+    function focusOutSat1Opt() {
+        ElementFocusOut("payBiweek_sat_1_opt");
+        ElementCalculation("payBiweek_sat_1_sel_id", "payBiweek_sat_1_reg", "payBiweek_sat_1_opt", "payBiweek_sat_1_sum");
+    }
+
+
+    function Sun1Selection() {
+        ElementCalculation("payBiweek_sun_1_sel_id", "payBiweek_sun_1_reg", "payBiweek_sun_1_opt", "payBiweek_sun_1_sum");
+    }
+    function focusOutSun1Reg() {
+        ElementFocusOut("payBiweek_sun_1_reg");
+        ElementCalculation("payBiweek_sun_1_sel_id", "payBiweek_sun_1_reg", "payBiweek_sun_1_opt", "payBiweek_sun_1_sum");
+
+        compareEnterWithAttendance("payBiweek_sun_1_reg", @Html.Raw(Json.Encode(ViewData["TOT2"])));
+    }
+    function focusOutSun1Opt() {
+        ElementFocusOut("payBiweek_sun_1_opt");
+        ElementCalculation("payBiweek_sun_1_sel_id", "payBiweek_sun_1_reg", "payBiweek_sun_1_opt", "payBiweek_sun_1_sum");
+    }
+
+
+    function Mon1Selection() {
+        ElementCalculation("payBiweek_mon_1_sel_id", "payBiweek_mon_1_reg", "payBiweek_mon_1_opt", "payBiweek_mon__1_sum");
+    }
+    function focusOutMon1Reg() {
+        ElementFocusOut("payBiweek_mon_1_reg");
+        ElementCalculation("payBiweek_mon_1_sel_id", "payBiweek_mon_1_reg", "payBiweek_mon_1_opt", "payBiweek_mon__1_sum");
+
+        compareEnterWithAttendance("payBiweek_mon_1_reg", @Html.Raw(Json.Encode(ViewData["TOT3"])));
+    }
+    function focusOutMon1Opt() {
+        ElementFocusOut("payBiweek_mon_1_opt");
+        ElementCalculation("payBiweek_mon_1_sel_id", "payBiweek_mon_1_reg", "payBiweek_mon_1_opt", "payBiweek_mon__1_sum");
+    }
+
+    function Tues1Selection() {
+        ElementCalculation("payBiweek_tues_1_sel_id", "payBiweek_tues_1_reg", "payBiweek_tues_1_opt", "payBiweek_tues_1_sum");
+    }
+    function focusOutTues1Reg() {
+        ElementFocusOut("payBiweek_tues_1_reg");
+        ElementCalculation("payBiweek_tues_1_sel_id", "payBiweek_tues_1_reg", "payBiweek_tues_1_opt", "payBiweek_tues_1_sum");
+        compareEnterWithAttendance("payBiweek_tues_1_reg", @Html.Raw(Json.Encode(ViewData["TOT4"])));
+    }
+    function focusOutTues1Opt() {
+        ElementFocusOut("payBiweek_tues_1_opt");
+        ElementCalculation("payBiweek_tues_1_sel_id", "payBiweek_tues_1_reg", "payBiweek_tues_1_opt", "payBiweek_tues_1_sum");
+    }
+
+
+    function Wed1Selection() {
+        ElementCalculation("payBiweek_wed_1_sel_id", "payBiweek_wed_1_reg", "payBiweek_wed_1_opt", "payBiweek_wed_1_sum");
+    }
+    function focusOutWed1Reg() {
+        ElementFocusOut("payBiweek_wed_1_reg");
+        ElementCalculation("payBiweek_wed_1_sel_id", "payBiweek_wed_1_reg", "payBiweek_wed_1_opt", "payBiweek_wed_1_sum");
+        compareEnterWithAttendance("payBiweek_wed_1_reg", @Html.Raw(Json.Encode(ViewData["TOT5"])));
+    }
+    function focusOutWed1Opt() {
+        ElementFocusOut("payBiweek_wed_1_opt");
+        ElementCalculation("payBiweek_wed_1_sel_id", "payBiweek_wed_1_reg", "payBiweek_wed_1_opt", "payBiweek_wed_1_sum");
+    }
+
+
+    function Thurs1Selection() {
+        ElementCalculation("payBiweek_thurs_1_sel_id", "payBiweek_thurs_1_reg", "payBiweek_thurs_1_opt", "payBiweek_thurs_1_sum");
+    }
+    function focusOutThurs1Reg() {
+        ElementFocusOut("payBiweek_thurs_1_reg");
+        ElementCalculation("payBiweek_thurs_1_sel_id", "payBiweek_thurs_1_reg", "payBiweek_thurs_1_opt", "payBiweek_thurs_1_sum");
+        compareEnterWithAttendance("payBiweek_thurs_1_reg", @Html.Raw(Json.Encode(ViewData["TOT6"])));
+    }
+    function focusOutThurs1Opt() {
+        ElementFocusOut("payBiweek_thurs_1_opt");
+        ElementCalculation("payBiweek_thurs_1_sel_id", "payBiweek_thurs_1_reg", "payBiweek_thurs_1_opt", "payBiweek_thurs_1_sum");
+    }
+
+    function Fri1Selection() {
+        ElementCalculation("payBiweek_fri_1_sel_id", "payBiweek_fri_1_reg", "payBiweek_fri_1_opt", "payBiweek_fri_1_sum");
+    }
+    function focusOutFri1Reg() {
+        ElementFocusOut("payBiweek_fri_1_reg");
+        ElementCalculation("payBiweek_fri_1_sel_id", "payBiweek_fri_1_reg", "payBiweek_fri_1_opt", "payBiweek_fri_1_sum");
+        compareEnterWithAttendance("payBiweek_fri_1_reg", @Html.Raw(Json.Encode(ViewData["TOT7"])));
+    }
+    function focusOutFri1Opt() {
+        ElementFocusOut("payBiweek_fri_1_opt");
+        ElementCalculation("payBiweek_fri_1_sel_id", "payBiweek_fri_1_reg", "payBiweek_fri_1_opt", "payBiweek_fri_1_sum");
+    }
+
+    function Sat2Selection() {
+        ElementCalculation("payBiweek_sat_2_sel_id", "payBiweek_sat_2_reg", "payBiweek_sat_2_opt", "payBiweek_sat_2_sum");
+    }
+    function focusOutSat2Reg() {
+        ElementFocusOut("payBiweek_sat_2_reg");
+        ElementCalculation("payBiweek_sat_2_sel_id", "payBiweek_sat_2_reg", "payBiweek_sat_2_opt", "payBiweek_sat_2_sum");
+        compareEnterWithAttendance("payBiweek_sat_2_reg", @Html.Raw(Json.Encode(ViewData["TOT8"])));
+    }
+    function focusOutSat2Opt() {
+        ElementFocusOut("payBiweek_sat_2_opt");
+        ElementCalculation("payBiweek_sat_2_sel_id", "payBiweek_sat_2_reg", "payBiweek_sat_2_opt", "payBiweek_sat_2_sum");
+    }
+
+
+    function Sun2Selection() {
+        ElementCalculation("payBiweek_sun_2_sel_id", "payBiweek_sun_2_reg", "payBiweek_sun_2_opt", "payBiweek_sun_2_sum");
+    }
+    function focusOutSun2Reg() {
+        ElementFocusOut("payBiweek_sun_2_reg");
+        ElementCalculation("payBiweek_sun_2_sel_id", "payBiweek_sun_2_reg", "payBiweek_sun_2_opt", "payBiweek_sun_2_sum");
+        compareEnterWithAttendance("payBiweek_sun_2_reg", @Html.Raw(Json.Encode(ViewData["TOT9"])));
+    }
+    function focusOutSun2Opt() {
+        ElementFocusOut("payBiweek_sun_2_opt");
+        ElementCalculation("payBiweek_sun_2_sel_id", "payBiweek_sun_2_reg", "payBiweek_sun_2_opt", "payBiweek_sun_2_sum");
+    }
+
+
+    function Mon2Selection() {
+        ElementCalculation("payBiweek_mon_2_sel_id", "payBiweek_mon_2_reg", "payBiweek_mon_2_opt", "payBiweek_mon_2_sum");
+    }
+    function focusOutMon2Reg() {
+        ElementFocusOut("payBiweek_mon_2_reg");
+        ElementCalculation("payBiweek_mon_2_sel_id", "payBiweek_mon_2_reg", "payBiweek_mon_2_opt", "payBiweek_mon_2_sum");
+        compareEnterWithAttendance("payBiweek_mon_2_reg", @Html.Raw(Json.Encode(ViewData["TOT10"])));
+    }
+    function focusOutMon2Opt() {
+        ElementFocusOut("payBiweek_mon_2_opt");
+        ElementCalculation("payBiweek_mon_2_sel_id", "payBiweek_mon_2_reg", "payBiweek_mon_2_opt", "payBiweek_mon_2_sum");
+    }
+
+    function Tues2Selection() {
+        ElementCalculation("payBiweek_tues_2_sel_id", "payBiweek_tues_2_reg", "payBiweek_tues_2_opt", "payBiweek_tues_2_sum");
+    }
+    function focusOutTues2Reg() {
+        ElementFocusOut("payBiweek_tues_2_reg");
+        ElementCalculation("payBiweek_tues_2_sel_id", "payBiweek_tues_2_reg", "payBiweek_tues_2_opt", "payBiweek_tues_2_sum");
+        compareEnterWithAttendance("payBiweek_tues_2_reg", @Html.Raw(Json.Encode(ViewData["TOT11"])));
+    }
+    function focusOutTues2Opt() {
+        ElementFocusOut("payBiweek_tues_2_opt");
+        ElementCalculation("payBiweek_tues_2_sel_id", "payBiweek_tues_2_reg", "payBiweek_tues_2_opt", "payBiweek_tues_2_sum");
+    }
+
+    function Wed2Selection() {
+        ElementCalculation("payBiweek_wed_2_sel_id", "payBiweek_wed_2_reg", "payBiweek_wed_2_opt", "payBiweek_wed_2_Sum");
+    }
+    function focusOutWed2Reg() {
+        ElementFocusOut("payBiweek_wed_2_reg");
+        ElementCalculation("payBiweek_wed_2_sel_id", "payBiweek_wed_2_reg", "payBiweek_wed_2_opt", "payBiweek_wed_2_Sum");
+        compareEnterWithAttendance("payBiweek_wed_2_reg", @Html.Raw(Json.Encode(ViewData["TOT12"])));
+    }
+    function focusOutWed2Opt() {
+        ElementFocusOut("payBiweek_wed_2_opt");
+        ElementCalculation("payBiweek_wed_2_sel_id", "payBiweek_wed_2_reg", "payBiweek_wed_2_opt", "payBiweek_wed_2_Sum");
+    }
+
+
+
+    function Thurs2Selection() {
+        ElementCalculation("payBiweek_thurs_2_sel_id", "payBiweek_thurs_2_reg", "payBiweek_thurs_2_opt", "payBiweek_thurs_2_Sum");
+    }
+    function focusOutThurs2Reg() {
+        ElementFocusOut("payBiweek_thurs_2_reg");
+        ElementCalculation("payBiweek_thurs_2_sel_id", "payBiweek_thurs_2_reg", "payBiweek_thurs_2_opt", "payBiweek_thurs_2_Sum");
+        compareEnterWithAttendance("payBiweek_thurs_2_reg", @Html.Raw(Json.Encode(ViewData["TOT13"])));
+    }
+    function focusOutThurs2Opt() {
+        ElementFocusOut("payBiweek_thurs_2_opt");
+        ElementCalculation("payBiweek_thurs_2_sel_id", "payBiweek_thurs_2_reg", "payBiweek_thurs_2_opt", "payBiweek_thurs_2_Sum");
+    }
+
+
+    function Fri2Selection() {
+        ElementCalculation("payBiweek_fri_2_sel_id", "payBiweek_fri_2_reg", "payBiweek_fri_2_opt", "payBiweek_fri_2_sum");
+    }
+    function focusOutFri2Reg() {
+        ElementFocusOut("payBiweek_fri_2_reg");
+        ElementCalculation("payBiweek_fri_2_sel_id", "payBiweek_fri_2_reg", "payBiweek_fri_2_opt", "payBiweek_fri_2_sum");
+        compareEnterWithAttendance("payBiweek_fri_2_reg", @Html.Raw(Json.Encode(ViewData["TOT14"])));
+    }
+    function focusOutFri2Opt() {
+        ElementFocusOut("payBiweek_fri_2_opt");
+        ElementCalculation("payBiweek_fri_2_sel_id", "payBiweek_fri_2_reg", "payBiweek_fri_2_opt", "payBiweek_fri_2_sum");
+    }
+
+    function compareEnterWithAttendance(elementVal,totalVal) {
+
+        var val1 = document.getElementById(elementVal).value;
+        const barChartVals = totalVal;  @*@Html.Raw(Json.Encode(ViewData["TOT3"]));*@
+
+        var res = barChartVals.split(":");
+
+        var hours = parseFloat(res[0]);
+        var min = parseFloat(res[1]);
+        var minutes = ((min * 4) / 60);
+
+        var result = 0;
+        if (minutes >= 2) {
+            result = hours + 0.5;
+        }
+        else {
+            result = hours;
+        }
+
+        var enteredVal = 0;
+        if (val1 != null && val1 != "" && val1 != " ") {
+            enteredVal = parseFloat(val1);
+        }
+
+        if (enteredVal > result) {
+            document.getElementById(elementVal).style.color = "red";
+        }
+        else {
+            document.getElementById(elementVal).style.color = "black";
+        }
+
+    }
+
+    function summary() {
+
+        var regList = [];
+        regList.push(document.getElementById("payBiweek_sat_1_reg").value);
+        regList.push(document.getElementById("payBiweek_sun_1_reg").value);
+        regList.push(document.getElementById("payBiweek_mon_1_reg").value);
+        regList.push(document.getElementById("payBiweek_tues_1_reg").value);
+        regList.push(document.getElementById("payBiweek_wed_1_reg").value);
+        regList.push(document.getElementById("payBiweek_thurs_1_reg").value);
+        regList.push(document.getElementById("payBiweek_fri_1_reg").value);
+        regList.push(document.getElementById("payBiweek_sat_2_reg").value);
+        regList.push(document.getElementById("payBiweek_sun_2_reg").value);
+        regList.push(document.getElementById("payBiweek_mon_2_reg").value);
+        regList.push(document.getElementById("payBiweek_tues_2_reg").value);
+        regList.push(document.getElementById("payBiweek_wed_2_reg").value);
+        regList.push(document.getElementById("payBiweek_thurs_2_reg").value);
+        regList.push(document.getElementById("payBiweek_fri_2_reg").value);
+        var totalRegHours = 0;
+        for (i = 0; i < regList.length; i++) {
+            if (isNaN(parseFloat(regList[i]))==false) {
+                totalRegHours = totalRegHours + parseFloat(regList[i]);
+            }
+        }
+        let ElementValues = [];
+        ElementValues.push([document.getElementById("payBiweek_sat_1_sel_id").options[document.getElementById("payBiweek_sat_1_sel_id").selectedIndex].text, document.getElementById("payBiweek_sat_1_opt").value]);
+        ElementValues.push([document.getElementById("payBiweek_sun_1_sel_id").options[document.getElementById("payBiweek_sun_1_sel_id").selectedIndex].text, document.getElementById("payBiweek_sun_1_opt").value]);
+        ElementValues.push([document.getElementById("payBiweek_mon_1_sel_id").options[document.getElementById("payBiweek_mon_1_sel_id").selectedIndex].text, document.getElementById("payBiweek_mon_1_opt").value]);
+        ElementValues.push([document.getElementById("payBiweek_tues_1_sel_id").options[document.getElementById("payBiweek_tues_1_sel_id").selectedIndex].text, document.getElementById("payBiweek_tues_1_opt").value]);
+        ElementValues.push([document.getElementById("payBiweek_wed_1_sel_id").options[document.getElementById("payBiweek_wed_1_sel_id").selectedIndex].text, document.getElementById("payBiweek_wed_1_opt").value]);
+        ElementValues.push([document.getElementById("payBiweek_thurs_1_sel_id").options[document.getElementById("payBiweek_thurs_1_sel_id").selectedIndex].text, document.getElementById("payBiweek_thurs_1_opt").value]);
+        ElementValues.push([document.getElementById("payBiweek_fri_1_sel_id").options[document.getElementById("payBiweek_fri_1_sel_id").selectedIndex].text, document.getElementById("payBiweek_fri_1_opt").value]);
+        ElementValues.push([document.getElementById("payBiweek_sat_2_sel_id").options[document.getElementById("payBiweek_sat_2_sel_id").selectedIndex].text, document.getElementById("payBiweek_sat_2_opt").value]);
+        ElementValues.push([document.getElementById("payBiweek_sun_2_sel_id").options[document.getElementById("payBiweek_sun_2_sel_id").selectedIndex].text, document.getElementById("payBiweek_sun_2_opt").value]);
+        ElementValues.push([document.getElementById("payBiweek_mon_2_sel_id").options[document.getElementById("payBiweek_mon_2_sel_id").selectedIndex].text, document.getElementById("payBiweek_mon_2_opt").value]);
+        ElementValues.push([document.getElementById("payBiweek_tues_2_sel_id").options[document.getElementById("payBiweek_tues_2_sel_id").selectedIndex].text, document.getElementById("payBiweek_tues_2_opt").value]);
+        ElementValues.push([document.getElementById("payBiweek_wed_2_sel_id").options[document.getElementById("payBiweek_wed_2_sel_id").selectedIndex].text, document.getElementById("payBiweek_wed_2_opt").value]);
+        ElementValues.push([document.getElementById("payBiweek_thurs_2_sel_id").options[document.getElementById("payBiweek_thurs_2_sel_id").selectedIndex].text, document.getElementById("payBiweek_thurs_2_opt").value]);
+        ElementValues.push([document.getElementById("payBiweek_fri_2_sel_id").options[document.getElementById("payBiweek_fri_2_sel_id").selectedIndex].text, document.getElementById("payBiweek_fri_2_opt").value]);
+
+        var vac = 0;
+        var ot = 0;
+        var sic = 0;
+        var brv = 0;
+        var statHol = 0;
+        var splitDay = 0;
+        var genIns = 0;
+        var emp_ins = 0;
+        var work_comp = 0;
+
+        for (let i = 0; i < ElementValues.length; i++) {
+            if (ElementValues[i][0] == "Va") {
+                if (isNaN(parseFloat(ElementValues[i][1])) == false) {
+                    vac = vac + parseFloat(ElementValues[i][1]);
+                }
+
+            }
+            if (ElementValues[i][0] == "OT") {
+                if (isNaN(parseFloat(ElementValues[i][1])) == false) {
+                    ot = ot + parseFloat(ElementValues[i][1]);
+                }
+
+            }
+            if (ElementValues[i][0] == "Si") {
+                if (isNaN(parseFloat(ElementValues[i][1])) == false) {
+                    sic = sic + parseFloat(ElementValues[i][1]);
+                }
+
+            }
+            if (ElementValues[i][0] == "Br") {
+                if (isNaN(parseFloat(ElementValues[i][1])) == false) {
+                    brv = brv + parseFloat(ElementValues[i][1]);
+                }
+
+            }
+
+            if (ElementValues[i][0] == "St") {
+                if (isNaN(parseFloat(ElementValues[i][1])) == false) {
+                    statHol = statHol + parseFloat(ElementValues[i][1]);
+                }
+
+            }
+
+            if (ElementValues[i][0] == "Sp") {
+                if (isNaN(parseFloat(ElementValues[i][1])) == false) {
+                    splitDay = splitDay + parseFloat(ElementValues[i][1]);
+                }
+
+            }
+            if (ElementValues[i][0] == "GI") {
+                if (isNaN(parseFloat(ElementValues[i][1])) == false) {
+                    genIns = genIns + parseFloat(ElementValues[i][1]);
+                }
+
+            }
+            if (ElementValues[i][0] == "EI") {
+                if (isNaN(parseFloat(ElementValues[i][1])) == false) {
+                    emp_ins = emp_ins + parseFloat(ElementValues[i][1]);
+                }
+
+            }
+            if (ElementValues[i][0] == "WC") {
+                if (isNaN(parseFloat(ElementValues[i][1])) == false) {
+                    work_comp = work_comp + parseFloat(ElementValues[i][1]);
+                }
+
+            }
+        }
+
+
+        if (totalRegHours + ot <= 80) {
+            totalRegHours = totalRegHours + ot;
+            ot = 0;
+        }
+        else {
+            ot = totalRegHours + ot - 80;
+            totalRegHours = 80;
+        }
+        console.log(totalRegHours.toString())
+        console.log(ot.toString())
+        document.getElementById("paySummary_regular").value = totalRegHours.toString();
+        document.getElementById("paySummary_ot").value = ot.toString();
+        document.getElementById("paySummary_brev").value = brv.toString();
+        document.getElementById("paySummary_sick").value = sic.toString();
+        document.getElementById("paySummary_vac").value = vac.toString();
+        document.getElementById("paySummary_stat").value = statHol.toString();
+        document.getElementById("paySummary_split").value = splitDay.toString();
+        document.getElementById("paySummary_gen_ins").value = genIns.toString();
+        document.getElementById("paySummary_emp_ins").value = emp_ins.toString();
+        document.getElementById("paySummary_workers_comp").value = work_comp.toString();
+    }
+
+
+</script>

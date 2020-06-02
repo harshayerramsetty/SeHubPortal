@@ -1,0 +1,336 @@
+﻿
+@{
+    ViewBag.Title = "NewOrder";
+    Layout = "~/Views/Shared/_TreadTrackerLayout.cshtml";
+}
+@model SeHubPortal.ViewModel.CustomerListViewModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/NewOrder.css" rel="stylesheet" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+    <style type="text/css">      
+        #treadTrackereClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+        #treadTrackerButton {          
+            color: black;
+            font-weight: 600;
+        }
+        #NewOrderLink {
+            color: black;
+            font-weight: 700;
+        }
+
+        body {
+            background-color: #f0f2f5;
+        }
+        .heading {
+           
+            margin: 10px 0px 0px 0px;
+           
+        }
+        .heading h2 {
+              
+           margin-top: 8px;
+                
+        }
+        .card-header {
+            background-color: #cde8ca;
+        }
+
+        .card-header h6 {
+                color: black;
+        }
+
+
+
+
+        .orderMainBody {
+            margin: 15px 15px 0px 15px;
+            /*background-color:antiquewhite;*/
+        }
+
+        .subHeading {
+            text-align: center;
+            background-color: #e9ecef;
+            margin: 15px 0px 0px 0px;
+        }
+
+        .subTables {
+            margin: 0px 0px 0px 0px;
+        }
+
+        .tableBorders {
+            border-style: solid;
+            border-width: thin;
+            margin: 0px 0px 0px 0px;
+            border-color: #e9ecef;
+        }
+
+        .mainTable {
+            margin: 25px 0px 0px 0px;
+        }
+
+        .textFields {
+            text-align: center;
+        }
+
+        input {
+            text-align: center;
+           
+        }
+
+        .lineStyle {
+            width: 60px;
+            visibility: visible;
+            height: 32px;
+        }
+
+        select {
+            color: black;
+            height: 32px;
+        }
+
+        input, select {
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+
+        .commentsHeader {
+            background-color: #343a40;
+            margin: 0px 3px 0px 3px;
+        }
+
+        .commentsSection {
+            margin: 10px 0px 0px 0px;
+        }
+
+        #comments {
+            width: 100%;
+            height: 100px;
+            box-sizing: border-box;
+        }
+
+        #NewOrderSubmit {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            background-color: #343a40;
+            border-color: #343a40;
+        }
+
+        .SearchInputs {
+            width: 100%;
+            visibility: visible;
+            border-color: black;
+            border-width: 2px;
+        }
+
+        .generateBtn {
+            width: 100%;
+            text-align:center;
+            height:35px;      
+            visibility: visible;
+        }
+
+
+        .fieldStyle {
+            width: 100%;
+            visibility: visible;
+            border-color: gray;
+            border-width: 1px;
+            height: 35px;
+        }
+
+        .TextStyle {
+            vertical-align: middle;
+            color: black;
+        }
+        .SearchWith {
+            width: 100%;
+            visibility: visible;
+            border-color: gray;
+            border-width: 1px;
+            height: 32px;
+        }
+        .SearchWithBtn {
+            text-align: center;
+            height: 35px;
+        }
+
+       
+    </style>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-12">
+            <div >                                  
+                <div class="row heading" >
+                    <div class="col">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
+                                <li class="breadcrumb-item"><a href="@Url.Action("NewOrder", "TreadTracker")">Tread Tracker</a></li>
+                                <li class="breadcrumb-item " aria-current="page">New Order</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+                        <i class="fa fa-bars" style="font-size:25px"></i>
+                        <span class="sr-only">Toggle Menu</span>
+                    </button>
+                </div>
+                <div class="orderMainBody">                  
+                            <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
+                                <div class="card-header">
+                                <h6 class="card-title mb-0 d-inline-block">New Tread Order</h6>
+                            </div>
+                                <div class="card-body">
+                                    @using (Html.BeginForm("Generate", "TreadTracker", FormMethod.Post))
+                                    {
+                                        <div class="row justify-content-start">
+                                            <div class="col-md-5">
+                                                <div class="container">
+                                                    <div class="row subTables">
+                                                        <div class="col-5 ">
+                                                            <text class="TextStyle">Retread Work Order</text>
+                                                        </div>
+                                                        <div class="col-7 ">
+                                                            @* <input type="text" class="SearchInputs" id="workOrderNumberSearch" name="workOrderNumberSearch" maxlength="7">*@
+                                                            @Html.TextBoxFor(m => m.WorkOrderNumber, new { @class = "fieldStyle", @type = "text", @maxlength = "6", @onkeypress = "return onlyNumberKey(event)" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-5">
+                                                <div class="container">
+                                                    <div class="row subTables">
+                                                        <div class="col-3 ">
+                                                            <text class="TextStyle">Customer</text>
+                                                        </div>
+                                                        <div class="col-9">
+                                                            @*<input type="text" class="SearchInputs" id="customerSearch" name="customerSearch" maxlength="7">*@
+                                                            @Html.DropDownListFor(m => m.CustId, Model.Customers, "Please select", new { @class = "fieldStyle" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input id="GenerateClicked" class="generateBtn btn btn-success" type="submit" value="Generate" />
+                                            </div>
+                                        </div>
+                                    }
+                                    <br/>
+                                    <div>
+                                        <button type="button" data-toggle="collapse" data-target="#demo" style="background-color:transparent;border-color:transparent;"><img src="https://img.icons8.com/ios-filled/25/000000/plus.png" /></button>
+                                        <text style="color:dodgerblue">Modified Search</text>
+                                        <div id="demo" class="collapse in">
+                                            <br />
+                                            <div class="row justify-content-start">
+                                                <div class="col-md-6">
+                                                    <div class="container">
+                                                        <div class="row subTables">
+                                                            <div class="col-md-4 ">
+                                                                <text class="TextStyle"> Input via Name</text>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                @Html.TextBoxFor(m => m.searchWithName, new { @class = "SearchWith" })
+                                                            </div>
+                                                            <div class="col-2">
+                                                                <input id="NameSearchBtn" class="SearchWithBtn  btn btn-info" type="submit" value="Search" />
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                               
+
+                                                <div class="col-md-6" id="DropDownName">
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row justify-content-start">
+                                                <div class="col-md-6">
+                                                    <div class="container">
+                                                        <div class="row subTables">
+                                                            <div class="col-4">
+                                                                <text class="TextStyle"> Input via No</text>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                @Html.TextBoxFor(m => m.searchWithNo, new { @class = "SearchWith" })
+                                                            </div>
+                                                            <div class="col-2">
+                                                                <input id="NumberSearchBtn" class="SearchWithBtn btn btn-info" type="submit" value="Search" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                              
+                                                <div class="col-md-6" id="DropDownNo">
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>                             
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function onlyNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode != 46 && charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+        $(document).ready(function () {           
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+            $('#NameSearchBtn').click(function () {
+                var SearchCondition = $("#searchWithName").val();
+                $.ajax({
+                            url: '@Url.Action("NameDropDown", "TreadTracker")',
+                            data: { value: SearchCondition },
+                            type: 'POST',
+                            success: function (data) {
+                                $("#DropDownName").html(data);
+                            }
+                });
+            });  
+
+            $('#NumberSearchBtn').click(function () {
+                var SearchCondition = $("#searchWithNo").val();
+                
+                $.ajax({
+                            url: '@Url.Action("NumberDropDown", "TreadTracker")',
+                            data: { value: SearchCondition },
+                            type: 'POST',
+                            success: function (data) {
+                                $("#DropDownNo").html(data);
+                            }
+                });
+            });  
+
+
+
+
+        });
+
+    </script>
+</body>
+</html>

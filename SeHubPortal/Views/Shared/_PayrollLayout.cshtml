@@ -1,0 +1,198 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Styles.Render("~/Content/sidebar/sidebar.css")
+@Scripts.Render("~/Content/sidebar/sidebar.js")
+@model List<SeHubPortal.ViewModel.EmployeePayrollListModel>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/1.7.0/d3-legend.min.js"></script>
+    <style type="text/css">
+        .mainBody {
+            margin-left: 5px;
+            margin-right: 5px;
+            margin-top: 10px;
+        }
+
+        .heading {
+            text-align: center;
+            background-color: darkgray;
+            margin: 10px 0px 0px 0px;
+        }
+
+            .heading h2 {
+                margin-top: 8px;
+            }
+
+        .payRollMainBody {
+            margin: 15px 15px 0px 0px;
+            height: 100%;
+        }
+        /*.card-header {
+            background-color: #5f76e8;
+        }
+        .card-title
+        {
+            color:#fff;
+        }*/
+        .wrap {
+            width: 100%;
+            overflow: auto;
+        }
+
+        .fleft {
+            float: left;
+            width: 17%;
+            /*background: blue;*/
+            height: 100vh;
+        }
+
+        .fright {
+            float: right;
+            /*background: pink;*/
+            height: 100vh;
+            width: 83%;
+            margin: 0px 0px 0px 0px;
+        }
+
+        .SerachLoc {
+            text-align: center;
+            height: 35px;
+            width: 100%;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .fieldStyle {
+            width: 100%;
+            height: 35px;
+            visibility: visible;
+            border-color: gray;
+            border-width: 1px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    @*style="background-color:#f9fbfd"*@
+    <div class="row mainBody">
+        <div class="col-md-12">
+            <div>
+                <div>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#">Management</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Payroll</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="payRollMainBody">
+                    <div>
+                        <div class="fleft ">
+
+                            <div class="row bg-secondary" style="height:50px; padding-top:8px; margin-left:2px;margin-right:1px;">
+                                <div class="col-md-7">
+                                    <h5 style="color:white;font-size:17px;margin-top:6px">Employee List</h5>
+                                </div>
+                                <div class="col-md-5">
+                                    <form id="selectionForm" name="selectionForm" action="Payroll" method="POST">
+                                        <select class="fieldStyle" id="valueINeed" name="valueINeed" onChange="javascript:chgAction()">
+                                            <option value="">@ViewData["LocationList"] </option>
+                                            <option value="001">001</option>
+                                            <option value="002">002</option>
+                                            <option value="003">003</option>
+                                            <option value="004">004</option>
+                                            <option value="005">005</option>
+                                            <option value="005">007</option>
+                                            <option value="009">009</option>
+                                            <option value="010">010</option>
+                                            <option value="101">101</option>
+                                            <option value="347">347</option>
+                                        </select>
+                                        <input class="SerachLoc btn btn-success" type="submit" style="visibility:hidden" value="Search" />
+                                    </form>
+                                </div>
+                            </div>
+                            <ul class="list-group shadow-lg  bg-white rounded">
+                                @*earlier this is div*@
+                                @foreach (var items in Model)
+                                {
+                                    if (items.submissionStatus == "0" || items.submissionStatus == "1")
+                                    {
+                                        <li class="list-group-item  ">
+                                            <a href="@Url.Action("Details", "Payroll", new { values =@items.fullName })">
+                                                <img style="vertical-align:middle" src="~/Content/uncheck.png" alt="">
+                                                <span style="vertical-align:middle">@items.fullName</span>
+                                            </a>                                         
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="list-group-item  ">
+                                            <a href="@Url.Action("Details", "TreadTracker", new { values =@items.fullName })">
+                                               <img style="vertical-align:middle" src="~/Content/check.png" alt="">
+                                                <span style="vertical-align:middle">@items.fullName</span>
+                                            </a>
+                                           
+                                          
+                                        </li>
+                                    }
+
+
+                                }
+
+                            </ul>
+
+                        </div>
+                        <div class="fright">
+                            <div id="PayrollRightBody">
+                                @RenderBody()
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function chgAction() {
+            $('#selectionForm').attr({ 'action': $('option:selected').attr('data-action') });
+            $('#selectionForm').submit();
+        }
+        $(document).ready(function () {
+            $('.list-group li').click(function (e) {
+                e.preventDefault()
+                $that = $(this);
+                $that.parent().find('li').removeClass('active');
+                $that.addClass('active');
+
+                var seleccionado = $(this).children("span").html();
+                 $.ajax({
+                            url: '@Url.Action("ShowEmployeePayroll", "Management")',
+                            data: { value: seleccionado },
+                            type: 'POST',
+                            success: function (data) {
+                                $("#PayrollRightBody").html(data);
+                            }
+                });
+
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+
