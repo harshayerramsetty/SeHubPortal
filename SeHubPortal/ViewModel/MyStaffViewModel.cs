@@ -12,6 +12,9 @@ namespace SeHubPortal.ViewModel
         public List<tbl_employee> employeeDetails { get; set; }
         public List<SelectListItem> MatchedStaffLocs { get; set; }
         public string MatchedStaffLocID { get; set; }
+        public int EmployeePermissions { get; set; }
+        public tbl_employee NewEmployee { get; set; }
+        public tbl_employee_personal NewEmployeePersonal { get; set; }
 
     }
 }

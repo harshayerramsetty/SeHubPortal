@@ -6,10 +6,10 @@
 
 @model SeHubPortal.ViewModel.MyStaffViewModel
 <html lang="en">
-<head>   
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">*@
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -49,7 +49,7 @@
             .card-header h6 {
                 color: black;
             }
-        
+
         .imageClass {
             width: 100%;
             height: 80%;
@@ -66,7 +66,7 @@
             position: relative;
             display: -ms-flexbox;
             display: flex;
-            height:auto;
+            height: auto;
             -ms-flex-direction: column;
             flex-direction: column;
             min-width: 0;
@@ -76,12 +76,14 @@
             border: 1px solid rgba(0,0,0,.125);
             border-radius: .25rem;
         }
-        p{
-            font-size:14px;
+
+        p {
+            font-size: 14px;
         }
-        #MatchedStaffLocID{
-            height:30px;
-            width:100px;
+
+        #MatchedStaffLocID {
+            height: 30px;
+            width: 100px;
         }
     </style>
 </head>
@@ -100,160 +102,304 @@
             <span class="sr-only">Toggle Menu</span>
         </button>
     </div>
-    <div class="row">
-        <div class="card shadow-sm flex-fill grow" style="margin:10px 20px 0px 20px;">
-            <div class="card-header">
-                <h6 class="card-title mb-0 d-inline-block">Employees : 101</h6>
-            </div>
-            <div class="card-body ">
-                <div class="row">
-                    <div class="col-md-3">
-                        @using (Html.BeginForm("MyStaff", "Management", FormMethod.Post))
+    @if (Model.EmployeePermissions != 0)
+    {
+        <div class="row">
+            <div class="card shadow-sm flex-fill grow" style="margin:10px 20px 0px 20px;">
+                <div class="card-header">
+                    <h6 class="card-title mb-0 d-inline-block">Employees : 101</h6>
+                </div>
+                <div class="card-body ">
+                    @if (Model.EmployeePermissions != 1)
+                    {
+                    <div class="row">
+                        <div class="col-md-3">
+                            @using (Html.BeginForm("MyStaff", "Management", FormMethod.Post))
+                            {
+                                <span style="margin-right:5px;margin-top:10px; font-size:15px;color:black;">Change Location:</span>
+                                @Html.DropDownListFor(m => m.MatchedStaffLocID, Model.MatchedStaffLocs, "All", new { @onChange = "this.form.submit()" })
+                                <noscript> <input class="btn btn-success" type="submit" value="Search" /></noscript>
+                            }
+                        </div>
+                        @if (Model.EmployeePermissions != 2)
                         {
-                            <span style="margin-right:5px;margin-top:10px; font-size:15px;color:black;">Change Location:</span>
-                            @Html.DropDownListFor(m => m.MatchedStaffLocID, Model.MatchedStaffLocs, "All", new { @onChange = "this.form.submit()" })
-                            <noscript> <input class="btn btn-success" type="submit" value="Search" /></noscript>
+                        <div class="col-md-9">
+                            @*<a href="@Url.Action("AddStaff", "Management")">
+                                <input type="button" class="btn btn-secondary EmpTransBtns " value="Add" style="width:80px;float:right;margin-right:5px;" />
+                            </a>*@
+
+                            <input id="AddEmployeeBtn" type="button" class="btn btn-success EmpTransBtns " data-toggle="modal" data-target="#AddEmployeeModal"  value="Add" style="width:80px;margin-top:7px;float:right;margin-right:5px;"  />
+
+                            <div class="modal fade" id="AddEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLongTitle">Add Employee</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">                                              
+                                                <div class="col-md-12">
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-5">
+                                                            <label>First Name</label>
+                                                            @*<input type="text" class="form-control">*@
+                                                            @Html.EditorFor(model => model.NewEmployee.first_name, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                        </div>
+                                                        <div class="form-group col-md-5">
+                                                            <label>Last Name</label>
+                                                            @*<input type="text" class="form-control">*@
+                                                            @Html.EditorFor(model => model.NewEmployee.last_name, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                        </div>
+                                                        <div class="form-group col-md-2">
+                                                            <label>MI</label>
+                                                            @*<input type="text" class="form-control">*@
+                                                            @Html.EditorFor(model => model.NewEmployee.middle_initial, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-5">
+                                                            <label>Employee ID</label>
+                                                            @*<input type="text" class="form-control">*@
+                                                            @Html.EditorFor(model => model.NewEmployee.employee_id, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                        </div>
+                                                        <div class="form-group col-md-5">
+                                                            <label>Date of Birth</label>
+                                                            @*<input type="text" class="form-control">*@
+                                                            @Html.EditorFor(model => model.NewEmployee.Date_of_birth, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                        </div>
+                                                        <div class="form-group col-md-2">
+                                                            <label>Loc ID</label>
+                                                            @*<input type="text" class="form-control">*@
+                                                            @Html.EditorFor(model => model.NewEmployee.loc_ID, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-10">
+                                                            <label>Work Email ID</label>
+                                                            @*<input type="text" class="form-control">*@
+                                                            @Html.EditorFor(model => model.NewEmployee.cta_email, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                        </div>
+                                                        <div class="form-group col-md-2">
+                                                            <label>Sales ID</label>
+                                                            @*<input type="text" class="form-control">*@
+                                                            @Html.EditorFor(model => model.NewEmployee.sales_id, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-8">
+                                                            <label>Position</label>
+                                                            @*<input type="text" class="form-control">*@
+                                                            @Html.EditorFor(model => model.NewEmployee.cta_position, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                        </div>
+                                                        <div class="form-group col-md-4">
+                                                            <label>Work No#</label>
+                                                            @*<input type="text" class="form-control">*@
+                                                            @Html.EditorFor(model => model.NewEmployee.cta_direct_phone, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                          <hr style="border:1px thin gray"/>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-8">
+                                                            <label>Personal Email</label>
+                                                            @*<input type="text" class="form-control">*@
+                                                            @Html.EditorFor(model => model.NewEmployeePersonal.personal_email, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                        </div>
+                                                        <div class="form-group col-md-4">
+                                                            <label>Primary Ph#</label>
+                                                            @*<input type="text" class="form-control">*@
+                                                            @Html.EditorFor(model => model.NewEmployeePersonal.primary_phone, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-8">
+                                                            <label>Emergency Contact</label>
+                                                            @*<input type="text" class="form-control">*@
+                                                            @Html.EditorFor(model => model.NewEmployeePersonal.emergency_contact_name, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                        </div>
+                                                        <div class="form-group col-md-4">
+                                                            <label>Emergency Ph#</label>
+                                                            @*<input type="text" class="form-control">*@
+                                                            @Html.EditorFor(model => model.NewEmployeePersonal.emergency_contact_number, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-4">
+                                                            <label>Secondary Ph#</label>
+                                                            @*<input type="text" class="form-control">*@
+                                                            @Html.EditorFor(model => model.NewEmployeePersonal.secondary_phone, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                        </div>
+                                                        <div class="form-group col-md-4">
+                                                            <label>Address 1</label>
+                                                            @*<input type="text" class="form-control">*@
+                                                            @Html.EditorFor(model => model.NewEmployeePersonal.home_street1, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                        </div>
+                                                        <div class="form-group col-md-4">
+                                                            <label>Address 2</label>
+                                                            @*<input type="text" class="form-control">*@
+                                                            @Html.EditorFor(model => model.NewEmployeePersonal.home_street2, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                              
+                                            </div>
+
+
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+
+                                            <input type="submit" class="btn btn-success" value="Save" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         }
                     </div>
-                    <div class="col-md-9">
-                        <a href="@Url.Action("AddStaff", "Management")">
-                            <input type="button" class="btn btn-secondary EmpTransBtns " value="Add" style="width:80px;float:right;margin-right:5px;" />
-                        </a>
-                    </div>
+                    }
+                    <div class="row" style="margin:20px 0px 0px 0px;">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" style="color:black;width:200px;text-align:center;border:1px solid green" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Active</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " id="profile-tab" style="color:black;width:200px;text-align:center;border:1px solid orangered" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">In-Active</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="myTabContent" style="border:1px solid #cde8ca">
+                            <div class="tab-pane fade  show bg-white active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <div class="card-body">
 
-                </div>
+                                    <!--Content tab-->
+                                    <div class="row people-grid-row">
 
-                <div class="row" style="margin:20px 0px 0px 0px;">
-                    <ul class="nav nav-tabs" id="myTab" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" style="color:black;width:200px;text-align:center;border:1px solid green" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Active</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link " id="profile-tab" style="color:black;width:200px;text-align:center;border:1px solid orangered" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">In-Active</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="myTabContent" style="border:1px solid #cde8ca">
-                        <div class="tab-pane fade  show bg-white active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                            <div class="card-body">
-
-                                <!--Content tab-->
-                                <div class="row people-grid-row">
-
-                                    @foreach (var employee in Model.employeeDetails)
-                                    {
-                                        if (employee.status == 1)
+                                        @foreach (var employee in Model.employeeDetails)
                                         {
-                                            string base64ProfilePic = "";
-                                            if (@employee.profile_pic is null)
+                                            if (employee.status == 1)
                                             {
-                                                base64ProfilePic = "";
-                                            }
-                                            else
-                                            {
-                                                base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(@employee.profile_pic);
-                                            }
-                                            <div class="col-md-6 col-lg-6 col-xl-4">
-                                                <div class="card shadow-sm">
-                                                    <div class="card-body">
-                                                        <div class="row">
-                                                            <div class="col-md-4 text-center">
-                                                                <a href="@Url.Action("StaffInfo", "Management", new { values = @employee.employee_id})" class="booking-doc-img">
-                                                                    @*<img src="~/Content/profilepic.jpg" alt="User Image">*@
+                                                string base64ProfilePic = "";
+                                                if (@employee.profile_pic is null)
+                                                {
+                                                    base64ProfilePic = "";
+                                                }
+                                                else
+                                                {
+                                                    base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(@employee.profile_pic);
+                                                }
+                                                <div class="col-md-6 col-lg-6 col-xl-4">
+                                                    <div class="card shadow-sm">
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col-md-4 text-center">
+                                                                    <a href="@Url.Action("StaffInfo", "Management", new { values = @employee.employee_id})" class="booking-doc-img">
+                                                                        @*<img src="~/Content/profilepic.jpg" alt="User Image">*@
 
-                                                                    @if (base64ProfilePic == "")
-                                                                    {
-                                                                        <img class="imageClass" src="~/Content/profilepic.jpg" alt="ProfilePic" />
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <img class="imageClass" alt="profilePic" src="@base64ProfilePic" />
-                                                                    }
+                                                                        @if (base64ProfilePic == "")
+                                                                        {
+                                                                            <img class="imageClass" src="~/Content/profilepic.jpg" alt="ProfilePic" />
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <img class="imageClass" alt="profilePic" src="@base64ProfilePic" />
+                                                                        }
 
-                                                                </a>
+                                                                    </a>
 
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <h6 style="font-size:18px;"><a href="@Url.Action("StaffInfo", "Management", new { values = @employee.employee_id})" class="text-primary">@employee.full_name</a></h6>
-                                                                <div>
-                                                                    <p class="mb-0"><b>@employee.cta_position</b></p>
-                                                                    <p class="mb-0 ctm-text-sm">@employee.employee_id</p>
                                                                 </div>
+                                                                <div class="col-md-8">
+                                                                    <h6 style="font-size:18px;"><a href="@Url.Action("StaffInfo", "Management", new { values = @employee.employee_id})" class="text-primary">@employee.full_name</a></h6>
+                                                                    <div>
+                                                                        <p class="mb-0"><b>@employee.cta_position</b></p>
+                                                                        <p class="mb-0 ctm-text-sm">@employee.employee_id</p>
+                                                                    </div>
 
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        }
+                                            }
 
-                                    }
+                                        }
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="tab-pane fade bg-white" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                            <div class="card-body">
+                            <div class="tab-pane fade bg-white" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                <div class="card-body">
 
-                                <!--Content tab-->
-                                <div class="row people-grid-row">
+                                    <!--Content tab-->
+                                    <div class="row people-grid-row">
 
-                                    @foreach (var employee in Model.employeeDetails)
-                                    {
-                                        if (employee.status == 0)
+                                        @foreach (var employee in Model.employeeDetails)
                                         {
-                                            string base64ProfilePic = "";
-                                            if (@employee.profile_pic is null)
+                                            if (employee.status == 0)
                                             {
-                                                base64ProfilePic = "";
-                                            }
-                                            else
-                                            {
-                                                base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(@employee.profile_pic);
-                                            }
-                                            <div class="col-md-6 col-lg-6 col-xl-4">
-                                                <div class="card shadow-sm">
-                                                    <div class="card-body">
-                                                        <div class="row">
-                                                            <div class="col-md-4 text-center">
-                                                                <a href="@Url.Action("StaffInfo", "Management", new { values = @employee.employee_id})" class="booking-doc-img">
-                                                                    @*<img src="~/Content/profilepic.jpg" alt="User Image">*@
+                                                string base64ProfilePic = "";
+                                                if (@employee.profile_pic is null)
+                                                {
+                                                    base64ProfilePic = "";
+                                                }
+                                                else
+                                                {
+                                                    base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(@employee.profile_pic);
+                                                }
+                                                <div class="col-md-6 col-lg-6 col-xl-4">
+                                                    <div class="card shadow-sm">
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col-md-4 text-center">
+                                                                    <a href="@Url.Action("StaffInfo", "Management", new { values = @employee.employee_id})" class="booking-doc-img">
+                                                                        @*<img src="~/Content/profilepic.jpg" alt="User Image">*@
 
-                                                                    @if (base64ProfilePic == "")
-                                                                    {
-                                                                        <img class="imageClass" src="~/Content/profilepic.jpg" alt="ProfilePic" />
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <img class="imageClass" alt="profilePic" src="@base64ProfilePic" />
-                                                                    }
+                                                                        @if (base64ProfilePic == "")
+                                                                        {
+                                                                            <img class="imageClass" src="~/Content/profilepic.jpg" alt="ProfilePic" />
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <img class="imageClass" alt="profilePic" src="@base64ProfilePic" />
+                                                                        }
 
-                                                                </a>
+                                                                    </a>
 
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <h6 style="font-size:18px;"><a href="@Url.Action("StaffInfo", "Management", new { values = @employee.employee_id})" class="text-primary">@employee.full_name</a></h6>
-                                                                <div>
-                                                                    <p class="mb-0" ><b>@employee.cta_position</b></p>
-                                                                    <p class="mb-0 ctm-text-sm">@employee.employee_id</p>
                                                                 </div>
+                                                                <div class="col-md-8">
+                                                                    <h6 style="font-size:18px;"><a href="@Url.Action("StaffInfo", "Management", new { values = @employee.employee_id})" class="text-primary">@employee.full_name</a></h6>
+                                                                    <div>
+                                                                        <p class="mb-0"><b>@employee.cta_position</b></p>
+                                                                        <p class="mb-0 ctm-text-sm">@employee.employee_id</p>
+                                                                    </div>
 
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        }
+                                            }
 
-                                    }
+                                        }
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-  
+    }
+
+
+
     <script>
         $(document).ready(function () {
             $('#home-tab').css("font-weight", "bold");
@@ -270,6 +416,19 @@
             $('#clickThis').on('click', function () {
                 $('#sidebar').toggleClass('active');
             });
+
+
+             @*$('#AddEmployeeBtn').click(function () {
+               
+                $.ajax({
+                            url: '@Url.Action("AddEmployee", "Management")',
+                            data: { value: "" },
+                            type: 'GET',
+                            success: function (data) {
+                                $("#AddEmployeeModalDiv").html(data);
+                    }
+                });
+         });*@
 
         });
 

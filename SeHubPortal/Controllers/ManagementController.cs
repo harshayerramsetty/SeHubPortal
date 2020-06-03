@@ -16,6 +16,18 @@ namespace SeHubPortal.Controllers
 {
     public class ManagementController : Controller
     {
+
+
+        public tbl_sehub_access CheckPermissions(int employeeID)
+        {
+             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            int empId = Convert.ToInt32(Session["userID"].ToString());         
+            var empDetails= db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
+     
+            return empDetails;
+        }
+
+
         // GET: Management
         public ActionResult Index()
         {
@@ -623,8 +635,11 @@ namespace SeHubPortal.Controllers
         public ActionResult MyStaff(string LocId)
         {
             Debug.WriteLine("In MyStaff");
-            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             int empId = Convert.ToInt32(Session["userID"].ToString());
+            int permissions=CheckPermissions(empId).my_staff.Value;
+
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+           
             string locationid = "";
             if (LocId == "" || LocId is null )
             {
@@ -645,17 +660,18 @@ namespace SeHubPortal.Controllers
             {
                 locationid = LocId;
             }
-            
 
-            var EmployeeDetails = db.tbl_employee.Where(x => x.loc_ID == locationid).OrderBy(x => x.full_name);
+
+            var EmployeeDetails = db.tbl_employee.Where(x => x.loc_ID == locationid).OrderBy(x => x.full_name).ToList();
             MyStaffViewModel modal = new MyStaffViewModel();
 
             Debug.WriteLine("locationid:" + locationid);
             if (EmployeeDetails != null)
             {
 
-                modal.employeeDetails = EmployeeDetails.ToList();
+                modal.employeeDetails = EmployeeDetails;
                 modal.MatchedStaffLocs= populateLocations();
+                modal.EmployeePermissions = permissions;
                 return View(modal);
             }
             else
