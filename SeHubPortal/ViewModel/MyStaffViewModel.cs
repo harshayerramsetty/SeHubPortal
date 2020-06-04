@@ -15,6 +15,7 @@ namespace SeHubPortal.ViewModel
         public int EmployeePermissions { get; set; }
         public tbl_employee NewEmployee { get; set; }
         public tbl_employee_personal NewEmployeePersonal { get; set; }
+        public bool active_status { get; set; }
 
     }
 }

@@ -32,6 +32,7 @@
 
         body {
             background-color: #f0f2f5;
+            padding-right: 0 !important;
         }
 
         .heading {
@@ -107,7 +108,7 @@
         <div class="row">
             <div class="card shadow-sm flex-fill grow" style="margin:10px 20px 0px 20px;">
                 <div class="card-header">
-                    <h6 class="card-title mb-0 d-inline-block">Employees : 101</h6>
+                    <h6 class="card-title mb-0 d-inline-block">Employee List</h6>
                 </div>
                 <div class="card-body ">
                     @if (Model.EmployeePermissions != 1)
@@ -123,145 +124,172 @@
                         </div>
                         @if (Model.EmployeePermissions != 2)
                         {
-                        <div class="col-md-9">
-                            @*<a href="@Url.Action("AddStaff", "Management")">
-                                <input type="button" class="btn btn-secondary EmpTransBtns " value="Add" style="width:80px;float:right;margin-right:5px;" />
-                            </a>*@
+                        <div class="col-md-9">                          
+                            <input id="AddEmployeeBtn" type="button" class="btn btn-success EmpTransBtns " data-toggle="modal" data-target="#AddEmployeeModal" value="Add" style="width:80px;margin-top:7px;float:right;margin-right:5px;" />
 
-                            <input id="AddEmployeeBtn" type="button" class="btn btn-success EmpTransBtns " data-toggle="modal" data-target="#AddEmployeeModal"  value="Add" style="width:80px;margin-top:7px;float:right;margin-right:5px;"  />
-
-                            <div class="modal fade" id="AddEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                                <div class="modal-dialog modal-lg" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLongTitle">Add Employee</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="row">                                              
-                                                <div class="col-md-12">
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-5">
-                                                            <label>First Name</label>
-                                                            @*<input type="text" class="form-control">*@
-                                                            @Html.EditorFor(model => model.NewEmployee.first_name, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
-                                                        </div>
-                                                        <div class="form-group col-md-5">
-                                                            <label>Last Name</label>
-                                                            @*<input type="text" class="form-control">*@
-                                                            @Html.EditorFor(model => model.NewEmployee.last_name, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
-                                                        </div>
-                                                        <div class="form-group col-md-2">
-                                                            <label>MI</label>
-                                                            @*<input type="text" class="form-control">*@
-                                                            @Html.EditorFor(model => model.NewEmployee.middle_initial, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-5">
-                                                            <label>Employee ID</label>
-                                                            @*<input type="text" class="form-control">*@
-                                                            @Html.EditorFor(model => model.NewEmployee.employee_id, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
-                                                        </div>
-                                                        <div class="form-group col-md-5">
-                                                            <label>Date of Birth</label>
-                                                            @*<input type="text" class="form-control">*@
-                                                            @Html.EditorFor(model => model.NewEmployee.Date_of_birth, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
-                                                        </div>
-                                                        <div class="form-group col-md-2">
-                                                            <label>Loc ID</label>
-                                                            @*<input type="text" class="form-control">*@
-                                                            @Html.EditorFor(model => model.NewEmployee.loc_ID, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-10">
-                                                            <label>Work Email ID</label>
-                                                            @*<input type="text" class="form-control">*@
-                                                            @Html.EditorFor(model => model.NewEmployee.cta_email, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
-                                                        </div>
-                                                        <div class="form-group col-md-2">
-                                                            <label>Sales ID</label>
-                                                            @*<input type="text" class="form-control">*@
-                                                            @Html.EditorFor(model => model.NewEmployee.sales_id, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-8">
-                                                            <label>Position</label>
-                                                            @*<input type="text" class="form-control">*@
-                                                            @Html.EditorFor(model => model.NewEmployee.cta_position, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
-                                                        </div>
-                                                        <div class="form-group col-md-4">
-                                                            <label>Work No#</label>
-                                                            @*<input type="text" class="form-control">*@
-                                                            @Html.EditorFor(model => model.NewEmployee.cta_direct_phone, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
-                                                        </div>
-                                                    </div>
-                                                </div>
-
+                            @using (Html.BeginForm("AddEmployee", "Management", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {
+                                <div class="modal fade" id="AddEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">Add Employee</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
                                             </div>
-                                          <hr style="border:1px thin gray"/>
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-8">
-                                                            <label>Personal Email</label>
-                                                            @*<input type="text" class="form-control">*@
-                                                            @Html.EditorFor(model => model.NewEmployeePersonal.personal_email, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-row">
+                                                            <div class="form-group col-md-2">
+                                                                <label>Employee ID</label>
+                                                               
+                                                                @Html.EditorFor(model => model.NewEmployee.employee_id, new { htmlAttributes = new { @class = "form-control", @type = "text", @required = "required" } })
+                                                            </div>
+
+                                                            <div class="form-group col-md-2">
+                                                                <label>Loc ID</label>
+                                                                @Html.DropDownListFor(model => model.NewEmployee.loc_ID, Model.MatchedStaffLocs, "select", new { @class = "form-control", @required = "required" })
+                                                            </div>
+                                                            <div class="form-group col-md-2">
+                                                                <label>Sales ID</label>
+                                                             
+                                                                @Html.EditorFor(model => model.NewEmployee.sales_id, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                            </div>
+                                                            <div class="form-group col-md-3">
+                                                                <label>Work Number</label>
+                                                             
+                                                                @Html.EditorFor(model => model.NewEmployee.cta_direct_phone, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                            </div>
+                                                            <div class="form-group col-md-3">
+                                                                <label>Cell Number</label>
+                                                              
+                                                                @Html.EditorFor(model => model.NewEmployee.cta_cell, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                            </div>
                                                         </div>
-                                                        <div class="form-group col-md-4">
-                                                            <label>Primary Ph#</label>
-                                                            @*<input type="text" class="form-control">*@
-                                                            @Html.EditorFor(model => model.NewEmployeePersonal.primary_phone, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                        <div class="form-row">
+                                                            <div class="form-group col-md-6">
+                                                                <label>Work Email ID</label>
+                                                             
+                                                                @Html.EditorFor(model => model.NewEmployee.cta_email, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label>Position</label>
+                                                            
+                                                                @Html.EditorFor(model => model.NewEmployee.cta_position, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                            </div>
                                                         </div>
+                                                        <hr style="border:1px solid  black" />
+                                                        <div class="form-row">
+                                                            <div class="form-group col-md-4">
+                                                                <label>First Name</label>
+                                                              
+                                                                @Html.EditorFor(model => model.NewEmployee.first_name, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label>Last Name</label>
+                                                              
+                                                                @Html.EditorFor(model => model.NewEmployee.last_name, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                            </div>
+                                                            <div class="form-group col-md-1">
+                                                                <label>MI</label>
+                                                               
+                                                                @Html.EditorFor(model => model.NewEmployee.middle_initial, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                            </div>
+                                                            <div class="form-group col-md-3">
+                                                                <label>Date of Birth</label>
+                                                              
+                                                                @Html.EditorFor(model => model.NewEmployee.Date_of_birth, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-row">
+                                                            <div class="form-group col-md-6">
+                                                                <label>Personal Email</label>
+                                                               
+                                                                @Html.EditorFor(model => model.NewEmployeePersonal.personal_email, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                            </div>
+                                                            <div class="form-group col-md-3">
+                                                                <label>Primary Phone</label>
+                                                               
+                                                                @Html.EditorFor(model => model.NewEmployeePersonal.primary_phone, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                            </div>
+                                                            <div class="form-group col-md-3">
+                                                                <label>Secondary Phone</label>
+                                                               
+                                                                @Html.EditorFor(model => model.NewEmployeePersonal.secondary_phone, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-row">
+                                                            <div class="form-group col-md-6">
+                                                                <label>Address 1</label>
+                                                              
+                                                                @Html.EditorFor(model => model.NewEmployeePersonal.home_street1, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label>Address 2</label>
+                                                            
+                                                                @Html.EditorFor(model => model.NewEmployeePersonal.home_street2, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-row">
+                                                            <div class="form-group col-md-4">
+                                                                <label>City</label>
+                                                              
+                                                                @Html.EditorFor(model => model.NewEmployeePersonal.city, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                            </div>
+                                                            <div class="form-group col-md-2">
+                                                                <label>Province</label>
+                                                             
+                                                                @Html.EditorFor(model => model.NewEmployeePersonal.province, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label>Postal Code</label>
+                                                               
+                                                                @Html.EditorFor(model => model.NewEmployeePersonal.postal_code, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                            </div>
+                                                            <div class="form-group col-md-2">
+                                                                <label>Country</label>
+                                                               
+                                                                @Html.EditorFor(model => model.NewEmployeePersonal.country, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                            </div>
+                                                        </div>
+                                                        <hr style="border:1px solid  black" />
+                                                        <div class="form-row">
+                                                            <div class="form-group col-md-4">
+                                                                <label style="color:red">Emergency Contact</label>
+                                                              
+                                                                @Html.EditorFor(model => model.NewEmployeePersonal.emergency_contact_name, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                            </div>
+                                                            <div class="form-group col-md-2">
+                                                                <label style="color:red">Phone Number</label>
+                                                              
+                                                                @Html.EditorFor(model => model.NewEmployeePersonal.emergency_contact_number, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                            </div>
+                                                            <div class="form-group col-md-2">
+                                                              
+                                                            </div>
+                                                            <div class="form-group col-md-4" >
+                                                                <label>Upload Image</label>
+                                                                <input type="file" name="EmployeeImage" />
+                                                            </div>
+                                                        </div>
+
+
                                                     </div>
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-8">
-                                                            <label>Emergency Contact</label>
-                                                            @*<input type="text" class="form-control">*@
-                                                            @Html.EditorFor(model => model.NewEmployeePersonal.emergency_contact_name, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
-                                                        </div>
-                                                        <div class="form-group col-md-4">
-                                                            <label>Emergency Ph#</label>
-                                                            @*<input type="text" class="form-control">*@
-                                                            @Html.EditorFor(model => model.NewEmployeePersonal.emergency_contact_number, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-4">
-                                                            <label>Secondary Ph#</label>
-                                                            @*<input type="text" class="form-control">*@
-                                                            @Html.EditorFor(model => model.NewEmployeePersonal.secondary_phone, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
-                                                        </div>
-                                                        <div class="form-group col-md-4">
-                                                            <label>Address 1</label>
-                                                            @*<input type="text" class="form-control">*@
-                                                            @Html.EditorFor(model => model.NewEmployeePersonal.home_street1, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
-                                                        </div>
-                                                        <div class="form-group col-md-4">
-                                                            <label>Address 2</label>
-                                                            @*<input type="text" class="form-control">*@
-                                                            @Html.EditorFor(model => model.NewEmployeePersonal.home_street2, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
-                                                        </div>
-                                                    </div>
+
                                                 </div>
-                                              
                                             </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger" data-dismiss="modal" style="width:80px;">Cancel</button>
 
-
-
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-
-                                            <input type="submit" class="btn btn-success" value="Save" />
+                                                <input type="submit" class="btn btn-success" value="Save" style="width:80px;" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            }
+
                         </div>
                         }
                     </div>
@@ -269,10 +297,10 @@
                     <div class="row" style="margin:20px 0px 0px 0px;">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" style="color:black;width:200px;text-align:center;border:1px solid green" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Active</a>
+                                <a class="nav-link active" style="color:black;width:200px;text-align:center;border:1px solid #cde8ca" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Active</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link " id="profile-tab" style="color:black;width:200px;text-align:center;border:1px solid orangered" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">In-Active</a>
+                                <a class="nav-link " id="profile-tab" style="color:black;width:200px;text-align:center;border:1px solid #cde8ca" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">In-Active</a>
                             </li>
                         </ul>
                         <div class="tab-content" id="myTabContent" style="border:1px solid #cde8ca">
@@ -297,42 +325,59 @@
                                                 }
                                                 <div class="col-md-6 col-lg-6 col-xl-4">
                                                     <div class="card shadow-sm">
-                                                        <div class="card-body">
-                                                            <div class="row">
-                                                                <div class="col-md-4 text-center">
-                                                                    <a href="@Url.Action("StaffInfo", "Management", new { values = @employee.employee_id})" class="booking-doc-img">
-                                                                        @*<img src="~/Content/profilepic.jpg" alt="User Image">*@
+                                                        <button style="color:Black;background-color:white;text-align:left;border:transparent" data-id="@employee.employee_id" class="EditEmployeeBtn" data-toggle="modal" data-target="#editEmployeeModal" >
+                                                            @*href="@Url.Action("StaffInfo", "Management", new { values = @employee.employee_id})"*@
+                                                            <div class="card-body">
+                                                                <div class="row">
+                                                                    <div class="col-md-4 text-center">
+                                                                        <div class="booking-doc-img">
+                                                                            @*<img src="~/Content/profilepic.jpg" alt="User Image">*@
 
-                                                                        @if (base64ProfilePic == "")
-                                                                        {
-                                                                            <img class="imageClass" src="~/Content/profilepic.jpg" alt="ProfilePic" />
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            <img class="imageClass" alt="profilePic" src="@base64ProfilePic" />
-                                                                        }
+                                                                            @if (base64ProfilePic == "")
+                                                                            {
+                                                                                <img class="imageClass" src="~/Content/profilepic.jpg" alt="ProfilePic" />
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <img class="imageClass" alt="profilePic" src="@base64ProfilePic" />
+                                                                            }
 
-                                                                    </a>
+                                                                        </div>
 
-                                                                </div>
-                                                                <div class="col-md-8">
-                                                                    <h6 style="font-size:18px;"><a href="@Url.Action("StaffInfo", "Management", new { values = @employee.employee_id})" class="text-primary">@employee.full_name</a></h6>
-                                                                    <div>
-                                                                        <p class="mb-0"><b>@employee.cta_position</b></p>
-                                                                        <p class="mb-0 ctm-text-sm">@employee.employee_id</p>
                                                                     </div>
+                                                                    <div class="col-md-8">
+                                                                        <h6 style="font-size:18px;">@employee.full_name</h6>
+                                                                        <div>
+                                                                            <p class="mb-0"><b>@employee.cta_position</b></p>
+                                                                            <p class="mb-0 ctm-text-sm">@employee.employee_id</p>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </button>
+                                                       
+
+                                                        <div class="modal fade" id="editEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                                            <div class="modal-dialog  modal-lg" role="document">
+                                                                <div id="EditEmployeeModalDiv">
 
                                                                 </div>
+
                                                             </div>
                                                         </div>
                                                     </div>
+
                                                 </div>
                                             }
 
                                         }
                                     </div>
                                 </div>
+                               
                             </div>
+
                             <div class="tab-pane fade bg-white" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                                 <div class="card-body">
 
@@ -354,35 +399,50 @@
                                                 }
                                                 <div class="col-md-6 col-lg-6 col-xl-4">
                                                     <div class="card shadow-sm">
-                                                        <div class="card-body">
-                                                            <div class="row">
-                                                                <div class="col-md-4 text-center">
-                                                                    <a href="@Url.Action("StaffInfo", "Management", new { values = @employee.employee_id})" class="booking-doc-img">
-                                                                        @*<img src="~/Content/profilepic.jpg" alt="User Image">*@
+                                                        <button style="color:Black;background-color:white;text-align:left;border:transparent" data-id="@employee.employee_id" class="EditEmployeeBtnInActive" data-toggle="modal" data-target="#editEmployeeModalInActive">
+                                                            @*href="@Url.Action("StaffInfo", "Management", new { values = @employee.employee_id})"*@
+                                                            <div class="card-body">
+                                                                <div class="row">
+                                                                    <div class="col-md-4 text-center">
+                                                                        <div class="booking-doc-img">
+                                                                            @*<img src="~/Content/profilepic.jpg" alt="User Image">*@
 
-                                                                        @if (base64ProfilePic == "")
-                                                                        {
-                                                                            <img class="imageClass" src="~/Content/profilepic.jpg" alt="ProfilePic" />
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            <img class="imageClass" alt="profilePic" src="@base64ProfilePic" />
-                                                                        }
+                                                                            @if (base64ProfilePic == "")
+                                                                            {
+                                                                                <img class="imageClass" src="~/Content/profilepic.jpg" alt="ProfilePic" />
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <img class="imageClass" alt="profilePic" src="@base64ProfilePic" />
+                                                                            }
 
-                                                                    </a>
+                                                                        </div>
 
-                                                                </div>
-                                                                <div class="col-md-8">
-                                                                    <h6 style="font-size:18px;"><a href="@Url.Action("StaffInfo", "Management", new { values = @employee.employee_id})" class="text-primary">@employee.full_name</a></h6>
-                                                                    <div>
-                                                                        <p class="mb-0"><b>@employee.cta_position</b></p>
-                                                                        <p class="mb-0 ctm-text-sm">@employee.employee_id</p>
                                                                     </div>
+                                                                    <div class="col-md-8">
+                                                                        <h6 style="font-size:18px;">@employee.full_name</h6>
+                                                                        <div>
+                                                                            <p class="mb-0"><b>@employee.cta_position</b></p>
+                                                                            <p class="mb-0 ctm-text-sm">@employee.employee_id</p>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </button>
+
+
+                                                        <div class="modal fade" id="editEmployeeModalInActive" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                                            <div class="modal-dialog  modal-lg" role="document">
+                                                                <div id="EditEmployeeModalInActiveDiv">
 
                                                                 </div>
+
                                                             </div>
                                                         </div>
                                                     </div>
+
                                                 </div>
                                             }
 
@@ -402,15 +462,16 @@
 
     <script>
         $(document).ready(function () {
-            $('#home-tab').css("font-weight", "bold");
+            $('#profile-tab').css({ "font-weight": "normal", "color": "gray" });
+            $('#home-tab').css({ "font-weight": "bold", "color": "black" });
             $('#home-tab').on("click", function () {
-                $('#profile-tab').css("font-weight", "normal");
-                $('#home-tab').css("font-weight", "bold");
+                $('#profile-tab').css({ "font-weight": "normal","color": "gray"});
+                $('#home-tab').css({ "font-weight": "bold", "color": "black" });
             })
 
             $('#profile-tab').on("click", function () {
-                $('#profile-tab').css("font-weight", "bold");
-                $('#home-tab').css("font-weight", "normal");
+                $('#profile-tab').css({ "font-weight": "bold", "color": "black" });
+                $('#home-tab').css({ "font-weight": "normal", "color": "gray" });
             })
 
             $('#clickThis').on('click', function () {
@@ -418,17 +479,31 @@
             });
 
 
-             @*$('#AddEmployeeBtn').click(function () {
+            $('.EditEmployeeBtn').click(function () {
                
+                var id = $(this).data('id');
                 $.ajax({
-                            url: '@Url.Action("AddEmployee", "Management")',
-                            data: { value: "" },
+                            url: '@Url.Action("EditEmployeeInfo", "Management")',
+                            data: { value: id },
                             type: 'GET',
                             success: function (data) {
-                                $("#AddEmployeeModalDiv").html(data);
+                                $("#EditEmployeeModalDiv").html(data);
                     }
                 });
-         });*@
+            });
+
+            $('.EditEmployeeBtnInActive').click(function () {
+               
+                var id = $(this).data('id');
+                $.ajax({
+                            url: '@Url.Action("EditEmployeeInfo", "Management")',
+                            data: { value: id },
+                            type: 'GET',
+                            success: function (data) {
+                                $("#EditEmployeeModalInActiveDiv").html(data);
+                    }
+                });
+            });
 
         });
 

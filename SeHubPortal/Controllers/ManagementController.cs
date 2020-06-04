@@ -631,6 +631,162 @@ namespace SeHubPortal.Controllers
             db.SaveChanges();
             return RedirectToAction("MyStaff", new { LocId = "" });
         }
+        [HttpPost]
+        public ActionResult AddEmployee(MyStaffViewModel model, HttpPostedFileBase EmployeeImage)
+        {
+
+            byte[] imageBytes = null;
+            if (EmployeeImage != null && EmployeeImage.ContentLength > 0)
+            {
+                var imageName = Path.GetFileName(EmployeeImage.FileName);
+                Debug.WriteLine("EmployeeImage:" + imageName);
+                string fileName = "C:/Users/mahes/Videos/Docs/Upload This/Resources/sidebar-04/js/" + imageName;
+                
+                using (Image image = Image.FromFile(fileName))
+                {
+                    using (MemoryStream m = new MemoryStream())
+                    {
+                        image.Save(m, image.RawFormat);
+                        imageBytes = m.ToArray();
+
+                        // Convert byte[] to Base64 String
+                        string base64String = Convert.ToBase64String(imageBytes);
+                        Debug.WriteLine("Image base64:" + base64String);
+                    }
+                }
+            }
+
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            tbl_employee empdetails = new tbl_employee();
+            empdetails = model.NewEmployee;
+            empdetails.full_name = model.NewEmployee.last_name + "," + model.NewEmployee.first_name;
+            empdetails.status = 1;
+            empdetails.pic_status = 0;
+            empdetails.profile_pic = imageBytes;
+            tbl_employee_personal personalDetails = new tbl_employee_personal();
+            personalDetails = model.NewEmployeePersonal;
+            personalDetails.employee_id = empdetails.employee_id;
+
+            db.tbl_employee.Add(empdetails);
+            db.tbl_employee_personal.Add(personalDetails);
+            db.SaveChanges();
+            return RedirectToAction("MyStaff", new { LocId = "" });
+        }
+
+
+        [HttpGet]
+        public ActionResult EditEmployeeInfo(string value)
+        {
+            Debug.WriteLine("Inside EditEmployeeInfo:" + value);
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            MyStaffViewModel model = new MyStaffViewModel();
+            int empId=Convert.ToInt32(value);
+            var employeeInfoObj = db.tbl_employee.Where(x => x.employee_id == empId).FirstOrDefault();
+            var employeePersonalInfoObj = db.tbl_employee_personal.Where(x => x.employee_id == empId).FirstOrDefault();
+            if (employeeInfoObj is null)
+            {
+                //Do Nothing
+            }
+            else
+            {
+                
+                model.NewEmployee = employeeInfoObj;     
+                if(employeeInfoObj.status==1)
+                {
+                    model.active_status = true;
+
+                }
+                else
+                {
+                    model.active_status = false;
+                }
+            }
+            if(employeePersonalInfoObj is null)
+            {
+
+            }
+            else
+            {
+                model.NewEmployeePersonal = employeePersonalInfoObj;
+            }
+            model.MatchedStaffLocs = populateLocations();
+            //obj.MatchedLocs = populateLocations();
+            //obj.MatchedLocID = vehicleInfoObj.loc_id;        
+            return PartialView(model);
+        }
+
+        [HttpPost]
+        public ActionResult EditEmployeeInfo(MyStaffViewModel model, HttpPostedFileBase EmployeeImage)
+        {
+
+            byte[] imageBytes = null;
+            if (EmployeeImage != null && EmployeeImage.ContentLength > 0)
+            {
+                var imageName = Path.GetFileName(EmployeeImage.FileName);
+                Debug.WriteLine("EmployeeImage:" + imageName);
+                string fileName = "C:/Users/mahes/Videos/Docs/Upload This/Resources/sidebar-04/js/" + imageName;
+
+                using (Image image = Image.FromFile(fileName))
+                {
+                    using (MemoryStream m = new MemoryStream())
+                    {
+                        image.Save(m, image.RawFormat);
+                        imageBytes = m.ToArray();
+
+                        // Convert byte[] to Base64 String
+                        string base64String = Convert.ToBase64String(imageBytes);
+                        Debug.WriteLine("Image base64:" + base64String);
+                    }
+                }
+            }
+
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            var EmployeeInfo = db.tbl_employee.Where(a => a.employee_id.Equals(model.NewEmployee.employee_id)).FirstOrDefault();
+            var PersonalDetails = db.tbl_employee_personal.Where(a => a.employee_id.Equals(model.NewEmployee.employee_id)).FirstOrDefault();
+            if (EmployeeInfo!=null)
+            {
+                EmployeeInfo.first_name = model.NewEmployee.first_name;
+                EmployeeInfo.middle_initial = model.NewEmployee.middle_initial;
+                EmployeeInfo.last_name = model.NewEmployee.last_name;
+                EmployeeInfo.cta_email = model.NewEmployee.cta_email;
+                EmployeeInfo.cta_cell = model.NewEmployee.cta_cell;
+                EmployeeInfo.cta_position = model.NewEmployee.cta_position;
+                EmployeeInfo.loc_ID = model.NewEmployee.loc_ID;
+                EmployeeInfo.sales_id = model.NewEmployee.sales_id;
+                EmployeeInfo.full_name = model.NewEmployee.last_name + "," + model.NewEmployee.first_name;
+                EmployeeInfo.cta_direct_phone = model.NewEmployee.cta_direct_phone;
+                if(model.active_status==true)
+                {
+                    EmployeeInfo.status = 1;
+                }
+                else
+                {
+                    EmployeeInfo.status = 0;
+                }
+                if(imageBytes!=null)
+                {
+                    EmployeeInfo.profile_pic = imageBytes;
+                }                       
+            }
+            if(PersonalDetails != null)
+            {
+                PersonalDetails.personal_email = model.NewEmployeePersonal.personal_email;
+                PersonalDetails.home_street1 = model.NewEmployeePersonal.home_street1;
+                PersonalDetails.home_street2 = model.NewEmployeePersonal.home_street2;
+                PersonalDetails.city = model.NewEmployeePersonal.city;
+                PersonalDetails.province = model.NewEmployeePersonal.province;
+                PersonalDetails.country = model.NewEmployeePersonal.country;
+                PersonalDetails.postal_code = model.NewEmployeePersonal.postal_code;
+                PersonalDetails.emergency_contact_name = model.NewEmployeePersonal.emergency_contact_name;
+                PersonalDetails.emergency_contact_number = model.NewEmployeePersonal.emergency_contact_number;
+
+            }
+
+            db.SaveChanges();
+            return RedirectToAction("MyStaff", new { LocId = model.NewEmployee.loc_ID });
+        }
+
+
         [HttpGet]
         public ActionResult MyStaff(string LocId)
         {
