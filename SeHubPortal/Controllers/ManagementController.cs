@@ -15,9 +15,7 @@ using System.Web.Mvc;
 namespace SeHubPortal.Controllers
 {
     public class ManagementController : Controller
-    {
-
-
+    {       
         public tbl_sehub_access CheckPermissions(int employeeID)
         {
              CityTireAndAutoEntities db = new CityTireAndAutoEntities();
@@ -827,6 +825,7 @@ namespace SeHubPortal.Controllers
 
                 modal.employeeDetails = EmployeeDetails;
                 modal.MatchedStaffLocs= populateLocations();
+                modal.MatchedStaffLocID = locationid;
                 modal.EmployeePermissions = permissions;
                 return View(modal);
             }
