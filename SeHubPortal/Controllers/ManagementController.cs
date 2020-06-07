@@ -16,7 +16,7 @@ namespace SeHubPortal.Controllers
 {
     public class ManagementController : Controller
     {       
-        public tbl_sehub_access CheckPermissions(int employeeID)
+        public tbl_sehub_access CheckPermissions()
         {
              CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             int empId = Convert.ToInt32(Session["userID"].ToString());         
@@ -32,199 +32,12 @@ namespace SeHubPortal.Controllers
             return View();
         }
         [HttpGet]
-        public ActionResult QuickGuide()
+        public ActionResult Dashboard()
         {
             return View();
         }
 
-        [HttpGet]
-        public ActionResult EmployeePermissions(string locId)
-        {
-            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
-            EmployeePermissionsViewModel model = new EmployeePermissionsViewModel();
-
-            string location = "";
-
-            if(locId is null || locId=="")
-            {
-                
-            }
-            else
-            {
-                model.MatchedLocID = locId;
-                location = locId;
-            }
-
-            //var employeeList =
-            //            (from employee in db.tbl_employee
-            //             join credentials in db.tbl_employee_credentials on employee.employee_id equals credentials.employee_id
-            //             where employee.loc_ID.Contains(location)
-            //             orderby employee.full_name
-            //             select new
-            //             {
-            //                 employee.employee_id,
-            //                 employee.first_name,
-            //                 employee.middle_initial,
-            //                 employee.last_name,
-            //                 employee.cta_email,
-            //                 employee.cta_cell,
-            //                 employee.cta_position,
-            //                 employee.loc_ID,
-            //                 employee.rfid_number,
-            //                 employee.sales_id,
-            //                 employee.full_name,
-            //                 employee.cta_direct_phone,
-            //                 employee.Date_of_birth,
-            //                 employee.status,
-            //                 employee.pic_status,
-            //                 employee.profile_pic
-            //             }).ToList();
-            //List<tbl_employee> emplyAttList = new List<tbl_employee>();
-            //foreach (var item in employeeList)
-            //{
-            //    tbl_employee obj = new tbl_employee(); // ViewModel
-
-            //    if (item.status == 1)
-            //    {
-            //        obj.employee_id = item.employee_id;
-            //        obj.full_name = item.full_name;
-            //        obj.cta_email = item.cta_email;
-            //        obj.cta_position = item.cta_position;
-            //        obj.profile_pic = item.profile_pic;
-            //        emplyAttList.Add(obj);
-            //    }
-
-            //}
-            var employeeList = db.tbl_employee.Where(x => x.loc_ID.Contains(location) &&x.status==1).OrderBy(x=>x.employee_id).ToList();
-            model.EmployeesList = employeeList;
-            model.MatchedLocs = populateLocations();
-            return View(model);
-        }
-        [HttpPost]
-        public ActionResult EmployeePermissionsChangelocation(EmployeePermissionsViewModel model)
-        {
-            return RedirectToAction("EmployeePermissions", new { locId = model.MatchedLocID });
-        }
-
-        [HttpGet]
-        public ActionResult ManageEmployeePermisssions(string value)
-        {
-
-            Debug.WriteLine("In ManageEmployeePermisssions:" + value);
-            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
-            int empId = Convert.ToInt32(value);
-            var credentialsObj = db.tbl_employee_credentials.Where(x => x.employee_id == empId).FirstOrDefault();
-            var SehubAccessObj = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
-            var empDetails= db.tbl_employee.Where(x => x.employee_id == empId).FirstOrDefault();
-           
-            if (SehubAccessObj is null)
-            {
-                tbl_sehub_access newAccess = new tbl_sehub_access();
-                newAccess.employee_id = empId;
-                newAccess.app_access = 0;
-                newAccess.dashboard = 0;
-                newAccess.calendar = 0;
-                newAccess.newsletter = 0;
-                newAccess.neworder = 0;
-                newAccess.openorder = 0;
-                newAccess.my_staff = 0;
-                newAccess.payroll = 0;
-                newAccess.attendance = 0;
-                newAccess.new_hire_package = 0;
-                newAccess.vacation_schedule = 0;
-                newAccess.asset_control = 0;
-                newAccess.calculator = 0;
-                newAccess.fuel_log = 0;
-                newAccess.library_access = 0;
-                newAccess.manufacturing_plant = 0;
-                newAccess.user_management = 0;
-                newAccess.customer_reporting = 0;
-                db.tbl_sehub_access.Add(newAccess);
-                db.SaveChanges();
-            }
-            if(credentialsObj is null)
-            {
-                tbl_employee_credentials newCredentials = new tbl_employee_credentials();
-                newCredentials.employee_id = empId;
-                newCredentials.password = null;
-                newCredentials.permission = true;
-                newCredentials.user_name = empDetails.first_name;
-                newCredentials.password365 = null;
-                newCredentials.management_permissions = false;
-                newCredentials.administrative_permissions = false;
-                newCredentials.additional_recipient = null;
-                db.tbl_employee_credentials.Add(newCredentials);
-                db.SaveChanges();
-            }
-            var AddSehubAccessObj = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
-            var AddcredentialsObj = db.tbl_employee_credentials.Where(x => x.employee_id == empId).FirstOrDefault();
-            ModifyEmployeePermissions obj = new ModifyEmployeePermissions();
-            obj.EmployeeCredentials = AddcredentialsObj;
-            obj.SehubAccess = AddSehubAccessObj;
-            obj.empDetails = empDetails;
-            return PartialView(obj);
-        }
-
-        [HttpPost]
-        public ActionResult ManageEmployeePermisssions(ModifyEmployeePermissions model)
-        {
-            Debug.WriteLine("App access:"+model.SehubAccess.app_access);
-            Debug.WriteLine("Library access:" + model.SehubAccess.library_access);
-            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
-            var SehubAccessObj = db.tbl_sehub_access.Where(x => x.employee_id == model.EmployeeCredentials.employee_id).FirstOrDefault();
-            var credentialsObj = db.tbl_employee_credentials.Where(x => x.employee_id == model.EmployeeCredentials.employee_id).FirstOrDefault();
-            var Empdetails = db.tbl_employee.Where(x => x.employee_id == model.empDetails.employee_id).FirstOrDefault();
-            var empAttendace=db.tbl_employee_attendance.Where(x => x.employee_id == model.empDetails.employee_id).FirstOrDefault();
-            if (credentialsObj!=null)
-            {
-                credentialsObj.password = model.EmployeeCredentials.password;
-                credentialsObj.password365 = model.EmployeeCredentials.password365;
-            }
-            if (SehubAccessObj!=null)
-            {
-                SehubAccessObj.app_access = model.SehubAccess.app_access;
-                SehubAccessObj.dashboard = model.SehubAccess.dashboard;
-                SehubAccessObj.calendar = model.SehubAccess.calendar;
-                SehubAccessObj.newsletter = model.SehubAccess.newsletter;
-                SehubAccessObj.neworder = model.SehubAccess.neworder;
-                SehubAccessObj.openorder = model.SehubAccess.openorder;
-                SehubAccessObj.my_staff = model.SehubAccess.my_staff;
-                SehubAccessObj.payroll = model.SehubAccess.payroll;
-                SehubAccessObj.attendance = model.SehubAccess.attendance;
-                SehubAccessObj.new_hire_package = model.SehubAccess.new_hire_package;
-                SehubAccessObj.vacation_schedule = model.SehubAccess.vacation_schedule;
-                SehubAccessObj.asset_control = model.SehubAccess.asset_control;
-                SehubAccessObj.calculator = model.SehubAccess.calculator;
-                SehubAccessObj.fuel_log = model.SehubAccess.fuel_log;
-                SehubAccessObj.library_access = model.SehubAccess.library_access;
-                SehubAccessObj.manufacturing_plant = model.SehubAccess.manufacturing_plant;
-                SehubAccessObj.user_management = model.SehubAccess.user_management;
-                SehubAccessObj.customer_reporting = model.SehubAccess.customer_reporting;
-            }
-            if(Empdetails!=null)
-            {
-                Empdetails.rfid_number = model.empDetails.rfid_number;
-                Empdetails.loc_ID = model.empDetails.loc_ID;
-            }
-
-            if(empAttendace!=null)
-            {
-                empAttendace.rfid_number = model.empDetails.rfid_number;
-                empAttendace.at_work_location = model.empDetails.loc_ID;
-            }
-            else
-            {
-                tbl_employee_attendance newAttendacnRow = new tbl_employee_attendance();
-                newAttendacnRow.employee_id = model.empDetails.employee_id;
-                newAttendacnRow.rfid_number = model.empDetails.rfid_number;
-                newAttendacnRow.at_work = false;
-                newAttendacnRow.at_work_location = model.empDetails.loc_ID;
-                db.tbl_employee_attendance.Add(newAttendacnRow);
-
-            }
-            db.SaveChanges();
-            return RedirectToAction("EmployeePermissions", new { locId = "" });
-        }
+  
 
         //[HttpGet]
         //public ActionResult AddEmployeePermisssions(string value)
@@ -256,6 +69,12 @@ namespace SeHubPortal.Controllers
         [HttpGet]
         public ActionResult AssetControl()
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
+            int permissions = CheckPermissions().asset_control.Value;
+            ViewData["AssetAccessLevel"] = permissions;
             Debug.WriteLine("In AssetControl");
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             int empId = Convert.ToInt32(Session["userID"].ToString());
@@ -270,13 +89,24 @@ namespace SeHubPortal.Controllers
             {
                 locationid = "";
             }
-            var VehicleDetails = db.tbl_vehicle_info.Where(x => x.loc_id == locationid).OrderBy(x => x.vehicle_short_id);
-
-
+            List<tbl_vehicle_info> VehicleDetails = new List<tbl_vehicle_info>();
+            if(permissions==1)
+            {
+                VehicleDetails = db.tbl_vehicle_info.Where(x => x.assigned_to == empId).OrderBy(x => x.vehicle_short_id).ToList();
+            }
+            else if(permissions==2)
+            {
+                VehicleDetails = db.tbl_vehicle_info.Where(x => x.loc_id == locationid).OrderBy(x => x.vehicle_short_id).ToList();
+            }
+            else if(permissions==3)
+            {
+                VehicleDetails = db.tbl_vehicle_info.OrderBy(x => x.vehicle_short_id).ToList();
+            }
+           
             if (VehicleDetails != null)
             {
                 Debug.WriteLine("Vehicle info there are details");
-                return View(VehicleDetails.ToList());
+                return View(VehicleDetails);
             }
             else
             {
@@ -787,11 +617,14 @@ namespace SeHubPortal.Controllers
 
         [HttpGet]
         public ActionResult MyStaff(string LocId)
-        {
-            Debug.WriteLine("In MyStaff");
-            int empId = Convert.ToInt32(Session["userID"].ToString());
-            int permissions=CheckPermissions(empId).my_staff.Value;
+        {          
+            if(Session["userID"]==null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
+            int permissions = CheckPermissions().my_staff.Value;
 
+            int empId = Convert.ToInt32(Session["userID"].ToString());
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
            
             string locationid = "";
@@ -1835,6 +1668,12 @@ namespace SeHubPortal.Controllers
         [HttpGet]
         public ActionResult Attendance(string locId,string employeeId)
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
+            int permissions = CheckPermissions().attendance.Value;
+
             Debug.WriteLine("On Attendence Load");
             int empId = Convert.ToInt32(Session["userID"].ToString());
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
@@ -1883,6 +1722,7 @@ namespace SeHubPortal.Controllers
             model.employeeList = emplyAttList;
             model.MatchedLocs = populateLocations();
             model.MatchedLocID = location;
+            model.AccessLevel = permissions;
 
             if(employeeId is null)
             {

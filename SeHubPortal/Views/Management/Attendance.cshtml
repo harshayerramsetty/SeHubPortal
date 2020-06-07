@@ -111,16 +111,6 @@
             height: 30px;
             font-size: 18px;
         }
-
-
-
-
-
-
-
-
-
-
         .title {
             color: grey;
             font-size: 18px;
@@ -214,7 +204,7 @@
                     <div class="col">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
-                                <li class="breadcrumb-item"><a href="@Url.Action("Attendance", "Management")">Management</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Management")">Management</a></li>
                                 <li class="breadcrumb-item " aria-current="page">Attendance</li>
                             </ol>
                         </nav>
@@ -224,275 +214,283 @@
                         <span class="sr-only">Toggle Menu</span>
                     </button>
                 </div>
-                <div class="payRollMainBody">
-                    <div>
-                        <div class="fleft ">                          
-                            <div class="row bg-secondary" style="height:47px; padding-top:8px; margin-left:2px;margin-right:1px;">
-                                <div class="col-md-7">
-                                    <h5 style="color:white;font-size:19px;margin-top:6px">Employee List</h5>
-                                </div>
-                                @using (Html.BeginForm("ChangeLocAttendance", "Management", FormMethod.Post))
-                                {
-                                <div class="col-md-5">
-                                    @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "Select", new { @onChange = "this.form.submit()" })
-                                    <noscript> <input class="btn btn-success" type="submit" value="Search" /></noscript>
-                                </div>
-                                }
-                            </div>
-                            <ul class="list-group shadow-lg  bg-white rounded">
-                                @foreach (var items in Model.employeeList)
-                                {
-                                    if (items.atWork == "True")
+                @if (Model.AccessLevel != 0)
+                {
+                    <div class="payRollMainBody">
+                        <div>
+                            <div class="fleft ">
+                                <div class="row bg-secondary" style="height:47px; padding-top:8px; margin-left:2px;margin-right:1px;">
+                                    <div class="col-md-7">
+                                        <h5 style="color:white;font-size:16px;margin-top:6px">Employee List</h5>
+                                    </div>
+                                    @if (Model.AccessLevel != 1 && Model.AccessLevel != 2)
                                     {
-                                        <li class="list-group-item" onclick="location.href='@Url.Action("Attendance", "Management", new { locId = Model.MatchedLocID,employeeId=@items.employeeId})';">
-                                            <img style="vertical-align:middle" src="~/Content/like3.png" alt="">
-                                            <span style="vertical-align:middle">@items.fullName</span>
-                                        </li>
+                                        using (Html.BeginForm("ChangeLocAttendance", "Management", FormMethod.Post))
+                                        {
+                                            <div class="col-md-5">
+                                                @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "Select", new { @onChange = "this.form.submit()" })
+                                                <noscript> <input class="btn btn-success" type="submit" value="Search" /></noscript>
+                                            </div>
+                                        }
+                                    }
+
+                                </div>
+                                <ul class="list-group shadow-lg  bg-white rounded">
+                                    @foreach (var items in Model.employeeList)
+                                    {
+                                        if (items.atWork == "True")
+                                        {
+                                            <li class="list-group-item" onclick="location.href='@Url.Action("Attendance", "Management", new { locId = Model.MatchedLocID,employeeId=@items.employeeId})';">
+                                                <img style="vertical-align:middle" src="~/Content/like3.png" alt="">
+                                                <span style="vertical-align:middle">@items.fullName</span>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li class="list-group-item" onclick="location.href='@Url.Action("Attendance", "Management", new { locId = Model.MatchedLocID,employeeId=@items.employeeId})';">
+                                                <img style="vertical-align:middle" src="~/Content/dislike.png" alt="">
+                                                <span style="vertical-align:middle">@items.fullName</span>
+                                            </li>
+                                        }
+
+
+                                    }
+
+                                </ul>
+
+                            </div>
+                            <div class="fright">
+                                <div id="divLoader" style="text-align:center;margin-top:230px;"> <img src="~/Content/blueloader.gif" alt="Loader" /> </div>
+                                <div id="AttendanceRightBody" style="display:none">
+                                    @if (Model.SelectedEmployeeId is null)
+                                    {
+
                                     }
                                     else
                                     {
-                                        <li class="list-group-item" onclick="location.href='@Url.Action("Attendance", "Management", new { locId = Model.MatchedLocID,employeeId=@items.employeeId})';">
-                                            <img style="vertical-align:middle" src="~/Content/dislike.png" alt="">
-                                            <span style="vertical-align:middle">@items.fullName</span>
-                                        </li>
+                                        <div style="margin:0px 0px 0px 10px;">
+                                            <div class="card shadow-sm flex-fill grow" style="margin:0px 0px 0px 0px;">
+                                                <div class="card-body ">
+                                                    <div class="row EmpDetailsHeader">
+                                                        <div class="col-lg-10 col-md-6">
+                                                            <div class="row" style="height:40px;">
+                                                                <text style="font-size:xx-large; font-weight:bold;">@ViewData["EmployeeName"]</text>
+                                                            </div>
+                                                            <div class="row" style="height:30px;">
+                                                                <text style="font-size:medium; margin:10px 0px 0px 0px"> @ViewData["Position"]</text>
+                                                            </div>
+                                                            <div class="row" style="height:30px;">
+                                                                <text style="font-size:medium; ">Employee Id : @ViewData["EmployeeId"] </text>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-2 col-md-6" style="text-align:right; display: flex;justify-content: center;align-items: center;overflow: hidden">
+                                                            @*<img src="~/Content/mahesh.jpg" alt="ProfilePic" style="width:85%; height:85%; border-radius:50%;">*@
+
+                                                            @if (@ViewData["ProfileImage"].ToString() == "data:image/png;base64,")
+                                                            {
+                                                                <img src="~/Content/profilepic.jpg" alt="ProfilePic" style="width:65%; height:75%; border-radius:50%;">
+                                                            }
+                                                            else
+                                                            {
+                                                                <img alt="profilePic" src=" @ViewData["ProfileImage"]" style="width:65%; height:75%; border-radius:50%;" />
+                                                            }
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div style="margin:20px 0px 0px 10px;">
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12 d-flex">
+                                                    <div class="card shadow-sm flex-fill grow">
+                                                        <div class="card-header">
+                                                            <h6 class="card-title mb-0 d-inline-block">Attendance Summary</h6>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            @* <svg class="barChart" data-bar-chart data-data="23,43,10,13,10,20,30,23,43,10,13,10,20,30" data-bar-width="15"></svg>*@
+                                                            <div class="AttendanceBarChart">
+                                                                <div class="row ">
+                                                                    <div class="col-lg-8">
+                                                                        <div class="row subTables">
+                                                                            <div class="col-md-2" style="background-color:#007bff">
+                                                                                <text style="color:white; font-size:14px">Date:</text>
+                                                                            </div>
+                                                                            <div class="col-md-2" style="border:1px solid #007bff">
+                                                                                <text><span id="city" style=" font-size:14px"></span></text>
+                                                                            </div>
+
+                                                                            &nbsp;
+                                                                            &nbsp;
+                                                                            <div class="col-md-2" style="background-color:#007bff">
+                                                                                <text style="color:white;font-size:14px">Hours:</text>
+                                                                            </div>
+                                                                            <div class="col-md-2" style="border:1px solid #007bff">
+                                                                                <text><span id="inches" style=" font-size:14px"></span></text>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-3  ml-auto">
+                                                                        <div class="row subTables">
+                                                                            <div class="col-md-8" style="background-color:#b0b4b8">
+                                                                                <text style="color:white; font-size:14px">Working Hours:</text>
+                                                                            </div>
+                                                                            <div class="col-md-4" style="border:1px solid #b0b4b8">
+                                                                                <text style=" font-size:14px">@ViewData["BiweekHours"]</text>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    @*&nbsp;
+                                                            &nbsp;
+                                                            <div class="col-lg-2">
+                                                                <div class="row subTables">
+                                                                    <div class="col-md-8" style="background-color:#007bff">
+                                                                        <text style="color:white;">Hours:</text>
+                                                                    </div>
+                                                                    <div class="col-md-4" style="border:1px solid #007bff">
+                                                                        <text><span id="inches"></span></text>
+                                                                    </div>
+                                                                </div>
+                                                            </div>*@
+                                                                    @*<p><span id="city"></span> - <span id="inches"></span></p>*@
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        <div style="margin:20px 0px 0px 10px;">
+                                            <div class="row">
+                                                <div class="col-lg-6 col-md-12 d-flex">
+                                                    <div class="card shadow-sm flex-fill grow">
+                                                        <div class="card-header">
+                                                            <h6 class="card-title mb-0 d-inline-block">Average In</h6>
+                                                            <a href="#" class="d-inline-block float-right text-primary"></a>
+                                                        </div>
+                                                        <div class="card-body text-center">
+                                                            <div class="time-list">
+                                                                <div class="dash-stats-list">
+                                                                    <span class="btn btn-outline-primary" style="font-size:30px;">@ViewData["avgInHoursOverall"]</span>
+                                                                    @*<span class="btn btn-outline-primary">7:45 AM</span>*@
+                                                                    <p class="mb-0">Year</p>
+                                                                </div>
+                                                                <div class="dash-stats-list">
+                                                                    <span class="btn btn-outline-primary" style="font-size:30px;"> @ViewData["avgInHoursCurrent"]</span>
+                                                                    @*<span class="btn btn-outline-primary">7:35 AM</span>*@
+                                                                    <p class="mb-0">Bi-Week</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-12 d-flex">
+                                                    <div class="card shadow-sm flex-fill grow">
+                                                        <div class="card-header">
+                                                            <h6 class="card-title mb-0 d-inline-block">Average Out</h6>
+                                                            <a href="#" class="d-inline-block float-right text-primary"></a>
+                                                        </div>
+                                                        <div class="card-body text-center">
+                                                            <div class="time-list">
+                                                                <div class="dash-stats-list">
+                                                                    <span class="btn btn-outline-primary" style="font-size:30px;">@ViewData["avgOutHoursOverall"]</span>
+                                                                    @*<span class="btn btn-outline-primary">17:25 PM</span>*@
+                                                                    <p class="mb-0">Year</p>
+                                                                </div>
+                                                                <div class="dash-stats-list">
+                                                                    <span class="btn btn-outline-primary" style="font-size:30px;">@ViewData["avgOutHoursCurrent"]</span>
+                                                                    @*<span class="btn btn-outline-primary">17:55 PM</span>*@
+                                                                    <p class="mb-0">Bi-Week</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div style="margin:20px 0px 20px 10px;">
+                                            <div class="row">
+                                                <div class="col-lg-6 col-md-12 d-flex">
+                                                    <div class="card shadow-sm flex-fill grow">
+                                                        <div class="card-header">
+                                                            <h6 class="card-title mb-0 d-inline-block">Attendance Usage</h6>
+                                                        </div>
+                                                        <div class="card-body text-center">
+                                                            @*<svg id="chart" preserveAspectRatio="xMinYMin meet" viewBox="0 0 200 200"></svg>*@
+                                                            <div id="chartBar" style=" height: 400px;width:400px;position: relative;">
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-12 d-flex">
+                                                    <div class="card shadow-sm flex-fill grow">
+                                                        <div class="card-header">
+                                                            <h6 class="card-title mb-0 d-inline-block">Employee Leave Summary</h6>
+                                                        </div>
+                                                        <div class="card-body text-center">
+                                                            @*<div id="my_dataviz"></div>*@
+                                                            <table class="table">
+                                                                <thead class="thead-light">
+                                                                    <tr>
+                                                                        <th scope="col">Type</th>
+                                                                        <th scope="col">Days</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>Pay Period</td>
+                                                                        <td>2008</td>
+
+                                                                    </tr>
+                                                                    <tr>
+
+                                                                        <td>Sick Days Used</td>
+                                                                        <td>0</td>
+
+                                                                    </tr>
+                                                                    <tr>
+
+                                                                        <td>Vaction Days Used</td>
+                                                                        <td>0</td>
+                                                                    </tr>
+                                                                    <tr>
+
+                                                                        <td>Split Days Used</td>
+                                                                        <td>0</td>
+                                                                    </tr>
+                                                                    <tr>
+
+                                                                        <td>Off Days Used</td>
+                                                                        <td>0</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
                                     }
 
-
-                                }
-
-                            </ul>
-
-                        </div>
-                        <div class="fright">
-                            <div id="divLoader" style="text-align:center;margin-top:230px;"> <img src="~/Content/blueloader.gif" alt="Loader" /> </div>
-                            <div id="AttendanceRightBody" style="display:none">
-                                @if (Model.SelectedEmployeeId is null)
-                                {
-
-                                }
-                                else
-                                {
-                                    <div style="margin:0px 0px 0px 10px;">
-                                        <div class="card shadow-sm flex-fill grow" style="margin:0px 0px 0px 0px;">
-                                            <div class="card-body ">
-                                                <div class="row EmpDetailsHeader">
-                                                    <div class="col-lg-10 col-md-6">
-                                                        <div class="row" style="height:40px;">
-                                                            <text style="font-size:xx-large; font-weight:bold;">@ViewData["EmployeeName"]</text>
-                                                        </div>
-                                                        <div class="row" style="height:30px;">
-                                                            <text style="font-size:medium; margin:10px 0px 0px 0px"> @ViewData["Position"]</text>
-                                                        </div>
-                                                        <div class="row" style="height:30px;">
-                                                            <text style="font-size:medium; ">Employee Id : @ViewData["EmployeeId"] </text>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-lg-2 col-md-6" style="text-align:right; display: flex;justify-content: center;align-items: center;overflow: hidden">
-                                                        @*<img src="~/Content/mahesh.jpg" alt="ProfilePic" style="width:85%; height:85%; border-radius:50%;">*@
-
-                                                        @if (@ViewData["ProfileImage"].ToString() == "data:image/png;base64,")
-                                                        {
-                                                            <img src="~/Content/profilepic.jpg" alt="ProfilePic" style="width:65%; height:75%; border-radius:50%;">
-                                                        }
-                                                        else
-                                                        {
-                                                            <img alt="profilePic" src=" @ViewData["ProfileImage"]" style="width:65%; height:75%; border-radius:50%;" />
-                                                        }
-
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div style="margin:20px 0px 0px 10px;">
-                                        <div class="row">
-                                            <div class="col-lg-12 col-md-12 d-flex">
-                                                <div class="card shadow-sm flex-fill grow">
-                                                    <div class="card-header">
-                                                        <h6 class="card-title mb-0 d-inline-block">Attendance Summary</h6>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        @* <svg class="barChart" data-bar-chart data-data="23,43,10,13,10,20,30,23,43,10,13,10,20,30" data-bar-width="15"></svg>*@
-                                                        <div class="AttendanceBarChart">
-                                                            <div class="row ">
-                                                                <div class="col-lg-8">
-                                                                    <div class="row subTables">
-                                                                        <div class="col-md-2" style="background-color:#007bff">
-                                                                            <text style="color:white; font-size:14px">Date:</text>
-                                                                        </div>
-                                                                        <div class="col-md-2" style="border:1px solid #007bff">
-                                                                            <text><span id="city" style=" font-size:14px"></span></text>
-                                                                        </div>
-
-                                                                        &nbsp;
-                                                                        &nbsp;
-                                                                        <div class="col-md-2" style="background-color:#007bff">
-                                                                            <text style="color:white;font-size:14px">Hours:</text>
-                                                                        </div>
-                                                                        <div class="col-md-2" style="border:1px solid #007bff">
-                                                                            <text><span id="inches" style=" font-size:14px"></span></text>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3  ml-auto">
-                                                                    <div class="row subTables">
-                                                                        <div class="col-md-8" style="background-color:#b0b4b8">
-                                                                            <text style="color:white; font-size:14px">Working Hours:</text>
-                                                                        </div>
-                                                                        <div class="col-md-4" style="border:1px solid #b0b4b8">
-                                                                            <text style=" font-size:14px">@ViewData["BiweekHours"]</text>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                @*&nbsp;
-                                            &nbsp;
-                                            <div class="col-lg-2">
-                                                <div class="row subTables">
-                                                    <div class="col-md-8" style="background-color:#007bff">
-                                                        <text style="color:white;">Hours:</text>
-                                                    </div>
-                                                    <div class="col-md-4" style="border:1px solid #007bff">
-                                                        <text><span id="inches"></span></text>
-                                                    </div>
-                                                </div>
-                                            </div>*@
-                                                                @*<p><span id="city"></span> - <span id="inches"></span></p>*@
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-                                    <div style="margin:20px 0px 0px 10px;">
-                                        <div class="row">
-                                            <div class="col-lg-6 col-md-12 d-flex">
-                                                <div class="card shadow-sm flex-fill grow">
-                                                    <div class="card-header">
-                                                        <h6 class="card-title mb-0 d-inline-block">Average In</h6>
-                                                        <a href="#" class="d-inline-block float-right text-primary"></a>
-                                                    </div>
-                                                    <div class="card-body text-center">
-                                                        <div class="time-list">
-                                                            <div class="dash-stats-list">
-                                                                <span class="btn btn-outline-primary" style="font-size:30px;">@ViewData["avgInHoursOverall"]</span>
-                                                                @*<span class="btn btn-outline-primary">7:45 AM</span>*@
-                                                                <p class="mb-0">Year</p>
-                                                            </div>
-                                                            <div class="dash-stats-list">
-                                                                <span class="btn btn-outline-primary" style="font-size:30px;"> @ViewData["avgInHoursCurrent"]</span>
-                                                                @*<span class="btn btn-outline-primary">7:35 AM</span>*@
-                                                                <p class="mb-0">Bi-Week</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6 col-md-12 d-flex">
-                                                <div class="card shadow-sm flex-fill grow">
-                                                    <div class="card-header">
-                                                        <h6 class="card-title mb-0 d-inline-block">Average Out</h6>
-                                                        <a href="#" class="d-inline-block float-right text-primary"></a>
-                                                    </div>
-                                                    <div class="card-body text-center">
-                                                        <div class="time-list">
-                                                            <div class="dash-stats-list">
-                                                                <span class="btn btn-outline-primary" style="font-size:30px;">@ViewData["avgOutHoursOverall"]</span>
-                                                                @*<span class="btn btn-outline-primary">17:25 PM</span>*@
-                                                                <p class="mb-0">Year</p>
-                                                            </div>
-                                                            <div class="dash-stats-list">
-                                                                <span class="btn btn-outline-primary" style="font-size:30px;">@ViewData["avgOutHoursCurrent"]</span>
-                                                                @*<span class="btn btn-outline-primary">17:55 PM</span>*@
-                                                                <p class="mb-0">Bi-Week</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-
-                                    <div style="margin:20px 0px 20px 10px;">
-                                        <div class="row">
-                                            <div class="col-lg-6 col-md-12 d-flex">
-                                                <div class="card shadow-sm flex-fill grow">
-                                                    <div class="card-header">
-                                                        <h6 class="card-title mb-0 d-inline-block">Attendance Usage</h6>
-                                                    </div>
-                                                    <div class="card-body text-center">
-                                                        @*<svg id="chart" preserveAspectRatio="xMinYMin meet" viewBox="0 0 200 200"></svg>*@
-                                                        <div id="chartBar" style=" height: 400px;width:400px;position: relative;">
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6 col-md-12 d-flex">
-                                                <div class="card shadow-sm flex-fill grow">
-                                                    <div class="card-header">
-                                                        <h6 class="card-title mb-0 d-inline-block">Employee Leave Summary</h6>
-                                                    </div>
-                                                    <div class="card-body text-center">
-                                                        @*<div id="my_dataviz"></div>*@
-                                                        <table class="table">
-                                                            <thead class="thead-light">
-                                                                <tr>
-                                                                    <th scope="col">Type</th>
-                                                                    <th scope="col">Days</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td>Pay Period</td>
-                                                                    <td>2008</td>
-
-                                                                </tr>
-                                                                <tr>
-
-                                                                    <td>Sick Days Used</td>
-                                                                    <td>0</td>
-
-                                                                </tr>
-                                                                <tr>
-
-                                                                    <td>Vaction Days Used</td>
-                                                                    <td>0</td>
-                                                                </tr>
-                                                                <tr>
-
-                                                                    <td>Split Days Used</td>
-                                                                    <td>0</td>
-                                                                </tr>
-                                                                <tr>
-
-                                                                    <td>Off Days Used</td>
-                                                                    <td>0</td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-                                }
+                                </div>
 
                             </div>
-
                         </div>
                     </div>
-                </div>
+                }
+
 
             </div>
         </div>

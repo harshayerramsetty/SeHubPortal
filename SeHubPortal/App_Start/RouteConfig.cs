@@ -21,8 +21,8 @@ namespace SeHubPortal
 
             routes.MapRoute(
            "EmployeesPermissions",
-           "Management/{action}/{values}",
-           new { controller = "Management", action = "EmployeePermissions", locId = "" }
+           "Tools/{action}/{values}",
+           new { controller = "Tools", action = "EmployeePermissions", locId = "" }
             );
 
             routes.MapRoute(

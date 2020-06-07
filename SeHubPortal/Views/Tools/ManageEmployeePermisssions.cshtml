@@ -8,22 +8,95 @@
     #EmployeeCredentials_password, #EmployeeCredentials_password365, #empDetails_rfid_number, #empDetails_loc_ID {
         text-align: center;
     }
+
+    /*Toggle buttton css code*/
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 28px;
+    }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 6px;
+            bottom: 5px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+       /*end of toggle button code*/
 </style>
 
 
-@using (Html.BeginForm("ManageEmployeePermisssions", "Management", FormMethod.Post))
+@using (Html.BeginForm("ManageEmployeePermisssions", "Tools", FormMethod.Post))
 {
     <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLongTitle"><b>@Model.empDetails.full_name</b> - <b>@Model.empDetails.employee_id</b></h5>
+            <h6 class="modal-title"  style="margin-left:60px;margin-top:0px; margin-right:10px;">Sehub Access</h6>
+            <label class="switch">
+               @Html.CheckBoxFor(model => model.appAccess, new { htmlAttributes = new { @class = "form-check-input", @type = "checkbox" } })
+                <span class="slider round"></span>
+            </label>
+            <h6 class="modal-title"  style="margin-left:45px;margin-top:3px; margin-right:10px;">Monitor Me</h6>
+            <label class="switch">
+                @Html.CheckBoxFor(model => model.monitorEmployee, new { htmlAttributes = new { @class = "form-check-input", @type = "checkbox" } })
+                <span class="slider round"></span>
+            </label>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <div class="modal-body">
             @*<div class="row" style="margin-left:0px;height:30px;background-color:#cde8ca;color:black;margin-bottom:5px;">
-                    <h6 style="padding:5px;">Employee Credentials:</h6>
-                </div>*@
+            <h6 style="padding:5px;">Employee Credentials:</h6>
+        </div>*@
             @Html.HiddenFor(m => m.EmployeeCredentials.employee_id)
             @Html.HiddenFor(m => m.empDetails.employee_id)
             <div class="row">
@@ -50,34 +123,36 @@
                     @*@Html.HiddenFor(m => m.EmployeeCredentials.password365)*@
                 </div>
             </div>
+            
+            
 
             <div class="row" style="margin-left:0px;height:30px;background-color:#cde8ca;color:black;margin-top:10px ;margin-bottom:5px;">
                 <h6 style="padding:5px;">Application Access:</h6>
             </div>
             @*<div class="row" style="margin-top:10px;">
-                    <div class="col-md-4">
+            <div class="col-md-4">
 
+            </div>
+            <div class="col-md-7">
+                <div class="row">
+                    <div class="col-md-2">
+                        <p>No</p>
                     </div>
-                    <div class="col-md-7">
-                        <div class="row">
-                            <div class="col-md-2">
-                                <p>No</p>
-                            </div>
-                            <div class="col-md-3">
-                                <p>View</p>
-                            </div>
-                            <div class="col-md-2" style="margin-left:4px;">
-                                <p>Edit</p>
-                            </div>
-                            <div class="col-md-2" style="margin-left:4px;">
-                                <p>New</p>
-                            </div>
-                        </div>
+                    <div class="col-md-3">
+                        <p>View</p>
                     </div>
-                    <div class="col-md-1">
+                    <div class="col-md-2" style="margin-left:4px;">
+                        <p>Edit</p>
+                    </div>
+                    <div class="col-md-2" style="margin-left:4px;">
+                        <p>New</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1">
 
-                    </div>
-                </div>*@
+            </div>
+        </div>*@
             <div class="row" style="margin-top:10px;font-style:italic;font-size:13px;color:darkgray">
                 <div class="col-md-3">
 
@@ -109,7 +184,7 @@
                     </div>
                 </div>
                 <div class="col-md-10">
-                    <div class="row">
+                    @*<div class="row">
                         <div class="col-md-3">
                             <text>Sehub Access</text>
                         </div>
@@ -119,7 +194,7 @@
                         <div class="col-md-2">
                             <span id="slider1Val"></span>
                         </div>
-                    </div>
+                    </div>*@
                     <div class="row">
                         <div class="col-md-3">
                             <text>Dashboard</text>

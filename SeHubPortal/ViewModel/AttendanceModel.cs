@@ -12,5 +12,6 @@ namespace SeHubPortal.ViewModel
         public List<SelectListItem> MatchedLocs { get; set; }
         public string MatchedLocID { get; set; }
         public string SelectedEmployeeId { get; set; }
+        public int AccessLevel { get; set; }
     }
 }

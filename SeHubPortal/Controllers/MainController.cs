@@ -13,8 +13,27 @@ namespace SeHubPortal.Controllers
     public class MainController : Controller
     {
         // GET: Main
+        public tbl_sehub_access CheckPermissions()
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+            var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
+
+            return empDetails;
+        }
+
         public ActionResult Dashboard()
         {
+
+            if(CheckPermissions()!=null)
+            {
+
+            }
+            else
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
+
             return View();
         }
         public ActionResult Calendar()
