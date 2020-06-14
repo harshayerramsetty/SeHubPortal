@@ -4,17 +4,24 @@
     Layout = "~/Views/Shared/_ToolsLayout.cshtml";
 }
 
+
+@model SeHubPortal.ViewModel.CustomerReportingViewModel
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <link href="~/Content/NewOrder.css" rel="stylesheet" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>*@
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <style>
         #ToolsClicked {
             background-color: #f0f2f5;
@@ -34,6 +41,7 @@
 
         body {
             background-color: #f0f2f5;
+            padding-right: 0 !important;
         }
 
         .heading {
@@ -51,6 +59,26 @@
             .card-header h6 {
                 color: black;
             }
+
+
+
+        #historyTable_info {
+            display: none;
+        }
+
+        .dataTables_filter {
+            display: none;
+        }
+
+        #historyTable_paginate {
+            float: right;
+        }
+
+        label {
+            display: inline-flex;
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
     </style>
 </head>
 <body>
@@ -58,21 +86,345 @@
         <div class="col">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
-                    <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Tools")">Tools</a></li>
-                    <li class="breadcrumb-item " aria-current="page">CRM</li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("QuickGuide", "Tools")">Tools</a></li>
+                    <li class="breadcrumb-item " aria-current="page">Customer Reporting</li>
                 </ol>
             </nav>
         </div>
-        <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+        <button type="button" id="clickThis" class="btn" style="margin-bottom: 14px;">
             <i class="fa fa-bars" style="font-size:25px"></i>
             <span class="sr-only">Toggle Menu</span>
         </button>
+    </div>
+
+    <div class="text-right" style="        margin-bottom: 0px;
+        margin-top: 0px;
+        margin-right: 1%;
+">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="padding-left:50px; padding-right:50px; ">
+            Add
+        </button>
+    </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            @using (Html.BeginForm("AddNewCRMDetails", "Tools", FormMethod.Post))
+            {
+                <div class="modal-content" style="width:45rem">
+
+                    <div class="modal-header">
+                        @if (Model.Custname != null)
+                        {<h5 class="modal-title" id="exampleModalLabel">@Model.customerDetails.cust_name (@Model.customerDetails.cust_us1)</h5>
+                        @Html.HiddenFor(m => m.customerDetails.cust_us1, new { @id = "some_property" })
+                        @Html.HiddenFor(m => m.customerDetails.cust_name, new { @id = "some_property1" })
+
+
+                    }
+                    else
+                    { <h5 class="modal-title" id="exampleModalLabel">Add Details</h5>}
+
+                    </div>
+                    <div class="modal-body">
+                        <div class="card shadow-lg">
+                            <div class="card-header text-white" style="background-color: #cde8ca;"><h6>Report Details</h6></div>
+                            <form style="margin: 10px;">
+
+                                <div class="row" style="padding-left:2%; padding-right:3%;  padding-top:2%">
+                                    <div class="clo-lg-2" style="margin-left:20px; margin-right:auto; margin-top: 0px;"><p>Visit type </p></div>
+                                    <div class="col-lg-4 text-right" style="margin-right: auto;">
+                                        @*<input class="text-center" type="text" style="text-align:right;" />*@
+                                        @{
+                                            List<SelectListItem> listItems = new List<SelectListItem>();
+                                            listItems.Add(new SelectListItem
+                                            {
+                                                Text = "Phone",
+                                                Value = "Phone"
+                                            });
+                                            listItems.Add(new SelectListItem
+                                            {
+                                                Text = "Face-To-Face",
+                                                Value = "Face-To-Face"
+                                            });
+
+
+                                        }
+                                        @Html.DropDownListFor(m => m.AddCRM.visit_type, listItems, new { @class = "text", @style = "width:91%" })
+                                        <br />
+                                    </div>
+                                    <div class="clo-lg-2" style="margin-left: 10px; margin-top: 0px;"><p>Date </p></div>
+                                    <div class="col-lg-4 text-right" style="margin-left: 20px;">
+                                        @*<input class="text-center " type="text" />*@
+                                        @Html.EditorFor(m => m.AddCRM.visit_date, new { htmlAttributes = new { @class = "text-center", @type = "date", @style = "width:93%", @required = "required" } })
+                                        <br />
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row" style="padding-left:2%; padding-right:3%;  padding-top:2%">
+                                    <div class="clo-lg-2" style="margin-left: 20px; margin-right:auto;margin-top: 0px;"><p>Employee </p></div>
+                                    <div class="col-sm-4 text-right" style="margin-right: auto;">
+                                        <input class="text-center" type="text" id="apped_AddButton_empname" />
+                                        <br />
+                                    </div>
+                                    <div class="clo-lg-2" style="margin-left: 10px;margin-top: 0px;"><p>Contact </p></div>
+                                    <div class="col-sm-4 text-right">
+                                        @*<input class="text-center " type="text" />*@
+                                        @Html.EditorFor(m => m.AddCRM.customer_contact, new { htmlAttributes = new { @class = "text-center", @required = "required" } })
+                                        <br />
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row" style="padding-left:2%; padding-right:3%;  padding-top:2%">
+                                    <div class="clo-lg-12" style="margin-left: 20px"><p>Comments </p></div>
+                                </div>
+                                <div class="row" style="margin-left:3%; margin-right:3%;">
+                                    @*<textarea class="col-lg-12" rows="7"></textarea>*@
+                                    @Html.TextAreaFor(m => m.AddCRM.discusssion_details, 5, 120, new { htmlAttributes = new { @required = "required" } })
+                                </div>
+                                <br />
+                                <div class="row" style="padding-left:2%; padding-right:3%;  padding-top:2%">
+                                    <div class="clo-lg-12" style="margin-left: 20px"><p>Remainders </p></div>
+                                </div>
+                                <div class="row" style="margin-left:3%; margin-right:3%; margin-bottom:2%;">
+                                    @*<textarea class="col-lg-12" rows="5"></textarea>*@
+                                    @Html.TextAreaFor(m => m.AddCRM.remainder, 3, 120, new { htmlAttributes = new { @required = "required" } })
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+
+                        <input type="submit" class="btn btn-success" value="Save" />
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="row" style="margin:10px 0px 0px 0px;padding-top:13px; padding-bottom:13px; background-color: white;">
+        <div class="col-md-6">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="card shadow-lg" style="height:15rem">
+                        <div class="card-header">
+                            <h6>
+                                Customer Details
+                            </h6>
+                        </div>
+                        <div class="card-body">
+
+
+                            <div class="row">
+                                @using (Html.BeginForm("CRMSelectedCustomer", "Tools", FormMethod.Post))
+                                {
+                                    <div class="row" style="margin-bottom: 13px">
+                                        <div class="col-lg-1"><label class="col-lg-12 col-form-label" style="margin-left: 0px;"> Name </label></div>
+                                        <div class="col-lg-11 text-left">
+                                            <div class="col-lg-12" style="background-color:white; text-align: left">
+                                                @Html.DropDownListFor(m => m.Custname, Model.Customers, "Please select", new { @class = "col-sm-12 text-left", @style = "width: 645px;height: 27px; margin-left: 41px;", @onChange = "this.form.submit()" })
+                                                <noscript> <input class="btn btn-success" type="submit" value="Search" /></noscript>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            @if (Model.Custname != null)
+                            {
+
+
+                                <div class="row" style="background-color:white;">
+                                    <div class="col-md-5">
+                                        <div class="form-group row">
+                                            <label for="inputPassword" class="col-lg-4 col-form-label ">Account # </label>
+                                            <div class="col-sm-8 text-left">
+                                                @Html.TextBoxFor(m => m.customerDetails.cust_us1, new { @type = "text" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword" class="col-lg-4 col-form-label ">Phone # </label>
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(m => m.customerDetails.cust_phone, new { @type = "text" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="form-group row">
+                                            <label for="inputPassword" class="col-lg-2 col-form-label " style="background-color:white;">Address </label>
+                                            <div class="col-md-9 text-left" style="width:60%; background-color: white;border: 1px solid black; border-radius: 3px;margin-left: 5%;">
+                                                @Html.TextBoxFor(m => m.customerDetails.cust_add1, new { @type = "text", @style = "width:100%; border: 3px;", @rows = "1" })
+                                                <br />
+                                                @Html.TextBoxFor(m => m.customerDetails.cust_add2, new { @type = "text", @style = "width:100%; border: 3px;", @rows = "1" })
+                                                <br />
+                                                @Html.TextBoxFor(m => m.customerDetails.cust_add3, new { @type = "text", @style = "width:100%; border: 3px; border-color:white;", @rows = "1" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            else
+                            {
+
+                                <div class="row" style="background-color:white;">
+                                    <div class="col-md-5">
+                                        <div class="form-group row">
+                                            <label for="inputPassword" class="col-lg-4 col-form-label ">Account # </label>
+                                            <div class="col-sm-8 text-left">
+                                                @Html.TextBoxFor(m => m.customerDetails.cust_us1, new { @type = "text" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword" class="col-lg-4 col-form-label ">Phone # </label>
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(m => m.customerDetails.cust_phone, new { @type = "text" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="form-group row">
+                                            <label for="inputPassword" class="col-lg-2 col-form-label " style="background-color:white;">Address </label>
+                                            <div class="col-md-9 text-left" style="width:60%; background-color: white;border: 1px solid black; border-radius: 3px;margin-left: 5%;">
+                                                @Html.TextBoxFor(m => m.customerDetails.cust_add1, new { @type = "text", @style = "width:100%; border: 3px;", @rows = "1" })
+                                                <br />
+                                                @Html.TextBoxFor(m => m.customerDetails.cust_add2, new { @type = "text", @style = "width:100%; border: 3px;", @rows = "1" })
+                                                <br />
+                                                @Html.TextBoxFor(m => m.customerDetails.cust_add3, new { @type = "text", @style = "width:100%; border: 3px;", @rows = "1" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card shadow-lg" style="height:27rem">
+                        <div class="card-header">
+                            <h6>Call Report History</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <table id="historyTable" class="table table-striped table-bordered display compact" cellspacing="0" style="width:100%;">
+                                    <thead class="thead-dark" style="        text-align: center
+">
+                                        <tr>
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Employee</th>
+                                            <th scope="col">visit</th>
+                                            <th scope="col">Contact</th>
+                                            <th>Info</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="text-align:center">
+
+                                        @if (Model.Custname != null)
+                                        {
+                                            foreach (var items in Model.customerReportingDetails)
+                                            {
+                                                <tr style="height: 10px">
+                                                    <td>@items.visit_date.ToString("yyyy-MM-dd")</td>
+                                                    <td>@items.cta_employee_number</td>
+                                                    <td>@items.visit_type</td>
+                                                    <td>@items.customer_contact</td>
+                                                    <td>
+                                                        <a href="#" class="btn"><span style="display:none">@items.visit_type;@items.visit_date;@items.cta_employee_number;@items.customer_contact;@items.discusssion_details;@items.remainder;@items.EmployeeName</span> <i class="fa fa-info" style="font-size:20px;opacity:0.8; color:dodgerblue;float:right"></i></a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-header"><h6>Report Details</h6></div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="clo-lg-2" style="margin-left:20px; margin-right:auto; margin-top: 0px;"><p>Visit type </p></div>
+                        <div class="col-lg-4 text-right" style="margin-right: auto;"><input class="text-center" type="text" id="append_Visit_type" style="text-align:right;" /><br /></div>
+                        <div class="clo-lg-2" style="margin-left: 10px; margin-top: 0px;"><p>Date :</p></div>
+                        <div class="col-lg-4 text-right" style="margin-left: 20px;"><input class="text-center " type="text" id="append_Date" /><br /></div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="clo-lg-2" style="margin-left: 20px; margin-right:auto;margin-top: 0px;"><p>Employee </p></div>
+                        <div class="col-sm-4 text-right" style="margin-right: auto;"><input class="text-center" type="text" id="append_empId" /><br /></div>
+                        <div class="clo-lg-2" style="margin-left: 10px;margin-top: 0px;"><p>Contact :</p></div>
+                        <div class="col-sm-4 text-right"><input class="text-center " type="text" id="appendc_Contact" /><br /></div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="clo-lg-12" style="margin-left: 20px"><p>Comments </p></div>
+                    </div>
+                    <div class="row" style="margin-left:auto; margin-right:auto;">
+                        <textarea class="col-lg-12" style="margin-left:auto; margin-right:auto;" id="append_Comments" rows="9"></textarea>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="clo-lg-12" style="margin-left: 20px"><p>Remainders </p></div>
+                    </div>
+                    <div class="row" style="margin-left:auto; margin-right:auto;">
+                        <textarea class="col-lg-12" id="append_Remainders" rows="6"></textarea>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="row"></div>
+
+        </div>
     </div>
 
     <script>
         $(document).ready(function () {
             $('#clickThis').on('click', function () {
                 $('#sidebar').toggleClass('active');
+            });
+            $.noConflict(true);
+
+            $('#historyTable').DataTable(
+
+                {
+                    "aLengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
+                    "iDisplayLength": 4,
+                    "bLengthChange": false,
+                    "orderFixed": [0, "desc"]
+
+                }
+            );
+
+
+
+            $('#historyTable a').click(function (e) {
+                e.preventDefault()
+                $that = $(this);
+                $that.parent().find('a');
+
+                var seleccionado = $(this).children("span").html();
+                console.log(seleccionado);
+                var array = seleccionado.split(";");
+                $('#append_Visit_type').val(array[0]);
+                $('#append_Date').val(array[1].split("").slice(0, 10).join(""))
+                $('#append_empId').val(array[6])
+                $('#appendc_Contact').val(array[3])
+                $('#apped_AddButton_empname').val(array[6])
+                document.getElementById("append_Comments").value = array[4];
+                document.getElementById("append_Remainders").value = array[5];
+
             });
 
         });
@@ -81,4 +433,8 @@
 </body>
 
 </html>
+
+
+
+
 

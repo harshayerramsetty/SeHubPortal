@@ -525,10 +525,193 @@ namespace SeHubPortal.Controllers
             db.SaveChanges();
             return RedirectToAction("EmployeePermissions", new { locId = "" });
         }
-        public ActionResult CRM()
+        public ActionResult CRM(string CustId)
         {
-            return View();
+            Debug.WriteLine("In CustomerReporting:" + CustId);
+            CustomerReportingViewModel modal = new CustomerReportingViewModel();
+            if (CustId == "")
+            {
+                Debug.WriteLine("Null");
+                modal.Customers = PopulateCustomers("Nothing");
+            }
+            else
+            {
+                modal.Custname = CustId;
+                Debug.WriteLine("Custoomer details:" + CustId);
+                modal.Customers = PopulateCustomers(CustId);
+                CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+                var result = db.tbl_customer_list.Where(a => a.cust_us1.Equals(CustId) && a.cust_us2 == "0").FirstOrDefault();
+                if (result != null)
+                {
+                    modal.customerDetails = result;
+                }
+
+
+
+                List<tbl_customer_reporting_viewmodel> customerReportingTable = new List<tbl_customer_reporting_viewmodel>();
+                string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+                using (SqlConnection con = new SqlConnection(constr))
+                {
+                    string query = "select * from tbl_customer_reporting a, tbl_employee b where a.cta_employee_number= b.employee_id and customer_number='" + CustId + "'";
+                    Debug.WriteLine(query);
+                    using (SqlCommand cmd = new SqlCommand(query))
+                    {
+                        cmd.Connection = con;
+                        con.Open();
+                        using (SqlDataReader sdr = cmd.ExecuteReader())
+                        {
+
+                            while (sdr.Read())
+                            {
+                                tbl_customer_reporting_viewmodel cust_report_tbl = new tbl_customer_reporting_viewmodel();
+                                cust_report_tbl.cta_employee_number = Convert.ToInt32(sdr["cta_employee_number"]);
+                                cust_report_tbl.visit_type = sdr["visit_type"].ToString();
+                                cust_report_tbl.report_type = sdr["report_type"].ToString();
+                                cust_report_tbl.customer_name = sdr["customer_name"].ToString();
+                                cust_report_tbl.customer_number = sdr["customer_number"].ToString();
+                                cust_report_tbl.customer_contact = sdr["customer_contact"].ToString();
+                                if(sdr["visit_date"]!=null)
+                                {
+                                    cust_report_tbl.visit_date = Convert.ToDateTime(sdr["visit_date"]);
+                                }
+                               
+
+                                //if (sdr["next_visit"] is null)
+                                //{
+                                    
+
+                                //}
+                                //else
+                                //{
+                                //    cust_report_tbl.next_visit = Convert.ToDateTime(sdr["next_visit"].ToString());
+                                //}
+                                
+                                cust_report_tbl.discusssion_details = sdr["discussion_details"].ToString();
+                                cust_report_tbl.remainder = sdr["reminders"].ToString();
+                                cust_report_tbl.submission_date = Convert.ToDateTime(sdr["submission_date"]);
+                                cust_report_tbl.EmployeeName = sdr["full_name"].ToString();
+                                customerReportingTable.Add(cust_report_tbl);
+
+                            }
+
+                        }
+                        con.Close();
+                    }
+                }
+
+                if (customerReportingTable != null)
+                {
+                    modal.customerReportingDetails = customerReportingTable;
+                }
+
+
+            }
+
+            return View(modal);
         }
+
+
+        [HttpPost]
+        public ActionResult CRMSelectedCustomer(CustomerReportingViewModel model)
+        {
+            Debug.WriteLine("Custoomer details:" + model.Custname);
+            return RedirectToAction("CRM", new { CustId = model.Custname });
+
+        }
+        [HttpPost]
+        public ActionResult AddNewCRMDetails(CustomerReportingViewModel model)
+        {
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+            Debug.WriteLine("In AddNewCRMDetails");
+            Debug.WriteLine(model.customerDetails.cust_us1);
+            Debug.WriteLine(model.AddCRM.visit_type);
+            string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            try
+            {
+
+                using (SqlConnection connection = new SqlConnection(constr))
+                {
+                    connection.Open();
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append("INSERT INTO tbl_customer_reporting VALUES (@empId, @visittype, 'Call Report', @custName, @custId, @custContact,@visitDate,null,@Comments,@remainders,@submissionDate)");
+
+                    string sql = sb.ToString();
+                    Debug.WriteLine(sql);
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@empId", empId);
+                        command.Parameters.AddWithValue("@visittype", model.AddCRM.visit_type);
+                        command.Parameters.AddWithValue("@custId", model.customerDetails.cust_us1);
+                        command.Parameters.AddWithValue("@custName", model.customerDetails.cust_name);
+                        command.Parameters.AddWithValue("@Comments", model.AddCRM.discusssion_details);
+                        command.Parameters.AddWithValue("@remainders", model.AddCRM.remainder);
+                        command.Parameters.AddWithValue("@visitDate", model.AddCRM.visit_date.Date);
+                        command.Parameters.AddWithValue("@custContact", model.AddCRM.customer_contact);
+                        command.Parameters.AddWithValue("@submissionDate", System.DateTime.Today.Date);
+
+
+                        command.ExecuteNonQuery();
+                        command.Parameters.Clear();
+                    }
+                    connection.Close();
+                }
+            }
+            catch (SqlException e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.ToString());
+            }
+
+            return RedirectToAction("CRM", new { CustId = "" });
+        }
+        private static List<SelectListItem> PopulateCustomers(string value)
+        {
+            Debug.WriteLine("Inside PopulateCustomers with value:" + value);
+            List<SelectListItem> items = new List<SelectListItem>();
+            string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                string query = "select cust_name,cust_us1 FRom tbl_customer_list  where cust_us2='0' order by cust_name";
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    cmd.Connection = con;
+                    con.Open();
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+                        if (value == "Nothing")
+                        {
+                            while (sdr.Read())
+                            {
+                                items.Add(new SelectListItem
+                                {
+                                    Text = sdr["cust_name"].ToString(),
+                                    Value = sdr["cust_us1"].ToString(),
+                                    //Selected = sdr["cust_name"].ToString() == "CITY TIRE AND AUTO CENTRE LTD" ? true : false
+                                });
+                            }
+                        }
+                        else
+                        {
+                            Debug.WriteLine("In else");
+                            while (sdr.Read())
+                            {
+                                items.Add(new SelectListItem
+                                {
+                                    Text = sdr["cust_name"].ToString(),
+                                    Value = sdr["cust_us1"].ToString(),
+                                    Selected = sdr["cust_name"].ToString() == value ? true : false
+                                });
+                            }
+                        }
+
+                    }
+                    con.Close();
+                }
+            }
+
+            return items;
+        }
+
+
         private static List<SelectListItem> populateLocations()
         {
             List<SelectListItem> items = new List<SelectListItem>();

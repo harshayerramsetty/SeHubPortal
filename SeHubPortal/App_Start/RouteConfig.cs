@@ -14,6 +14,13 @@ namespace SeHubPortal
           routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+        "CRM",
+        "Tools/{action}/{values}",
+        new { controller = "Tools", action = "CRM", CustId = "" }
+         );
+
+
+            routes.MapRoute(
           "MyStaffPermissions",
           "Management/{action}/{values}",
           new { controller = "Management", action = "MyStaff", LocId="" }
