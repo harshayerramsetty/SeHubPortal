@@ -13,6 +13,7 @@ namespace SeHubPortal.ViewModel
         public List<SelectListItem> Customers { get; set; }
         public string Custname { get; set; }
         public tbl_customer_list customerDetails { get; set; }
+
         public tbl_customer_reporting_viewmodel AddCRM { get; set; }
     }
 }
