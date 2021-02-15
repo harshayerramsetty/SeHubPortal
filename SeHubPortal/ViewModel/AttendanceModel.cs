@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using SeHubPortal.Models;
 
 namespace SeHubPortal.ViewModel
 {
@@ -13,5 +14,6 @@ namespace SeHubPortal.ViewModel
         public string MatchedLocID { get; set; }
         public string SelectedEmployeeId { get; set; }
         public int AccessLevel { get; set; }
+        public tbl_sehub_access SehubAccess { get; set; }
     }
 }

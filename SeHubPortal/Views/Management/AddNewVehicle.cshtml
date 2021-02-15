@@ -7,11 +7,8 @@
 {
 
     <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header" style="padding:5px 5px 5px 15px">
             <h5 class="modal-title" id="exampleModalLongTitle">Add Vehicle</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
         </div>
         <div class="modal-body">
             <div class="row">
@@ -47,24 +44,18 @@
             </div>
 
             <div class="row">
-                <div class="form-group col-md-5">
+                <div class="form-group col-md-6">
                     <label for="inputEmail4">Location ID</label>
                     @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "Please select", new { @class = "form-control", @required = "required" })
                 </div>
-                <div class="form-group col-md-7">
+                <div class="form-group col-md-6">
                     <label for="inputEmail4">Assigned To</label>
                     <button id="editEmployeeId" type="button" style="background-color:transparent;border:1px solid transparent;float:right"><i class="fa fa-edit" style="font-size:15px;color:#007bff;"></i></button>
                     @Html.EditorFor(m => m.MatchedEmployeeName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                     @Html.DropDownListFor(model => model.MatchedEmployeeID, new SelectList(" "), "--Branch--", new { @class = "form-control" })
                 </div>
             </div>
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label for="inputEmail4">Registration Due Date</label>
-                    @Html.EditorFor(m => m.VehicleInfo.inspection_due_date, new { htmlAttributes = new { @class = "form-control",type="date" } })
-                </div>
-
-            </div>
+            
             <div class="row">
                 <div class="form-group col-md-6">
                     <label for="inputEmail4">Upload Image</label>
@@ -72,10 +63,9 @@
                 </div>
             </div>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-
-            <input type="submit" class="btn btn-success" value="Save" />
+        <div class="modal-footer" style="padding:5px 5px 5px 15px">
+            <input type="submit" style="padding:2px 30px 2px 30px" class="btn btn-success" value="Save" />
+            <button type="button" style="padding:2px 20px 2px 20px" class="btn btn-danger" data-dismiss="modal">Cancel</button>
         </div>
     </div>
 }

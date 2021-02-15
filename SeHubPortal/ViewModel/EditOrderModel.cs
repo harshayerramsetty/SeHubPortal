@@ -14,5 +14,8 @@ namespace SeHubPortal.ViewModel
         public tbl_treadtracker_workorder WorkOrderInfo { get; set; }
         public List<SelectListItem> CustomersList { get; set; }
         public string ChangedCustomerId { get; set; }
+
+        public tbl_sehub_access SehubAccess { get; set; }
+
     }
 }

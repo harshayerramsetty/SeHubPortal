@@ -12,7 +12,8 @@ namespace SeHubPortal.ViewModel
         public string workOrder { get; set; }
         public string OrderDate { get; set; }
         public string SubmittedEmployee { get; set; }
-       
+
+        public tbl_sehub_access SehubAccess { get; set; }
 
     }
 }

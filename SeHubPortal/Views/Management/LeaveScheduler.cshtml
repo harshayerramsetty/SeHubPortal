@@ -1,0 +1,339 @@
+﻿@model SeHubPortal.ViewModel.FileURL
+@{
+    ViewBag.Title = "LeaveScheduler";
+    Layout = "~/Views/Shared/_ManagementLayout.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/NewOrder.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+
+
+    @if (Model.SehubAccess.tools > 0)
+    {
+        <style>
+            #toolsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.payroll > 0)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.fleetTVT > 0)
+    {
+        <style>
+            #FleetTVTClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTracker > 0)
+    {
+        <style>
+            #treadTrackereClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_access > 0)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.main > 0)
+    {
+        <style>
+            #mainClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings == 3)
+    {
+        <style>
+            #SettingsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.management_dashboard > 0)
+    {
+        <style>
+            #DashboardLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.my_staff > 0)
+    {
+        <style>
+            #MyStaffLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.attendance > 0)
+    {
+        <style>
+            #AttendanceLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.asset_control > 0)
+    {
+        <style>
+            #AssetControlLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+
+
+
+    <style>
+
+        #ManagementClicked {
+            display: block !important;
+        }
+
+        #LeaveSchedulerLink {
+            display: block !important;
+        }
+
+        #ManagementClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #managementBtn {
+            color: black;
+            font-weight: 600;
+        }
+
+        #LeaveSchedulerLink {
+            color: black;
+            font-weight: 700;
+            background-color: #f0f2f5;
+        }
+
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .heading {
+            margin: 10px 0px 0px 0px;
+        }
+
+            .heading h2 {
+                margin-top: 8px;
+            }
+
+        .card-header {
+            background-color: #cde8ca;
+        }
+
+            .card-header h6 {
+                color: black;
+            }
+    </style>
+</head>
+<body>
+    <div class="row heading">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="        background-color: white;
+        height: 100%;
+        margin-top: 0px;">
+                    <li class="breadcrumb-item"><a href="@Url.Action("LeaveScheduler", "Management")">Management</a></li>
+                    <li class="breadcrumb-item " aria-current="page">Vacation Scheduler</li>
+                    <label style="margin: 0px 3px 0px 1127px ">Location</label>
+                    <div>
+                        @{
+                            List
+                            <SelectListItem>
+                            listItems = new List
+                            <SelectListItem>
+                            ();
+
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "001",
+                                Value = "001"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "002",
+                                Value = "002"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "003",
+                                Value = "003"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "004",
+                                Value = "004"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "005",
+                                Value = "005"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "007",
+                                Value = "007"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "009",
+                                Value = "009"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "010",
+                                Value = "010"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "011",
+                                Value = "011"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "101",
+                                Value = "101"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "347",
+                                Value = "347"
+                            });
+                        }
+                        @Html.DropDownListFor(m => m.Location_ID, listItems, new { @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
+                    </div>
+                </ol>
+            </nav>
+        </div>
+        <button type="button" id="clickThis" class="btn" style="margin-bottom: 14px;">
+            <i class="fa fa-bars" style="font-size:25px"></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-header" style="padding:8px 8px 0px 15px">
+                <h5>Vacation Scheduler</h5>
+            </div>
+            <div class="card-body" style=" padding:20px 20px 0px 20px">
+                <div class="row">
+                    <div class="col-md-2">
+                        <img src="~/Content/mahesh.jpg" style="border-radius:70px; width:100px" alt="Alternate Text" />
+                    </div>
+                    <div class="col-md-6" style="padding-left:25px">
+                        <p style="font-size:15px; padding:0px; margin: 3px"><strong>Mahesh, Pochamreddy</strong></p>
+                        <p style="font-size:12px; padding:0px; margin: 3px"><strong>Software Developper</strong></p>
+                        <p style="font-size:10px; padding:0px; margin: 3px">115077</p>
+                        <p style="font-size:12px; padding:0px; margin: 3px"><strong>START DATE</strong></p>
+                        <p style="font-size:12px; padding:0px; margin: 3px"><strong>Jan 1, 2014</strong></p>
+                    </div>
+                    <div class="col-md-4">
+                        <table class="table table-bordered text-center" style="border-color:black">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col" style="padding:0px; margin:0px;">ALOTTED</th>
+                                    <th scope="col" style="padding:0px; margin:0px;">USED</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>10</td>
+                                    <td>6</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:30px">
+                    <div class="col-md-12"><label style="font-size:20px"><strong>Scheduled Leave</strong></label></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-11">
+                        <table class="table table-bordered text-center" style="border-color:black">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col" style="padding:0px; margin:0px;">Start Date</th>
+                                    <th scope="col" style="padding:0px; margin:0px;">End Date</th>
+                                    <th scope="col" style="padding:0px; margin:0px;">Current(Days)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2020-04-13</td>
+                                    <td>2020-04-22</td>
+                                    <td>6</td>
+                                </tr>
+                                <tr>
+                                    <td>2020-08-03</td>
+                                    <td>2020-08-07</td>
+                                    <td>4</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-1 text-left" style="margin:0px; padding:0px">
+                        <input style="font-size:30px; padding:0px; margin:0px 10px 20px 10px" type="button" value="+">
+                        <input style="margin:0px 10px 20px 15px" type="checkbox">
+                        <input style="margin:0px 10px 20px 15px" type="checkbox">
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-right" style="padding-top:15px">
+                <label style="margin-right:20px"><strong>TOTAL DAYS</strong></label><input class="text-center" type="text" name="name" value="10" />
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+
+    </script>
+</body>
+
+</html>
+

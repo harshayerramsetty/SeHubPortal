@@ -16,6 +16,7 @@ namespace SeHubPortal.ViewModel
         public tbl_employee NewEmployee { get; set; }
         public tbl_employee_personal NewEmployeePersonal { get; set; }
         public bool active_status { get; set; }
-
+        public List<SelectListItem> Positions { get; set; }
+        public tbl_sehub_access SehubAccess { get; set; }
     }
 }

@@ -1,0 +1,63 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Styles.Render("~/Content/sidebar/sidebar.css")
+@Scripts.Render("~/Content/sidebar/sidebar.js")
+<style>
+    #sidebar {
+        background-color: white;
+        color: black
+    }
+
+        #sidebar ul li a {
+            color: black;
+            border-bottom: 2px solid #f0f2f5;
+            border-right: 1px solid #f0f2f5;
+        }
+
+        #sidebar ul li.active > a {
+            color: black;
+            border-bottom: 2px solid #f0f2f5;
+        }
+</style>
+<div>
+    <div class="wrapper d-flex align-items-stretch">
+        <nav id="sidebar">
+
+
+            <ul class="list-unstyled components mb-5">
+                <li class="active" style="display:none" id="FleetTVTDashboardLink">
+                    <a id="FleetTVTClicked" href="@Url.Action("Dashboard", "FleetTVT")"><span class="fa  mr-3"></span> Dashboard</a>
+                </li>
+                <li id="FleetTVTFieldSurveyEditAccountLink" style="display:none">
+                    <a id="FieldSurveyEditAccountClicked" href="@Url.Action("FieldSurveyEditAccount", "FleetTVT")"><span class="fa  mr-3"></span> New Survey</a>
+                </li>
+                <li id="FleetTVTEditAccountLink" style="display:none">
+                    <a id="EditAccountClicked" href="@Url.Action("EditAccount", "FleetTVT")"><span class="fa  mr-3"></span> Customers</a>
+                </li>
+                <li id="ViewOrEditSurveyLink" style="display:none">
+                    <a id="ViewOrEditSurveyClicked" href="@Url.Action("ViewOrEditSurvey", "FleetTVT")"><span class="fa  mr-3"></span> View/Edit Survey</a>
+                </li>
+
+                @*<li>
+            <a id="NewsletterClicked" href="@Url.Action("Newsletter", "Main")"><span class="fa  mr-3"></span></a>
+        </li>*@
+            </ul>
+
+        </nav>
+
+        <!-- Page Content  -->
+        <div id="content">
+            <div id="DashboardArea">
+                @RenderBody()
+            </div>
+        </div>
+
+    </div>
+    <hr />
+    <footer>
+        <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+    </footer>
+</div>
+<script src="~/Content/sidebar/sidebar.js"></script>
+@RenderSection("Scripts", false)

@@ -1,0 +1,343 @@
+﻿@model SeHubPortal.ViewModel.LibraryAddDocumentRequest
+@{
+    ViewBag.Title = "Documents";
+    Layout = "~/Views/Shared/_LibraryLayout.cshtml";
+}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+
+
+
+
+
+    @if (Model.SehubAccess.tools > 0)
+    {
+        <style>
+            #toolsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.management > 0)
+    {
+        <style>
+            #ManagementClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings > 0)
+    {
+        <style>
+            #SettingsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.payroll > 0)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.main > 0)
+    {
+        <style>
+            #mainClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.fleetTVT > 0)
+    {
+        <style>
+            #FleetTVTClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTracker > 0)
+    {
+        <style>
+            #treadTrackereClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_company_Documents > 0)
+    {
+        <style>
+            #CompanyDocumentsLink {
+                display: block !important;
+            }
+        </style>
+    }
+    @if (Model.SehubAccess.library_branch_shared_drive > 0)
+    {
+        <style>
+            #BranchSharedDriveLink {
+                display: block !important;
+            }
+        </style>
+    }
+    @if (Model.SehubAccess.library_supplier_documents > 0)
+    {
+        <style>
+            #SupplierDocumentsLink {
+                display: block !important;
+            }
+        </style>
+    }
+    @if (Model.SehubAccess.library_Management > 0)
+    {
+        <style>
+            #ManagementLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+
+    <style>
+
+        #DashboardLink {
+            display: block !important;
+        }
+
+        #libraryClicked {
+            display: block !important;
+        }
+
+
+        .libraryBtn {
+            font-weight: bold;
+        }
+
+        #libraryClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #DashboardLink {
+            color: black;
+            font-weight: 700;
+            background-color: #f0f2f5;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            padding: 0px !important;
+            margin: 0px !important;
+        }
+
+        .card-header {
+            background-color: #cde8ca;
+        }
+
+            .card-header h6 {
+                color: black;
+            }
+    </style>
+</head>
+<body style="overflow-y: hidden;">
+
+
+
+
+
+    @if (Model.SehubAccess.library_dashboard > 0)
+    {
+        <div class="row heading" style="padding:10px 20px 0px 15px">
+            <div class="col">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb" style="        background-color: white;
+        height: 100%;
+        margin-top: 0px;
+    ">
+                        <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Library")">Library</a></li>
+                        <li class="breadcrumb-item " aria-current="page">Dashboard</li>
+                    </ol>
+                </nav>
+            </div>
+            <button type="button" id="clickThis" class="btn" style="        margin-bottom: 14px;
+">
+                <i class="fa fa-bars" style="font-size: 25px "></i>
+                <span class="sr-only">Toggle Menu</span>
+            </button>
+        </div>
+
+        <div class="row" style="margin-left: 0px">
+
+
+            <div class="col-lg-2">
+                <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#AddDocuments" style="width:260px; height:360px">
+                    <div class="card-body text-center" style="height:270px; padding-left:15px;  padding-top:55px">
+                        <img src="~/Content/AddDocument.png" style="margin-top:5px; margin-bottom:40px; width:170px;">
+                        <h5><b>Add Document Request</b></h5>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="modal fade" id="AddDocuments" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="width:400px">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add Document Request</h5>
+                    </div>
+
+                    @using (Html.BeginForm("AddDocumentRequest", "Library", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <div class="modal-body" style="padding:12px">
+                            <div class="row" style="margin:3px">
+                                <div class="col-md-5 text-left" style="margin:0px; padding:0px"><label>Resource Type</label></div>
+                                <div class="col-md-7  text-right" style="margin:0px; padding:0px">
+                                    @{
+                                        List
+                                        <SelectListItem>
+                                        listItems = new List
+                                        <SelectListItem>
+                                        ();
+                                        listItems.Add(new SelectListItem
+                                        {
+                                            Text = "Branch Shared Drive",
+                                            Value = "Branch Shared Drive"
+                                        });
+                                        listItems.Add(new SelectListItem
+                                        {
+                                            Text = "Company Documents",
+                                            Value = "Company Documents"
+                                        });
+                                        listItems.Add(new SelectListItem
+                                        {
+                                            Text = "Customer Documents",
+                                            Value = "Customer Documents"
+                                        });
+                                        listItems.Add(new SelectListItem
+                                        {
+                                            Text = "Management",
+                                            Value = "Management"
+                                        });
+                                        listItems.Add(new SelectListItem
+                                        {
+                                            Text = "Supplier Documents",
+                                            Value = "Supplier Documents"
+                                        });                                        
+                                    }
+                                    @Html.DropDownListFor(m => m.ResourceType, listItems, new { @class = "text-center", @style = "text-align-last: center; width:200px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
+                                </div>
+                            </div>
+                            <div class="row" style="margin:3px">
+                                <div class="col-md-5 text-left" style="margin:0px; padding:0px"><label>Document Name</label></div>
+                                <div class="col-md-7  text-right" style="margin:0px; padding:0px">
+                                    @Html.EditorFor(m => m.DocumentName, new { htmlAttributes = new { @style = "width:200px;height:23px;", @required = "required" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin:3px">
+                                <div class="col-md-5 text-left" style="margin:0px; padding:0px"><label>Description</label></div>
+                            </div>
+                            <div class="row" style="margin:3px">
+                                <div class="col-md-12  text-right" style="margin:0px; padding:0px">
+                                    @Html.TextAreaFor(m => m.Description, 5, 49, new { htmlAttributes = new { @required = "required" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin:3px">
+                                <div class="col-md-5 text-left" style="margin:0px; padding:0px"><label>Upload Document</label></div>
+                            </div>
+                            <div class="row" style="margin:3px">
+                                <div class="col-md-6  text-center" style="margin:0px; padding:0px">
+                                    <input type="file" name="Document" value="" required />
+                                </div>
+                                <div class="col-md-6  text-center" style="margin:0px; padding:0px">
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" style="padding:2px 20px 2px 20px" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                            <button type="submit" style="padding:2px 20px 2px 20px" class="btn btn-success">Submit</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+    }
+
+
+    <script>
+        $(document).ready(function () {
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+
+        });
+
+    </script>
+
+    <script src="https://code.jquery.com/jquery-migrate-3.0.1.js" integrity="sha256-VvnF+Zgpd00LL73P2XULYXEn6ROvoFaa/vbfoiFlZZ4=" crossorigin="anonymous"></script>
+    @section Scripts{
+        <script src="~/Scripts/jquery.filedrop.js"></script>
+        <script type="text/javascript">
+        $(function () {
+            $('#dropArea').filedrop({
+                url: '@Url.Action("Upload")',
+                allowedfiletypes: ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'],
+                allowedfileextensions: ['.jpg', '.jpeg', '.png', '.gif', '.pdf'],
+                paramname: 'files',
+                maxfiles: 5,
+                maxfilesize: 5, // in MB
+                dragOver: function () {
+                    $('#dropArea').addClass('active-drop');
+                },
+                dragLeave: function () {
+                    $('#dropArea').removeClass('active-drop');
+                },
+                drop: function () {
+                    $('#dropArea').removeClass('active-drop');
+                    //$('#Attachments').val("1234");
+                },
+                afterAll: function (e) {
+                    $('#dropArea').html('file(s) uploaded successfully');
+                },
+                uploadFinished: function (i, file, response, time) {
+                    $('#uploadList').append('<li class="list-group-item">'+file.name+'</li>')
+                }
+            })
+        })
+        </script>
+    }
+
+</body>
+</html>
+
+
+
+
+
+
+

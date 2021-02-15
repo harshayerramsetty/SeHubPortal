@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using SeHubPortal.Models;
+
 namespace SeHubPortal.ViewModel
 {
     public class CustomerListViewModel
@@ -16,7 +18,7 @@ namespace SeHubPortal.ViewModel
         public string MatchedNameId { get; set; }
 
         public string searchWithNo { get; set; }
-       
 
+        public tbl_sehub_access SehubAccess { get; set; }
     }
 }

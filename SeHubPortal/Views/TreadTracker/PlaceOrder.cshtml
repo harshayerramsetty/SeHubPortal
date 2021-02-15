@@ -15,12 +15,99 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>*@
+
+
+    @if (Model.SehubAccess.tools > 0)
+    {
+        <style>
+            #toolsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.management > 0)
+    {
+        <style>
+            #ManagementClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings > 0)
+    {
+        <style>
+            #SettingsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.payroll > 0)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.fleetTVT > 0)
+    {
+        <style>
+            #FleetTVTClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.main > 0)
+    {
+        <style>
+            #mainClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_access > 0)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+
+    @if (Model.SehubAccess.openorder > 0)
+    {
+        <style>
+            #OpenOrderLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTrackerDashboard > 0)
+    {
+        <style>
+            #DashboardLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+
+
     <style type="text/css">
 
         #treadTrackereClicked {
             background-color: #f0f2f5;
             color: black;
             font-weight: 600;
+            display:block !important;
         }
 
         #treadTrackerButton {
@@ -30,7 +117,9 @@
 
         #NewOrderLink {
             color: black;
+            background-color: #f0f2f5;
             font-weight: 700;
+            display:block !important;
         }
 
         body {
@@ -179,10 +268,25 @@
             height: 25px;
             font-size: 13px;
         }
+
+        .example::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .example {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+
+        .BarcodeValidation{
+            padding-top: 17%;
+        }
+
     </style>
 </head>
 <body onload="pageLoad()">
-    <div class="row">
+    <div class="row " >
         <div class="col-md-12">
             <div >     @*class="shadow-lg p-3 mb-5 bg-white rounded"*@
                 <div class="row heading">
@@ -200,13 +304,13 @@
                     </div>
                 </div>
 
-                <div class="orderMainBody">
+                <div class="orderMainBody example" style="height:750px; overflow-y:auto; overflow-x:hidden">
                     @*here i remove class - container*@
                     <div class="row justify-content-between">
                         <div class="col-md-6">
 
                             <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
-                                <div class="card-header">
+                                <div class="card-header" style="padding:3px 3px 3px 15px">
                                     <h6 class="card-title mb-0 d-inline-block">Order Information</h6>
                                 </div>
                                 <div class="card-body ">
@@ -242,7 +346,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
-                                <div class="card-header">
+                                <div class="card-header" style="padding:3px 3px 3px 15px">
                                     <h6 class="card-title mb-0 d-inline-block">Customer Information</h6>
                                 </div>
                                 <div class="card-body">
@@ -279,320 +383,343 @@
                     </div>
                     @using (Html.BeginForm("submitNewOrder", "TreadTracker"))
                     {
-                    <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
-                        <div class="card-header">
-                            <h6 class="card-title mb-0 d-inline-block">Tire Casing Information</h6>
-                        </div>
-                        <div class="card-body ">
-
-                            <div class="row justify-content-end TableTransactions">
-                                <a href="@Url.Action("BackPlaceOrder", "TreadTracker")">
-                                    <input type="button" class="btn btn-secondary transcationButtons" style="visibility:visible" value="Back" />
-                                </a>
-                                &nbsp;
-                                <input type="submit" class="btn btn-success transcationButtons" style="visibility:visible" value="Save" />
-                                &nbsp;
-                                <a href="@Url.Action("CancelPlaceOrder", "TreadTracker")">
-                                    <input type="button" class="btn btn-danger transcationButtons" style="visibility:visible" value="Cancel" />
-                                </a>
+                        @Html.HiddenFor(m => m.workOrder, new { htmlAttributes = new { @style = "display:none" } })
+                        @Html.HiddenFor(m => m.customerInfo.cust_us1, new { htmlAttributes = new { @style = "display:none" } })
+                        <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
+                            <div class="card-header" style="        padding: 3px 3px 3px 15px
+">
+                                <h6 class="card-title mb-0 d-inline-block">Tire Casing Information</h6>
                             </div>
-                            <div class="row mainTable">
-                                <table class="table table-striped">
-                                    @*removing class   table-bordered*@
-                                    <thead class="thead-dark">
-                                        <tr class="textFields">
-                                            <th scope="col">#</th>
-                                            <th scope="col">Line</th>
-                                            <th scope="col">Barcode</th>
-                                            <th scope="col">Serial/DOT</th>
-                                            <th scope="col">Size</th>
-                                            <th scope="col">Brand</th>
-                                            <th scope="col">Tread</th>
-                                            <th scope="col">Unit ID</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="textFields">
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td>
-                                                <input type="text" id="line1" name="line1" maxlength="2" onkeypress="return onlyNumberKey(event)" class="lineStyle" onfocusout="line1Out()">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="barcode1" name="barcode1" maxlength="8" onkeypress="return onlyNumberKey(event)">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="serial1" name="serial1" maxlength="8" style="text-transform:uppercase">
-                                            </td>
-                                            <td>
-                                                <div id="casing1Div"></div>
-                                            </td>
-                                            <td>
-                                                <div id="Brand1Div"></div>
-                                            </td>
-                                            <td>
-                                                <div id="Tread1Div"></div>
-                                            </td>
-                                            <td>
-                                                <input type="text" id="unit1" name="unit1" onkeypress="return onlyNumberKey(event)">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">2</th>
-                                            <td>
-                                                <input class="lineStyle" type="text" id="line2" name="line2" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line2Out()">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="barcode2" name="barcode2" maxlength="8" onkeypress="return onlyNumberKey(event)">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="serial2" name="serial2" maxlength="8" style="text-transform:uppercase">
-                                            </td>
-                                            <td>
-                                                <div id="casing2Div"></div>
-                                            </td>
-                                            <td>
-                                                <div id="Brand2Div"></div>
-                                            </td>
-                                            <td>
-                                                <div id="Tread2Div"></div>
-                                            </td>
-                                            <td>
-                                                <input type="text" id="unit2" name="unit2" onkeypress="return onlyNumberKey(event)">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">3</th>
-                                            <td>
-                                                <input class="lineStyle" type="text" id="line3" name="line3" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line3Out()">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="barcode3" maxlength="8" name="barcode3" onkeypress="return onlyNumberKey(event)">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="serial3" name="serial3" maxlength="8" style="text-transform: uppercase">
-                                            </td>
-                                            <td>
-                                                <div id="casing3Div"></div>
-                                            </td>
-                                            <td>
-                                                <div id="Brand3Div"></div>
-                                            </td>
-                                            <td>
-                                                <div id="Tread3Div"></div>
-                                            </td>
-                                            <td>
-                                                <input type="text" id="unit3" name="unit3" onkeypress="return onlyNumberKey(event)">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">4</th>
-                                            <td>
-                                                <input class="lineStyle" type="text" id="line4" name="line4" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line4Out()">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="barcode4" maxlength="8" name="barcode4" onkeypress="return onlyNumberKey(event)">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="serial4" name="serial4" maxlength="8" style=" text-transform: uppercase ">
-                                            </td>
-                                            <td>
-                                                <div id="casing4Div"></div>
-                                            </td>
-                                            <td>
-                                                <div id="Brand4Div"></div>
-                                            </td>
-                                            <td>
-                                                <div id="Tread4Div"></div>
-                                            </td>
-                                            <td>
-                                                <input type="text" id="unit4" name="unit4" onkeypress="return onlyNumberKey(event)">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">5</th>
-                                            <td>
-                                                <input class="lineStyle" type="text" id="line5" name="line5" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line5Out()">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="barcode5" name="barcode5" maxlength="8" onkeypress="return onlyNumberKey(event)">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="serial5" name="serial5" maxlength="8" style="text-transform:uppercase">
-                                            </td>
-                                            <td>
-                                                <div id="casing5Div"></div>
-                                            </td>
-                                            <td>
-                                                <div id="Brand5Div"></div>
-                                            </td>
-                                            <td>
-                                                <div id="Tread5Div"></div>
-                                            </td>
-                                            <td>
-                                                <input type="text" id="unit5" name="unit5" onkeypress="return onlyNumberKey(event)">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">6</th>
-                                            <td>
-                                                <input class="lineStyle" type="text" id="line6" name="line6" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line6Out()">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="barcode6" name="barcode6" maxlength="8" onkeypress="return onlyNumberKey(event)">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="serial6" name="serial6" maxlength="8" style="text-transform:uppercase">
-                                            </td>
-                                            <td>
-                                                <div id="casing6Div"></div>
-                                            </td>
-                                            <td>
-                                                <div id="Brand6Div"></div>
-                                            </td>
-                                            <td>
-                                                <div id="Tread6Div"></div>
-                                            </td>
-                                            <td>
-                                                <input type="text" id="unit6" name="unit6" onkeypress="return onlyNumberKey(event)">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">7</th>
-                                            <td>
-                                                <input class="lineStyle" type="text" id="line7" name="line7" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line7Out()">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="barcode7" name="barcode7" maxlength="8" onkeypress="return onlyNumberKey(event)">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="serial7" name="serial7" maxlength="8" style="text-transform:uppercase">
-                                            </td>
-                                            <td>
-                                                <div id="casing7Div"></div>
-                                            </td>
-                                            <td>
-                                                <div id="Brand7Div"></div>
-                                            </td>
-                                            <td>
-                                                <div id="Tread7Div"></div>
-                                            </td>
-                                            <td>
-                                                <input type="text" id="unit7" name="unit7" onkeypress="return onlyNumberKey(event)">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">8</th>
-                                            <td>
-                                                <input class="lineStyle" type="text" id="line8" name="line8" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line8Out()">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="barcode8" name="barcode8" maxlength="8" onkeypress="return onlyNumberKey(event)">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="serial8" name="serial8" maxlength="8" style="text-transform:uppercase">
-                                            </td>
-                                            <td>
-                                                <div id="casing8Div"></div>
-                                            </td>
-                                            <td>
-                                                <div id="Brand8Div"></div>
-                                            </td>
-                                            <td>
-                                                <div id="Tread8Div"></div>
-                                            </td>
-                                            <td>
-                                                <input type="text" id="unit8" name="unit8" onkeypress="return onlyNumberKey(event)">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">9</th>
-                                            <td>
-                                                <input class="lineStyle" type="text" id="line9" name="line9" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line9Out()">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="barcode9" name="barcode9" maxlength="8" onkeypress="return onlyNumberKey(event)">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="serial9" name="serial9" maxlength="8" style="text-transform:uppercase">
-                                            </td>
-                                            <td>
-                                                <div id="casing9Div"></div>
-                                            </td>
-                                            <td>
-                                                <div id="Brand9Div"></div>
-                                            </td>
-                                            <td>
-                                                <div id="Tread9Div"></div>
-                                            </td>
-                                            <td>
-                                                <input type="text" id="unit9" name="unit9" onkeypress="return onlyNumberKey(event)">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">10</th>
-                                            <td>
-                                                <input class="lineStyle" type="text" id="line10" name="line10" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line10Out()">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="barcode10" name="barcode10" maxlength="8" onkeypress="return onlyNumberKey(event)">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="serial10" name="serial10" maxlength="8" style="text-transform:uppercase">
-                                            </td>
-                                            <td>
-                                                <div id="casing10Div"></div>
-                                            </td>
-                                            <td>
-                                                <div id="Brand10Div"></div>
-                                            </td>
-                                            <td>
-                                                <div id="Tread10Div"></div>
-                                            </td>
-                                            <td>
-                                                <input type="text" id="unit10" name="unit10" onkeypress="return onlyNumberKey(event)">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">11</th>
-                                            <td>
-                                                <input class="lineStyle" type="text" id="line11" name="line11" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line11Out()">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="barcode11" name="barcode11" maxlength="8" onkeypress="return onlyNumberKey(event)" style="background-color:black">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="serial11" name="serial11" maxlength="8" style="text-transform:uppercase">
-                                            </td>
-                                            <td>
-                                                <div id="casing11Div"></div>
-                                            </td>
-                                            <td>
-                                                <div id="Brand11Div"></div>
-                                            </td>
-                                            <td>
-                                                <div id="Tread11Div"></div>
-                                            </td>
-                                            <td>
-                                                <input type="text" id="unit11" name="unit11" onkeypress="return onlyNumberKey(event)">
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div class="card-body" style="padding-top:10px">
 
+                                <div class="row justify-content-end TableTransactions">
+                                    <a href="@Url.Action("BackPlaceOrder", "TreadTracker")">
+                                        <input type="button" class="btn btn-secondary transcationButtons" style="visibility:visible" value="Back" />
+                                    </a>
+                                    &nbsp;
+                                    <input type="submit" class="btn btn-success transcationButtons" style="visibility:visible" value="Save" />
+                                    &nbsp;
+                                    <a href="@Url.Action("CancelPlaceOrder", "TreadTracker")">
+                                        <input type="button" class="btn btn-danger transcationButtons" style="visibility:visible" value="Cancel" />
+                                    </a>
+                                </div>
+                                <div class="row mainTable">
+                                    <table class="table table-striped">
+                                        @*removing class   table-bordered*@
+                                        <thead class="thead-dark">
+                                            <tr class="textFields">
+                                                <th scope="col">#</th>
+                                                <th scope="col">Line</th>
+                                                <th scope="col">Barcode</th>
+                                                <th scope="col">Serial/DOT</th>
+                                                <th scope="col">Size</th>
+                                                <th scope="col">Brand</th>
+                                                <th scope="col">Tread</th>
+                                                <th scope="col">Unit ID</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="textFields">
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>
+                                                    <input type="text" id="line1" name="line1" maxlength="2" onkeypress="return onlyNumberKey(event)" class="lineStyle" onfocusout="line1Out()">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="barcode1" onfocusout="validateBarcode(this.value, '#barcode1')" name="barcode1" maxlength="8" onkeypress="return onlyNumberKey(event)">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="serial1" name="serial1" maxlength="8" style="text-transform:uppercase">
+                                                </td>
+                                                <td>
+                                                    <div id="casing1Div"></div>
+                                                </td>
+                                                <td>
+                                                    <div id="Brand1Div"></div>
+                                                </td>
+                                                <td>
+                                                    <div id="Tread1Div"></div>
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="unit1" name="unit1" onkeypress="return onlyNumberKey(event)">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">2</th>
+                                                <td>
+                                                    <input class="lineStyle" type="text" id="line2" name="line2" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line2Out()">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="barcode2" onfocusout="validateBarcode(this.value, '#barcode2')" name="barcode2" maxlength="8" onkeypress="return onlyNumberKey(event)">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="serial2" name="serial2" maxlength="8" style="text-transform:uppercase">
+                                                </td>
+                                                <td>
+                                                    <div id="casing2Div"></div>
+                                                </td>
+                                                <td>
+                                                    <div id="Brand2Div"></div>
+                                                </td>
+                                                <td>
+                                                    <div id="Tread2Div"></div>
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="unit2" name="unit2" onkeypress="return onlyNumberKey(event)">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3</th>
+                                                <td>
+                                                    <input class="lineStyle" type="text" id="line3" name="line3" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line3Out()">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="barcode3" onfocusout="validateBarcode(this.value, '#barcode3')" maxlength="8" name="barcode3" onkeypress="return onlyNumberKey(event)">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="serial3" name="serial3" maxlength="8" style="text-transform: uppercase">
+                                                </td>
+                                                <td>
+                                                    <div id="casing3Div"></div>
+                                                </td>
+                                                <td>
+                                                    <div id="Brand3Div"></div>
+                                                </td>
+                                                <td>
+                                                    <div id="Tread3Div"></div>
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="unit3" name="unit3" onkeypress="return onlyNumberKey(event)">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">4</th>
+                                                <td>
+                                                    <input class="lineStyle" type="text" id="line4" name="line4" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line4Out()">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="barcode4" onfocusout="validateBarcode(this.value, '#barcode4')" maxlength="8" name="barcode4" onkeypress="return onlyNumberKey(event)">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="serial4" name="serial4" maxlength="8" style=" text-transform: uppercase ">
+                                                </td>
+                                                <td>
+                                                    <div id="casing4Div"></div>
+                                                </td>
+                                                <td>
+                                                    <div id="Brand4Div"></div>
+                                                </td>
+                                                <td>
+                                                    <div id="Tread4Div"></div>
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="unit4" name="unit4" onkeypress="return onlyNumberKey(event)">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">5</th>
+                                                <td>
+                                                    <input class="lineStyle" type="text" id="line5" name="line5" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line5Out()">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="barcode5" onfocusout="validateBarcode(this.value, '#barcode5')" name="barcode5" maxlength="8" onkeypress="return onlyNumberKey(event)">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="serial5" name="serial5" maxlength="8" style="text-transform:uppercase">
+                                                </td>
+                                                <td>
+                                                    <div id="casing5Div"></div>
+                                                </td>
+                                                <td>
+                                                    <div id="Brand5Div"></div>
+                                                </td>
+                                                <td>
+                                                    <div id="Tread5Div"></div>
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="unit5" name="unit5" onkeypress="return onlyNumberKey(event)">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">6</th>
+                                                <td>
+                                                    <input class="lineStyle" type="text" id="line6" name="line6" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line6Out()">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="barcode6" onfocusout="validateBarcode(this.value, '#barcode6')" name="barcode6" maxlength="8" onkeypress="return onlyNumberKey(event)">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="serial6" name="serial6" maxlength="8" style="text-transform:uppercase">
+                                                </td>
+                                                <td>
+                                                    <div id="casing6Div"></div>
+                                                </td>
+                                                <td>
+                                                    <div id="Brand6Div"></div>
+                                                </td>
+                                                <td>
+                                                    <div id="Tread6Div"></div>
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="unit6" name="unit6" onkeypress="return onlyNumberKey(event)">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">7</th>
+                                                <td>
+                                                    <input class="lineStyle" type="text" id="line7" name="line7" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line7Out()">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="barcode7" onfocusout="validateBarcode(this.value, '#barcode7')" name="barcode7" maxlength="8" onkeypress="return onlyNumberKey(event)">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="serial7" name="serial7" maxlength="8" style="text-transform:uppercase">
+                                                </td>
+                                                <td>
+                                                    <div id="casing7Div"></div>
+                                                </td>
+                                                <td>
+                                                    <div id="Brand7Div"></div>
+                                                </td>
+                                                <td>
+                                                    <div id="Tread7Div"></div>
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="unit7" name="unit7" onkeypress="return onlyNumberKey(event)">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">8</th>
+                                                <td>
+                                                    <input class="lineStyle" type="text" id="line8" name="line8" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line8Out()">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="barcode8" onfocusout="validateBarcode(this.value, '#barcode8')" name="barcode8" maxlength="8" onkeypress="return onlyNumberKey(event)">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="serial8" name="serial8" maxlength="8" style="text-transform:uppercase">
+                                                </td>
+                                                <td>
+                                                    <div id="casing8Div"></div>
+                                                </td>
+                                                <td>
+                                                    <div id="Brand8Div"></div>
+                                                </td>
+                                                <td>
+                                                    <div id="Tread8Div"></div>
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="unit8" name="unit8" onkeypress="return onlyNumberKey(event)">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">9</th>
+                                                <td>
+                                                    <input class="lineStyle" type="text" id="line9" name="line9" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line9Out()">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="barcode9" onfocusout="validateBarcode(this.value, '#barcode9')" name="barcode9" maxlength="8" onkeypress="return onlyNumberKey(event)">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="serial9" name="serial9" maxlength="8" style="text-transform:uppercase">
+                                                </td>
+                                                <td>
+                                                    <div id="casing9Div"></div>
+                                                </td>
+                                                <td>
+                                                    <div id="Brand9Div"></div>
+                                                </td>
+                                                <td>
+                                                    <div id="Tread9Div"></div>
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="unit9" name="unit9" onkeypress="return onlyNumberKey(event)">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">10</th>
+                                                <td>
+                                                    <input class="lineStyle" type="text" id="line10" name="line10" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line10Out()">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="barcode10" onfocusout="validateBarcode(this.value, '#barcode10')" name="barcode10" maxlength="8" onkeypress="return onlyNumberKey(event)">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="serial10" name="serial10" maxlength="8" style="text-transform:uppercase">
+                                                </td>
+                                                <td>
+                                                    <div id="casing10Div"></div>
+                                                </td>
+                                                <td>
+                                                    <div id="Brand10Div"></div>
+                                                </td>
+                                                <td>
+                                                    <div id="Tread10Div"></div>
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="unit10" name="unit10" onkeypress="return onlyNumberKey(event)">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">11</th>
+                                                <td>
+                                                    <input class="lineStyle" type="text" id="line11" name="line11" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line11Out()">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="barcode11" onfocusout="validateBarcode(this.value, '#barcode11')" name="barcode11" maxlength="8" onkeypress="return onlyNumberKey(event)" style="background-color:black">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="serial11" name="serial11" maxlength="8" style="text-transform:uppercase">
+                                                </td>
+                                                <td>
+                                                    <div id="casing11Div"></div>
+                                                </td>
+                                                <td>
+                                                    <div id="Brand11Div"></div>
+                                                </td>
+                                                <td>
+                                                    <div id="Tread11Div"></div>
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="unit11" name="unit11" onkeypress="return onlyNumberKey(event)">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
                             </div>
                         </div>
-                    </div>
 
 
                         <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
-                            <div class="card-header">
+                            <div class="card-header" style="padding:3px 3px 3px 15px">
                                 <h6 class="card-title mb-0 d-inline-block">Comments</h6>
                             </div>
-                            <div class="card-body ">
+                            <div class="card-body" style="padding:10px">
                                 <div style="width:100%">
                                     <textarea id="comments"></textarea>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="modal BarcodeValidation" data-backdrop="static" data-keyboard="false" id="BarcodeValidation">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header" style="background-color:#ff4a4a; padding:5px 2px 0px 2px">
+                                        <h5 style="margin-left:auto; margin-right:auto; color:white">Acknowledgment</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-lg-12 text-center" > <h5 style="margin-left:auto; margin-right:auto">This barcode is already in use</h5> </div>
+                                            <input type="text" style="display:none" id="hiddenID" name="name" value="" />
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer" style="padding: 3px 0px 3px 0px">
+                                        <button style="padding:2px 40px 2px 40px; margin-left:auto; margin-right:auto" class="btn btn-primary" onclick="okClick()" data-dismiss="modal">OK</button>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
                     }
@@ -602,6 +729,42 @@
         </div>
     </div>
     <script>
+
+
+        let stopTabFunction = function(e) {
+          if (e.keyCode == 9) {
+            e.preventDefault();
+          }
+        };
+
+
+        function validateBarcode(barcode, id) {
+            $.ajax({
+                url: '@Url.Action("validateBarcode", "TreadTracker")',
+                data: { value: barcode },
+                type: 'POST',
+                success: function (data) {
+                    if (data == "Exists") {
+                        document.addEventListener('keydown', stopTabFunction);
+                        $('#BarcodeValidation').modal();
+                        $(id).val("");
+                        $('#hiddenID').val(id);
+
+                    }
+                    else {
+
+                    }
+                    
+                }
+            });
+        }
+
+        function okClick() {
+            document.removeEventListener('keydown', stopTabFunction);
+            $($('#hiddenID').val()).focus();
+        }
+
+
         $(document).ready(function () {
                            
             $('#clickThis').on('click', function () {
@@ -683,10 +846,30 @@
             var tread = "tread" + lineNum;
             var unit = "unit" + lineNum;
 
+            //alert("Reached")
+
             if (lineValue == 1 || lineValue == 5 || lineValue == 6 || lineValue == 7 || lineValue == 9 || lineValue == 10 || lineValue == 11) {
-                if (lineValue != 1) {
+                if (lineNum != 1) {
                     if (document.getElementById(barcode).value.length == 0) {
                         var barcodeValue = checkBarcodes();
+
+                        $.ajax({
+                            url: '@Url.Action("validateBarcode", "TreadTracker")',
+                            data: { value: barcodeValue },
+                            type: 'POST',
+                            success: function (data) {
+                                if (data == "Exists") {
+                                    document.addEventListener('keydown', stopTabFunction);
+                                    $('#BarcodeValidation').modal();
+                                    $('#'+ barcode).val("");
+                                    $('#hiddenID').val('#'+ barcode);
+                                }
+                                else {
+
+                                }
+                            }
+                         });
+
                         document.getElementById(barcode).value = barcodeValue;
                     }
                 }
@@ -780,6 +963,8 @@
 
             const array = [barcode1, barcode2, barcode3, barcode4, barcode5, barcode6, barcode7, barcode8, barcode9, barcode10, barcode11];
             var nextBarcode = Math.max(...array);
+                      
+
             return nextBarcode + 1;
 
         }

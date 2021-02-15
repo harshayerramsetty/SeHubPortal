@@ -26,5 +26,6 @@ namespace SeHubPortal.Models
         public string country { get; set; }
         public string emergency_contact_name { get; set; }
         public string emergency_contact_number { get; set; }
+        public string employee_start_date { get; set; }
     }
 }

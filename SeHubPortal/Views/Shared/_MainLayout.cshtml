@@ -4,55 +4,53 @@
 @Styles.Render("~/Content/sidebar/sidebar.css")
 @Scripts.Render("~/Content/sidebar/sidebar.js")
 <style>
-    #sidebar{
-        background-color:white;
-        color:black
+    #sidebar {
+        background-color: white;
+        color: black
     }
+
         #sidebar ul li a {
             color: black;
             border-bottom: 2px solid #f0f2f5;
             border-right: 1px solid #f0f2f5;
         }
+
         #sidebar ul li.active > a {
             color: black;
             border-bottom: 2px solid #f0f2f5;
         }
 </style>
 <div>
-        <div class="wrapper d-flex align-items-stretch">
-            <nav id="sidebar">
-                <div class="custom-menu">
-                    <button type="button" id="sidebarCollapse" class="btn btn-primary">
-                        <i class="fa fa-bars"></i>
-                        <span class="sr-only">Toggle Menu</span>
-                    </button>
-                </div>
+    <div class="wrapper d-flex align-items-stretch">
+        <nav id="sidebar">
+            
 
-                <ul class="list-unstyled components mb-5">
-                    <li class="active">
-                        <a id="DashboardClicked" href="@Url.Action("Dashboard", "Main")"><span class="fa fa-home mr-3"></span> Dashboard</a>
-                    </li>
-                    @*<li>
-                        <a id="CalendarClicked" href="@Url.Action("Calendar", "Main")"><span class="fa fa-user mr-3"></span> Calendar</a>
-                    </li>*@
-                    @*<li>
-                        <a id="NewsletterClicked" href="@Url.Action("Newsletter", "Main")"><span class="fa fa-sticky-note mr-3"></span> Newsletter</a>
-                    </li>*@
-                </ul>
+            <ul class="list-unstyled components mb-5">
+                <li class="active" style="display:none" id="MainDashboardLink">
+                    <a id="DashboardClicked" href="@Url.Action("Dashboard", "Main")"><span class="fa  mr-3"></span> Dashboard</a>
+                </li>
+                <li id="MainCalendarLink"style="display:none" >
+                    <a id="CalendarClicked" href="@Url.Action("Calendar", "Main")"><span class="fa  mr-3"></span> Calendar</a>
+                </li>
+                @*<li>
+                    <a id="NewsletterClicked" href="@Url.Action("Newsletter", "Main")"><span class="fa  mr-3"></span></a>
+                </li>*@
+            </ul>
 
-            </nav>
+        </nav>
 
-            <!-- Page Content  -->
-            <div id="content" class="p-4 p-md-5 pt-5">
-                <div id="DashboardArea">
-                    @RenderBody()
-                </div>
+        <!-- Page Content  -->
+        <div id="content">
+            <div id="DashboardArea">
+                @RenderBody()
             </div>
-
         </div>
+
+    </div>
     <hr />
     <footer>
         <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
     </footer>
 </div>
 <script src="~/Content/sidebar/sidebar.js"></script>
+@RenderSection("Scripts", false)

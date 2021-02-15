@@ -4,8 +4,7 @@
     Layout = "~/Views/Shared/_ManagementLayout.cshtml";
 }
 
-
-@model IEnumerable<SeHubPortal.Models.tbl_vehicle_info>
+@model SeHubPortal.ViewModel.AssetControlViewModel
 <html lang="en">
 <head>
     <title>Vehicle Info</title>
@@ -17,7 +16,129 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
+
+
+
+
+    @if (Convert.ToInt32(ViewData["tools"]) > 0)
+    {
+        <style>
+            #toolsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Convert.ToInt32(ViewData["payroll"]) > 0)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Convert.ToInt32(ViewData["fleetTVT"]) > 0)
+    {
+        <style>
+            #FleetTVTClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Convert.ToInt32(ViewData["treadTracker"]) > 0)
+    {
+        <style>
+            #treadTrackereClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Convert.ToInt32(ViewData["library"]) > 0)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Convert.ToInt32(ViewData["main"]) > 0)
+    {
+        <style>
+            #mainClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Convert.ToInt32(ViewData["settings"]) > 0)
+    {
+        <style>
+            #SettingsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+
+
+
+
+
+
+
+
+    @if (Convert.ToInt32(ViewData["management_dashboard"]) > 0)
+    {
+        <style>
+            #DashboardLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Convert.ToInt32(ViewData["management_mystaff"]) > 0)
+    {
+        <style>
+            #MyStaffLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Convert.ToInt32(ViewData["management_vacationScheduler"]) > 0)
+    {
+        <style>
+            #LeaveSchedulerLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Convert.ToInt32(ViewData["management_attendance"]) > 0)
+    {
+        <style>
+            #AttendanceLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+
     <style>
+
+
+        #ManagementClicked {
+            display: block !important;
+        }
+
+        #AssetControlLink {
+            display: block !important;
+        }
+
         #ManagementClicked {
             background-color: #f0f2f5;
             color: black;
@@ -32,6 +153,7 @@
         #AssetControlLink {
             color: black;
             font-weight: 700;
+            background-color: #f0f2f5;
         }
 
         body {
@@ -54,7 +176,7 @@
             .card-header h6 {
                 color: black;
             }
-      
+
         .imageClass {
             width: 100%;
             height: 90%;
@@ -105,6 +227,16 @@
         .transcationButtons {
             width: 100px;
         }
+
+        .example::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .example {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
     </style>
 </head>
 <body>
@@ -114,6 +246,95 @@
                 <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
                     <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Management")">Management</a></li>
                     <li class="breadcrumb-item " aria-current="page">Asset Control</li>
+
+                    @using (Html.BeginForm("UploadBranchShareDrive", "Library", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <input type="text" readonly style="height:23px; width:100px; margin-left:540px" value="Add" id="AddVehicleBtn" class="btn btn-success transcationButtons" data-toggle="modal" data-target="#addModal" />
+
+                    }
+                    <label style="margin: 0px 0px 0px 210px">
+                        <h6><strong>Active-Only</strong></h6>
+                    </label>
+                    <div class="custom-control custom-switch" style="margin: 0px 0px 0px 7px">
+                        <input type="checkbox" style="width:60px; height:25px" class="custom-control-input" id="customSwitches">
+                        <label class="custom-control-label" for="customSwitches">
+                            <h6><strong>All</strong></h6>
+                        </label>
+                    </div>
+
+                    <label style="margin: 0px 3px 0px 175px ">Location</label>
+
+                    @using (Html.BeginForm("AssetControlChangeLocation", "Management", FormMethod.Post))
+                    {
+                        <div>
+                            @{
+                                List
+                                <SelectListItem>
+                                listItems = new List
+                                <SelectListItem>
+                                ();
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "001",
+                                    Value = "001"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "002",
+                                    Value = "002"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "003",
+                                    Value = "003"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "004",
+                                    Value = "004"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "005",
+                                    Value = "005"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "007",
+                                    Value = "007"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "009",
+                                    Value = "009"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "010",
+                                    Value = "010"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "011",
+                                    Value = "011"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "101",
+                                    Value = "101"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "347",
+                                    Value = "347"
+                                });
+
+                            }
+                            @Html.DropDownListFor(m => m.MatchedLoc, listItems, new { @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:6px;" })
+                            <noscript> <input style="display:none" class="btn btn-success" type="submit" value="Search" /></noscript>
+                        </div>
+                    }
+
                 </ol>
             </nav>
         </div>
@@ -122,50 +343,33 @@
             <span class="sr-only">Toggle Menu</span>
         </button>
     </div>
-    @if (Convert.ToInt32(@ViewData["AssetAccessLevel"]) >0)
-    {
-        <div class="row" style="margin:20px">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" style="color:black;width:200px;text-align:center" id="vehicle-tab" data-toggle="tab" href="#home" role="tab" aria-controls="vehicle" aria-selected="true">Vehicles</a>
-                </li>
-                @*<li class="nav-item">
+
+    <div class="row" style="margin:0px 15px 15px 15px">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" style="color:black;width:200px;text-align:center" id="vehicle-tab" data-toggle="tab" href="#home" role="tab" aria-controls="vehicle" aria-selected="true">Vehicles</a>
+            </li>
+            @*s<li class="nav-item">
                     <a class="nav-link " id="profile-tab" style="color:black;width:200px;text-align:center" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Option2</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link " id="profile-tab" style="color:black;width:200px;text-align:center" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Option3</a>
                 </li>*@
 
-            </ul>
-            <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade shadow-sm show bg-white active" id="vehicle" role="tabpanel" aria-labelledby="vehicle-tab">
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade shadow-sm show bg-white active" id="vehicle" role="tabpanel" aria-labelledby="vehicle-tab">
 
-                    <div class="card-body">
-                        <!--Content tab-->
-                        @if (Convert.ToInt32(@ViewData["AssetAccessLevel"] )>2)
+                <div class="card-body example" id="active_vehicles" style="display:none; height:700px; width:1640px; overflow-x:hidden; overflow-y:auto; ">
+                    <!--Content tab-->
+
+                    <div class="row people-grid-row">
+
+                        @foreach (var vehicle in Model.VehicalInfoList)
                         {
-                            <div class="row justify-content-md-start" style="margin-left:0px; margin-bottom:20px;">
-
-                                <button type="button" id="AddVehicleBtn" class="btn btn-success transcationButtons" data-toggle="modal" data-target="#addModal">
-                                    Add
-                                </button>
-
-                                <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div id="AddVehicleModal">
-
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
-                        <div class="row people-grid-row">
-
-                            @foreach (var vehicle in Model)
+                            if (vehicle.vehicle_status != null)
                             {
-                                if (vehicle.vehicle_status == 1)
+                                if (vehicle.loc_id == Model.MatchedLoc)
                                 {
                                     string base64ProfilePic = "";
                                     if (@vehicle.vehicle_image is null)
@@ -177,141 +381,379 @@
                                         base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(@vehicle.vehicle_image);
                                     }
                                     <div class="col-md-6 col-lg-6 col-xl-6">
-                                        <div class="card shadow-sm">
+                                        <div class="card shadow-sm" style="height:245px">
                                             <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-md-6 text-center">
-                                                        <a class="booking-doc-img">
-                                                            @*<img src="~/Content/profilepic.jpg" alt="User Image">*@
+                                                <div class="row" style="padding-right:10px;">
 
-                                                            @if (base64ProfilePic == "")
-                                                            {
-                                                                <img class="imageClass" src="~/Content/jordancar.png" alt="ProfilePic" />
-                                                            }
-                                                            else
-                                                            {
-                                                                <img class="imageClass" alt="profilePic" src="@base64ProfilePic" />
-                                                            }
-
-                                                        </a>
-
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <text style="font-size:34px;font-weight:bold">@vehicle.vehicle_short_id </text>
-                                                        @if (Convert.ToInt32(@ViewData["AssetAccessLevel"]) > 2)
-                                                        {
+                                                    <div class="col-md-5 text-center">
+                                                        <div class="row">
                                                             <button data-id="@vehicle.VIN" class="EditVehicleBtn" data-toggle="modal" data-target="#editVehicleModal" style="background-color:transparent;border:1px solid transparent;float:right"><i class="fa fa-edit" style="font-size:20px;color:black;float:right"></i></button>
-                                                        }
-                                                        <div class="modal fade" id="editVehicleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                                                            <div class="modal-dialog" role="document">
-                                                                <div id="EditVehicleModalDiv">
-
-                                                                </div>
-
-                                                            </div>
                                                         </div>
+                                                        <div class="row">
+                                                            <a class="booking-doc-img">
+                                                                @*<img src="~/Content/profilepic.jpg" alt="User Image">*@
+
+                                                                @if (base64ProfilePic == "")
+                                                                {
+                                                                    <img class="imageClass" style=" width:300px; height:200px" src="~/Content/jordancar.png" alt="ProfilePic" />
+                                                                }
+                                                                else
+                                                                {
+                                                                    <img class="imageClass" style=" width:300px; height:200px" alt="profilePic" src="@base64ProfilePic" />
+                                                                }
+
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <text style="font-size:30px;font-weight:bold">@vehicle.vehicle_short_id </text>
+
+
 
                                                         <div class="row" style="margin-bottom:5px;margin-left:0px;">
                                                             <p class="mb-0" style="font-size:14px;font-style:italic">@vehicle.vehicle_long_id</p>
                                                         </div>
                                                         <div class="row" style="margin-bottom:1px;margin-left:0px;">
-                                                            <p class="mb-0" style="font-size:18px;"><b>VIN:</b> @vehicle.VIN</p>
+                                                            <p class="mb-0" style="font-size:17px;"><b>VIN:</b> @vehicle.VIN</p>
                                                         </div>
                                                         <div class="row" style="margin-bottom:1px;margin-left:0px;">
-                                                            <p class="mb-0" style="font-size:18px;"><b>Plate:</b> @vehicle.vehicle_plate</p>
+                                                            <p class="mb-0" style="font-size:17px;"><b>Plate:</b> @vehicle.vehicle_plate</p>
                                                         </div>
                                                         <div class="row" style="margin-bottom:1px;margin-left:0px;">
-                                                            <p class="mb-0" style="font-size:18px;"><b> Year:</b>   @vehicle.vehicle_year</p>
+                                                            <p class="mb-0" style="font-size:17px;"><b> Year:</b>   @vehicle.vehicle_year</p>
                                                         </div>
                                                         <div class="row" style="margin-bottom:1px;margin-left:0px;">
-                                                            <p class="mb-0" style="font-size:18px;"><b>Manufacturer:</b>   @vehicle.vehicle_manufacturer</p>
+                                                            <p class="mb-0" style="font-size:17px;"><b>Manufacturer:</b>   @vehicle.vehicle_manufacturer</p>
                                                         </div>
                                                         <div class="row" style="margin-bottom:0px;margin-left:0px;">
-                                                            <p class="mb-0" style="font-size:18px;"><b>Model:</b>   @vehicle.vehicle_model</p>
+                                                            <p class="mb-0" style="font-size:17px;"><b>Model:</b>   @vehicle.vehicle_model</p>
                                                         </div>
 
 
                                                     </div>
+                                                    <div class="col-md-3">
+                                                        <div class="row" style="padding:7px; margin-bottom:10px; border-radius:10px; background-color:#357efc">
+                                                            <div class="col-md-8 text-center">
 
+                                                                @if (vehicle.current_milage.HasValue)
+                                                                {
+                                                                    <span class="btn" style="font-size:20px; color:white;">
+                                                                        @Math.Round(@vehicle.current_milage.Value, 1).ToString("N0")
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="btn" style="font-size:20px; color:white;">
+                                                                        0
+                                                                    </span>
+                                                                }
+
+                                                            </div>
+                                                            <div class="col-md-4 text-center" style="padding-top:10px; font-size:12px; color:white; border-left:2px solid white">
+                                                                <label>KM</label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row" style="padding:7px; margin-bottom:10px; border-radius:10px; background-color:#357efc">
+                                                            <div class="col-md-8 text-center">
+
+                                                                @if (vehicle.efficiency_price.HasValue)
+                                                                {
+                                                                    <span class="btn" style="font-size:20px; color:white;">
+                                                                        @Math.Round(@vehicle.efficiency_price.Value, 1).ToString("N2")
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="btn" style="font-size:20px; color:white;">
+                                                                        0
+                                                                    </span>
+                                                                }
+
+                                                            </div>
+                                                            <div class="col-md-4" style="padding-left:3px; border-left:2px solid white">
+                                                                <img style="width:50px" src="~/Content/Untitled.png" alt="Alternate Text" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row" style="padding:7px; border-radius:10px; background-color:#357efc">
+                                                            <div class="col-md-8 text-center">
+
+                                                                @if (vehicle.efficiency_liter.HasValue)
+                                                                {
+                                                                    <span class="btn" style="font-size:20px; color:white;">
+                                                                        @Math.Round(@vehicle.efficiency_liter.Value, 1).ToString("N3")
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="btn" style="font-size:20px; color:white;">
+                                                                        0
+                                                                    </span>
+                                                                }
+
+                                                            </div>
+                                                            <div class="col-md-4 text-center" style="padding-left:3px; border-left:2px solid white">
+                                                                <img style="width:50px" src="~/Content/Untitled2.png" alt="Alternate Text" />
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
 
                                                 </div>
 
                                             </div>
-                                            <div class="card-footer">
-                                                <div class="row">
-                                                    <div class="dash-stats-list">
 
-                                                        <span class="btn" style="font-size:22px; color:white;">@Convert.ToDateTime(vehicle.inspection_due_date).ToString("yyyy-MMM")</span>
+                                        </div>
+                                    </div>
+                                }
+                            }
 
-                                                        <p class="mb-0 " style="text-align:center; border-top: 1px solid white; padding-bottom:4px;">REGISTRATION</p>
+                        }
+                    </div>
+
+
+
+                </div>
+                <div class="card-body example" id="inactive_vehicles" style="display:none; height:700px; width:1640px; overflow-x:hidden; overflow-y:auto; ">
+                    <!--Content tab-->
+
+                    <div class="row people-grid-row">
+
+                        @foreach (var vehicle in Model.VehicalInfoList)
+                        {
+                            if (vehicle.vehicle_status == 1)
+                            {
+                                if (vehicle.loc_id == Model.MatchedLoc)
+                                {
+                                    string base64ProfilePic = "";
+                                    if (@vehicle.vehicle_image is null)
+                                    {
+                                        base64ProfilePic = "";
+                                    }
+                                    else
+                                    {
+                                        base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(@vehicle.vehicle_image);
+                                    }
+                                    <div class="col-md-6 col-lg-6 col-xl-6">
+
+                                        <div class="card shadow-sm" style="height:245px">
+                                            <div class="card-body">
+                                                <div class="row" style="padding-right:10px;">
+
+                                                    <div class="col-md-5 text-center">
+                                                        <div class="row">
+                                                            <button data-id="@vehicle.VIN" class="EditVehicleBtn" data-toggle="modal" data-target="#editVehicleModal" style="background-color:transparent;border:1px solid transparent;float:right"><i class="fa fa-edit" style="font-size:20px;color:black;float:right"></i></button>
+                                                        </div>
+                                                        <div class="row">
+                                                            <a class="booking-doc-img">
+                                                                @*<img src="~/Content/profilepic.jpg" alt="User Image">*@
+
+                                                                @if (base64ProfilePic == "")
+                                                                {
+                                                                    <img class="imageClass" style=" width:300px; height:200px" src="~/Content/jordancar.png" alt="ProfilePic" />
+                                                                }
+                                                                else
+                                                                {
+                                                                    <img class="imageClass" style=" width:300px; height:200px" alt="profilePic" src="@base64ProfilePic" />
+                                                                }
+
+                                                            </a>
+                                                        </div>
+
                                                     </div>
-                                                    <div class="dash-stats-list">
-                                                        <span class="btn" style="font-size:22px; color:white;"> @vehicle.current_milage</span>
+                                                    <div class="col-md-4">
+                                                        <text style="font-size:30px;font-weight:bold">@vehicle.vehicle_short_id </text>
 
-                                                        <p class="mb-0" style="text-align:center; border-top: 1px solid white; padding-bottom:4px;">KM</p>
-                                                    </div>
-                                                    <div class="dash-stats-list">
-                                                        <span class="btn " style="font-size:22px; color:white;">  @vehicle.efficiency_price</span>
 
-                                                        <p class="mb-0 " style="text-align:center; border-top: 1px solid white; padding-bottom:4px;">$/KM</p>
-                                                    </div>
-                                                    <div class="dash-stats-list">
-                                                        <span class="btn " style="font-size:22px; color:white;">  @vehicle.efficiency_liter</span>
 
-                                                        <p class="mb-0" style="text-align:center; border-top: 1px solid white; padding-bottom:4px;">L/100KM</p>
+                                                        <div class="row" style="margin-bottom:5px;margin-left:0px;">
+                                                            <p class="mb-0" style="font-size:14px;font-style:italic">@vehicle.vehicle_long_id</p>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom:1px;margin-left:0px;">
+                                                            <p class="mb-0" style="font-size: 17px;"><b>VIN:</b> @vehicle.VIN</p>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom:1px;margin-left:0px;">
+                                                            <p class="mb-0" style="font-size:17px;"><b>Plate:</b> @vehicle.vehicle_plate</p>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom:1px;margin-left:0px;">
+                                                            <p class="mb-0" style="font-size:17px;"><b> Year:</b>   @vehicle.vehicle_year</p>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom:1px;margin-left:0px;">
+                                                            <p class="mb-0" style="font-size:17px;"><b>Manufacturer:</b>   @vehicle.vehicle_manufacturer</p>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom:0px;margin-left:0px;">
+                                                            <p class="mb-0" style="font-size:17px;"><b>Model:</b>   @vehicle.vehicle_model</p>
+                                                        </div>
+
+
                                                     </div>
+                                                    <div class="col-md-3">
+                                                        <div class="row" style="padding:7px; margin-bottom:10px; border-radius:10px; background-color:#357efc">
+                                                            <div class="col-md-8 text-center">
+
+                                                                @if (vehicle.current_milage.HasValue)
+                                                                {
+                                                                    <span class="btn" style="font-size:20px; color:white;">
+                                                                        @Math.Round(@vehicle.current_milage.Value, 1).ToString("N0")
+                                                                    </span>
+                                                                }
+                                                                else 
+                                                                { 
+                                                                    <span class="btn" style="font-size:20px; color:white;">
+                                                                        0
+                                                                    </span>
+                                                                }
+
+                                                            </div>
+                                                            <div class="col-md-4 text-center" style="padding-top:10px; font-size:12px; color:white; border-left:2px solid white">
+                                                                <label>KM</label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row" style="padding:7px; margin-bottom:10px; border-radius:10px; background-color:#357efc">
+                                                            <div class="col-md-8 text-center">
+
+                                                                @if (vehicle.efficiency_price.HasValue)
+                                                                {
+                                                                    <span class="btn" style="font-size:20px; color:white;">
+                                                                        @Math.Round(@vehicle.efficiency_price.Value, 1).ToString("N2")
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="btn" style="font-size:20px; color:white;">
+                                                                        0
+                                                                    </span>
+                                                                }
+
+                                                            </div>
+                                                            <div class="col-md-4" style="padding-left:3px; border-left:2px solid white">
+                                                                <img style="width:50px" src="~/Content/Untitled.png" alt="Alternate Text" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row" style="padding:7px; border-radius:10px; background-color:#357efc">
+                                                            <div class="col-md-8 text-center">
+
+                                                                @if (vehicle.efficiency_liter.HasValue)
+                                                                {
+                                                                    <span class="btn" style="font-size:20px; color:white;">
+                                                                        @Math.Round(@vehicle.efficiency_liter.Value, 1).ToString("N3")
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="btn" style="font-size:20px; color:white;">
+                                                                        0
+                                                                    </span>
+                                                                }
+
+                                                            </div>
+                                                            <div class="col-md-4 text-center" style="padding-left:3px; border-left:2px solid white">
+                                                                <img style="width:50px" src="~/Content/Untitled2.png" alt="Alternate Text" />
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
                                                 </div>
+
                                             </div>
+
                                         </div>
                                     </div>
                                 }
 
                             }
-                        </div>
+
+                        }
                     </div>
+
+
+
                 </div>
-                <div class="tab-pane fade shadow-sm bg-white" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                    <div class="card-body">
+            </div>
+            <div class="tab-pane fade shadow-sm bg-white" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <div class="card-body">
 
 
-                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-md-start" style="margin-left:0px; margin-bottom:20px;">
+
+
+        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div id="AddVehicleModal">
+
                 </div>
 
             </div>
         </div>
-    }
 
+        <div class="modal fade" id="editVehicleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div id="EditVehicleModalDiv">
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
 
 
     <script>
+
+        $("#customSwitches").on('change', function() {
+             if ($(this).is(':checked')) {
+                 $('#inactive_vehicles').css('display', 'bock');
+                 $('#active_vehicles').css('display', 'block');
+             }
+             else {
+                 $('#active_vehicles').css('display', 'none');
+                 $('#inactive_vehicles').css('display', 'block');
+             }
+         });
+
+
         $(document).ready(function () {
+
+            $('#inactive_vehicles').css('display', 'block');
 
             $('#clickThis').on('click', function () {
                 $('#sidebar').toggleClass('active');
             });
 
-         $('#AddVehicleBtn').click(function () {
-                $.ajax({
-                            url: '@Url.Action("AddNewVehicle", "Management")',
-                            data: { value: "" },
-                            type: 'GET',
-                            success: function (data) {
-                                $("#AddVehicleModal").html(data);
-                            }
-                });
-         });
+             $('#AddVehicleBtn').click(function () {
+                    $.ajax({
+                                url: '@Url.Action("AddNewVehicle", "Management")',
+                                data: { value: "" },
+                                type: 'GET',
+                                success: function (data) {
+                                    $("#AddVehicleModal").html(data);
+                                }
+                    });
+             });
 
-         $('.EditVehicleBtn').click(function () {
-                var id = $(this).data('id');
-                $.ajax({
-                            url: '@Url.Action("EditVehicleInfo", "Management")',
-                            data: { value: id },
-                            type: 'GET',
-                            success: function (data) {
-                                $("#EditVehicleModalDiv").html(data);
-                    }
-                });
-         });
+
+             $('.EditVehicleBtn').click(function () {
+                    var id = $(this).data('id');
+
+
+                    $.ajax({
+                                url: '@Url.Action("EditVehicleInfo", "Management")',
+                                data: { value: id },
+                                type: 'GET',
+                                success: function (data) {
+                                    $("#EditVehicleModalDiv").html(data);
+                                    $('#editVehicleModal').modal();
+                                }
+                    });
+             });
 
 
       });

@@ -14,6 +14,13 @@
     @*<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>*@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <style>
+        
+        body {
+         overflow-x: hidden!important;
+         overflow-y: hidden;
+        }
+
+
         #TabLinks {
             margin-left: 7%;
         }
@@ -50,43 +57,62 @@
 <body>
     <nav class="navbar navbar-expand-md navbar-light bg-white" style="border:2px solid  #f0f2f5">
         @*<a href="#" class="navbar-brand">City Tire</a>*@
-        <img  src="~/Content/dashboard.png" style="height:10%;width:10%" class="navbar-brand"/>
+        <img src="~/Content/dashboard.png" style="height:10%;width:10%; padding-left:20px" class="navbar-brand" />
         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav" id="TabLinks">
-                <a id="mainClicked" href="@Url.Action("Dashboard", "Main")" class="btn">
-                    @*class="nav-item nav-link active tabLinksSpace"*@
-                    @*<img src="~/Content/home-run.png">*@
-                    <img src="~/Content/home.png" />
+
+                <a id="mainClicked" href="@Url.Action("Dashboard", "Main")" style="display:none; margin-right:20px; padding:10px; border-radius:5px" class="text-center">
+                    <img src="~/Content/home.png" /><br/>
                     <input type="button" id="mainButton" class="btn btn-outline my-2 my-sm-0" style="visibility:visible;border-color:transparent;color:black;font-size:18px;" value="Main">
                 </a>
-                @*<a id="libraryClicked" href="@Url.Action("Documents", "Library")" class="btn tabLinksSpace">
-                    <img src="~/Content/book.png" />
-                    <input type="button" id="libraryBtn" class="btn btn-outline my-2 my-sm-0" style="visibility:visible;font-size:18px;border-color:transparent;color:black;" value="Library" />
-                </a>*@
-                <a id="treadTrackereClicked" href="@Url.Action("NewOrder", "TreadTracker")" class="btn tabLinksSpace">
-                    <img src="~/Content/tire.png" />
+
+                <a id="libraryClicked" href="@Url.Action("Dashboard", "Library")" style="display:none; margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center">
+                    <img src="~/Content/book.png" /><br />
+                    <input type="button" id="libraryBtn" class="btn btn-outline my-2 my-sm-0 libraryBtn" style=" font-size: 18px; visibility: visible; border-color: transparent; color: black;" value="Library" />
+                </a>
+
+                <a id="toolsClicked" href="@Url.Action("Dashboard", "Tools")" style="display:none; margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center">
+                    <img src="~/Content/wrench.png" /><br />
+                    <input type="button" id="toolsBtn" class="btn btn-outline my-2 my-sm-0" style="visibility:visible;border-color:transparent;font-size:18px;color:black;" value="Tools" />
+                </a>
+
+                <a id="treadTrackereClicked" href="@Url.Action("Dashboard", "TreadTracker")" style="display:none; margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center"> @*class="btn tabLinksSpace"        is replaced by        style="margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center"*@ 
+                    <img src="~/Content/Tread_tracker.png" /><br />
                     <input type="button" id="treadTrackerButton" class="btn btn-outline my-2 my-sm-0" style="font-size:18px;visibility:visible;border-color:transparent;color:black;" value="Tread Tracker" />
                 </a>
-                <a id="ManagementClicked" href="@Url.Action("Dashboard", "Management")" class="btn tabLinksSpace">
-                    <img src="~/Content/man.png" />
+
+
+                <a id="FleetTVTClicked" href="@Url.Action("Dashboard", "FleetTVT")" style="display:none; margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center">
+                    <img style="height:25px;" src="~/Content/FleetTVT_icon (1).png" /><br />
+                    <input type="button" id="libraryBtn" class="btn btn-outline my-2 my-sm-0 fleetTVTBtn" style=" visibility:visible;border-color:transparent;font-size:18px;color:black;" value="Fleet TVT" />
+                </a>
+
+                <a id="ManagementClicked" href="@Url.Action("Dashboard", "Management")" style="display:none; margin-left: 20px;margin-right: 20px;padding: 10px;border-radius: 5px" class="text-center">
+                    <img src="~/Content/man.png" /><br />
                     <input type="button" id="managementBtn" class="btn btn-outline my-2 my-sm-0" style="visibility:visible;border-color:transparent;font-size:18px;color:black;" value="Management" />
                 </a>
-                <a id="ToolsClicked" href="@Url.Action("Dashboard", "Tools")" class="btn tabLinksSpace">
-                    <img src="~/Content/wrench.png" />
-                    <input type="button" id="toolsBtn" class="btn btn-outline my-2 my-sm-0" style="visibility:visible;border-color:transparent;color:black;font-size:18px;" value="Tools" />
-                </a>
-                <a id="PayrollClicked" href="@Url.Action("Payroll", "Management")" class="btn tabLinksSpace">
-                  
-                    <img src="~/Content/payroll.png" />
+
+
+                <a id="PayrollClicked" href="@Url.Action("Payroll", "Management", new { locId = "101" })" style="display:none; margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center">
+
+                    <img src="~/Content/payroll.png" /><br />
                     <input type="button" id="payrollBtn" class="btn btn-outline my-2 my-sm-0" style="visibility:visible;border-color:transparent;font-size:18px;color:black;" value="Payroll" />
                 </a>
+
+                <a id="SettingsClicked"  href="@Url.Action("Dashboard", "Settings")" style="display:none; margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center">
+
+                    <img style="height:20px;" src="~/Content/settings.png" /><br />
+                    <input type="button" id="libraryBtn" class="btn btn-outline my-2 my-sm-0 settingsBtn" style="visibility:visible;border-color:transparent;font-size:18px;color:black;" value="Settings" />
+                </a>
+
+
             </div>
             <div class="navbar-nav ml-auto">
-                
+
                 <a href="@Url.Action("LogOut", "Main")" class="btn">
                     <img src="~/Content/power.png" />
                 </a>
@@ -97,9 +123,10 @@
         @RenderBody()
     </div>
     <script>
-     
+
     </script>
     @Scripts.Render("~/bundles/jquery")   @*I commented this line because datatables in the fuel log page is not working properly. please uncomment if you face any issue with other pages*@
+    @Scripts.Render("~/bundles/fullcalendarjs")
     @Scripts.Render("~/bundles/bootstrap")
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Scripts/jquery.validate.min.js"></script>

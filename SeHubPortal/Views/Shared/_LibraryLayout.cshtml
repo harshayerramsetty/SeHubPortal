@@ -24,29 +24,46 @@
 </style>
 <div class="wrapper d-flex align-items-stretch">
     <nav id="sidebar">
-        <div class="custom-menu">
-            <button type="button" id="sidebarCollapse" class="btn btn-primary">
-                <i class="fa fa-bars"></i>
-                <span class="sr-only">Toggle Menu</span>
-            </button>
-        </div>
 
         <ul class="list-unstyled components mb-5">
-            <li class="active" id="NewOrderLink">
-                <a id="DocumentsClicked" href="@Url.Action("Documents", "Library", new { values = ""})"><span class="fa fa-home mr-3"></span> Documents</a>
+            <li class="active" style="display:none" id="DashboardLink">
+                <a id="DashboardClicked" href="@Url.Action("Dashboard", "Library", new { values = ""})">Dashboard</a>
             </li>
-            <li class="active" id="OpenOrderLink">
-                <a id="PoliciesClicked" href="@Url.Action("Policies", "Library", new { id = "",barcode="" })"><span class="fa fa-sticky-note mr-3"></span> Policies</a>
+
+            <li class="active" style="display:none" id="BranchSharedDriveLink">
+                <a id="BranchSharedDriveClicked" href="@Url.Action("Branch_Shared_drive", "Library", new { id = "",barcode="" })">Branch Shared Drive</a>
             </li>
+
+            <li class="active" style="display:none" id="CompanyDocumentsLink">
+                <a id="CompanyDocumentsClicked" href="@Url.Action("Company_Documents", "Library", new { values = ""})">Company Documents</a>
+            </li>
+
+            <li class="active" style="display:block" id="CustomerDocumentsLink">
+                <a id="CustomerDocumentsClicked" href="@Url.Action("Customer_Documents", "Library", new { values = ""})">Customer Documents</a>
+            </li>
+
+            <li class="active" style="display:none" id="ManagementLink">
+                <a id="ManagementClicked" href="@Url.Action("Management", "Library")">Management Library</a>
+            </li>
+
+            <li class="active" style="display:none" id="SupplierDocumentsLink">
+                <a id="SupplierDocumentsClicked" href="@Url.Action("Supplier_Documents", "Library", new { id = "",barcode="" })">Supplier Documents</a>
+            </li>
+
         </ul>
 
     </nav>
 
     <!-- Page Content  -->
-    <div id="content" class="p-4 p-md-5 pt-5">
+    <div id="content">
         <div id="LibraryArea">
             @RenderBody()
         </div>
     </div>
 </div>
 <script src="~/Content/sidebar/sidebar.js"></script>
+@RenderSection("scripts", required: false)
+
+
+
+

@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using SeHubPortal.ViewModel;
 
 namespace SeHubPortal.Controllers
 {
@@ -22,23 +23,64 @@ namespace SeHubPortal.Controllers
             return empDetails;
         }
 
-        public ActionResult Dashboard()
+        public ActionResult Dashboard(MainDashboard modal)
         {
+            System.Diagnostics.Trace.WriteLine("whatever");
 
-            if(CheckPermissions()!=null)
+            if (CheckPermissions()!=null)
             {
+                CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+                int empId = Convert.ToInt32(Session["userID"].ToString());
+                var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
+                modal.SehubAccess = empDetails;
 
+                if (modal.SehubAccess.main == 0)
+                {
+                    return RedirectToAction("Dashboard", "Library");
+                }
+                else if (modal.SehubAccess.mainDashboard == 0) {
+                    return RedirectToAction("Calendar", "Main");
+                }
             }
             else
             {
                 return RedirectToAction("SignIn", "Login");
             }
 
-            return View();
+            return View(modal);
         }
-        public ActionResult Calendar()
+
+        public JsonResult GetEvents()
         {
-            return View();
+            using (CityTireAndAutoEntities dc = new CityTireAndAutoEntities())
+            {
+                var events = dc.tbl_Calendar_events.ToList();
+                return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+        }
+
+        public JsonResult GetBirthdayEvents()
+        {
+            using (CityTireAndAutoEntities dc = new CityTireAndAutoEntities())
+            {
+                var events = dc.tbl_employee.Where(x => (x.status == 1)).ToList();
+                return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+        }
+
+        public ActionResult Calendar(FileURL model)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+            var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
+            model.SehubAccess = empDetails;
+
+            if (model.SehubAccess.mainCalendar == 0)
+            {
+                return RedirectToAction("Dashboard", "Library");
+            }
+
+            return View(model);
         }
         public ActionResult Newsletter()
         {
@@ -77,8 +119,7 @@ namespace SeHubPortal.Controllers
                         var result = db.tbl_employee.Where(a => a.employee_id.Equals(empId)).FirstOrDefault();
                         if (result != null)
                         {
-                            result.profile_pic = imageBytes;
-                            
+                            result.profile_pic = imageBytes;                            
 
                             //Testing
                             Debug.WriteLine(result.employee_id +"    "+ result.full_name);

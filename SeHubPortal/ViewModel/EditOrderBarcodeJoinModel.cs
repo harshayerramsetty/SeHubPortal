@@ -8,6 +8,7 @@ namespace SeHubPortal.ViewModel
     public class EditOrderBarcodeJoinModel
     {
         public string barcode { get; set; }
+        public string changed_barcode { get; set; }
         public string retread_workorder { get; set; }
         public Nullable<int> line_number { get; set; }
         public Nullable<int> line_code { get; set; }

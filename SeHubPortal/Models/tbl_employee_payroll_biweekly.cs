@@ -92,5 +92,6 @@ namespace SeHubPortal.Models
         public Nullable<double> sun_2_sum { get; set; }
         public Nullable<double> timeClock_sun1 { get; set; }
         public Nullable<double> timeClock_sun2 { get; set; }
+        public string loc_id { get; set; }
     }
 }

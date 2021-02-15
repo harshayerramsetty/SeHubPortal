@@ -1,5 +1,5 @@
 ﻿@{
-    Layout = "~/Views/Shared/_ToolsLayout.cshtml";
+    Layout = "~/Views/Shared/_Settings.cshtml";
 }
 @model SeHubPortal.ViewModel.EmployeePermissionsViewModel
 <!DOCTYPE html>
@@ -15,14 +15,122 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 
 
+
+
+    @if (Model.SehubAccess.tools > 0)
+    {
+        <style>
+            #toolsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.management > 0)
+    {
+        <style>
+            #ManagementClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+
+    @if (Model.SehubAccess.settings_dashboard > 0)
+    {
+        <style>
+            #SettingsLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings_customers > 0)
+    {
+        <style>
+            #CustomersLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+
+    @if (Model.SehubAccess.payroll > 0)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.fleetTVT > 0)
+    {
+        <style>
+            #FleetTVTClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTracker > 0)
+    {
+        <style>
+            #treadTrackereClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_access > 0)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.main > 0)
+    {
+        <style>
+            #mainClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_access == 3)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+
     <style>
-        #ToolsClicked {
+
+        #EmployeePermissionsLink {
+            display: block !important;
+        }
+
+        #SettingsClicked {
+            display: block !important;
+        }
+
+        .settingsBtn {
+            font-weight: bold;
+        }
+
+        #SettingsClicked {
             background-color: #f0f2f5;
             color: black;
             font-weight: 600;
         }
 
-        #toolsBtn {
+        #settingsBtn {
             color: black;
             font-weight: 600;
         }
@@ -31,6 +139,7 @@
         #EmployeePermissionsLink {
             color: black;
             font-weight: 700;
+            background-color: #f0f2f5;
         }
 
         body {
@@ -68,6 +177,14 @@
                 <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
                     <li class="breadcrumb-item"><a href="@Url.Action("Calculator", "Tools")">Tools</a></li>
                     <li class="breadcrumb-item " aria-current="page">Manage Permissions</li>
+                    <div style="margin-left:1163px">
+                        @using (Html.BeginForm("EmployeePermissionsChangelocation", "Tools", FormMethod.Post))
+                        {
+                            <span style="margin-right:3px;color:black;">Location:</span>
+                            @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "All", new { @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:6px;"  })
+                            <noscript> <input class="btn btn-success" type="submit" value="Search" /></noscript>
+                        }
+                    </div>
                 </ol>
             </nav>
         </div>
@@ -78,25 +195,18 @@
     </div>
     @if (Model.userManagementAccessLevel > 2)
     {
-        <div class="row" style="margin:5px 50px 20px 15px;">
+        <div class="row" style="margin:0px 15px 20px 15px;">
             <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
-                <div class="card-header">
-                    <h6 class="card-title mb-0 d-inline-block">Employee information</h6>
+                <div class="card-header" style="background-color: #cde8ca; padding:5px 5px 5px 15px">
+                    <h6 class="card-title mb-0 d-inline-block">Employee List</h6>
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="padding:20px; overflow-y: auto; max-height:700px">
                     @*<div class="row">
                             <input name="weight" class="custom-range"  type="range" min="1" max="3" step="1" labels="1,2,3"/>
                         </div>*@
-                    <div class="row" style="margin-top:10px;margin-left:20px">
+                    <div class="row" style="display:none; margin-top:10px;margin-left:20px">
 
-                        <div class="col-md-3">
-                            @using (Html.BeginForm("EmployeePermissionsChangelocation", "Tools", FormMethod.Post))
-                            {
-                                <span style="margin-right:5px;margin-top:10px; font-size:15px;color:black;">Change Location:</span>
-                                @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "All", new { @onChange = "this.form.submit()" })
-                                <noscript> <input class="btn btn-success" type="submit" value="Search" /></noscript>
-                            }
-                        </div>
+                        
                         @*<div class="col-md-9">
                                 <input type="button" id="AddCredentialsBtn" class="btn btn-success" value="Add" data-toggle="modal" data-target="#AddPermissions" style="float:right;width:80px;margin-right:20px;" />
                                 <div class="modal fade" id="AddPermissions" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -110,16 +220,16 @@
                             </div>*@
 
                     </div>
-                    <div class="row" style="margin:5px 20px 20px 20px;">
-                        <table class="table">
-                            <thead style="text-align:center">
+                    <div class="row" style="margin:0px 5px 0px 5px;">
+                        <table class="table ">
+                            <thead style="text-align:center" class="thead-dark">
                                 <tr>
-                                    <th scope="col">Employee</th>
-                                    <th scope="col">Employee ID</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Email ID</th>
-                                    <th scope="col">Position</th>
-                                    <th scope="col">Manage</th>
+                                    <th style="padding:0px; font-size:12px; margin:0px;" scope="col">Employee</th>
+                                    <th style="padding:0px; font-size:12px; margin:0px;" scope="col">Employee ID</th>
+                                    <th style="padding:0px; font-size:12px; margin:0px;" scope="col">Name</th>
+                                    <th style="padding:0px; font-size:12px; margin:0px;" scope="col">Email</th>
+                                    <th style="padding:0px; font-size:12px; margin:0px;" scope="col">Position</th>
+                                    <th style="padding:0px; font-size:12px; margin:0px;" scope="col">Edit</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -138,11 +248,11 @@
                                         <td style="width:130px;text-align:center">
                                             @if (base64ProfilePic == "")
                                             {
-                                                <img src="~/Content/profilepic.jpg" style="width:30%; height:2%;" />
+                                                <img src="~/Content/profilepic.jpg" style="width:30%; height:30px;" />
                                             }
                                             else
                                             {
-                                                <img alt="profilePic" src="@base64ProfilePic" style="width:30%; height:2%;border-radius:50%" />
+                                                <img alt="profilePic" src="@base64ProfilePic" style="width:30%; height:30px;border-radius:50%" />
                                             }
 
                                         </td>
@@ -150,8 +260,8 @@
                                         <td style="text-align:center">@item.full_name</td>
                                         <td style="text-align:center">@item.cta_email</td>
                                         <td style="text-align:center">@item.cta_position</td>
-                                        <td style="text-align:center">
-                                            <button data-id="@item.employee_id" class="managePermissionsBtn" data-toggle="modal" data-target="#managePermissions" style="background-color:transparent;border:1px solid transparent;text-align:center"><i class="fa fa-edit" style="font-size:20px;color:dodgerblue;float:right"></i></button>
+                                        <td style="text-align: center">
+                                            <button data-id="@item.employee_id" class="managePermissionsBtn" data-toggle="modal" data-target="#managePermissions" style="background-color: transparent;border: 1px solid transparent;text-align: center"><i class="fa fa-edit" style="font-size:20px;color:dodgerblue;float:right"></i></button>
                                             <div class="modal fade" id="managePermissions" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true" style="text-align:left">
                                                 <div class="modal-dialog modal-lg" role="document">
                                                     <div id="managePermissionsDiv">
@@ -163,7 +273,6 @@
                                         </td>
                                     </tr>
                                 }
-
 
                             </tbody>
                         </table>

@@ -1,26 +1,151 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Attendance";
     Layout = "~/Views/Shared/_ManagementLayout.cshtml";
 }
-
-@*@model List<SeHubPortal.ViewModel.EmployeeAttendanceListModel>*@
+@*@model List
+    <SeHubPortal.ViewModel.EmployeeAttendanceListModel>
+*@
 @model SeHubPortal.ViewModel.AttendanceModel
-
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    @*<link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">*@
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    @*
+        <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+    *@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>*@
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://d3js.org/d3.v3.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/1.7.0/d3-legend.min.js"></script>
+
+
+
+
+    @if (Model.SehubAccess.tools > 0)
+    {
+        <style>
+            #toolsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.payroll > 0)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.fleetTVT > 0)
+    {
+        <style>
+            #FleetTVTClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTracker > 0)
+    {
+        <style>
+            #treadTrackereClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_access > 0)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.main > 0)
+    {
+        <style>
+            #mainClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings == 3)
+    {
+        <style>
+            #SettingsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+
+
+
+
+
+
+
+
+    @if (Model.SehubAccess.management_dashboard > 0)
+    {
+        <style>
+            #DashboardLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.my_staff > 0)
+    {
+        <style>
+            #MyStaffLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.vacation_schedule > 0)
+    {
+        <style>
+            #LeaveSchedulerLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.asset_control > 0)
+    {
+        <style>
+            #AssetControlLink {
+                display: block !important;
+            }
+        </style>
+    }
+
     <style type="text/css">
+
+        .example::-webkit-scrollbar {
+          display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .example {
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
+        }
+
+        #ManagementClicked {
+            display: block !important;
+        }
+
+        #AttendanceLink {
+            display: block !important;
+        }
+
         #ManagementClicked {
             background-color: #f0f2f5;
             color: black;
@@ -35,6 +160,7 @@
         #AttendanceLink {
             color: black;
             font-weight: 700;
+            background-color: #f0f2f5;
         }
 
         body {
@@ -57,18 +183,17 @@
                 color: black;
             }
 
-
         .payRollMainBody {
             margin: 0px 15px 0px 20px;
             height: 100%;
         }
         /*.card-header {
-            background-color: #5f76e8;
-        }
-        .card-title
-        {
-            color:#fff;
-        }*/
+         background-color: #5f76e8;
+         }
+         .card-title
+         {
+         color:#fff;
+         }*/
         .wrap {
             width: 100%;
             overflow: auto;
@@ -111,6 +236,7 @@
             height: 30px;
             font-size: 18px;
         }
+
         .title {
             color: grey;
             font-size: 18px;
@@ -164,8 +290,6 @@
             font: 10px sans-serif;
         }
 
-
-
         .axis path {
             fill: none;
             stroke: #000;
@@ -180,7 +304,6 @@
         .x.axis path {
             display: none;
         }
-
         /*//AttendanceBarChart*/
         .AttendanceBarChart {
             margin: 0px 25px;
@@ -194,6 +317,11 @@
         rect:hover {
             fill: orange;
         }
+
+        .btn:hover {
+            color: black;
+            background-color: #cfcfcf;
+        }
     </style>
 </head>
 <body>
@@ -204,8 +332,29 @@
                     <div class="col">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
-                                <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Management")">Management</a></li>
+                                <li class="breadcrumb-item"><a href="@Url.Action("Attendance", "Management")">Management</a></li>
                                 <li class="breadcrumb-item " aria-current="page">Attendance</li>
+
+                                @if (Model.SehubAccess.attendance >= 2)
+                                {
+                                    <lable style="margin-left:1180px; margin-right:0px">Location</lable>
+                                    using (Html.BeginForm("ChangeLocAttendance", "Management", FormMethod.Post))
+                                    {
+                                        <div>
+
+                                            @if (Model.SehubAccess.attendance == 3)
+                                            {
+                                                @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "Select", new { @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:6px;" })
+                                            }
+                                            else if (Model.SehubAccess.attendance == 2) { 
+                                                @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "Select", new {@disabled = "True", @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:6px;" })
+                                            }
+
+                                            <noscript> <input style="display:none" class="btn btn-success" type="submit" value="Search" /></noscript>
+                                        </div>
+                                    }
+                                }
+
                             </ol>
                         </nav>
                     </div>
@@ -214,288 +363,276 @@
                         <span class="sr-only">Toggle Menu</span>
                     </button>
                 </div>
-                @if (Model.AccessLevel != 0)
-                {
-                    <div class="payRollMainBody">
-                        <div>
-                            <div class="fleft ">
-                                <div class="row bg-secondary" style="height:47px; padding-top:8px; margin-left:2px;margin-right:1px;">
-                                    <div class="col-md-7">
-                                        <h5 style="color:white;font-size:16px;margin-top:6px">Employee List</h5>
-                                    </div>
-                                    @if (Model.AccessLevel != 1 && Model.AccessLevel != 2)
-                                    {
-                                        using (Html.BeginForm("ChangeLocAttendance", "Management", FormMethod.Post))
-                                        {
-                                            <div class="col-md-5">
-                                                @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "Select", new { @onChange = "this.form.submit()" })
-                                                <noscript> <input class="btn btn-success" type="submit" value="Search" /></noscript>
-                                            </div>
-                                        }
-                                    }
-
+                <div class="payRollMainBody example" style="max-height:734px; overflow:auto">
+                    <div>
+                        <div class="fleft ">
+                            <div class="row bg-secondary" style="height: 30px;padding-top: 4px;margin-left: 2px;margin-right: 1px;">
+                                <div class="col-md-7">
+                                    <h5 style="color:white;font-size:19px;">Employee List</h5>
                                 </div>
-                                <ul class="list-group shadow-lg  bg-white rounded">
-                                    @foreach (var items in Model.employeeList)
-                                    {
-                                        if (items.atWork == "True")
-                                        {
-                                            <li class="list-group-item" onclick="location.href='@Url.Action("Attendance", "Management", new { locId = Model.MatchedLocID,employeeId=@items.employeeId})';">
-                                                <img style="vertical-align:middle" src="~/Content/like3.png" alt="">
-                                                <span style="vertical-align:middle">@items.fullName</span>
-                                            </li>
-                                        }
-                                        else
-                                        {
-                                            <li class="list-group-item" onclick="location.href='@Url.Action("Attendance", "Management", new { locId = Model.MatchedLocID,employeeId=@items.employeeId})';">
-                                                <img style="vertical-align:middle" src="~/Content/dislike.png" alt="">
-                                                <span style="vertical-align:middle">@items.fullName</span>
-                                            </li>
-                                        }
-
-
-                                    }
-
-                                </ul>
-
                             </div>
-                            <div class="fright">
-                                <div id="divLoader" style="text-align:center;margin-top:230px;"> <img src="~/Content/blueloader.gif" alt="Loader" /> </div>
-                                <div id="AttendanceRightBody" style="display:none">
-                                    @if (Model.SelectedEmployeeId is null)
+                            <ul class="list-group shadow-lg  bg-white rounded">
+                                @foreach (var items in Model.employeeList)
+                                {
+                                    if (items.atWork == "True")
                                     {
-
+                                        <li class="list-group-item btn text-left" onclick="location.href='@Url.Action("Attendance", "Management", new { locId = Model.MatchedLocID,employeeId=@items.employeeId})';">
+                                            <img class="btn" style="vertical-align:middle" src="~/Content/like3.png" alt="">
+                                            <span class="btn" style="vertical-align:middle">@items.fullName</span>
+                                        </li>
                                     }
                                     else
                                     {
-                                        <div style="margin:0px 0px 0px 10px;">
-                                            <div class="card shadow-sm flex-fill grow" style="margin:0px 0px 0px 0px;">
-                                                <div class="card-body ">
-                                                    <div class="row EmpDetailsHeader">
-                                                        <div class="col-lg-10 col-md-6">
-                                                            <div class="row" style="height:40px;">
-                                                                <text style="font-size:xx-large; font-weight:bold;">@ViewData["EmployeeName"]</text>
-                                                            </div>
-                                                            <div class="row" style="height:30px;">
-                                                                <text style="font-size:medium; margin:10px 0px 0px 0px"> @ViewData["Position"]</text>
-                                                            </div>
-                                                            <div class="row" style="height:30px;">
-                                                                <text style="font-size:medium; ">Employee Id : @ViewData["EmployeeId"] </text>
-                                                            </div>
+                                        <li class="list-group-item btn text-left" onclick="location.href='@Url.Action("Attendance", "Management", new { locId = Model.MatchedLocID,employeeId=@items.employeeId})';">
+                                            <img class="btn" style="vertical-align:middle" src="~/Content/dislike.png" alt="">
+                                            <span class="btn" style="vertical-align:middle">@items.fullName</span>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                        <div class="fright">
+                            <div id="divLoader" style="text-align:center;margin-top:150px;"> <img style="height:300px" src="~/Content/blueloader.gif" alt="Loader" /></div>
+                            <div id="AttendanceRightBody" style="display:none">
+                                @if (Model.SelectedEmployeeId is null)
+                                {
+                                }
+                                else
+                                {
+                                    <div style="margin:0px 0px 0px 10px;">
+                                        <div class="card shadow-sm flex-fill grow" style="margin:0px 0px 0px 0px;">
+                                            <div class="card-body ">
+                                                <div class="row EmpDetailsHeader">
+                                                    <div class="col-lg-10">
+                                                        <div class="row" style="height:40px;">
+                                                            <text style="font-size:xx-large; font-weight:bold;">@ViewData["EmployeeName"]</text>
                                                         </div>
-
-                                                        <div class="col-lg-2 col-md-6" style="text-align:right; display: flex;justify-content: center;align-items: center;overflow: hidden">
-                                                            @*<img src="~/Content/mahesh.jpg" alt="ProfilePic" style="width:85%; height:85%; border-radius:50%;">*@
-
-                                                            @if (@ViewData["ProfileImage"].ToString() == "data:image/png;base64,")
-                                                            {
-                                                                <img src="~/Content/profilepic.jpg" alt="ProfilePic" style="width:65%; height:75%; border-radius:50%;">
-                                                            }
-                                                            else
-                                                            {
-                                                                <img alt="profilePic" src=" @ViewData["ProfileImage"]" style="width:65%; height:75%; border-radius:50%;" />
-                                                            }
-
-
+                                                        <div class="row" style="height:30px;">
+                                                            <text style="font-size:medium; margin:10px 0px 0px 0px"> @ViewData["Position"]</text>
+                                                        </div>
+                                                        <div class="row" style="height:30px;">
+                                                            <text style="font-size:medium; ">Employee Id : @ViewData["EmployeeId"] </text>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-2 text-right" style="overflow: hidden">
+                                                        @*<img src="~/Content/mahesh.jpg" alt="ProfilePic" style="width:85%; height:85%; border-radius:50%;">*@
+                                                        @if (@ViewData["ProfileImage"].ToString() == "data:image/png;base64,")
+                                                        {
+                                                            <img src="~/Content/profilepic.jpg" alt="ProfilePic" style="width:65%; height:90%; border-radius:50%;">
+                                                        }
+                                                        else
+                                                        {
+                                                            <img alt="profilePic" src="@ViewData["ProfileImage"]" style="width:65%; height:90%; border-radius:50%;" />
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="margin:20px 0px 0px 10px;">
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12 d-flex">
+                                                <div class="card shadow-sm flex-fill grow" style="margin:0px 0px 0px 0px;">
+                                                    <div class="card-header" style="padding:2px 5px 0px 20px">
+                                                        <h6 class="card-title mb-0 d-inline-block">Attendance Summary</h6>
+                                                        <div style="display: inline-block">
+                                                            <h6>(@ViewData["start_date"] to @ViewData["end_date"])</h6>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body text-center" style="padding:0px 15px 0px 15px">
+                                                        <div class="row">
+                                                            <div class="col-md-1" style="padding-top: 15px">
+                                                                <table class="table text-left" style="margin-top:0px">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td class="tdProperties" style="border-color:#fff;font-size:14px"></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class="tdProperties" style="border-color:#fff;font-size:14px; padding:5px;">ClockIn</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class="tdProperties" style="border-color:#fff;font-size:14px; padding:5px;">ClockOut  </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class="tdProperties" style="border-color:#fff;font-size:14px; padding:5px;"><strong>TOTAL</strong></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <div class="col-md-11">
+                                                                <table class="table table-responsive-sm table-bordered" style="margin-top:15px">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">SUN</td>
+                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">MON</td>
+                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">TUE</td>
+                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">WED</td>
+                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">THU</td>
+                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">FRI</td>
+                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">SAT</td>
+                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">SUN</td>
+                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">MON</td>
+                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">TUE</td>
+                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">WED</td>
+                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">THU</td>
+                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">FRI</td>
+                                                                            <td class="tdProperties" style="background-color:lightgrey; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">SAT</td>
+                                                                        </tr>
+                                                                        <tr height="35px">
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN1"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN2"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN3"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN4"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN5"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN6"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN7"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN8"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN9"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN10"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN11"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN12"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN13"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN14"]</td>
+                                                                        </tr>
+                                                                        <tr height="35px">
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT1"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT2"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT3"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT4"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT5"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT6"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT7"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT8"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT9"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT10"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT11"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT12"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT13"]</td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT14"]</td>
+                                                                        </tr>
+                                                                        <tr height="35px">
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT1"]</strong></td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT2"]</strong></td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT3"]</strong></td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT4"]</strong></td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT5"]</strong></td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT6"]</strong></td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT7"]</strong></td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT8"]</strong></td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT9"]</strong></td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT10"]</strong></td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT11"]</strong></td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT12"]</strong></td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT13"]</strong></td>
+                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT14"]</strong></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <div style="margin:20px 0px 0px 10px;">
-                                            <div class="row">
-                                                <div class="col-lg-12 col-md-12 d-flex">
+                                    </div>
+                                    <div style="margin:20px 0px 0px 25px;">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="row">
                                                     <div class="card shadow-sm flex-fill grow">
-                                                        <div class="card-header">
-                                                            <h6 class="card-title mb-0 d-inline-block">Attendance Summary</h6>
-                                                        </div>
-                                                        <div class="card-body">
-                                                            @* <svg class="barChart" data-bar-chart data-data="23,43,10,13,10,20,30,23,43,10,13,10,20,30" data-bar-width="15"></svg>*@
-                                                            <div class="AttendanceBarChart">
-                                                                <div class="row ">
-                                                                    <div class="col-lg-8">
-                                                                        <div class="row subTables">
-                                                                            <div class="col-md-2" style="background-color:#007bff">
-                                                                                <text style="color:white; font-size:14px">Date:</text>
-                                                                            </div>
-                                                                            <div class="col-md-2" style="border:1px solid #007bff">
-                                                                                <text><span id="city" style=" font-size:14px"></span></text>
-                                                                            </div>
-
-                                                                            &nbsp;
-                                                                            &nbsp;
-                                                                            <div class="col-md-2" style="background-color:#007bff">
-                                                                                <text style="color:white;font-size:14px">Hours:</text>
-                                                                            </div>
-                                                                            <div class="col-md-2" style="border:1px solid #007bff">
-                                                                                <text><span id="inches" style=" font-size:14px"></span></text>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-3  ml-auto">
-                                                                        <div class="row subTables">
-                                                                            <div class="col-md-8" style="background-color:#b0b4b8">
-                                                                                <text style="color:white; font-size:14px">Working Hours:</text>
-                                                                            </div>
-                                                                            <div class="col-md-4" style="border:1px solid #b0b4b8">
-                                                                                <text style=" font-size:14px">@ViewData["BiweekHours"]</text>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    @*&nbsp;
-                                                            &nbsp;
-                                                            <div class="col-lg-2">
-                                                                <div class="row subTables">
-                                                                    <div class="col-md-8" style="background-color:#007bff">
-                                                                        <text style="color:white;">Hours:</text>
-                                                                    </div>
-                                                                    <div class="col-md-4" style="border:1px solid #007bff">
-                                                                        <text><span id="inches"></span></text>
-                                                                    </div>
-                                                                </div>
-                                                            </div>*@
-                                                                    @*<p><span id="city"></span> - <span id="inches"></span></p>*@
-                                                                </div>
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-                                        <div style="margin:20px 0px 0px 10px;">
-                                            <div class="row">
-                                                <div class="col-lg-6 col-md-12 d-flex">
-                                                    <div class="card shadow-sm flex-fill grow">
-                                                        <div class="card-header">
-                                                            <h6 class="card-title mb-0 d-inline-block">Average In</h6>
+                                                        <div class="card-header" style="padding:2px 5px 2px 20px">
+                                                            <h6 class="card-title mb-0 d-inline-block">Average</h6>
                                                             <a href="#" class="d-inline-block float-right text-primary"></a>
                                                         </div>
-                                                        <div class="card-body text-center">
+                                                        <div class="card-body text-center" style="padding-top:8px">
+                                                            <div class="row" style="margin:0px 0px 0px 0px; padding:0px;">
+                                                                <div class="col-lg-6 text-center">
+                                                                    <strong>Clock In</strong>
+                                                                </div>
+                                                                <div class="col-lg-6 text-center">
+                                                                    <strong>Clock Out</strong>
+                                                                </div>
+                                                            </div>
+                                                            <hr style="margin-top:8px" />
                                                             <div class="time-list">
                                                                 <div class="dash-stats-list">
-                                                                    <span class="btn btn-outline-primary" style="font-size:30px;">@ViewData["avgInHoursOverall"]</span>
+                                                                    <span class="btn btn-outline-primary" style="font-size:28px;width:130px; height:60px;">@ViewData["avgInHoursCurrent"]</span>
+                                                                    @*<span class="btn btn-outline-primary">7:35 AM</span>*@
+                                                                    <p class="mb-0">Bi-Week</p>
+                                                                </div>
+                                                                <div class="dash-stats-list">
+                                                                    <span class="btn btn-outline-primary" style="font-size:28px;width:130px; height:60px;">TBD</span>@*@ViewData["avgInHoursOverall"]*@
                                                                     @*<span class="btn btn-outline-primary">7:45 AM</span>*@
                                                                     <p class="mb-0">Year</p>
                                                                 </div>
                                                                 <div class="dash-stats-list">
-                                                                    <span class="btn btn-outline-primary" style="font-size:30px;"> @ViewData["avgInHoursCurrent"]</span>
-                                                                    @*<span class="btn btn-outline-primary">7:35 AM</span>*@
-                                                                    <p class="mb-0">Bi-Week</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 col-md-12 d-flex">
-                                                    <div class="card shadow-sm flex-fill grow">
-                                                        <div class="card-header">
-                                                            <h6 class="card-title mb-0 d-inline-block">Average Out</h6>
-                                                            <a href="#" class="d-inline-block float-right text-primary"></a>
-                                                        </div>
-                                                        <div class="card-body text-center">
-                                                            <div class="time-list">
-                                                                <div class="dash-stats-list">
-                                                                    <span class="btn btn-outline-primary" style="font-size:30px;">@ViewData["avgOutHoursOverall"]</span>
-                                                                    @*<span class="btn btn-outline-primary">17:25 PM</span>*@
-                                                                    <p class="mb-0">Year</p>
-                                                                </div>
-                                                                <div class="dash-stats-list">
-                                                                    <span class="btn btn-outline-primary" style="font-size:30px;">@ViewData["avgOutHoursCurrent"]</span>
+                                                                    <span class="btn btn-outline-primary" style="font-size:28px;width:130px; height:60px;">@ViewData["avgOutHoursCurrent"]</span>
                                                                     @*<span class="btn btn-outline-primary">17:55 PM</span>*@
                                                                     <p class="mb-0">Bi-Week</p>
                                                                 </div>
+                                                                <div class="dash-stats-list">
+                                                                    <span class="btn btn-outline-primary" style="font-size:28px;width:130px; height:60px;">TBD</span>@*@ViewData["avgOutHoursOverall"]*@
+                                                                    @*<span class="btn btn-outline-primary">17:25 PM</span>*@
+                                                                    <p class="mb-0">Year</p>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-
+                                                <div class="row"></div>
                                             </div>
-
-                                        </div>
-
-                                        <div style="margin:20px 0px 20px 10px;">
-                                            <div class="row">
-                                                <div class="col-lg-6 col-md-12 d-flex">
-                                                    <div class="card shadow-sm flex-fill grow">
-                                                        <div class="card-header">
-                                                            <h6 class="card-title mb-0 d-inline-block">Attendance Usage</h6>
+                                            <div class="col-lg-6 col-md-12 d-flex">
+                                                <div class="card shadow-sm flex-fill grow">
+                                                    <div class="card-header" style="padding:2px 5px 2px 20px">
+                                                        <h6 class="card-title mb-0 d-inline-block">Employee Leave Count</h6>
+                                                    </div>
+                                                    <div class="card-body text-center" style="padding-top:8px">
+                                                        <div class="row" style="margin:0px 0px 0px 0px; padding:0px;">
+                                                            <div class="col-lg-4 text-center">
+                                                                <strong>Vacation Days</strong>
+                                                            </div>
+                                                            <div class="col-lg-4 text-center">
+                                                                <strong>Sick Days</strong>
+                                                            </div>
+                                                            <div class="col-lg-4 text-center">
+                                                                <strong>Off Days</strong>
+                                                            </div>
                                                         </div>
-                                                        <div class="card-body text-center">
-                                                            @*<svg id="chart" preserveAspectRatio="xMinYMin meet" viewBox="0 0 200 200"></svg>*@
-                                                            <div id="chartBar" style=" height: 400px;width:400px;position: relative;">
-
+                                                        <hr style="margin-top:8px" />
+                                                        <div class="time-list">
+                                                            <div class="dash-stats-list">
+                                                                <span class="btn btn-outline-primary" style="font-size:28px;width:130px; height:60px;">TBD</span>
+                                                                @*<span class="btn btn-outline-primary">7:35 AM</span>*@
+                                                                <p class="mb-0">Bi-Week</p>
+                                                            </div>
+                                                            <div class="dash-stats-list">
+                                                                <span class="btn btn-outline-primary" style="font-size:28px;width:130px; height:60px;">TBD</span>@*@ViewData["avgInHoursOverall"]*@
+                                                                @*<span class="btn btn-outline-primary">7:45 AM</span>*@
+                                                                <p class="mb-0">Year</p>
+                                                            </div>
+                                                            <div class="dash-stats-list">
+                                                                <span class="btn btn-outline-primary" style="font-size:28px;width:130px; height:60px;">TBD</span>
+                                                                @*<span class="btn btn-outline-primary">17:55 PM</span>*@
+                                                                <p class="mb-0">Bi-Week</p>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-6 col-md-12 d-flex">
-                                                    <div class="card shadow-sm flex-fill grow">
-                                                        <div class="card-header">
-                                                            <h6 class="card-title mb-0 d-inline-block">Employee Leave Summary</h6>
-                                                        </div>
-                                                        <div class="card-body text-center">
-                                                            @*<div id="my_dataviz"></div>*@
-                                                            <table class="table">
-                                                                <thead class="thead-light">
-                                                                    <tr>
-                                                                        <th scope="col">Type</th>
-                                                                        <th scope="col">Days</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>Pay Period</td>
-                                                                        <td>2008</td>
-
-                                                                    </tr>
-                                                                    <tr>
-
-                                                                        <td>Sick Days Used</td>
-                                                                        <td>0</td>
-
-                                                                    </tr>
-                                                                    <tr>
-
-                                                                        <td>Vaction Days Used</td>
-                                                                        <td>0</td>
-                                                                    </tr>
-                                                                    <tr>
-
-                                                                        <td>Split Days Used</td>
-                                                                        <td>0</td>
-                                                                    </tr>
-                                                                    <tr>
-
-                                                                        <td>Off Days Used</td>
-                                                                        <td>0</td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
                                             </div>
-
                                         </div>
-                                    }
-
-                                </div>
-
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
-                }
-
-
+                </div>
             </div>
         </div>
     </div>
-
+    @*$(".btn").click(function () {
+        $('#AttendanceRightBody').css('display', 'none');
+        $('#divLoader').css('display', 'block');
+        });*@
     <script>
         $(window).on('load', function () {
             $('#AttendanceRightBody').css('display', 'block');
@@ -505,264 +642,19 @@
         $(document).ready(function () {
             $('#clickThis').on('click', function () {
                 $('#sidebar').toggleClass('active');
-            });
-         
-        });
-
-    StackedBarChart()
-    function wrap(text, width) {
-        text.each(function () {
-            var text = d3.select(this),
-                words = text.text().split(/\s+/).reverse(),
-                word,
-                line = [],
-                lineNumber = 0,
-                lineHeight = 1.1, // ems
-                y = text.attr("y"),
-                dy = parseFloat(text.attr("dy")),
-                tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-            while (word = words.pop()) {
-                line.push(word);
-                tspan.text(line.join(" "));
-                if (tspan.node().getComputedTextLength() > width) {
-                    line.pop();
-                    tspan.text(line.join(" "));
-                    line = [word];
-                    tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
-                }
-            }
-        });
-    }
-    function colores_google(n) {
-        var colores_g = ["#3366cc", "#dc3912", "#ff9900"];
-        return colores_g[n % colores_g.length];
-    }
-    function StackedBarChart() {
-
-        var ClockInFob =  @Html.Raw(Json.Encode(ViewData["StackedClockInFob"]));
-        var ClockInManual =@Html.Raw(Json.Encode(ViewData["StackedClockInManual"]));
-        var ClockOutFob =@Html.Raw(Json.Encode(ViewData["StackedClockOutFob"]));
-        var ClockOutManual =@Html.Raw(Json.Encode(ViewData["StackedClockOutManual"]));
-        var ClockOutAuto =@Html.Raw(Json.Encode(ViewData["StackedClockOutAuto"]));
-        console.log(ClockInFob);
-        console.log(ClockInManual);
-        console.log(ClockOutFob);
-        console.log(ClockOutManual);
-        console.log(ClockOutAuto);
-        dataset = [
-            { label: "Clock-In", "Fob": ClockInFob, "Manual": ClockInManual, "Auto": 0 },
-            { label: "Clock-Out", "Fob": ClockOutFob, "Manual": ClockOutManual, "Auto": ClockOutAuto },
-        ];
-
-        
-        var margin = { top: (parseInt(d3.select('#chartBar').style('height'), 10) / 20), right: (parseInt(d3.select('#chartBar').style('width'), 10) / 20), bottom: (parseInt(d3.select('#chartBar').style('height'), 10) / 6), left: (parseInt(d3.select('#chartBar').style('width'), 15) / 20) },
-            width = parseInt(d3.select('#chartBar').style('width'), 10) - margin.left - margin.right,
-            height = parseInt(d3.select('#chartBar').style('height'), 10) - margin.top - margin.bottom;
-        var x = d3.scale.ordinal()
-            .rangeRoundBands([0, width], .1, .3);
-        var y = d3.scale.linear()
-            .rangeRound([height, 0]);
-        var colorRange = d3.scale.category20();
-        var color = d3.scale.ordinal()
-            .range(["#4682b4", "#c9cdd1","#dc3912"]);
-        console.log(color)
-        var xAxis = d3.svg.axis()
-            .scale(x)
-            .orient("bottom");
-        var yAxis = d3.svg.axis()
-            .scale(y)
-            .orient("left")
-            .tickFormat(d3.format(".2s"));
-        var svg = d3.select("#chartBar").append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-        var divTooltip = d3.select("#chartBar").append("div").attr("class", "toolTip");
-        color.domain(d3.keys(dataset[0]).filter(function (key) { return key !== "label"; }));
-        dataset.forEach(function (d) {
-            var y0 = 0;
-            d.values = color.domain().map(function (name) { return { name: name, y0: y0, y1: y0 += +d[name] }; });
-            d.total = d.values[d.values.length - 1].y1;
-        });
-        x.domain(dataset.map(function (d) { return d.label; }));
-        y.domain([0, d3.max(dataset, function (d) { return d.total; })]);
-        svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(xAxis);
-        svg.append("g")
-            .attr("class", "y axis")
-            .call(yAxis)
-            .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 9)
-            .attr("dy", ".71em")
-            .style("text-anchor", "end")
-            .text("Usage %");
-        var bar = svg.selectAll(".label")
-            .data(dataset)
-            .enter().append("g")
-            .attr("class", "g")
-            .attr("transform", function (d) { return "translate(" + x(d.label) + ",0)"; });
-        svg.selectAll(".x.axis .tick text")
-            .call(wrap, x.rangeBand());
-
-        var bar_enter = bar.selectAll("rect")
-            .data(function (d) { return d.values; })
-            .enter();
-
-        bar_enter.append("rect")
-            .attr("width", x.rangeBand())
-            .attr("y", function (d) { return y(d.y1); })
-            .attr("height", function (d) { return y(d.y0) - y(d.y1); })
-            .style("fill", function (d) { return color(d.name); });
-
-        bar_enter.append("text")
-            .text(function (d) { return d3.format(".2s")(d.y1 - d.y0) + "%"; })
-            .attr("y", function (d) { return y(d.y1) + (y(d.y0) - y(d.y1)) / 2; })
-            .attr("x", x.rangeBand() / 3)
-            .style("fill", '#ffffff');
-
-        svg.append("g")
-            .attr("class", "legendLinear")
-            .attr("transform", "translate(0," + (height + 30) + ")");
-        var legend = d3.legend.color()
-            .shapeWidth(height / 4)
-            .shapePadding(10)
-            .orient('horizontal')
-            .scale(color);
-        svg.select(".legendLinear")
-            .call(legend);
-    }
-
-
-    function renderAttendanceBarChart() {
-        // Golden Snowglobe totals (as of 2/5/15)
-        const barChartVals = @Html.Raw(Json.Encode(ViewData["BarChartValues"]));
-         const barChartDates = @Html.Raw(Json.Encode(ViewData["BarChartDates"]));
-        barChartVals.forEach(element => console.log(element));
-        barChartDates.forEach(element => console.log(element));
-        console.log(barChartDates.length);
-        var dataset = []
-        for (i = 0; i < barChartDates.length; i++) {
-            dataset.push({ "day": barChartDates[i], "hours": barChartVals[i] });
-        }
-        
-        
-        // Dimensions for the chart: height, width, and space b/t the bars
-        var margins = { top: 30, right: 50, bottom: 30, left: 50 }
-        var height = 400 - margins.left - margins.right,
-            width = 700 - margins.top - margins.bottom,
-            barPadding = 5
-
-        // Create a scale for the y-axis based on data
-        // >> Domain - min and max values in the dataset
-        // >> Range - physical range of the scale (reversed)
-        var yScale = d3.scale.linear()
-            .domain([0, d3.max(dataset, function (d) {
-                return d.hours;
-            })])
-            .range([height, 0]);
-
-        // Implements the scale as an actual axis
-        // >> Orient - places the axis on the left of the graph
-        // >> Ticks - number of points on the axis, automated
-        var yAxis = d3.svg.axis()
-            .scale(yScale)
-            .orient('left')
-            .ticks(5);
-
-        // Creates a scale for the x-axis based on city names
-        var xScale = d3.scale.ordinal()
-            .domain(dataset.map(function (d) {
-                return d.day;
-            }))
-            .rangeRoundBands([0, width], .1);
-
-        // Creates an axis based off the xScale properties
-        var xAxis = d3.svg.axis()
-            .scale(xScale)
-            .orient('bottom');
-
-        // Creates the initial space for the chart
-        // >> Select - grabs the empty <div> above this script
-        // >> Append - places an <svg> wrapper inside the div
-        // >> Attr - applies our height & width values from above
-        var chart = d3.select('.AttendanceBarChart')
-            .append('svg')
-            .attr('width', width + margins.left + margins.right)
-            .attr('height', height + margins.top + margins.bottom)
-            .append('g')
-            .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')');
-
-        // For each value in our dataset, places and styles a bar on the chart
-
-        // Step 1: selectAll.data.enter.append
-        // >> Loops through the dataset and appends a rectangle for each value
-        chart.selectAll('rect')
-            .data(dataset)
-            .enter()
-            .append('rect')
-
-            // Step 2: X & Y
-            // >> X - Places the bars in horizontal order, based on number of
-            //        points & the width of the chart
-            // >> Y - Places vertically based on scale
-            .attr('x', function (d, i) {
-                return xScale(d.day);
-            })
-            .attr('y', function (d) {
-                return yScale(d.hours);
-            })
-
-            // Step 3: Height & Width
-            // >> Width - Based on barpadding and number of points in dataset
-            // >> Height - Scale and height of the chart area
-            .attr('width', (width / dataset.length) - barPadding)
-            .attr('height', function (d) {
-                return height - yScale(d.hours);
-            })
-            .attr('fill', 'steelblue')
-
-            // Step 4: Info for hover interaction
-            .attr('class', function (d) {
-                return d.day;
-            })
-            .attr('id', function (d) {
-                return d.hours;
+                $('#divLoader').css('display', 'block');
             });
 
-        // Renders the yAxis once the chart is finished
-        // >> Moves it to the left 10 pixels so it doesn't overlap
-        chart.append('g')
-            .attr('class', 'axis')
-            .attr('transform', 'translate(-10, 0)')
-            .call(yAxis);
+        });
 
-        // Appends the yAxis
-        chart.append('g')
-            .attr('class', 'axis')
-            .attr('transform', 'translate(0,' + (height + 10) + ')')
-            .call(xAxis);
 
-        // Adds yAxis title
-        chart.append('text')
-            .text('Hours')
-            .attr('transform', 'translate(-50, -10)');
-    }
 
-    renderAttendanceBarChart()
-
-    $('rect').mouseenter(function () {
-        $('#city').html(this.className.animVal);
-        $('#inches').html($(this).attr('id'));
-    });
-
+        $("#AttendanceLink").click(function () {
+            $('#AttendanceRightBody').css('display', 'none');
+            $('#divLoader').css('display', 'block');
+        });
 
 
     </script>
 </body>
 </html>
-
-

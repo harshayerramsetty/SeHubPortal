@@ -13,6 +13,32 @@ namespace SeHubPortal
         {
           routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+
+            routes.MapRoute(
+          "RenameCompanyDocumentBlob",
+          "Library/{action}/{values}",
+          new { controller = "Library", action = "RenameCompanyDocumentBlob", currentFileName = "", newFileName = "" }
+           );
+
+            routes.MapRoute(
+          "RenameBranchSharedDriveBlob",
+          "Library/{action}/{values}",
+          new { controller = "Library", action = "RenameBranchSharedDriveBlob", currentFileName = "", newFileName = "" }
+           );
+
+
+            routes.MapRoute(
+          "RenameSupplireBlob",
+          "Library/{action}/{values}",
+          new { controller = "Library", action = "RenameSupplireBlob", currentFileName = "" , newFileName = ""}
+           );
+
+            routes.MapRoute(
+          "DeleteSupplireBlob",
+          "Library/{action}/{values}",
+          new { controller = "Library", action = "DeleteSupplireBlob", fileileName = ""}
+           );
+
             routes.MapRoute(
         "CRM",
         "Tools/{action}/{values}",

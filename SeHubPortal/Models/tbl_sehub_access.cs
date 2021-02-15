@@ -33,5 +33,29 @@ namespace SeHubPortal.Models
         public Nullable<int> manufacturing_plant { get; set; }
         public Nullable<int> user_management { get; set; }
         public Nullable<int> customer_reporting { get; set; }
+        public Nullable<int> library_dashboard { get; set; }
+        public Nullable<int> library_company_Documents { get; set; }
+        public Nullable<int> library_branch_shared_drive { get; set; }
+        public Nullable<int> library_supplier_documents { get; set; }
+        public Nullable<int> library_Management { get; set; }
+        public Nullable<int> mainDashboard { get; set; }
+        public Nullable<int> mainCalendar { get; set; }
+        public Nullable<int> main { get; set; }
+        public Nullable<int> treadTracker { get; set; }
+        public Nullable<int> treadTrackerDashboard { get; set; }
+        public Nullable<int> fleetTvt_dashboard { get; set; }
+        public Nullable<int> fleetTvt_fieldSurvey { get; set; }
+        public Nullable<int> fleetTvt_EditAccount { get; set; }
+        public Nullable<int> fleetTVT { get; set; }
+        public Nullable<int> settings_dashboard { get; set; }
+        public Nullable<int> settings_managePermissions { get; set; }
+        public Nullable<int> settings_customers { get; set; }
+        public Nullable<int> settings { get; set; }
+        public Nullable<int> management_dashboard { get; set; }
+        public Nullable<int> management { get; set; }
+        public Nullable<int> tools { get; set; }
+        public Nullable<int> tools_dashboard { get; set; }
+        public Nullable<int> library_customer_Documents { get; set; }
+        public Nullable<int> fleetTVT_vier_or_edit_survey { get; set; }
     }
 }

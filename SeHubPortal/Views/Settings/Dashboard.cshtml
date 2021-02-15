@@ -1,0 +1,669 @@
+﻿
+@model SeHubPortal.ViewModel.SettingsViewModel
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Settings.cshtml";
+}
+
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Dashboard</title>
+    <meta charset="utf-8">
+    @*<link rel="shortcut icon" type="image/x-icon" href="~/Content/title_logo64.png">*@
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+
+
+    @if (Model.SehubAccess.tools > 0)
+    {
+        <style>
+            #toolsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.management > 0)
+    {
+        <style>
+            #ManagementClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings_managePermissions > 0)
+    {
+        <style>
+            #EmployeePermissionsLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings_customers > 0)
+    {
+        <style>
+            #CustomersLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.payroll > 0)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.fleetTVT > 0)
+    {
+        <style>
+            #FleetTVTClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTracker > 0)
+    {
+        <style>
+            #treadTrackereClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_access > 0)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.main > 0)
+    {
+        <style>
+            #mainClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_access == 3)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+
+    <style>
+
+        #SettingsLink {
+            display: block !important;
+        }
+
+        #SettingsClicked {
+            display: block !important;
+        }
+
+        .settingsBtn {
+            font-weight: bold;
+        }
+
+        #SettingsLink {
+            color: black;
+            font-weight: 700;
+            background-color: #f0f2f5;
+            border-color: white;
+        }
+
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .card-header {
+            background-color: #cde8ca;
+            padding: 5px;
+        }
+
+        table tr:hover {
+            background: lightgray;
+        }
+    </style>
+</head>
+<body>
+    <div class="row heading" style="padding:10px 20px 0px 15px">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="background-color: white;
+                  height: 100%;
+                  margin-top: 0px;
+                  ">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Settings")">Settings</a></li>
+                    <li class="breadcrumb-item " aria-current="page">Dashboard</li>
+                </ol>
+            </nav>
+        </div>
+        <button type="button" id="clickThis" class="btn" style=" margin-bottom: 14px;">
+            <i class="fa fa-bars" style="font-size: 25px "></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+    <div class="row" style=" padding-left: 15px">
+        <div class="col-lg-2">
+            <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#AddDocuments" style="width:260px; height:350px">
+
+                <div class="card-body text-center" style="height:320px; margin-left:auto; margin-right:auto; margin-top:20px; padding-top:30px">
+                    <img src="~/Content/Calculator.png" style="margin-bottom:30px; width:150px;">
+                    <h5 style="font-weight:bold; color:black">Calculator Settings</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#exampleModal" style="width:260px; height:350px">
+
+                <div class="card-body text-center" style="height:320px; margin-left:auto; margin-right:auto; margin-top:10px; padding-top:30px">
+                    <img src="~/Content/Payrollicon.png" style="margin-bottom:20px; width:210px;">
+                    <h5 style="font-weight:bold; color:black">Payroll Settings</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document" style="width:400px">
+                <div class="modal-content">
+                    @using (Html.BeginForm("SavePayrollSettings", "Settings", FormMethod.Post))
+                    {
+                        <div class="modal-header" style="padding:5px 5px 5px 15px">
+                            <h5 class="modal-title" id="exampleModalLabel">Pay Roll Settings</h5>
+                        </div>
+                        <div class="modal-body">
+
+
+
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <label>Lock Payroll Dates After</label>
+                                </div>
+
+                                <div class="col-md-4">
+                                    @{
+                                        List
+                                        <SelectListItem>
+                                        listItems1 = new List
+                                        <SelectListItem>
+                                        ();
+                                        listItems1.Add(new SelectListItem
+                                        {
+                                            Text = "Saturday",
+                                            Value = "0"
+                                        });
+                                        listItems1.Add(new SelectListItem
+                                        {
+                                            Text = "Friday",
+                                            Value = "1"
+                                        });
+                                        listItems1.Add(new SelectListItem
+                                        {
+                                            Text = "Thursday",
+                                            Value = "2"
+                                        });
+                                        listItems1.Add(new SelectListItem
+                                        {
+                                            Text = "Wednesday",
+                                            Value = "3"
+                                        });
+                                        listItems1.Add(new SelectListItem
+                                        {
+                                            Text = "Tuesday",
+                                            Value = "4"
+                                        });
+                                        listItems1.Add(new SelectListItem
+                                        {
+                                            Text = "Monday",
+                                            Value = "5"
+                                        });
+                                        listItems1.Add(new SelectListItem
+                                        {
+                                            Text = "Sunday",
+                                            Value = "6"
+                                        });
+                                    }
+                                    @Html.DropDownListFor(m => m.payroll_Settings.payroll_date, listItems1, new { @class = "text", @style = "text-align-last: center; width:100px; height:28px", @required = "required", @id = "quantity" })
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <label>Lock Payroll Submission After</label>
+                                </div>
+
+                                <div class="col-md-4">
+                                    @{
+                                        List
+                                        <SelectListItem>
+                                        listItems2 = new List
+                                        <SelectListItem>
+                                        ();
+                                        listItems2.Add(new SelectListItem
+                                        {
+                                            Text = "Saturday",
+                                            Value = "0"
+                                        });
+                                        listItems2.Add(new SelectListItem
+                                        {
+                                            Text = "Friday",
+                                            Value = "1"
+                                        });
+                                        listItems2.Add(new SelectListItem
+                                        {
+                                            Text = "Thursday",
+                                            Value = "2"
+                                        });
+                                        listItems2.Add(new SelectListItem
+                                        {
+                                            Text = "Wednesday",
+                                            Value = "3"
+                                        });
+                                        listItems2.Add(new SelectListItem
+                                        {
+                                            Text = "Tuesday",
+                                            Value = "4"
+                                        });
+                                        listItems2.Add(new SelectListItem
+                                        {
+                                            Text = "Monday",
+                                            Value = "5"
+                                        });
+                                        listItems2.Add(new SelectListItem
+                                        {
+                                            Text = "Sunday",
+                                            Value = "6"
+                                        });
+
+                                    }
+                                    @Html.DropDownListFor(m => m.payroll_Settings.payroll_submission, listItems2, new { @class = "text", @style = "text-align-last: center; width:100px; height:28px", @required = "required", @id = "quantity" })
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                        <div class="modal-footer" style="padding:4px 15px 4px 4px">
+                            <button type="button" style="padding: 1px 30px 1px 30px" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            <button type="submit" style="padding: 1px 30px 1px 30px" class="btn btn-success">Save</button>
+                        </div>
+
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-2">
+            <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#NewHirePackageContent" style="width:260px; height:350px">
+
+                <div class="card-body text-center" style="height:320px; margin-left:auto; margin-right:auto; margin-top:20px; padding-top:30px">
+                    <img src="~/Content/NewHirePackage.png" style="margin-bottom: 45px; width:170px;">
+                    <h5 style="font-weight:bold; color:black">New Hire Package Content</h5>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="NewHirePackageContent" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="width:600px">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">New Hire Package</h5>
+                    </div>
+                    <div class="modal-body">
+                        @using (Html.BeginForm("MergePDFStreamArray", "Library", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            <div class="row">
+                                <div class="col-lg-7">
+                                    <div class="row" style="margin-bottom:15px">
+                                        <div class="col-lg-1">1</div>
+                                        <div class="col-lg-3">
+                                            <img style="width:70px" src="~/Content/doc-icon.png" alt="Alternate Text" />
+                                        </div>
+                                        <div class="col-lg-1"><input type="file" name="file1" id="file" /></div>
+                                    </div>
+                                    <div class="row" style="margin-bottom:15px">
+                                        <div class="col-lg-1">2</div>
+                                        <div class="col-lg-3">
+                                            <img style="width:70px" src="~/Content/doc-icon.png" alt="Alternate Text" />
+                                        </div>
+                                        <div class="col-lg-1"><input type="file" name="file2" id="file" /></div>
+                                    </div>
+                                    <div class="row" style="margin-bottom:15px">
+                                        <div class="col-lg-1">3</div>
+                                        <div class="col-lg-3">
+                                            <img style="width:70px" src="~/Content/doc-icon.png" alt="Alternate Text" />
+                                        </div>
+                                        <div class="col-lg-1"><input type="file" name="file3" id="file" /></div>
+                                    </div>
+                                    <div class="row" style="margin-bottom:15px">
+                                        <div class="col-lg-1">4</div>
+                                        <div class="col-lg-3">
+                                            <img style="width:70px" src="~/Content/doc-icon.png" alt="Alternate Text" />
+                                        </div>
+                                        <div class="col-lg-1"><input type="file" name="file4" id="file" /></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-1">5</div>
+                                        <div class="col-lg-3">
+                                            <img style="width:70px" src="~/Content/doc-icon.png" alt="Alternate Text" />
+                                        </div>
+                                        <div class="col-lg-1"><input type="file" name="file5" id="file" /></div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2" style="bac">
+                                    <div class="row" style="margin-top:250%">
+                                        <button class="btn btn-success" style="padding:1px 27px 1px 27px" type="submit">Merge</button>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3" style="margin-top:18%">
+                                    <a data-dismiss="modal" id="anchor" data-toggle="modal" data-target="#MergPDF" href=""><span style="display:none"></span><p><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                    <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                        <strong></strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" style="padding:1px 27px 1px 27px" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="MergPDF" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" style="height:980px; width:900px">
+                    <div class="modal-body" style="padding:0px">
+                        <div>
+                            <iframe id="modal_content" src="~/Content/merge.pdf" style="width:100%;height:980px;"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="AddCalendarEvent" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" style="width:400px">
+                    <div class="modal-header" style="padding:8px 5px 5px 15px">Add Calendar Event</div>
+                    <div class="modal-body" style="padding:15px">
+                        <div class="row" style="margin-bottom:15px">
+                            <div class="col-lg-3">
+                                Date
+                            </div>
+                            <div class="col-lg-9">
+                                <input style="width:180px" type="date" name="name" value="" />
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom:15px">
+                            <div class="col-lg-3">
+                                Type
+                            </div>
+                            <div class="col-lg-9">
+                                @{
+                                    List
+                                    <SelectListItem>
+                                    listItems3 = new List
+                                    <SelectListItem>
+                                    ();
+                                    listItems3.Add(new SelectListItem
+                                    {
+                                        Text = "Statutory",
+                                        Value = "Statutory"
+                                    });
+
+                                    listItems3.Add(new SelectListItem
+                                    {
+                                        Text = "Split",
+                                        Value = "Split"
+                                    });
+
+                                }
+                                @Html.DropDownListFor(m => m.temp, listItems3, new { @class = "text", @style = "text-align-last: center; width:180px; height:28px", @required = "required", @id = "quantity" })
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom:15px">
+                            <div class="col-lg-3">
+                                Title
+                            </div>
+                            <div class="col-lg-9">
+                                <input type="text" name="name" value="" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer text-center" style="padding:3px">
+                        <button type="button" data-dismiss="modal" style="padding: 1px 30px 1px 30px" class="btn btn-danger">Cancel</button>
+                        <button type="button" style="padding: 1px 30px 1px 30px" class="btn btn-success">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="EditCalendarEvent" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" style="width:400px">
+
+                    @using (Html.BeginForm("EditCallenderEvent", "Settings", FormMethod.Post))
+                    {
+                        <div class="modal-header" style="padding:8px 5px 5px 15px">Edit Calendar Event</div>
+                        <div class="modal-body" style="padding:15px">
+                            <div class="row" style="margin-bottom:15px">
+                                <div class="col-lg-3">
+                                    Date
+                                </div>
+                                <div class="col-lg-9">
+                                    @Html.HiddenFor(m => m.CalenderPost.eventID, new { @id = "PostEventID" })
+                                    @Html.EditorFor(m => m.CalenderPost.Date, new { htmlAttributes = new { @id = "PostDate", @class = "text-center", @type = "date", @style = "width:180px", @required = "required" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:15px">
+                                <div class="col-lg-3">
+                                    Type
+                                </div>
+                                <div class="col-lg-9">
+                                    @{
+                                        List
+                                        <SelectListItem>
+                                        listItems4 = new List
+                                        <SelectListItem>
+                                        ();
+                                        listItems4.Add(new SelectListItem
+                                        {
+                                            Text = "Statutory",
+                                            Value = "Statutory"
+                                        });
+
+                                        listItems4.Add(new SelectListItem
+                                        {
+                                            Text = "Split",
+                                            Value = "Split"
+                                        });
+
+                                    }
+                                    @Html.DropDownListFor(m => m.CalenderPost.Type, listItems4, new { @id = "PostType", @class = "text", @style = "text-align-last: center; width:180px; height:28px", @required = "required" })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:15px">
+                                <div class="col-lg-3">
+                                    Title
+                                </div>
+                                <div class="col-lg-9">
+                                    @Html.EditorFor(m => m.CalenderPost.Title, new { htmlAttributes = new { @id = "PostTitle", @class = "text-center", @type = "text", @style = "width:180px", @required = "required" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer text-center" style="padding:3px">
+                            <button type="button" style="padding: 1px 30px 1px 30px" class="btn btn-primary">Delete</button>
+                            <button type="button" data-dismiss="modal" style="padding: 1px 30px 1px 30px" class="btn btn-danger">Cancel</button>
+                            <button type="submit" style="padding: 1px 30px 1px 30px" class="btn btn-success">Save</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="Calendar_Events" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">Calendar Events</div>
+                    <div class="modal-body" style="padding:0px">
+                        <div>
+                            <div class="row" style="padding:15px">
+                                <div class="col-lg-1">
+                                    Year
+                                </div>
+                                <div class="col-lg-4">
+                                    <select id='date-dropdown' style="width:150px">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin:15px; padding:0px; overflow: auto; height:150px">
+                                <table id="example" class="table table-bordered text-center" style="border:2px solid black">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th style="padding:0px" scope="col">Evemt ID</th>
+                                            <th style="padding:0px" scope="col">Holiday Type</th>
+                                            <th style="padding:0px" scope="col">Description</th>
+                                            <th style="padding:0px" scope="col">Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var items in Model.Calendar_Events)
+                                        {
+                                            <tr>
+                                                <td style="padding:7px">@items.event_ID</td>
+                                                <td style="padding:7px">@items.subject</td>
+                                                <td style="padding:7px">@items.Description</td>
+                                                <td style="padding:7px">@items.start_date</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-toggle="modal" id="edit" data-target="#EditCalendarEvent" data-dismiss="modal" style="display:none; padding: 1px 30px 1px 30px" class="btn btn-primary">Edit Event</button> 
+                        <button type="submit" data-toggle="modal" data-target="#AddCalendarEvent" data-dismiss="modal" style="padding: 1px 30px 1px 30px" class="btn btn-primary">Add Event</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-2">
+            <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#Calendar_Events" style="width:260px; height:350px">
+
+                <div class="card-body text-center" style="height:320px; margin-left:auto; margin-right:auto; margin-top:20px; padding-top:30px">
+                    <img src="~/Content/calendar-icon.jpg" style="margin-bottom: 35px; width:170px;">
+                    <h5 style="font-weight:bold; color:black">Callendar Events</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        let dateDropdown = document.getElementById('date-dropdown');
+
+        let currentYear = new Date().getFullYear();
+        let earliestYear = 2022;
+        while (currentYear <= earliestYear) {
+            let dateOption = document.createElement('option');
+            dateOption.text = currentYear;
+            dateOption.value = currentYear;
+            dateDropdown.add(dateOption);
+            currentYear += 1;
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#SettingsClicked").css({ "background-color": "#f0f2f5", "color": "black", "font-weight": "600" })
+            //$("#mainButton").css({ "color": "black", "font-weight": "600" })
+            $("#DashboardClicked").css({ "color": "black", "font-weight": "700" })
+        });
+        $(document).ready(function () {
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+
+            $('#example tr').click(function () {
+
+                $(this).css('background', 'gray');
+                document.getElementById('edit').style.display = 'block';     
+                var date = this.cells.item(3).innerHTML.toString().substring(0, 10);
+                document.getElementById('PostDate').value = date;
+                document.getElementById('PostType').value = this.cells.item(1).innerHTML.toString();
+                document.getElementById('PostTitle').value = this.cells.item(2).innerHTML.toString();
+                document.getElementById('PostEventID').value = this.cells.item(0).innerHTML.toString();
+            });
+
+        });
+
+        updateList = function () {
+            var input = document.getElementById('file');
+            var output = document.getElementById('fileList');
+            var children = "";
+            for (var i = 0; i < input.files.length; ++i) {
+                children += '<li>' + input.files.item(i).name + '</li>';
+            }
+            output.innerHTML = '<ul>' + children + '</ul>';
+        }
+
+        function getUrlVars() {
+            var vars = [], hash;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+        }
+
+
+        var acknowledgment = getUrlVars()["ac"];
+        if (acknowledgment == "MergeSuccessful") {
+
+            url = document.URL + "#";
+            location = "#";
+            window.location.reload();
+        }
+
+
+    </script>
+</body>
+
+
+</html>
+

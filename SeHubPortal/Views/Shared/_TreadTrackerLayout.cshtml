@@ -31,14 +31,19 @@
            
         </div>*@
         <ul class="list-unstyled components mb-5">
-            <li class="active" id="NewOrderLink">
-                <a id="NewOrderClicked" href="@Url.Action("NewOrder", "TreadTracker", new { values = ""})"><span class="fa fa-home mr-3"></span> New Order</a>
+
+            <li class="active" style="display:none" id="DashboardLink">
+                <a id="NewOrderClicked" href="@Url.Action("Dashboard", "TreadTracker", new { values = ""})">Dashboard</a>
+            </li>
+
+            <li class="active" style="display:none" id="NewOrderLink">
+                <a id="NewOrderClicked" href="@Url.Action("NewOrder", "TreadTracker", new { values = ""})">New Order</a>
             </li>
             @*<li>
-                <a id="EditOrderClicked" href="@Url.Action("EditOrder", "TreadTracker")"><span class="fa fa-user mr-3"></span> Edit Order</a>
-            </li>*@
-            <li class="active" id="OpenOrderLink">
-                <a id="OpenOrderClicked" href="@Url.Action("OpenOrder", "TreadTracker", new { id = "",barcode="" })"><span class="fa fa-sticky-note mr-3"></span> Open Order</a>
+            <a id="EditOrderClicked" href="@Url.Action("EditOrder", "TreadTracker")"><span class="fa fa-user mr-3"></span> Edit Order</a>
+        </li>*@
+            <li class="active" style="display:none" id="OpenOrderLink">
+                <a id="OpenOrderClicked" href="@Url.Action("OpenOrder", "TreadTracker", new { id = "",barcode="" })">Open Order</a>
             </li>
         </ul>
 

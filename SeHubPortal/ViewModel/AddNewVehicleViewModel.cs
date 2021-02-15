@@ -14,6 +14,6 @@ namespace SeHubPortal.ViewModel
         public string MatchedLocID { get; set; }
         public string MatchedEmployeeID { get; set; }
         public string MatchedEmployeeName { get; set; }
-        
+        public bool VehicleStatus { get; set; }
     }
 }

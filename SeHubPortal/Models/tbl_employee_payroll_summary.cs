@@ -29,5 +29,7 @@ namespace SeHubPortal.Models
         public Nullable<double> gen_ins { get; set; }
         public Nullable<double> emp_ins { get; set; }
         public Nullable<double> workers_comp { get; set; }
+        public Nullable<double> PL { get; set; }
+        public Nullable<double> NL { get; set; }
     }
 }

@@ -1,9 +1,9 @@
 ﻿
 @model SeHubPortal.ViewModel.MyStaffViewModel
 <style type="text/css">
-    #active_status{
-        height:20px;
-        width:20px;
+    #active_status {
+        height: 20px;
+        width: 20px;
     }
 </style>
 
@@ -13,35 +13,62 @@
 
     <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">@Model.NewEmployee.full_name</h5>
-            <div style="margin-left:20px;margin-top:5px;">
-                @Html.CheckBoxFor(model => model.active_status, new { htmlAttributes = new { @class = "form-check-input", @type = "checkbox" } })
-                @*<label class="form-check-label" for="inlineCheckbox1">Active</label>*@
-            </div>
 
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+            <div class="col-lg-4" style="padding-left:0px !important" >
+                <h5 class="modal-title" id="exampleModalLongTitle">
+                    @Model.NewEmployee.full_name
+                </h5>
+            </div>
+            <div class="col-lg-4 text-center">
+                
+                @if (Model.active_status == true)
+                {
+                    <h5 style="color:#24a0ed;margin:3px 20px 0px 10px">@Html.CheckBoxFor(model => model.active_status, new { htmlAttributes = new {@style = "margin-top:5px;", @class = "form-check-input", @type = "checkbox" } })  Active</h5>
+                }
+                else
+                {
+                    <h5 style="color:#24a0ed; margin:3px 20px 0px 10px">@Html.CheckBoxFor(model => model.active_status, new { htmlAttributes = new {@style = "margin-top:5px;",  @class = "form-check-input", @type = "checkbox" } })  Active</h5>
+                }
+            </div>
+            <div class="col-lg-4"></div>
+
         </div>
         <div class="modal-body">
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-row">
-                        <div class="form-group col-md-2">
+                        <div class="form-group col-md-3">
                             <label>Employee ID</label>
                             @*<input type="text" class="form-control">*@
-                            @Html.EditorFor(model => model.NewEmployee.employee_id, new { htmlAttributes = new { @class = "form-control", @type = "text", @required = "required" } })
+                            @if (Model.SehubAccess.my_staff == 3)
+                            {
+                                @Html.EditorFor(model => model.NewEmployee.employee_id, new { htmlAttributes = new { @class = "form-control", @type = "text", @required = "required" } })
+                            }
+                            else
+                            {
+                                @Html.EditorFor(model => model.NewEmployee.employee_id, new { htmlAttributes = new { @readonly = "true", @class = "form-control", @type = "text", @required = "required" } })
+                            }
+
+
                         </div>
 
-                        <div class="form-group col-md-2">
+                        <div class="form-group col-md-3">
                             <label>Loc ID</label>
                             @*<input type="text" class="form-control">*@
-                            @Html.DropDownListFor(model => model.NewEmployee.loc_ID, Model.MatchedStaffLocs, "select", new { @class = "form-control", @required = "required" })
+                            @if (Model.SehubAccess.my_staff == 3)
+                            {
+                                @Html.DropDownListFor(model => model.NewEmployee.loc_ID, Model.MatchedStaffLocs, "select", new {@id = "selectId", @class = "form-control", @required = "required" })
+                            }
+                            else
+                            {
+                                @Html.DropDownListFor(model => model.NewEmployee.loc_ID, Model.MatchedStaffLocs, "select", new { @readonly = "true", @id = "selectId", @class = "form-control", @required = "required" })
+                            }
+
                         </div>
-                        <div class="form-group col-md-2">
+                        <div class="form-group col-md-2" style="display:none">
                             <label>Sales ID</label>
                             @*<input type="text" class="form-control">*@
-                            @Html.EditorFor(model => model.NewEmployee.sales_id, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                            @Html.EditorFor(model => model.NewEmployee.sales_id, new { htmlAttributes = new {@style = "visibility: hidden", @class = "form-control", @type = "text" } })
                         </div>
                         <div class="form-group col-md-3">
                             <label>Work Number</label>
@@ -73,20 +100,20 @@
                             @*<input type="text" class="form-control">*@
                             @Html.EditorFor(model => model.NewEmployee.first_name, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
                         </div>
+                        <div class="form-group col-md-2">
+                            <label>MI</label>
+                            @*<input type="text" class="form-control">*@
+                            @Html.EditorFor(model => model.NewEmployee.middle_initial, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                        </div>
                         <div class="form-group col-md-4">
                             <label>Last Name</label>
                             @*<input type="text" class="form-control">*@
                             @Html.EditorFor(model => model.NewEmployee.last_name, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
                         </div>
-                        <div class="form-group col-md-1">
-                            <label>MI</label>
-                            @*<input type="text" class="form-control">*@
-                            @Html.EditorFor(model => model.NewEmployee.middle_initial, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
-                        </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-2">
                             <label>Date of Birth</label>
                             @*<input type="text" class="form-control">*@
-                            @Html.EditorFor(model => model.NewEmployee.Date_of_birth, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                            @Html.EditorFor(model => model.NewEmployee.Date_of_birth, new { htmlAttributes = new { @id = "DateOFBirth", @style = "width:114px", @class = "form-control", @type = "text" } })
                         </div>
                     </div>
                     <div class="form-row">
@@ -119,7 +146,7 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-6">
                             <label>City</label>
                             @*<input type="text" class="form-control">*@
                             @Html.EditorFor(model => model.NewEmployeePersonal.city, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
@@ -129,7 +156,7 @@
                             @*<input type="text" class="form-control">*@
                             @Html.EditorFor(model => model.NewEmployeePersonal.province, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
                         </div>
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-2">
                             <label>Postal Code</label>
                             @*<input type="text" class="form-control">*@
                             @Html.EditorFor(model => model.NewEmployeePersonal.postal_code, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
@@ -147,25 +174,25 @@
                             @*<input type="text" class="form-control">*@
                             @Html.EditorFor(model => model.NewEmployeePersonal.emergency_contact_name, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
                         </div>
-                        <div class="form-group col-md-2">
+                        <div class="form-group col-md-4">
                             <label style="color:red">Phone Number</label>
                             @*<input type="text" class="form-control">*@
                             @Html.EditorFor(model => model.NewEmployeePersonal.emergency_contact_number, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
                         </div>
-                        <div class="form-group col-md-2">
-                            <div class="col-lg-4">
-                                <div class="form-check form-check-inline col-md-4">
-                                    @*<input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" checked>*@
-                                   
-                                </div>                              
-                            </div>
-                        </div>
-                        <div class="form-group col-md-4">
+
+                        <div class="form-group col-md-3" style="padding-top:5px; padding-left:20px">
                             <label>Upload Image</label>
-                            <input type="file" name="EmployeeImage" />
+                            <input type="file" name="EmployeeImage" style="height:50px" />
                         </div>
                     </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label>Employee Start Date</label>
+                            @*<input type="text" class="form-control">*@
+                            @Html.EditorFor(model => model.NewEmployeePersonal.employee_start_date, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
 
+                        </div>
+                    </div>
 
                 </div>
 
@@ -179,10 +206,38 @@
     </div>
 }
 
+
+@if (Model.SehubAccess.my_staff != 3)
+{
+
+    <script>
+
+        $(document).ready(function () {
+
+
+            $('#selectId').change(function(){
+                $(this).val(@Model.NewEmployee.loc_ID); 
+            });
+
+
+        });
+
+
+        
+    </script>
+
+
+    
+
+}
+
+
+
 <script>
     $(document).ready(function () {
-
-
-
+                       
+        var date = $('#DateOFBirth').val();
+        date = date.substring(0, 10);
+        $('#DateOFBirth').val(date);
     });
 </script>

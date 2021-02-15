@@ -36,12 +36,37 @@ namespace SeHubPortal.Models
         public virtual DbSet<tbl_employee_attendance> tbl_employee_attendance { get; set; }
         public virtual DbSet<tbl_employee_personal> tbl_employee_personal { get; set; }
         public virtual DbSet<tbl_employee_payroll_biweekly> tbl_employee_payroll_biweekly { get; set; }
-        public virtual DbSet<tbl_employee_payroll_dates> tbl_employee_payroll_dates { get; set; }
         public virtual DbSet<tbl_employee_payroll_summary> tbl_employee_payroll_summary { get; set; }
         public virtual DbSet<tbl_payroll_category_selection> tbl_payroll_category_selection { get; set; }
         public virtual DbSet<tbl_vehicle_info> tbl_vehicle_info { get; set; }
         public virtual DbSet<tbl_fuel_log> tbl_fuel_log { get; set; }
         public virtual DbSet<database_firewall_rules> database_firewall_rules { get; set; }
         public virtual DbSet<tbl_sehub_access> tbl_sehub_access { get; set; }
+        public virtual DbSet<tbl_tire_adjustment> tbl_tire_adjustment { get; set; }
+        public virtual DbSet<tbl_dispute_resolution> tbl_dispute_resolution { get; set; }
+        public virtual DbSet<tbl_Calendar_events> tbl_Calendar_events { get; set; }
+        public virtual DbSet<tbl_employee_payroll_submission> tbl_employee_payroll_submission { get; set; }
+        public virtual DbSet<tbl_payroll_submission_branch> tbl_payroll_submission_branch { get; set; }
+        public virtual DbSet<tbl_payroll_submission_corporate> tbl_payroll_submission_corporate { get; set; }
+        public virtual DbSet<tbl_employee_status> tbl_employee_status { get; set; }
+        public virtual DbSet<tbl_payroll_settings> tbl_payroll_settings { get; set; }
+        public virtual DbSet<tbl_employee_payroll_dates> tbl_employee_payroll_dates { get; set; }
+        public virtual DbSet<tbl_position_info> tbl_position_info { get; set; }
+        public virtual DbSet<tbl_payroll_change_loction> tbl_payroll_change_loction { get; set; }
+        public virtual DbSet<tbl_calculator_GM_parts> tbl_calculator_GM_parts { get; set; }
+        public virtual DbSet<tbl_calculator_GM_tire> tbl_calculator_GM_tire { get; set; }
+        public virtual DbSet<tbl_fleettvt_Customer> tbl_fleettvt_Customer { get; set; }
+        public virtual DbSet<tbl_commercial_tire_manufacturers> tbl_commercial_tire_manufacturers { get; set; }
+        public virtual DbSet<tbl_commercial_tire_sizes> tbl_commercial_tire_sizes { get; set; }
+        public virtual DbSet<tbl_fleettvt_configurations> tbl_fleettvt_configurations { get; set; }
+        public virtual DbSet<tbl_fleetTVT_fieldsurvey_tire> tbl_fleetTVT_fieldsurvey_tire { get; set; }
+        public virtual DbSet<tbl_fleetTVT_fieldsurvey_unit> tbl_fleetTVT_fieldsurvey_unit { get; set; }
+        public virtual DbSet<tbl_source_tire_condition> tbl_source_tire_condition { get; set; }
+        public virtual DbSet<tbl_source_tire_wear> tbl_source_tire_wear { get; set; }
+        public virtual DbSet<tbl_source_valve> tbl_source_valve { get; set; }
+        public virtual DbSet<tblLocation> tblLocations { get; set; }
+        public virtual DbSet<tbl_source_wheel_condition> tbl_source_wheel_condition { get; set; }
+        public virtual DbSet<tbl_treadtracker_inventory_casing> tbl_treadtracker_inventory_casing { get; set; }
+        public virtual DbSet<tbl_fleetTVT_unit> tbl_fleetTVT_unit { get; set; }
     }
 }

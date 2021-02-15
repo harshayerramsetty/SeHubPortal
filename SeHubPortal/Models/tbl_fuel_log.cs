@@ -22,5 +22,7 @@ namespace SeHubPortal.Models
         public Nullable<double> price_per_liter { get; set; }
         public string transaction_number { get; set; }
         public bool audit_status { get; set; }
+        public string comments { get; set; }
+        public string change_type { get; set; }
     }
 }

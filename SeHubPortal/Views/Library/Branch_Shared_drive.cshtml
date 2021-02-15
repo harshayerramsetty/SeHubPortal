@@ -1,0 +1,627 @@
+﻿@model SeHubPortal.ViewModel.FileURL
+@{
+    ViewBag.Title = "Branch_Shared_drive";
+    Layout = "~/Views/Shared/_LibraryLayout.cshtml";
+}
+
+<meta name="viewport" content="width=device-width" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+
+
+
+
+@if (Model.SehubAccess.tools > 0)
+{
+    <style>
+        #toolsClicked {
+            display: block !important;
+        }
+    </style>
+}
+
+@if (Model.SehubAccess.management > 0)
+{
+    <style>
+        #ManagementClicked {
+            display: block !important;
+        }
+    </style>
+}
+
+@if (Model.SehubAccess.settings > 0)
+{
+    <style>
+        #SettingsClicked {
+            display: block !important;
+        }
+    </style>
+}
+
+@if (Model.SehubAccess.payroll > 0)
+{
+    <style>
+        #PayrollClicked {
+            display: block !important;
+        }
+    </style>
+}
+
+@if (Model.SehubAccess.fleetTVT > 0)
+{
+    <style>
+        #FleetTVTClicked {
+            display: block !important;
+        }
+    </style>
+}
+
+@if (Model.SehubAccess.treadTracker > 0)
+{
+    <style>
+        #treadTrackereClicked {
+            display: block !important;
+        }
+    </style>
+}
+
+
+@if (Model.SehubAccess.main > 0)
+{
+    <style>
+        #mainClicked {
+            display: block !important;
+        }
+    </style>
+}
+
+
+@if (Model.SehubAccess.library_company_Documents > 0)
+{
+    <style>
+        #CompanyDocumentsLink {
+            display: block !important;
+        }
+    </style>
+}
+@if (Model.SehubAccess.library_dashboard > 0)
+{
+    <style>
+        #DashboardLink {
+            display: block !important;
+        }
+    </style>
+}
+@if (Model.SehubAccess.library_supplier_documents > 0)
+{
+    <style>
+        #SupplierDocumentsLink {
+            display: block !important;
+        }
+    </style>
+}
+@if (Model.SehubAccess.library_Management > 0)
+{
+    <style>
+        #ManagementLink {
+            display: block !important;
+        }
+    </style>
+}
+
+
+
+<style>
+
+    #libraryClicked {
+        display: block !important;
+    }
+
+    #BranchSharedDriveLink {
+        display: block !important;
+    }
+
+
+    #libraryClicked {
+        background-color: #f0f2f5;
+    }
+
+    .libraryBtn {
+        background-color: #f0f2f5;
+        color: black;
+        font-weight: bold;
+    }
+
+
+
+    body {
+        background-color: #f0f2f5;
+        padding-right: 0 !important;
+    }
+
+    #BranchSharedDriveLink {
+        color: black;
+        font-weight: 700;
+        background-color: #f0f2f5;
+    }
+
+    .modal {
+        padding-right: 7%;
+    }
+</style>
+
+<body style="overflow-y: hidden;">
+    <div class="row heading" style="padding:10px 20px 0px 15px">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="background-color: white;height: 100%;margin-top: 0px;">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Branch_Shared_drive", "Library")">Library</a></li>
+                    <li class="breadcrumb-item " aria-current="page">Branch Shared Drive</li>
+
+                    @using (Html.BeginForm("UploadBranchShareDrive", "Library", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <input type="text" readonly style="visibility:visible; height:23px; width:100px; margin-left:459px" class="btn btn-success Upload" name="name" value="Upload" onclick="document.getElementById('Upload').click()" />
+                        <input id="Upload" type="file" name="BranchShareDrive" style="visibility:hidden; height: 23px;width: 100px;margin-left: 450px;display: none" onchange="form.submit()" />
+                        <input id="1" type="text" readonly data-toggle="modal" data-target="#BranchShareDriveManage" style="visibility:visible; height: 23px; width: 100px; margin-left: 20px" class="btn btn-primary Manage" name="name" value="Manage" />
+                        @Html.EditorFor(m => m.Location_ID, new { htmlAttributes = new { @class = "text-center", @style = "height:28px; display:none" } })
+                    }
+
+
+
+                    @if (Model.SehubAccess.library_branch_shared_drive >= 2)
+                    {
+                        <label style="margin: 0px 3px 0px 490px ">Location</label>
+                        <div>
+
+                            @if (Model.SehubAccess.library_branch_shared_drive == 3)
+                            {
+                                @Html.DropDownListFor(m => m.Location_ID, Model.LocationsList, new { @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
+                            }
+                            else if (Model.SehubAccess.library_branch_shared_drive == 2)
+                            {
+                                @Html.DropDownListFor(m => m.Location_ID, Model.LocationsList, new { @disabled = "True", @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
+                            }
+
+
+                        </div>
+                    }
+
+
+                </ol>
+            </nav>
+        </div>
+        <button type="button" id="clickThis" class="btn" style=" margin-bottom: 14px;">
+            <i class="fa fa-bars" style="font-size: 25px "></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+
+
+    @if (Model.Permission != 4)
+    {
+
+        <div class="row">
+            @foreach (var items in Model.URLName)
+            {
+                if (items.Value.Substring(0, 3) == "001")
+                {
+                    <div class="col-md-2 text-center 001" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value.Substring(4)</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value.Substring(0, 3) == "002")
+                {
+                    <div class="col-md-2 text-center 002" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value.Substring(4)</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value.Substring(0, 3) == "003")
+                {
+                    <div class="col-md-2 text-center 003" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value.Substring(4)</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value.Substring(0, 3) == "004")
+                {
+                    <div class="col-md-2 text-center 004" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display: none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value.Substring(4)</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value.Substring(0, 3) == "005")
+                {
+                    <div class="col-md-2 text-center 005" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value.Substring(4)</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value.Substring(0, 3) == "007")
+                {
+                    <div class="col-md-2 text-center 007" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value.Substring(4)</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value.Substring(0, 3) == "009")
+                {
+                    <div class="col-md-2 text-center 009" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value.Substring(4)</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value.Substring(0, 3) == "010")
+                {
+                    <div class="col-md-2 text-center 010" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value.Substring(4)</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value.Substring(0, 3) == "011")
+                {
+                    <div class="col-md-2 text-center 011" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value.Substring(4)</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value.Substring(0, 3) == "101")
+                {
+                    <div class="col-md-2 text-center 101" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value.Substring(4)</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value.Substring(0, 3) == "347")
+                {
+                    <div class="col-md-2 text-center 347" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value.Substring(4)</strong>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" style="height:800px; width:1000px">
+                    <div class="modal-body" style="padding:0px">
+                        <div>
+                            <iframe id="modal_content" src="" style="width:100%;height:880px;"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="BranchShareDriveManage" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" style="width:680px">
+                    <div class="modal-body" style="padding:0px">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><strong>Manage Branch Shared Drive Documents</strong></h5>
+                            </div>
+                            <div class="card-body">
+                                @{
+                                    int i = 1;
+                                    foreach (var items in Model.URLName)
+                                    {
+                                        string k = i.ToString();
+                                        string Rename = "#R" + k;
+                                        string Delete = "#D" + k;
+                                        string Deleteid = Delete.Substring(1);
+                                        string Renameid = Rename.Substring(1);
+
+                                        if (items.Value.Substring(0, 3) == Model.Location_ID)
+                                        {
+
+                                            using (Html.BeginForm("RenameBranchSharedDriveBlob", "Library", new { currentFileName = items.Value }, FormMethod.Post))
+                                            {
+                                                <div id="div" class="row" style="padding:10px 20px 10px 10px; margin-top:0px">
+                                                    <div class="col-md-2" style="padding-left:0px">
+                                                        <a id="anchor" class="btn" data-toggle="modal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 60px; border-color: white"></p></a>
+                                                    </div>
+                                                    <div class="col-md-6" style="color: cornflowerblue; font-size: 15px; padding-top:22px">
+                                                        <strong>@items.Value.Substring(4)</strong>
+                                                    </div>
+                                                    <div class="col-md-2 text-right" style="padding-top:20px">
+                                                        <a class="btn btn-primary" style="height:30px" data-toggle="collapse" href=@Rename role="button" aria-expanded="false" aria-controls="collapseExample">
+                                                            Rename
+                                                        </a>
+                                                        @*<a style="width:100px; height:30px; font-size:15px" class="btn btn-primary rename" href="@Url.Action("RenameSupplireBlob", "Library", new {currentFileName = items.Value, newFileName = "RenamedFile.pdf"})">Rename</a>*@
+                                                    </div>
+                                                    <div class="col-md-2 text-right" style="padding-top:9px">
+                                                        <a class="btn" data-toggle="collapse" href=@Delete role="button" aria-expanded="false" aria-controls=@Deleteid><img style="height:35px" src="~/Content/trash.png" /></a>
+                                                        @*onclick="location.href='@Url.Action("DeleteSupplireBlob", "Library", new { fileName = items.Value})';"*@
+                                                    </div>
+                                                    @Html.EditorFor(m => m.Location_ID, new { htmlAttributes = new { @class = "text-center", @style = "height:28px; display:none" } })
+
+                                                    <div class="collapse" id=@Deleteid style="margin-bottom:10px">
+                                                        <div class="card card-body" style="width:645px;padding:0px; margin:0px">
+                                                            <div class="row" style="padding:0px; margin:0px">
+                                                                <div class="col-md-8" style="padding-top:17px"><label>Delete: @items.Value</label></div>
+                                                                <div class="col-md-2" style="padding-top:4px"><a type="text" class="btn" href="@Url.Action("DeleteBranchSharedDriveBlob", "Library", new {fileName = items.Value})"><img style="height:40px" src="~/Content/Tick.png" /></a></div>
+                                                                <div class="col-md-2" style="padding-top:4px"><button class="btn" style="margin-left:8px" type="button" data-toggle="collapse" data-dismiss=@Deleteid aria-expanded="false" aria-controls=@Deleteid data-target=@Delete><img style="height:40px" src="~/Content/Cross.png" /></button></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="collapse" id=@Renameid>
+                                                        <div class="card card-body" style="width:645px;padding:0px; margin:0px">
+                                                            <div class="row" style="padding:0px; margin:0px">
+                                                                <div class="col-md-8" style="padding-top:12px">@Html.EditorFor(m => m.RenameString, new { htmlAttributes = new { @required = "required", @style = "height:28px; width:350px", @value = @items.Value } })</div>
+                                                                <div class="col-md-2" style="padding-top:1px"><button class="btn" type="submit"><img style="height:40px" src="~/Content/Tick.png" /></button></div>
+                                                                <div class="col-md-2 text-right" style="padding-top:1px"><button class="btn" data-dismiss="modal"><img style="height:40px" src="~/Content/Cross.png" /></button></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            <hr />
+                                        }
+
+
+
+                                        i = i + 1;
+                                    }
+
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+
+    <script>
+        $(document).ready(function () {
+
+            $("." + $("#Location option:selected").text()).css("display", "block");
+
+        });
+        $(document).ready(function () {
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+
+
+        $('.001 a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+
+        });
+
+        $('.002 a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+
+        });
+
+        $('.003 a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+
+        });
+        $('.004 a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+
+        });
+        $('.005 a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+
+        });
+
+        $('.007 a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+
+        });
+
+        $('.010 a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+
+        });
+
+        $('.011 a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+
+        });
+
+        $('.101 a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+
+        });
+
+        $('.347 a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+
+        });
+
+
+        $("#Location").change(function () {
+            var selected = $("#Location option:selected").text();
+
+
+            if (selected == @Model.Location_ID && @Model.SehubAccess.library_branch_shared_drive == 3) {
+                $(".Manage").css("visibility", "visible");
+                $(".Upload").css("visibility", "visible");
+            }
+            else {
+                $(".Manage").css("visibility", "hidden");
+                $(".Upload").css("visibility", "hidden");
+            }
+
+            if (selected == "001") {
+                $(".001").css("display", "block");
+            }
+            else {
+                $(".001").css("display", "none");
+            }
+
+            if (selected == "002") {
+                $(".002").css("display", "block");
+            }
+            else {
+                $(".002").css("display", "none");
+            }
+
+            if (selected == "003") {
+                $(".003").css("display", "block");
+            }
+            else {
+                $(".003").css("display", "none");
+            }
+
+            if (selected == "004") {
+                $(".004").css("display", "block");
+            }
+            else {
+                $(".004").css("display", "none");
+            }
+
+            if (selected == "005") {
+                $(".005").css("display", "block");
+            }
+            else {
+                $(".005").css("display", "none");
+            }
+
+            if (selected == "007") {
+                $(".007").css("display", "block");
+            }
+            else {
+                $(".007").css("display", "none");
+            }
+
+            if (selected == "009") {
+                $(".009").css("display", "block");
+            }
+            else {
+                $(".009").css("display", "none");
+            }
+
+
+
+            if (selected == "010") {
+                $(".010").css("display", "block");
+            }
+            else {
+                $(".010").css("display", "none");
+            }
+
+            if (selected == "011") {
+                $(".011").css("display", "block");
+            }
+            else {
+                $(".011").css("display", "none");
+            }
+
+            if (selected == "101") {
+                $(".101").css("display", "block");
+            }
+            else {
+                $(".101").css("display", "none");
+            }
+
+            if (selected == "347") {
+                $(".347").css("display", "block");
+            }
+            else {
+                $(".347").css("display", "none");
+            }
+
+        });
+
+    </script>
+</body>
+

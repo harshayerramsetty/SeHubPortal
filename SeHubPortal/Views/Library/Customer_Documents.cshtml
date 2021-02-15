@@ -1,0 +1,2607 @@
+﻿@model SeHubPortal.ViewModel.FileURL
+@{
+    ViewBag.Title = "Customer_Documents";
+    Layout = "~/Views/Shared/_LibraryLayout.cshtml";
+}
+
+<meta name="viewport" content="width=device-width" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+
+
+
+
+@if (Model.SehubAccess.tools > 0)
+{
+    <style>
+        #toolsClicked {
+            display: block !important;
+        }
+    </style>
+}
+
+@if (Model.SehubAccess.management > 0)
+{
+    <style>
+        #ManagementClicked {
+            display: block !important;
+        }
+    </style>
+}
+
+@if (Model.SehubAccess.settings > 0)
+{
+    <style>
+        #SettingsClicked {
+            display: block !important;
+        }
+    </style>
+}
+
+@if (Model.SehubAccess.payroll > 0)
+{
+    <style>
+        #PayrollClicked {
+            display: block !important;
+        }
+    </style>
+}
+
+@if (Model.SehubAccess.fleetTVT > 0)
+{
+    <style>
+        #FleetTVTClicked {
+            display: block !important;
+        }
+    </style>
+}
+
+@if (Model.SehubAccess.treadTracker > 0)
+{
+    <style>
+        #treadTrackereClicked {
+            display: block !important;
+        }
+    </style>
+}
+
+@if (Model.SehubAccess.main > 0)
+{
+    <style>
+        #mainClicked {
+            display: block !important;
+        }
+    </style>
+}
+
+
+@if (Model.SehubAccess.library_company_Documents > 0)
+{
+    <style>
+        #CompanyDocumentsLink {
+            display: block !important;
+        }
+    </style>
+}
+@if (Model.SehubAccess.library_dashboard > 0)
+{
+    <style>
+        #DashboardLink {
+            display: block !important;
+        }
+    </style>
+}
+@if (Model.SehubAccess.library_branch_shared_drive > 0)
+{
+    <style>
+        #BranchSharedDriveLink {
+            display: block !important;
+        }
+    </style>
+}
+@if (Model.SehubAccess.library_Management > 0)
+{
+    <style>
+        #ManagementLink {
+            display: block !important;
+        }
+    </style>
+}
+
+@if (Model.SehubAccess.library_supplier_documents > 0)
+{
+    <style>
+        #SupplierDocumentsLink {
+            display: block !important;
+        }
+    </style>
+}
+
+<style>
+
+    #CustomerDocumentsLink {
+        display: block !important;
+    }
+
+
+    #libraryClicked {
+        display: block !important;
+    }
+
+    #libraryClicked {
+        background-color: #f0f2f5;
+    }
+
+    .libraryBtn {
+        font-weight: bold;
+    }
+
+    body {
+        background-color: #f0f2f5;
+        padding-right: 0 !important;
+    }
+
+    #CustomerDocumentsLink {
+        color: black;
+        font-weight: 700;
+        background-color: #f0f2f5;
+    }
+
+    .modal {
+        padding-right: 7%;
+    }
+</style>
+
+<body style="overflow-y: hidden;">
+    <div class="row heading" style="padding: 10px 20px 0px 15px ">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="        background-color: white;
+        height: 100%;
+        margin-top: 0px;">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Customer_Documents", "Library")">Library</a></li>
+                    <li class="breadcrumb-item " aria-current="page">Customer Documents</li>
+
+                    @if (Model.SehubAccess.library_customer_Documents >= 2)
+                    {
+                        using (Html.BeginForm("UploadCustomerDocuments", "Library", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            <input for="Upload" type="text" readonly style="height:23px; width:100px; margin-left:459px" class="btn btn-success" name="name" value="Upload" onclick="document.getElementById('Upload').click()" />
+                            <input id="Upload" type="file" name="CustomerDocuments" style="height: 23px; width: 100px; margin-left: 450px; display: none" onchange="form.submit()" />
+                            <input id="1" type="text" data-toggle="modal" data-target="#SupplierDocManage" readonly style="height:23px; width:100px; margin-left:20px" class="btn btn-primary" name="name" value="Manage" />
+                        }
+                    }
+
+                </ol>
+            </nav>
+        </div>
+        <button type="button" id="clickThis" class="btn" style=" margin-bottom: 14px;">
+            <i class="fa fa-bars" style="font-size: 25px "></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+
+
+    @if (Model.Permission != 4)
+    {
+
+        <div class="row" style="padding-left:30px">
+            <div id="Abtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Abtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>A</strong></button></div>
+            <div id="Bbtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Bbtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>B</strong></button></div>
+            <div id="Cbtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Cbtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>C</strong></button></div>
+            <div id="Dbtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Dbtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>D</strong></button></div>
+            <div id="Ebtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Ebtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>E</strong></button></div>
+            <div id="Fbtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Fbtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>F</strong></button></div>
+            <div id="Gbtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Gbtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>G</strong></button></div>
+            <div id="Hbtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Hbtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>H</strong></button></div>
+            <div id="Ibtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Ibtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>I</strong></button></div>
+            <div id="Jbtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Jbtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>J</strong></button></div>
+            <div id="Kbtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Kbtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>K</strong></button></div>
+            <div id="Lbtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Lbtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>L</strong></button></div>
+            <div id="Mbtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Mbtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>M</strong></button></div>
+            <div id="Nbtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Nbtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>N</strong></button></div>
+            <div id="Obtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Obtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>O</strong></button></div>
+            <div id="Pbtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Pbtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>P</strong></button></div>
+            <div id="Qbtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Qbtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>Q</strong></button></div>
+            <div id="Rbtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Rbtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>R</strong></button></div>
+            <div id="Sbtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Sbtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>S</strong></button></div>
+            <div id="Tbtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Tbtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>T</strong></button></div>
+            <div id="Ubtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Ubtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>U</strong></button></div>
+            <div id="Vbtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Vbtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>V</strong></button></div>
+            <div id="Wbtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Wbtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>W</strong></button></div>
+            <div id="Xbtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Xbtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>X</strong></button></div>
+            <div id="Ybtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Ybtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>Y</strong></button></div>
+            <div id="Zbtndiv" style="border:6px solid; height:56px; border-color:#f0f2f5; border-radius:50px; padding:2px; margin:2px"><button id="Zbtn" style="margin:0px; border-radius:50px; width:40px; height:40px"><strong>Z</strong></button></div>
+            <button id="hashbtn" style="margin:10px; border-radius:50px; width:40px; height:40px"><strong>#</strong></button>
+        </div>
+
+
+        <div class="row" id="SupplierDocumentsBody">
+
+
+            @foreach (var items in Model.URLName)
+            {
+                if (items.Value[0] == 'A')
+                {
+                    <input style="display:none" type="text" id="A" value="A" />
+                    <div class="col-md-2 text-center Adiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'B')
+                {
+                    <input style="display:none" type="text" id="B" value="B" />
+                    <div class="col-md-2 text-center Bdiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'C')
+                {
+                    <input style="display:none" type="text" id="C" value="C" />
+                    <div class="col-md-2 text-center Cdiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'D')
+                {
+                    <input style="display:none" type="text" id="D" value="D" />
+                    <div class="col-md-2 text-center Ddiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'E')
+                {
+                    <input style="display:none" type="text" id="E" value="E" />
+                    <div class="col-md-2 text-center Ediv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'F')
+                {
+                    <input style="display:none" type="text" id="F" value="F" />
+                    <div class="col-md-2 text-center Fdiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'G')
+                {
+                    <input style="display:none" type="text" id="G" value="G" />
+                    <div class="col-md-2 text-center Gdiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'H')
+                {
+                    <input style="display:none" type="text" id="H" value="H" />
+                    <div class="col-md-2 text-center Hdiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'I')
+                {
+                    <input style="display:none" type="text" id="I" value="I" />
+                    <div class="col-md-2 text-center Idiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'J')
+                {
+                    <input style="display:none" type="text" id="J" value="J" />
+                    <div class="col-md-2 text-center Jdiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'K')
+                {
+                    <input style="display:none" type="text" id="K" value="K" />
+                    <div class="col-md-2 text-center Kdiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'L')
+                {
+                    <input style="display:none" type="text" id="L" value="L" />
+                    <div class="col-md-2 text-center Ldiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'M')
+                {
+                    <input style="display:none" type="text" id="M" value="M" />
+                    <div class="col-md-2 text-center Mdiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'N')
+                {
+                    <input style="display:none" type="text" id="N" value="N" />
+                    <div class="col-md-2 text-center Ndiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'O')
+                {
+                    <input style="display:none" type="text" id="O" value="O" />
+                    <div class="col-md-2 text-center Odiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'P')
+                {
+                    <input style="display:none" type="text" id="P" value="P" />
+                    <div class="col-md-2 text-center Pdiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'Q')
+                {
+                    <input style="display:none" type="text" id="Q" value="Q" />
+                    <div class="col-md-2 text-center Qdiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'R')
+                {
+                    <input style="display:none" type="text" id="R" value="R" />
+                    <div class="col-md-2 text-center Rdiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'S')
+                {
+                    <input style="display:none" type="text" id="S" value="S" />
+                    <div class="col-md-2 text-center Sdiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'T')
+                {
+                    <input style="display:none" type="text" id="T" value="T" />
+                    <div class="col-md-2 text-center Tdiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'U')
+                {
+                    <input style="display:none" type="text" id="U" value="U" />
+                    <div class="col-md-2 text-center Udiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'V')
+                {
+                    <input style="display:none" type="text" id="V" value="V" />
+                    <div class="col-md-2 text-center Vdiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'W')
+                {
+                    <input style="display:none" type="text" id="W" value="W" />
+                    <div class="col-md-2 text-center Wdiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'X')
+                {
+                    <input style="display:none" type="text" id="X" value="X" />
+                    <div class="col-md-2 text-center Xdiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'Y')
+                {
+                    <input style="display:none" type="text" id="Y" value="Y" />
+                    <div class="col-md-2 text-center Ydiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == 'Z')
+                {
+                    <input style="display:none" type="text" id="Z" value="Z" />
+                    <div class="col-md-2 text-center Zdiv" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+                if (items.Value[0] == '#')
+                {
+                    <input style="display:none" type="text" id="hash" value="#" />
+                    <div id="Zdiv" class="col-md-2 text-center" style="display:none; padding: 20px">
+                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                            <strong>@items.Value</strong>
+                        </div>
+                    </div>
+                }
+
+
+            }
+        </div>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" style="height:800px; width:1000px">
+                    <div class="modal-body" style="padding:0px">
+                        <div>
+                            <iframe id="modal_content" src="" style="width:100%;height:880px;"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="SupplierDocManage" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" style="width:680px">
+                    <div class="modal-body" style="padding:0px">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><strong>Manage Supplier Documents</strong></h5>
+                            </div>
+                            <div class="card-body">
+                                @{
+                                    int i = 1;
+                                    foreach (var items in Model.URLName)
+                                    {
+                                        string k = i.ToString();
+                                        string Rename = "#R" + k;
+                                        string Delete = "#D" + k;
+                                        string Deleteid = Delete.Substring(1);
+                                        string Renameid = Rename.Substring(1);
+
+                                        using (Html.BeginForm("RenameCustomerBlob", "Library", new { currentFileName = items.Value }, FormMethod.Post))
+                                        {
+                                            <div id="div" class="row" style="padding:10px 20px 10px 10px; margin-top:0px">
+                                                <div class="col-md-2" style="padding-left:0px">
+                                                    <a id="anchor" class="btn" data-toggle="modal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 60px; border-color: white"></p></a>
+                                                </div>
+                                                <div class="col-md-6" style="color: cornflowerblue; font-size: 15px; padding-top:22px">
+                                                    <strong>@items.Value</strong>
+                                                </div>
+                                                <div class="col-md-2 text-right" style="padding-top:20px">
+                                                    <a class="btn btn-primary" style="height:30px" data-toggle="collapse" href=@Rename role="button" aria-expanded="false" aria-controls="collapseExample">
+                                                        Rename
+                                                    </a>
+                                                    @*<a style="width:100px; height:30px; font-size:15px" class="btn btn-primary rename" href="@Url.Action("RenameSupplireBlob", "Library", new {currentFileName = items.Value, newFileName = "RenamedFile.pdf"})">Rename</a>*@
+                                                </div>
+                                                <div class="col-md-2 text-right" style="padding-top:9px">
+                                                    <a class="btn" data-toggle="collapse" href=@Delete role="button" aria-expanded="false" aria-controls=@Deleteid><img style="height:35px" src="~/Content/trash.png" /></a>
+                                                    @*onclick="location.href='@Url.Action("DeleteSupplireBlob", "Library", new { fileName = items.Value})';"*@
+                                                </div>
+
+                                                <div class="collapse" id=@Deleteid style="margin-bottom:10px">
+                                                    <div class="card card-body" style="width:645px;padding:0px; margin:0px">
+                                                        <div class="row" style="padding:0px; margin:0px">
+                                                            <div class="col-md-8" style="padding-top:17px"><label>Delete: @items.Value</label></div>
+                                                            <div class="col-md-2" style="padding-top:4px"><a type="text" class="btn" href="@Url.Action("DeleteCustomerBlob", "Library", new {fileName = items.Value})"><img style="height:40px" src="~/Content/Tick.png" /></a></div>
+                                                            <div class="col-md-2" style="padding-top:4px"><button class="btn" style="margin-left:8px" type="button" data-toggle="collapse" data-dismiss=@Deleteid aria-expanded="false" aria-controls=@Deleteid data-target=@Delete><img style="height:40px" src="~/Content/Cross.png" /></button></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="collapse" id=@Renameid>
+                                                    <div class="card card-body" style="width:645px;padding:0px; margin:0px">
+                                                        <div class="row" style="padding:0px; margin:0px">
+                                                            <div class="col-md-8" style="padding-top:12px">@Html.EditorFor(m => m.RenameString, new { htmlAttributes = new { @required = "required", @style = "height:28px; width:350px", @value = @items.Value } })</div>
+                                                            <div class="col-md-2" style="padding-top:1px"><button class="btn" type="submit"><img style="height:40px" src="~/Content/Tick.png" /></button></div>
+                                                            <div class="col-md-2 text-right" style="padding-top:1px"><button class="btn" data-dismiss="modal"><img style="height:40px" src="~/Content/Cross.png" /></button></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        <hr />
+                                        i = i + 1;
+                                    }
+
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            //$("#libraryClicked").css({ "background-color": "#f0f2f5", "color": "black", "font-weight": "600" })
+            //$("#SupplierDocumentsClicked").css({ "color": "black", "font-weight": "700", "font-size": "15px" })
+            //$("#CompanyDocumentsClicked").css({ "color": "black", "font-size": "15px" })
+            //$("#BranchSharedDriveClicked").css({ "color": "black", "font-size": "15px" })
+            //$("#DashboardClicked").css({ "color": "black", "font-size": "15px" })
+        });
+        $(document).ready(function () {
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+
+
+        $("#Abtn").click(function () {
+            $("#Abtndiv").css("border-color", "#5cb85c");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "block");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $(".rename").click(function () {
+            var value = prompt('Rename the file');
+        })
+
+        $("#Bbtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#5cb85c");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "block");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Cbtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#5cb85c");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "block");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Dbtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#5cb85c");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "block");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Ebtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#5cb85c");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "block");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Fbtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#5cb85c");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "block");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Gbtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#5cb85c");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "block");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Hbtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#5cb85c");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "block");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Ibtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#5cb85c");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "block");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Jbtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#5cb85c");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "block");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Kbtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#5cb85c");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "block");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Lbtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#5cb85c");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "block");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Mbtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#5cb85c");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "block");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Nbtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#5cb85c");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "block");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Obtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#5cb85c");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "block");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Pbtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#5cb85c");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "block");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Qbtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#5cb85c");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "block");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Rbtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#5cb85c");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "block");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Sbtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#5cb85c");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "block");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Tbtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#5cb85c");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "block");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Ubtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#5cb85c");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "block");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Vbtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#5cb85c");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "block");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Wbtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#5cb85c");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "block");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Xbtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#5cb85c");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "block");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Ybtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#5cb85c");
+            $("#Zbtndiv").css("border-color", "#f0f2f5");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "block");
+            $(".Zdiv").css("display", "none");
+        });
+
+        $("#Zbtn").click(function () {
+            $("#Abtndiv").css("border-color", "#f0f2f5");
+            $("#Bbtndiv").css("border-color", "#f0f2f5");
+            $("#Cbtndiv").css("border-color", "#f0f2f5");
+            $("#Dbtndiv").css("border-color", "#f0f2f5");
+            $("#Ebtndiv").css("border-color", "#f0f2f5");
+            $("#Fbtndiv").css("border-color", "#f0f2f5");
+            $("#Gbtndiv").css("border-color", "#f0f2f5");
+            $("#Hbtndiv").css("border-color", "#f0f2f5");
+            $("#Ibtndiv").css("border-color", "#f0f2f5");
+            $("#Jbtndiv").css("border-color", "#f0f2f5");
+            $("#Kbtndiv").css("border-color", "#f0f2f5");
+            $("#Lbtndiv").css("border-color", "#f0f2f5");
+            $("#Mbtndiv").css("border-color", "#f0f2f5");
+            $("#Nbtndiv").css("border-color", "#f0f2f5");
+            $("#Obtndiv").css("border-color", "#f0f2f5");
+            $("#Pbtndiv").css("border-color", "#f0f2f5");
+            $("#Qbtndiv").css("border-color", "#f0f2f5");
+            $("#Rbtndiv").css("border-color", "#f0f2f5");
+            $("#Sbtndiv").css("border-color", "#f0f2f5");
+            $("#Tbtndiv").css("border-color", "#f0f2f5");
+            $("#Ubtndiv").css("border-color", "#f0f2f5");
+            $("#Vbtndiv").css("border-color", "#f0f2f5");
+            $("#Wbtndiv").css("border-color", "#f0f2f5");
+            $("#Xbtndiv").css("border-color", "#f0f2f5");
+            $("#Ybtndiv").css("border-color", "#f0f2f5");
+            $("#Zbtndiv").css("border-color", "#5cb85c");
+            $(".Adiv").css("display", "none");
+            $(".Bdiv").css("display", "none");
+            $(".Cdiv").css("display", "none");
+            $(".Ddiv").css("display", "none");
+            $(".Ediv").css("display", "none");
+            $(".Fdiv").css("display", "none");
+            $(".Gdiv").css("display", "none");
+            $(".Hdiv").css("display", "none");
+            $(".Idiv").css("display", "none");
+            $(".Jdiv").css("display", "none");
+            $(".Kdiv").css("display", "none");
+            $(".Ldiv").css("display", "none");
+            $(".Mdiv").css("display", "none");
+            $(".Ndiv").css("display", "none");
+            $(".Odiv").css("display", "none");
+            $(".Pdiv").css("display", "none");
+            $(".Qdiv").css("display", "none");
+            $(".Rdiv").css("display", "none");
+            $(".Sdiv").css("display", "none");
+            $(".Tdiv").css("display", "none");
+            $(".Udiv").css("display", "none");
+            $(".Vdiv").css("display", "none");
+            $(".Wdiv").css("display", "none");
+            $(".Xdiv").css("display", "none");
+            $(".Ydiv").css("display", "none");
+            $(".Zdiv").css("display", "block");
+        });
+
+        $('.Adiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Bdiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Cdiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Ddiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Ediv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Fdiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Gdiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Hdiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Idiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Jdiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Kdiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Ldiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Mdiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Ndiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Odiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Pdiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Qdiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Rdiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Sdiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Tdiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Udiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Vdiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Wdiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Xdiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Ydiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+        $('.Zdiv a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+        });
+
+
+
+        if ($("#A").val() == "A") {
+            $("#Abtn").css("background-color", "cornflowerblue");
+            $("#Abtn").css("background-color", "cornflowerblue");
+            $("#Abtn").css("font-weight", "bolder");
+            $("#Abtn").css("font-size", "20px");
+        }
+        else {
+            $("#Abtn").css("background-color", "lightgray");
+            $("#Abtn").css("color", "white");
+        }
+
+        if ($("#B").val() == "B") {
+            $("#Bbtn").css("background-color", "cornflowerblue");
+            $("#Bbtn").css("background-color", "cornflowerblue");
+            $("#Bbtn").css("font-weight", "bolder");
+            $("#Bbtn").css("font-size", "20px");
+        }
+        else {
+            $("#Bbtn").css("background-color", "lightgray");
+            $("#Bbtn").css("color", "white");
+        }
+
+        if ($("#C").val() == "C") {
+            $("#Cbtn").css("background-color", "cornflowerblue");
+            $("#Cbtn").css("background-color", "cornflowerblue");
+            $("#Cbtn").css("font-weight", "bolder");
+            $("#Cbtn").css("font-size", "20px");
+        }
+        else {
+            $("#Cbtn").css("background-color", "lightgray");
+            $("#Cbtn").css("color", "white");
+        }
+
+        if ($("#D").val() == "D") {
+            $("#Dbtn").css("background-color", "cornflowerblue");
+            $("#Dbtn").css("background-color", "cornflowerblue");
+            $("#Dbtn").css("font-weight", "bolder");
+            $("#Dbtn").css("font-size", "20px");
+        }
+        else {
+            $("#Dbtn").css("background-color", "lightgray");
+            $("#Dbtn").css("color", "white");
+        }
+
+        if ($("#E").val() == "E") {
+            $("#Ebtn").css("background-color", "cornflowerblue");
+            $("#Ebtn").css("background-color", "cornflowerblue");
+            $("#Ebtn").css("font-weight", "bolder");
+            $("#Ebtn").css("font-size", "20px");
+        }
+        else {
+            $("#Ebtn").css("background-color", "lightgray");
+            $("#Ebtn").css("color", "white");
+        }
+
+        if ($("#F").val() == "F") {
+            $("#Fbtn").css("background-color", "cornflowerblue");
+            $("#Fbtn").css("background-color", "cornflowerblue");
+            $("#Fbtn").css("font-weight", "bolder");
+            $("#Fbtn").css("font-size", "20px");
+        }
+        else {
+            $("#Fbtn").css("background-color", "lightgray");
+            $("#Fbtn").css("color", "white");
+        }
+
+        if ($("#G").val() == "G") {
+            $("#Gbtn").css("background-color", "cornflowerblue");
+            $("#Gbtn").css("background-color", "cornflowerblue");
+            $("#Gbtn").css("font-weight", "bolder");
+            $("#Gbtn").css("font-size", "20px");
+        }
+        else {
+            $("#Gbtn").css("background-color", "lightgray");
+            $("#Gbtn").css("color", "white");
+        }
+
+        if ($("#H").val() == "H") {
+            $("#Hbtn").css("background-color", "cornflowerblue");
+            $("#Hbtn").css("background-color", "cornflowerblue");
+            $("#Hbtn").css("font-weight", "bolder");
+            $("#Hbtn").css("font-size", "20px");
+        }
+        else {
+            $("#Hbtn").css("background-color", "lightgray");
+            $("#Hbtn").css("color", "white");
+        }
+
+        if ($("#I").val() == "I") {
+            $("#Ibtn").css("background-color", "cornflowerblue");
+            $("#Ibtn").css("background-color", "cornflowerblue");
+            $("#Ibtn").css("font-weight", "bolder");
+            $("#Ibtn").css("font-size", "20px");
+        }
+        else {
+            $("#Ibtn").css("background-color", "lightgray");
+            $("#Ibtn").css("color", "white");
+        }
+
+        if ($("#J").val() == "J") {
+            $("#Jbtn").css("background-color", "cornflowerblue");
+            $("#Jbtn").css("background-color", "cornflowerblue");
+            $("#Jbtn").css("font-weight", "bolder");
+            $("#Jbtn").css("font-size", "20px");
+        }
+        else {
+            $("#Jbtn").css("background-color", "lightgray");
+            $("#Jbtn").css("color", "white");
+        }
+
+        if ($("#K").val() == "K") {
+            $("#Kbtn").css("background-color", "cornflowerblue");
+            $("#Kbtn").css("background-color", "cornflowerblue");
+            $("#Kbtn").css("font-weight", "bolder");
+            $("#Kbtn").css("font-size", "20px");
+        }
+        else {
+            $("#Kbtn").css("background-color", "lightgray");
+            $("#Kbtn").css("color", "white");
+        }
+
+        if ($("#L").val() == "L") {
+            $("#Lbtn").css("background-color", "cornflowerblue");
+            $("#Lbtn").css("background-color", "cornflowerblue");
+            $("#Lbtn").css("font-weight", "bolder");
+            $("#Lbtn").css("font-size", "20px");
+        }
+        else {
+            $("#Lbtn").css("background-color", "lightgray");
+            $("#Lbtn").css("color", "white");
+        }
+
+        if ($("#M").val() == "M") {
+            $("#Mbtn").css("background-color", "cornflowerblue");
+            $("#Mbtn").css("background-color", "cornflowerblue");
+            $("#Mbtn").css("font-weight", "bolder");
+            $("#Mbtn").css("font-size", "20px");
+        }
+        else {
+            $("#Mbtn").css("background-color", "lightgray");
+            $("#Mbtn").css("color", "white");
+        }
+
+        if ($("#N").val() == "N") {
+            $("#Nbtn").css("background-color", "cornflowerblue");
+            $("#Nbtn").css("background-color", "cornflowerblue");
+            $("#Nbtn").css("font-weight", "bolder");
+            $("#Nbtn").css("font-size", "20px");
+        }
+        else {
+            $("#Nbtn").css("background-color", "lightgray");
+            $("#Nbtn").css("color", "white");
+        }
+
+        if ($("#O").val() == "O") {
+            $("#Obtn").css("background-color", "cornflowerblue");
+            $("#Obtn").css("background-color", "cornflowerblue");
+            $("#Obtn").css("font-weight", "bolder");
+            $("#Obtn").css("font-size", "20px");
+        }
+        else {
+            $("#Obtn").css("background-color", "lightgray");
+            $("#Obtn").css("color", "white");
+        }
+
+        if ($("#P").val() == "P") {
+            $("#Pbtn").css("background-color", "cornflowerblue");
+            $("#Pbtn").css("background-color", "cornflowerblue");
+            $("#Pbtn").css("font-weight", "bolder");
+            $("#Pbtn").css("font-size", "20px");
+        }
+        else {
+            $("#Pbtn").css("background-color", "lightgray");
+            $("#Pbtn").css("color", "white");
+        }
+
+        if ($("#Q").val() == "Q") {
+            $("#Qbtn").css("background-color", "cornflowerblue");
+            $("#Qbtn").css("background-color", "cornflowerblue");
+            $("#Qbtn").css("font-weight", "bolder");
+            $("#Qbtn").css("font-size", "20px");
+        }
+        else {
+            $("#Qbtn").css("background-color", "lightgray");
+            $("#Qbtn").css("color", "white");
+        }
+
+        if ($("#R").val() == "R") {
+            $("#Rbtn").css("background-color", "cornflowerblue");
+            $("#Rbtn").css("background-color", "cornflowerblue");
+            $("#Rbtn").css("font-weight", "bolder");
+            $("#Rbtn").css("font-size", "20px");
+        }
+        else {
+            $("#Rbtn").css("background-color", "lightgray");
+            $("#Rbtn").css("color", "white");
+        }
+
+
+        if ($("#S").val() == "S") {
+            $("#Sbtn").css("background-color", "cornflowerblue");
+            $("#Sbtn").css("background-color", "cornflowerblue");
+            $("#Sbtn").css("font-weight", "bolder");
+            $("#Sbtn").css("font-size", "20px");
+        }
+        else {
+            $("#Sbtn").css("background-color", "lightgray");
+            $("#Sbtn").css("color", "white");
+        }
+
+        if ($("#T").val() == "T") {
+            $("#Tbtn").css("background-color", "cornflowerblue");
+            $("#Tbtn").css("background-color", "cornflowerblue");
+            $("#Tbtn").css("font-weight", "bolder");
+            $("#Tbtn").css("font-size", "20px");
+        }
+        else {
+            $("#Tbtn").css("background-color", "lightgray");
+            $("#Tbtn").css("color", "white");
+        }
+
+        if ($("#U").val() == "U") {
+            $("#Ubtn").css("background-color", "cornflowerblue");
+            $("#Ubtn").css("background-color", "cornflowerblue");
+            $("#Ubtn").css("font-weight", "bolder");
+            $("#Ubtn").css("font-size", "20px");
+        }
+        else {
+            $("#Ubtn").css("background-color", "lightgray");
+            $("#Ubtn").css("color", "white");
+        }
+
+        if ($("#V").val() == "V") {
+            $("#Vbtn").css("background-color", "cornflowerblue");
+            $("#Vbtn").css("background-color", "cornflowerblue");
+            $("#Vbtn").css("font-weight", "bolder");
+            $("#Vbtn").css("font-size", "20px");
+        }
+        else {
+            $("#Vbtn").css("background-color", "lightgray");
+            $("#Vbtn").css("color", "white");
+        }
+
+        if ($("#W").val() == "W") {
+            $("#Wbtn").css("background-color", "cornflowerblue");
+            $("#Wbtn").css("background-color", "cornflowerblue");
+            $("#Wbtn").css("font-weight", "bolder");
+            $("#Wbtn").css("font-size", "20px");
+        }
+        else {
+            $("#Wbtn").css("background-color", "lightgray");
+            $("#Wbtn").css("color", "white");
+        }
+
+        if ($("#X").val() == "X") {
+            $("#Xbtn").css("background-color", "cornflowerblue");
+            $("#Xbtn").css("background-color", "cornflowerblue");
+            $("#Xbtn").css("font-weight", "bolder");
+            $("#Xbtn").css("font-size", "20px");
+        }
+        else {
+            $("#Xbtn").css("background-color", "lightgray");
+            $("#Xbtn").css("color", "white");
+        }
+
+        if ($("#Y").val() == "Y") {
+            $("#Ybtn").css("background-color", "cornflowerblue");
+            $("#Ybtn").css("background-color", "cornflowerblue");
+            $("#Ybtn").css("font-weight", "bolder");
+            $("#Ybtn").css("font-size", "20px");
+        }
+        else {
+            $("#Ybtn").css("background-color", "lightgray");
+            $("#Ybtn").css("color", "white");
+        }
+
+        if ($("#Z").val() == "Z") {
+            $("#Zbtn").css("background-color", "cornflowerblue");
+            $("#Zbtn").css("background-color", "cornflowerblue");
+            $("#Zbtn").css("font-weight", "bolder");
+            $("#Zbtn").css("font-size", "20px");
+        }
+        else {
+            $("#Zbtn").css("background-color", "lightgray");
+            $("#Zbtn").css("color", "white");
+        }
+
+        if ($("#hash").val() == "#") {
+            $("#hashbtn").css("background-color", "cornflowerblue");
+            $("#hashbtn").css("background-color", "cornflowerblue");
+            $("#hashbtn").css("font-weight", "bolder");
+            $("#hashbtn").css("font-size", "20px");
+        }
+        else {
+            $("#hashbtn").css("background-color", "lightgray");
+            $("#hashbtn").css("color", "white");
+        }
+
+    </script>
+</body>
+
+

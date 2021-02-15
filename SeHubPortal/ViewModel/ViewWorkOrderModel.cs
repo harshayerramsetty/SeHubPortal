@@ -13,5 +13,6 @@ namespace SeHubPortal.ViewModel
         public tbl_treadtracker_workorder workOrderInfo { get; set; }
         public string WorkOrderNumber { get; set; }
         public string Barcode { get; set; }
+        public tbl_sehub_access SehubAccess { get; set; }
     }
 }

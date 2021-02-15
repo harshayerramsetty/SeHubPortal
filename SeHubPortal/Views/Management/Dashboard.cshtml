@@ -1,4 +1,4 @@
-﻿
+﻿@model SeHubPortal.ViewModel.FileURL
 @{
     ViewBag.Title = "Dashboard";
     Layout = "~/Views/Shared/_ManagementLayout.cshtml";
@@ -9,10 +9,128 @@
     <meta name="viewport" content="width=device-width" />
     <link href="~/Content/NewOrder.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+
+
+    @if (Model.SehubAccess.tools > 0)
+    {
+        <style>
+            #toolsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.payroll > 0)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.fleetTVT > 0)
+    {
+        <style>
+            #FleetTVTClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTracker > 0)
+    {
+        <style>
+            #treadTrackereClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_access > 0)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.main > 0)
+    {
+        <style>
+            #mainClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings == 3)
+    {
+        <style>
+            #SettingsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+
+
+
+
+
+    @if (Model.SehubAccess.my_staff > 0)
+    {
+        <style>
+            #MyStaffLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.attendance > 0)
+    {
+        <style>
+            #AttendanceLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.vacation_schedule > 0)
+    {
+        <style>
+            #LeaveSchedulerLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.asset_control > 0)
+    {
+        <style>
+            #AssetControlLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+
     <style>
+
+
+        #ManagementClicked {
+            display: block !important;
+        }
+
+        #DashboardLink {
+            display: block !important;
+        }
+
         #ManagementClicked {
             background-color: #f0f2f5;
             color: black;
@@ -27,6 +145,7 @@
         #DashboardLink {
             color: black;
             font-weight: 700;
+            background-color: #f0f2f5;
         }
 
         body {
@@ -57,14 +176,247 @@
                 <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
                     <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Management")">Management</a></li>
                     <li class="breadcrumb-item " aria-current="page">Dashboard</li>
+
+                    @if (Model.SehubAccess.management_dashboard >= 2)
+                    {
+                        <label style="margin: 0px 3px 0px 1201px ">Location</label>
+                        <div>
+                            @{
+                                List
+                                <SelectListItem>
+                                listItems = new List
+                                <SelectListItem>
+                                ();
+
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "001",
+                                    Value = "001"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "002",
+                                    Value = "002"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "003",
+                                    Value = "003"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "004",
+                                    Value = "004"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "005",
+                                    Value = "005"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "007",
+                                    Value = "007"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "009",
+                                    Value = "009"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "010",
+                                    Value = "010"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "011",
+                                    Value = "011"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "101",
+                                    Value = "101"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "347",
+                                    Value = "347"
+                                });
+                            }
+
+                            @if (Model.SehubAccess.management_dashboard == 3)
+                            {
+                                @Html.DropDownListFor(m => m.Location_ID, listItems, new { @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
+                            }
+                            else if (Model.SehubAccess.management_dashboard == 2)
+                            {
+                                @Html.DropDownListFor(m => m.Location_ID, listItems, new { @disabled = "true", @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
+                            }
+
+                        </div>
+                    }
                 </ol>
             </nav>
         </div>
-        <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+        <button type="button" id="clickThis" class="btn" style="margin-bottom: 14px;">
             <i class="fa fa-bars" style="font-size:25px"></i>
             <span class="sr-only">Toggle Menu</span>
         </button>
     </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" style="height:980px; width:900px">
+                <div class="modal-body" style="padding:0px">
+                    <div>
+                        <iframe id="modal_content" src="" style="width:100%;height:980px;"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="InspectionChecklist" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" style="height:400px; width:600px">
+                <div class="modal-header" style="padding:7px 0px 0px 15px "><h5>Preventative Maintenance</h5></div>
+                <div class="modal-body" style="padding:0px">
+                    <label style="margin-left:15px; margin-top:15px"><h5>Inspection</h5></label>
+
+                    <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin:0px 15px 0px 15px">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Vehicles</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Ramps & Liftes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Tools & Equipments</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent" style="margin:0px 15px 0px 14px; border-bottom:2px solid #f0f2f5; border-right:2px solid #f0f2f5; border-left:2px solid #f0f2f5">
+                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab" style="height:245px">
+                            <div class="row">
+                                <div class="col-lg-4" style="margin-top:10px">
+                                    <div id="div" class="text-center" style="padding: 20px">
+                                        <a data-dismiss="modal" id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 130px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px; color: cornflowerblue; font-size: 13px; margin-left: 15px; margin-right: 10px">
+                                            <strong>Passenger / Light Truck pm1</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4" style="margin-top:10px">
+                                    <div id="div" class="text-center" style="padding: 20px 20px 0px 20px">
+                                        <a data-dismiss="modal" id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 130px; border-color: white"></p></a>
+                                    </div>
+                                    <div style="word-wrap: break-word; white-space: normal; padding-top: 0px; color: cornflowerblue; font-size: 13px; margin-left: 30px; margin-right: 10px; margin-top:10px">
+                                        <strong>Service Truck pm1</strong>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4" style="margin-top:10px">
+                                    <div id="div" class="text-center" style="padding: 20px 20px 0px 20px">
+                                        <a data-dismiss="modal" id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 130px; border-color: white"></p></a>
+                                    </div>
+                                    <div style="word-wrap: break-word; white-space: normal; padding-top: 0px; color: cornflowerblue; font-size: 13px; margin-left: 35px; margin-right: 10px; margin-top:10px">
+                                        <strong>Boom Truck pm1</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab" style="height:245px"></div>
+                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab" style="height:245px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row" style="padding-left:20px">
+
+        @foreach (var items in Model.URLName)
+        {
+            <div id="div" class="col-md-2 text-center">
+                <a id="anchor" data-toggle="modal" data-target="#exampleModal" href="">
+                    <span style="display:none">@items.Key</span>
+                    <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#exampleModal" style="width:260px; height:360px">
+                        @{
+                            if (items.Value == "Technician Time Card ")
+                            {
+                                <div class="card-body text-center" style="height:270px;  padding-top:25px">
+                                    <img src="~/Content/time card icon.png" style="margin-top:0px; margin-bottom:45px; width:210px;">
+                                    <h5 style="margin-left:0px"><b>Tech Time Card</b></h5>
+                                </div>
+                            }
+                            else if (items.Value == "New Hire Package ")
+                            {
+                                <div class="card-body text-center" style="height:270px; padding-top:40px">
+                                    <img src="~/Content/NewHirePackage.png" style="margin-top:0px; margin-bottom:40px; width:200px;">
+                                    <h5><b>New Hire Package</b></h5>
+                                </div>
+                            }
+                        }
+
+                    </div>
+                </a>
+            </div>
+
+        }
+
+        @if (Model.SehubAccess.management_dashboard == 3)
+        {
+            <div class="col-lg-2">
+                <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#InspectionChecklist" style="width:260px; height:360px">
+                    <div class="card-body text-center" style="height:270px; padding-top:55px">
+                        <img src="~/Content/checklist icon.png" style="margin-top:0px; margin-bottom:35px; width:130px;">
+                        <h5 style="margin-left:0px"><b>Preventative Maintenance</b></h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#AddDocuments" style="width:790px; height:360px">
+                    <div class="card-header text-center" style="padding:6px 6px 0px 6px">
+                        <h5>Technician Efficiency</h5>
+                    </div>
+                    <div class="card-body text-center" style="height:270px">
+                        <img src="~/Content/underConstruction.png" alt="Alternate Text" style="width:500px; margin-top:30px" />
+                    </div>
+                </div>
+            </div>
+        }
+
+
+    </div>
+
+    @if (Model.SehubAccess.management_dashboard == 3)
+    {
+        <div class="row" style="margin-left: 5px; margin-top:15px">
+            <div class="col-lg-6">
+                <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#AddDocuments" style="width:815px; height:360px">
+                    <div class="card-header text-center" style="padding:6px 6px 0px 6px">
+                        <h5>Action List</h5>
+                    </div>
+                    <div class="card-body text-center" style="height:270px; padding-left:65px;  padding-top:35px">
+                        <img src="~/Content/underConstruction.png" alt="Alternate Text" style="width:500px" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#AddDocuments" style="width:790px; height:360px">
+                    <div class="card-header text-center" style="padding:6px 6px 0px 6px">
+                        <h5>Shop Performance Vs Targets</h5>
+                    </div>
+                    <div class="card-body text-center" style="height:270px; padding-top:35px">
+                        <img src="~/Content/underConstruction.png" alt="Alternate Text" style="width:500px" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+
 
     <script>
         $(document).ready(function () {
@@ -74,7 +426,17 @@
 
         });
 
+        $('#div a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+
+        });
+
     </script>
 </body>
-   
+
 </html>

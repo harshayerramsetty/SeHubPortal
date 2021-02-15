@@ -1,0 +1,229 @@
+﻿@model SeHubPortal.ViewModel.SettingsCustomers
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Settings.cshtml";
+}
+
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Dashboard</title>
+    <meta charset="utf-8">
+    @*<link rel="shortcut icon" type="image/x-icon" href="~/Content/title_logo64.png">*@
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+
+
+    @if (Model.SehubAccess.tools > 0)
+    {
+        <style>
+            #toolsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.management > 0)
+    {
+        <style>
+            #ManagementClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings_managePermissions > 0)
+    {
+        <style>
+            #EmployeePermissionsLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings_dashboard > 0)
+    {
+        <style>
+            #SettingsLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.payroll > 0)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.fleetTVT > 0)
+    {
+        <style>
+            #FleetTVTClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTracker > 0)
+    {
+        <style>
+            #treadTrackereClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_access > 0)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.main > 0)
+    {
+        <style>
+            #mainClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_access == 3)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    <style>
+
+
+
+        #CustomersLink {
+            display: block !important;
+        }
+
+        #SettingsClicked {
+            display: block !important;
+        }
+
+        .settingsBtn {
+            font-weight: bold;
+        }
+
+        #CustomersLink {
+            color: black;
+            font-weight: 700;
+            background-color: #f0f2f5;
+            border-color: white;
+        }
+
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .card-header {
+            background-color: #cde8ca;
+            padding: 5px;
+        }
+
+        body {
+            overflow-y: hidden !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="row heading" style="padding:10px 20px 0px 15px">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="background-color: white; height: 100%; margin-top: 0px;">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Customers", "Settings")">Customers</a></li>
+                    <li class="breadcrumb-item " aria-current="page">Dashboard</li>
+                </ol>
+            </nav>
+        </div>
+        <button type="button" id="clickThis" class="btn" style=" margin-bottom: 14px;">
+            <i class="fa fa-bars" style="        font-size: 25px
+"></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+    <div class="row">
+    </div>
+
+    <div class="row" style="        display: none;
+        width: 1645px;
+        height: 800px;
+        margin-left: 15px;
+        background-color: aqua
+">
+        <iframe src="https://outlook.office365.com/mail/inbox" style="width:1645px;height:805px;"></iframe>
+    </div>
+
+
+
+    <script>
+
+        updateList = function () {
+            var input = document.getElementById('file');
+            var output = document.getElementById('fileList');
+            var children = "";
+            for (var i = 0; i < input.files.length; ++i) {
+                children += '<li>' + input.files.item(i).name + '</li>';
+            }
+            output.innerHTML = '<ul>' + children + '</ul>';
+        }
+
+        $(document).ready(function () {
+            $("#SettingsClicked").css({ "background-color": "#f0f2f5", "color": "black", "font-weight": "600" })
+            //$("#mainButton").css({ "color": "black", "font-weight": "600" })
+            //$("#DashboardClicked").css({ "color": "black", "font-weight": "700" })
+        });
+        $(document).ready(function () {
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+
+        });
+
+        function getUrlVars() {
+            var vars = [], hash;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+        }
+
+
+        var acknowledgment = getUrlVars()["ac"];
+        if (acknowledgment == "MergeSuccessful") {
+
+            url = document.URL + "#";
+            location = "#";
+            window.location.reload();
+        }
+    </script>
+
+
+</body>
+
+
+</html>
+

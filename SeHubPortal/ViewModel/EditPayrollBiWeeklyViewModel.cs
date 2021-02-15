@@ -46,7 +46,7 @@ namespace SeHubPortal.ViewModel
         public string thurs_2_sel { get; set; }
         public string fri_2_sel { get; set; }
         public Nullable<double> sat_1_sum { get; set; }
-        public Nullable<double> mon__1_sum { get; set; }
+        public Nullable<double> mon_1_sum { get; set; }
         public Nullable<double> tues_1_sum { get; set; }
         public Nullable<double> wed_1_sum { get; set; }
         public Nullable<double> thurs_1_sum { get; set; }

@@ -1,20 +1,769 @@
-﻿
+﻿@model SeHubPortal.ViewModel.FileURL
 @{
-    ViewBag.Title = "Calendar";
+    ViewBag.Title = "Dashboard";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
 }
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-<style>
-    body {
-        background-color: #f0f2f5;
-    }
-</style>
-<h2>Calendar</h2>
 
-<script>
-    $(document).ready(function () {
-        $("#mainButton").css({ "background-color": "#f0f2f5", "color": "black", "font-weight": "600" })
-        $("#CalendarClicked").css({ "color": "black", "font-weight": "700" })
-    });
-</script>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/NewOrder.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" rel="stylesheet" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.css" rel="stylesheet" media="print" />
+    <link href="~/Content/fullcalendar.css" rel="stylesheet" />
+
+
+
+
+    @if (Model.SehubAccess.tools > 0)
+    {
+        <style>
+            #toolsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.management > 0)
+    {
+        <style>
+            #ManagementClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings > 0)
+    {
+        <style>
+            #SettingsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.payroll > 0)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.fleetTVT > 0)
+    {
+        <style>
+            #FleetTVTClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTracker > 0)
+    {
+        <style>
+            #treadTrackereClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_access > 0)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.mainDashboard > 0)
+    {
+        <style>
+            #MainDashboardLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    <style>
+
+        @*        .fc-state-default {
+            background-color: aqua;
+        }*@
+
+        #MainCalendarLink {
+            display: block !important;
+        }
+
+        #mainClicked {
+            display: block !important;
+        }
+
+        body {
+         overflow-y: hidden!important;
+        }
+
+        #mainButton {
+            color: black;
+            font-weight: bold;
+        }
+
+
+        .fc-title {
+            color: black;
+        }
+
+        .fc-toolbar h2 {
+            color: #008ce3;
+        }
+
+
+        .fc-widget-header {
+            background-color: gray;
+            color: white;
+        }
+
+
+        #mainClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        .fc-month-button {
+            display:none;
+        }
+
+        .fc-agendaWeek-button {
+            display:none;
+        }
+
+        .fc-agendaDay-button {
+            display: none;
+        }
+
+        #mainBtn {
+            color: black;
+            font-weight: 600;
+        }
+
+        #MainCalendarLink {
+            color: black;
+            font-weight: bold;
+            background-color: #f0f2f5;
+        }
+
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .heading {
+            margin: 10px 0px 0px 0px;
+        }
+
+            .heading h2 {
+                margin-top: 8px;
+            }
+
+        .card-header {
+            background-color: #cde8ca;
+        }
+
+            .card-header h6 {
+                color: black;
+            }
+    </style>
+</head>
+<body>
+    <div class="row heading" style="margin-right:7px">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Main")">Main</a></li>
+                    <li class="breadcrumb-item " aria-current="page">Callendar</li>
+                    <label style="margin: 0px 3px 0px 1264px ">Location</label>
+                    <div>
+                        @{
+                            List
+                            <SelectListItem>
+                            listItems = new List
+                            <SelectListItem>
+                            ();
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "All",
+                                Value = "All"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "001",
+                                Value = "001"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "002",
+                                Value = "002"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "003",
+                                Value = "003"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "004",
+                                Value = "004"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "005",
+                                Value = "005"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "007",
+                                Value = "007"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "009",
+                                Value = "009"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "010",
+                                Value = "010"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "011",
+                                Value = "011"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "101",
+                                Value = "101"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "347",
+                                Value = "347"
+                            });
+                        }
+                        @Html.DropDownListFor(m => m.Location_ID, listItems, new { @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
+                    </div>
+                </ol>
+            </nav>
+        </div>
+        <button type="button" id="clickThis" class="btn" style="margin-bottom: 14px; ">
+            <i class="fa fa-bars" style="font-size: 25px "></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+
+    
+    <div class="row" style="background-color: white; padding:15px 0px 0px 0px; margin:0px 15px 0px 15px">
+        <div class="col-lg-4">
+
+            <div class="row">
+                <div class="col-md-3"><input id="today" type="text" class="btn btn-primary" readonly value="Today" style="height:30px; width:100px" /></div>
+                <div class="col-md-3 text-right" style="margin:0px; padding:0px">
+                    <label style="margin:0px; padding-bottom:0px"><strong>Vacations</strong></label>
+                </div>
+                <div class="col-md-6 text-left" >
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" style="width:60px; height:25px" class="custom-control-input" id="customSwitches">
+                        <label class="custom-control-label" for="customSwitches"><strong>Birthdays</strong></label>
+                    </div>
+                </div>                
+            </div>
+
+            
+        </div>
+        <div class="col-lg-4">
+            <input id="prev" type="text" class="btn btn-primary" readonly value="<" style="height:30px; width:40px" />
+
+            <input id="next" type="text" class="btn btn-primary" readonly value=">" style="height:30px; width:40px; margin-left:426px" />
+        </div>
+        <div class="col-lg-4 text-right">
+            <input id="month" type="text" class="btn" readonly value="Month" style="color:white; background-color:#24a0ed; height:30px; width:100px" />
+            <input id="basicWeek" type="text" class="btn" readonly value="Week" style="color:white; background-color:#24a0ed; height:30px; width:100px" />
+            <input id="basicDay" type="text" class="btn" readonly value="Day" style="color:white; background-color:#24a0ed; height:30px; width:100px" />
+        </div>
+    </div>
+
+
+    <div class="row" style="padding:0px 15px 15px 15px;">
+        <div class="row" style="padding:0px 15px 15px 15px; ">
+            <div id="calender" style="height:700px; width:1640px; margin:0px 15px 15px 15px; padding:15px 15px 15px 15px; background-color:white"></div> @*padding:15px 15px 15px 15px; background-color:white*@
+        </div>
+
+    </div>
+
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:10px">
+                    <h5 class="modal-title" style="color:black"><strong><span id="eventTitle"> </span></strong></h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-6"><p id="pDetails"></p></div>
+                        <div class="col-lg-6 text-right"><img id="EventImage" src="" style="width:150px; height:150px" /></div>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer" style="padding:8px">
+                    <input type="text" readonly class="btn btn-danger" data-dismiss="modal" name="name" value="Close" style="height:25px; width:100px" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+                $('.fc-month-button').style.display = 'none';
+                $('.fc-agendaWeek-button').hide();
+                $('.fc-agendaDay-button').hide();   
+                
+            });
+
+            $("#month").css('background-color', 'white');
+            $("#month").css('color', '#008ce3');
+            $("#month").css('border', '2px solid #008ce3');
+            
+        });
+
+        $("#next").click(function () {
+            $("#calender").fullCalendar("next").click();
+        });
+
+        $("#prev").click(function () {
+            $("#calender").fullCalendar("prev").click();
+        });
+
+        $("#today").click(function () {
+            $("#calender").fullCalendar("today").click();
+        });
+
+        $("#month").click(function () {
+            //alert($('.fc-event-title').html());
+            $('.fc-month-button').click();
+            $("#month").css('background-color', 'white');
+            $("#month").css('color', '#008ce3');
+            $("#month").css('border', '2px solid #008ce3');
+            $("#basicWeek").css('background-color', '#008ce3');
+            $("#basicWeek").css('color', 'white');
+            $("#basicDay").css('background-color', '#008ce3');
+            $("#basicDay").css('color','white');
+        });
+
+        $("#basicWeek").click(function () {
+            $('.fc-agendaWeek-button').click();
+            $("#basicWeek").css('border', '2px solid #008ce3');
+            $("#basicWeek").css('background-color', 'white');
+            $("#basicWeek").css('color', '#008ce3');
+            $("#month").css('background-color', '#008ce3');
+            $("#month").css('color', 'white');
+            $("#basicDay").css('background-color', '#008ce3');
+            $("#basicDay").css('color','white');
+        });
+
+        $("#basicDay").click(function () {
+            $('.fc-agendaDay-button').click();
+            $("#basicDay").css('border', '2px solid #008ce3');
+            $("#basicDay").css('background-color', 'white');
+            $("#basicDay").css('color', '#008ce3');
+            $("#month").css('background-color', '#008ce3');
+            $("#month").css('color', 'white');
+            $("#basicWeek").css('background-color', '#008ce3');
+            $("#basicWeek").css('color', 'white');
+        });
+
+
+    </script>
+    @section Scripts{
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                var events = [];
+                $.ajax({
+                    type: "GET",
+                    url: "/Main/GetEvents",
+                    success: function (data) {
+                        $.each(data, function (i, v) {
+
+                            if (v.subject == 'Vacation') {
+                                events.push({
+                                    title: v.Description,
+                                    description: v.subject,
+                                    start: moment(v.start_date),
+                                    end: moment(v.end_date),
+                                    color: '#c9eaff',
+                                    imageurl: '/Content/Vacation1.png',
+                                });
+                            }
+                            else if (v.subject == 'Meeting') {
+                                events.push({
+                                    title: v.subject,
+                                    description: v.Description,
+                                    start: moment(v.start_date),
+                                    end: moment(v.end_date),
+                                    color: '#0288c7',
+                                    imageurl: '/Content/Meeting.png',
+                                });
+                            }
+                            else if (v.subject == 'Deadline') {
+                                events.push({
+                                    title: v.subject,
+                                    description: v.Description,
+                                    start: moment(v.start_date),
+                                    end: moment(v.end_date),
+                                    color: '#ff3636',
+                                    imageurl: '/Content/Hourglass.jpg',
+                                });
+                            }
+                            else if (v.subject == 'Split') {
+
+                                var date1 = moment(v.start_date).add(1, 'days');
+                                events.push({
+                                    title: v.subject,
+                                    description: v.Description,
+                                    start: moment(date1).format("YYYY-MM-DD"),
+                                    end: moment(date1).format("YYYY-MM-DD"),
+                                    color: '#d0e6bc',
+                                    imageurl: '/Content/Vacation1.png',
+                                });                                
+                            }
+                            else if (v.subject == 'Statutory') {
+                                          
+                                var date1 = moment(v.start_date).add(1, 'days');
+                                events.push({
+                                    title: v.subject,
+                                    description: v.Description,
+                                    start: moment(date1).format("YYYY-MM-DD"),
+                                    end: moment(date1).format("YYYY-MM-DD"),
+                                    color: '#a7d1fa',
+                                    imageurl: '/Content/Vacation1.png',
+                                });     
+                            }
+                            else if (v.subject == 'Holiday') {
+                                var d = new Date();
+                                var year = d.getFullYear();
+                                var date1 = moment(v.start_date).add(1, 'days').calendar();
+
+                                events.push({
+                                    title: v.subject,
+                                    description: v.Description,
+                                    start: year + '-' + moment(date1).format("MM-DD"),
+                                    end: moment(v.end_date),
+                                    color: '#e8facf',
+                                    imageurl: '/Content/Vacation1.png',
+                                });
+                            }
+
+
+                        })
+
+                        GenerateCalender(events);
+                    },
+                    error: function (error) {
+                        alert('failed');
+                    }
+                })
+
+                function GenerateCalender(events) {
+                    $('#calender').fullCalendar('destroy');
+
+                    $('#calender').fullCalendar({
+                        contentHeight: 610,
+                        defaultDate: new Date(),
+                        timeFormat: 'h(:mm)a',
+                        displayEventTime: false,
+                        header: {
+                            left: '',
+                            center: 'title',
+                            right: 'month,agendaWeek,agendaDay'
+                        },
+
+                        eventLimit: true,
+                        eventColor: '#378006',
+                        events: events,
+
+
+                        eventRender: function(event, eventElement) {
+                        if (event.imageurl) {
+                            eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl +"' width='32' height='30'>");
+                            }
+                        },
+
+
+                        eventClick: function (calEvent, jsEvent, view) {
+                            $('#myModal #eventTitle').text(calEvent.title);
+                            var $description = $('<div/>');
+                            $description.append($('<p/>').html('<b>Start: </b>' + calEvent.start.format("DD-MMM-YYYY")));
+                            if (calEvent.end != null) {
+                                $description.append($('<p/>').html('<b>End: </b>' + calEvent.end.format("DD-MMM-YYYY")));
+                            }
+                            $description.append($('<p/>').html('<b>Description: </b>' + calEvent.description));
+                            $('#myModal #pDetails').empty().html($description);
+                            $('#myModal #EventImage').empty().attr("src",calEvent.imageurl);
+                            $('#myModal').modal();
+                        }
+                    })
+                }
+
+            })
+
+
+            $("#customSwitches").on('change', function() {
+                if ($(this).is(':checked')) {        
+                    var events = [];
+                    $.ajax({
+                        type: "GET",
+                        url: "/Main/GetBirthdayEvents",
+                        success: function (data) {
+                            $.each(data, function (i, v) {    
+                                //alert(moment(v.Date_of_birth));
+                                var d = new Date();
+                                var year = d.getFullYear();
+                                var date1 = moment(v.Date_of_birth).add(1, 'days').calendar();
+                                //alert(moment(date1).format("YYYY-MM-DD"));
+                                
+                                events.push({
+                                    title: v.full_name,
+                                    description: v.full_name + moment(date1).format("YYYY"),
+                                    start: year + '-' + moment(date1).format("MM-DD"), //.add(1, 'days').calendar()                  year + '-'+ moment(v.Date_of_birth).format("DD-MM")
+                                    end: moment(date1).format("YYYY-MM-DD"),
+                                    color: '#94fff1',
+                                    textColor: 'black',
+                                    imageurl: '/Content/Birthday.png',
+                                });
+                            
+                            })
+
+                            GenerateCalender(events);
+                        },
+                        error: function (error) {
+                            alert('failed');
+                        }
+                    })
+
+                    function GenerateCalender(events) {
+                        $('#calender').fullCalendar('destroy');
+                        $('#calender').fullCalendar({
+                            contentHeight: 610,
+                            defaultDate: new Date(),
+                            timeFormat: 'h(:mm)a',
+                            displayEventTime : false,
+                            header: {
+                                left: '',
+                                center: 'title',
+                                right: 'month,agendaWeek,agendaDay' //,list
+                            },
+
+                            eventLimit: true,
+                            eventColor: '#378006',
+                            events: events,
+                        
+
+                            eventRender: function(event, eventElement) {
+                            if (event.imageurl) {
+                                eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl +"' width='32' height='30'>");
+                            }},
+
+
+                            eventClick: function (calEvent, jsEvent, view) {
+                                var d = new Date();
+                                var year = d.getFullYear();
+                                var currentYear = parseInt(year);
+                                var birthYear = calEvent.description.slice(calEvent.description.length - 4);  
+                                var age = currentYear - birthYear;
+                                $('#myModal #eventTitle').text(calEvent.title);
+                                var $description = $('<div/>');
+                                $description.append($('<p/>').html('<b>Start: </b>' + calEvent.start.format("DD-MMM-YYYY"))); // HH:mm (put it before after date)
+                                if (calEvent.end != null) {
+                                    $description.append($('<p/>').html('<b>End: </b>' + calEvent.end.format("DD-MMM-YYYY"))); // HH:mm (put it before after date)
+                                }
+                                $description.append($('<p/>').html('<b>Description: </b>Happy ' + age + ' Birthday '+ calEvent.title));
+                                $('#myModal #pDetails').empty().html($description);
+                                $('#myModal #EventImage').empty().attr("src",calEvent.imageurl);
+                                $('#myModal').modal();
+                            }
+                        })
+                    }
+                }
+                else {        
+                    var events = [];
+                    $.ajax({
+                        type: "GET",
+                        url: "/Main/GetEvents",
+                        success: function (data) {
+                            $.each(data, function (i, v) {
+                                if (v.subject == 'Vacation') {
+                                    events.push({
+                                        title: v.Description,
+                                        description: v.subject,
+                                        start: moment(v.start_date),
+                                        end: moment(v.end_date),
+                                        color: '#c9eaff',
+                                        imageurl: '/Content/Vacation1.png',
+                                    });
+                                }
+                                else if (v.subject == 'Meeting') {
+                                    events.push({
+                                        title: v.subject,
+                                        description: v.Description,
+                                        start: moment(v.start_date),
+                                        end: moment(v.end_date),
+                                        color: '#0288c7',
+                                        imageurl: '/Content/Meeting.png',
+                                    });
+                                }
+                                else if (v.subject == 'Deadline') {
+                                    events.push({
+                                        title: v.subject,
+                                        description: v.Description,
+                                        start: moment(v.start_date),
+                                        end: moment(v.end_date),
+                                        color: '#ff3636',
+                                        imageurl: '/Content/Hourglass.jpg',
+                                    });
+                                }
+                                else if (v.subject == 'Split') {
+
+                                    var date1 = moment(v.start_date).add(1, 'days');
+                                    events.push({
+                                        title: v.subject,
+                                        description: v.Description,
+                                        start: moment(date1).format("YYYY-MM-DD"),
+                                        end: moment(date1).format("YYYY-MM-DD"),
+                                        color: '#d0e6bc',
+                                        imageurl: '/Content/Vacation1.png',
+                                    });
+                                }
+                                else if (v.subject == 'Statutory') {
+                                          
+                                    var date1 = moment(v.start_date).add(1, 'days');
+                                    events.push({
+                                        title: v.subject,
+                                        description: v.Description,
+                                        start: moment(date1).format("YYYY-MM-DD"),
+                                        end: moment(date1).format("YYYY-MM-DD"),
+                                        color: '#a7d1fa',
+                                        imageurl: '/Content/Vacation1.png',
+                                    });     
+                                }
+                                else if (v.subject == 'Holiday') {
+
+                                    var d = new Date();
+                                    var year = d.getFullYear();
+                                    var date1 = moment(v.start_date).add(1, 'days').calendar();
+
+                                    events.push({
+                                        title: v.subject,
+                                        description: v.Description,
+                                        start: year + '-' + moment(date1).format("MM-DD"),
+                                        end: moment(v.end_date),
+                                        color: '#e8facf',
+                                        imageurl: '/Content/Vacation1.png',
+                                    });
+                                }
+
+
+                            })
+
+                            GenerateCalender(events);
+                        },
+                        error: function (error) {
+                            alert('failed');
+                        }
+                    })
+
+                    function GenerateCalender(events) {
+                        $('#calender').fullCalendar('destroy');
+                        $('#calender').fullCalendar({
+                            contentHeight: 610,
+                            defaultDate: new Date(),
+                            timeFormat: 'h(:mm)a',
+                            displayEventTime : false,
+                            header: {
+                                left: '',
+                                center: 'title',
+                                right: 'month,agendaWeek,agendaDay'
+                            },
+
+                            eventLimit: true,
+                            eventColor: '#378006',
+                            events: events,
+
+
+                            eventRender: function(event, eventElement) {
+                            if (event.imageurl) {
+                                eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl +"' width='32' height='30'>");
+                                }
+                            },
+
+
+                            eventClick: function (calEvent, jsEvent, view) {
+                                $('#myModal #eventTitle').text(calEvent.title);
+                                var $description = $('<div/>');
+                                $description.append($('<p/>').html('<b>Start:</b>' + calEvent.start.format("DD-MMM-YYYY")));
+                                if (calEvent.end != null) {
+                                    $description.append($('<p/>').html('<b>End:</b>' + calEvent.end.format("DD-MMM-YYYY")));
+                                }
+                                $description.append($('<p/>').html('<b>Description:</b>' + calEvent.description));
+                                $('#myModal #pDetails').empty().html($description);
+                                $('#myModal #EventImage').empty().attr("src",calEvent.imageurl);
+                                $('#myModal').modal();
+                            }
+                        })
+                    }
+                }
+            });
+
+        </script>
+    }
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

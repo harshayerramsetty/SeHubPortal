@@ -1,0 +1,190 @@
+﻿@model SeHubPortal.ViewModel.FleetTvtEditAccount
+@{
+    ViewBag.Title = "EditAccount";
+    Layout = "~/Views/Shared/FleetTVT.cshtml";
+}
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+
+
+
+    @if (Model.SehubAccess.tools > 0)
+    {
+        <style>
+            #toolsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.management > 0)
+    {
+        <style>
+            #ManagementClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings > 0)
+    {
+        <style>
+            #SettingsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.payroll > 0)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.main > 0)
+    {
+        <style>
+            #mainClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTracker > 0)
+    {
+        <style>
+            #treadTrackereClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_access > 0)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+
+
+    @if (Model.SehubAccess.fleetTvt_dashboard > 0)
+    {
+        <style>
+            #FleetTVTDashboardLink {
+                display: block !important;
+            }
+        </style>
+    }
+    @if (Model.SehubAccess.fleetTvt_fieldSurvey > 0)
+    {
+        <style>
+            #FleetTVTFieldSurveyEditAccountLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.fleetTVT_vier_or_edit_survey > 0)
+    {
+        <style>
+            #ViewOrEditSurveyLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+
+    <style>
+
+        #FleetTVTClicked {
+            display: block !important;
+        }
+
+        #FleetTVTEditAccountLink {
+            display: block !important;
+        }
+
+        .Trailer {
+            display: none;
+        }
+
+        #FleetTVTClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: bold;
+        }
+
+        .fleetTVTBtn {
+            color: black;
+            font-weight: bold;
+        }
+
+        #FleetTVTEditAccountLink {
+            color: black;
+            font-weight: bold;
+            background-color: #f0f2f5;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            padding: 0px !important;
+            margin: 0px !important;
+        }
+
+        .card-header {
+            background-color: #cde8ca;
+        }
+
+            .card-header h6 {
+                color: black;
+            }
+    </style>
+</head>
+<body style="overflow-y: hidden; ">
+    <div class="row heading" style="padding:10px 20px 0px 15px">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="background-color: white; height: 100%; margin-top: 0px; ">
+                    <li class="breadcrumb-item"><a href="@Url.Action("EditAccount", "FleetTVT")">Fleet TVT</a></li>
+                    <li class="breadcrumb-item " aria-current="page">EditAccount</li>
+                </ol>
+            </nav>
+        </div>
+        <button type="button" id="clickThis" class="btn" style=" margin-bottom: 14px;">
+            <i class="fa fa-bars" style="font-size: 25px "></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

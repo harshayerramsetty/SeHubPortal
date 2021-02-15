@@ -7,17 +7,29 @@
 @using (Html.BeginForm("EditVehicleInfo", "Management", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Edit Vehicle</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+        <div class="modal-header" style="padding:5px 5px 5px 15px">
+            <div class="col-lg-5" style="padding:5px 0px 0px 0px">
+                <h5 class="modal-title" id="exampleModalLongTitle">Edit Vehicle</h5>
+            </div>
+            <div class="col-lg-4 ">
+                <div class="row">
+                    <div class="col-lg-1 text-right">
+                        @Html.EditorFor(m => m.VehicleStatus, new { htmlAttributes = new { @style = "width:15px; height:15px", @class = "form-control", @type = "checkbox", @checked = Model.VehicleStatus, } })
+                    </div>
+                    <div class="col-lg-7" style="padding: 7px 0px 0px 5px">
+                        <label>Active</label>
+                    </div>
+                </div>
+            </div>           
+
+            
+            <div class="col-lg-3"></div>
         </div>
         <div class="modal-body">
             <div class="row">
                 <div class="form-group col-md-6">
                     <label for="inputEmail4">VIN</label>
-                    @Html.EditorFor(m => m.VehicleInfo.VIN, new { htmlAttributes = new { @class = "form-control" , @readonly = "readonly" } })
+                    @Html.EditorFor(m => m.VehicleInfo.VIN, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                     @Html.HiddenFor(m => m.VehicleInfo.VIN)
                 </div>
                 <div class="form-group col-md-6">
@@ -48,37 +60,51 @@
             </div>
 
             <div class="row">
-                <div class="form-group col-md-5">
+                <div class="form-group col-md-6">
                     <label for="inputEmail4">Location ID</label>
                     @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "Please select", new { @class = "form-control" })
                 </div>
-                <div class="form-group col-md-7">
+                <div class="form-group col-md-6">
                     <label for="inputEmail4">Assigned To</label>
                     <button id="editEmployeeId" type="button" style="background-color:transparent;border:1px solid transparent;float:right"><i class="fa fa-edit" style="font-size:15px;color:#007bff;"></i></button>
                     @Html.EditorFor(m => m.MatchedEmployeeName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
- 
-                    @Html.DropDownListFor(model => model.MatchedEmployeeID, new SelectList(" "),"Branch", new { @class = "form-control" })
+
+                    @Html.DropDownListFor(model => model.MatchedEmployeeID, new SelectList(" "), "Branch", new { @class = "form-control" })
 
                 </div>
             </div>
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label for="inputEmail4">Registration Due Date</label>
-                    @Html.EditorFor(m => m.VehicleInfo.inspection_due_date, new { htmlAttributes = new { @class = "form-control", type = "date", @selectedDate= Convert.ToDateTime(Model.VehicleInfo.inspection_due_date).ToString("yyyy-MM-dd"), @Value = Convert.ToDateTime(Model.VehicleInfo.inspection_due_date).ToString("yyyy-MM-dd")} })
-                </div>
-
-            </div>
+            
             <div class="row">
                 <div class="form-group col-md-6">
                     <label for="inputEmail4">Upload Image</label>
                     <input type="file" name="vehicleImage" />
                 </div>
             </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
 
-            <input type="submit" class="btn btn-success" value="Save" />
+            <div class="row">
+                <div class="form-group col-md-6">
+                    @{string base64ProfilePic = "";
+
+                        if (Model.VehicleInfo.vehicle_image is null)
+                        {
+                            base64ProfilePic = "";
+                            <img class="imageClass" style="height:210px; width:250px" src="~/Content/jordancar.png" alt="ProfilePic" />
+                        }
+                        else
+                        {
+                            base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(Model.VehicleInfo.vehicle_image);
+                            <img class="imageClass" style="height:150px; width:250px" alt="profilePic" src="@base64ProfilePic" />
+                        }
+                    }
+                                       
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer" style="padding:5px 5px 5px 15px">
+            <button type="button" style="padding:2px 20px 2px 20px" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+
+            <input type="submit" style="padding:2px 30px 2px 30px" class="btn btn-success" value="Save" />
         </div>
     </div>
 }

@@ -10,6 +10,7 @@ namespace SeHubPortal.ViewModel
     {
         public string employeeId { get; set; }
         public string fullName { get; set; }
-        public string submissionStatus { get; set; }      
+        public string submissionStatus { get; set; }
+        public string submissionStatusCorporate { get; set; }
     }
 }

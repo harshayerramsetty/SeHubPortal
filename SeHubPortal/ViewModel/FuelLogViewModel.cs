@@ -1,8 +1,10 @@
-﻿using SeHubPortal.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
+using SeHubPortal.Models;
+
 
 namespace SeHubPortal.ViewModel
 {
@@ -14,5 +16,10 @@ namespace SeHubPortal.ViewModel
         public tbl_vehicle_info SelectedVehicleInfo { get; set; }
         public tbl_fuel_log fuelLogTableValues { get; set; }
         public int fuel_log_access { get; set; }
+        public tbl_sehub_access SehubAccess { get; set; }
+        public List<SelectListItem> MatchedLocs { get; set; }
+        public string MatchedLocID { get; set; }
+        public List<SelectListItem> MatchedVehicals { get; set; }
+        public string MatchedVehicle { get; set; }
     }
 }
