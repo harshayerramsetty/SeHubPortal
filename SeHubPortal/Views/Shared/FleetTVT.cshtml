@@ -27,16 +27,20 @@
 
             <ul class="list-unstyled components mb-5">
                 <li class="active" style="display:none" id="FleetTVTDashboardLink">
-                    <a id="FleetTVTClicked" href="@Url.Action("Dashboard", "FleetTVT")"><span class="fa  mr-3"></span> Dashboard</a>
-                </li>
-                <li id="FleetTVTFieldSurveyEditAccountLink" style="display:none">
-                    <a id="FieldSurveyEditAccountClicked" href="@Url.Action("FieldSurveyEditAccount", "FleetTVT")"><span class="fa  mr-3"></span> New Survey</a>
+                    <a id="FleetTVTDashboardClicked" href="@Url.Action("Dashboard", "FleetTVT")"><span class="fa  mr-3"></span>Dashboard</a>
                 </li>
                 <li id="FleetTVTEditAccountLink" style="display:none">
-                    <a id="EditAccountClicked" href="@Url.Action("EditAccount", "FleetTVT")"><span class="fa  mr-3"></span> Customers</a>
+                    <a id="EditAccountClicked" href="@Url.Action("EditAccount", "FleetTVT", new { active = false})"><span class="fa  mr-3"></span>Customers</a>
                 </li>
+                <li id="FleetSnapShotLink" style="display:none">
+                    <a id="FleetSnapShotClicked" href="@Url.Action("FleetSnapShot", "FleetTVT", new { active = false})"><span class="fa  mr-3"></span>Fleet Snapshot</a>
+                </li>
+                <li id="FleetTVTFieldSurveyEditAccountLink" style="display:none">
+                    <a id="FieldSurveyEditAccountClicked" href="@Url.Action("FieldSurveyEditAccount", "FleetTVT")"><span class="fa  mr-3"></span>Survey - New</a>
+                </li>
+
                 <li id="ViewOrEditSurveyLink" style="display:none">
-                    <a id="ViewOrEditSurveyClicked" href="@Url.Action("ViewOrEditSurvey", "FleetTVT")"><span class="fa  mr-3"></span> View/Edit Survey</a>
+                    <a id="ViewOrEditSurveyClicked" href="@Url.Action("ViewOrEditSurvey", "FleetTVT")"><span class="fa  mr-3"></span>Survey - View/Edit</a>
                 </li>
 
                 @*<li>
@@ -55,9 +59,6 @@
 
     </div>
     <hr />
-    <footer>
-        <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-    </footer>
 </div>
 <script src="~/Content/sidebar/sidebar.js"></script>
 @RenderSection("Scripts", false)

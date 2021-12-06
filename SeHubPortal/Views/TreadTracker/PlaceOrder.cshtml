@@ -1,7 +1,7 @@
 ﻿
 @{
     ViewBag.Title = "PlaceOrder";
-    Layout = "~/Views/Shared/_TreadTrackerLayout.cshtml";
+    //Layout = "~/Views/Shared/_TreadTrackerLayout.cshtml";
     //Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @model SeHubPortal.ViewModel.NewWorkOrder
@@ -17,110 +17,9 @@
     @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>*@
 
 
-    @if (Model.SehubAccess.tools > 0)
-    {
-        <style>
-            #toolsClicked {
-                display: block !important;
-            }
-        </style>
-    }
-
-    @if (Model.SehubAccess.management > 0)
-    {
-        <style>
-            #ManagementClicked {
-                display: block !important;
-            }
-        </style>
-    }
-
-    @if (Model.SehubAccess.settings > 0)
-    {
-        <style>
-            #SettingsClicked {
-                display: block !important;
-            }
-        </style>
-    }
-
-    @if (Model.SehubAccess.payroll > 0)
-    {
-        <style>
-            #PayrollClicked {
-                display: block !important;
-            }
-        </style>
-    }
-
-    @if (Model.SehubAccess.fleetTVT > 0)
-    {
-        <style>
-            #FleetTVTClicked {
-                display: block !important;
-            }
-        </style>
-    }
-
-    @if (Model.SehubAccess.main > 0)
-    {
-        <style>
-            #mainClicked {
-                display: block !important;
-            }
-        </style>
-    }
-
-    @if (Model.SehubAccess.library_access > 0)
-    {
-        <style>
-            #libraryClicked {
-                display: block !important;
-            }
-        </style>
-    }
-
-
-    @if (Model.SehubAccess.openorder > 0)
-    {
-        <style>
-            #OpenOrderLink {
-                display: block !important;
-            }
-        </style>
-    }
-
-    @if (Model.SehubAccess.treadTrackerDashboard > 0)
-    {
-        <style>
-            #DashboardLink {
-                display: block !important;
-            }
-        </style>
-    }
-
-
 
     <style type="text/css">
 
-        #treadTrackereClicked {
-            background-color: #f0f2f5;
-            color: black;
-            font-weight: 600;
-            display:block !important;
-        }
-
-        #treadTrackerButton {
-            color: black;
-            font-weight: 600;
-        }
-
-        #NewOrderLink {
-            color: black;
-            background-color: #f0f2f5;
-            font-weight: 700;
-            display:block !important;
-        }
 
         body {
             background-color: #f0f2f5;
@@ -177,19 +76,28 @@
         input {
             text-align: center;
             visibility: hidden;
-            height: 32px;
+            height: 30px;
         }
 
         .lineStyle {
-            width: 60px;
+            width: 70px;
             visibility: visible;
             height: 32px;
+        }
+
+        .barcode {
+            width: 200px;
+        }
+
+        .serialDot {
+            width: 200px;
         }
 
         select {
             color: black;
             visibility: hidden;
-            height: 32px;
+            height:25px;
+            width:180px
         }
 
         input, select {
@@ -283,452 +191,825 @@
             padding-top: 17%;
         }
 
+
+        input[type=text] {
+            height:25px
+        }
+
+        #info{
+            padding-top:14%;
+        }
+
+        @@media screen {
+            #printSection {
+                display: none;
+            }
+
+            #dontshow {
+                display: none;
+            }
+
+            .dontshow {
+                display: none;
+            }
+        }
+
+        @@media print {
+            #btnPrint {
+                display: none;
+            }
+
+            .dontShowInPrint {
+                display: none;
+            }
+
+
+            #printSection {
+                position: absolute;
+                left: 0;
+                top: 0;
+                -ms-transform: rotate(360deg) scaleX(1.40) scaleY(1.7);
+                -webkit-transform: rotate(360deg) scaleX(1.40) scaleY(1.7);
+                transform: rotate(360deg) scaleX(1.40) scaleY(1.7);
+                top: 6.3in;
+                left: 0.07in;
+            }
+
+
+        }
+
     </style>
 </head>
-<body onload="pageLoad()">
-    <div class="row " >
-        <div class="col-md-12">
-            <div >     @*class="shadow-lg p-3 mb-5 bg-white rounded"*@
-                <div class="row heading">
-                    <button type="button" id="clickThis" class="btn" style="margin-bottom:10px;">
-                        <i class="fa fa-bars" style="font-size:25px"></i>
-                        <span class="sr-only">Toggle Menu</span>
-                    </button>
-                    <div class="col">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
-                                <li class="breadcrumb-item"><a href="@Url.Action("NewOrder", "TreadTracker")">Tread Tracker</a></li>
-                                <li class="breadcrumb-item " aria-current="page">Place Order</li>
-                            </ol>
-                        </nav>
+<body>
+    <div class="card">
+        @using (Html.BeginForm("submitNewOrder", "TreadTracker"))
+        {
+            <div class="card-header" style="padding:5px 30px 5px 0px; background-color:white">
+                <div class="row">
+                    <div class="col-md-9" style="padding-left:30px; padding-top:5px; padding-bottom:0px">
+                        <h4><b>New Work Order</b></h4>
+                    </div>
+                    <div class="col-md-3 text-right" style="padding-right:0px">
+                        <button id="btnPrint" type="button" class="btn btn-primary" style="float:right; margin-top:5px; width:110px; padding:2px 20px 2px 20px">
+                            Print
+                        </button>
                     </div>
                 </div>
-
-                <div class="orderMainBody example" style="height:750px; overflow-y:auto; overflow-x:hidden">
-                    @*here i remove class - container*@
-                    <div class="row justify-content-between">
-                        <div class="col-md-6">
-
-                            <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
-                                <div class="card-header" style="padding:3px 3px 3px 15px">
-                                    <h6 class="card-title mb-0 d-inline-block">Order Information</h6>
-                                </div>
-                                <div class="card-body ">
-                                    <div class="container">
-                                        <div class="row subTables">
-                                            <div class="col-5 ">
-                                                Retread Work Order
-                                            </div>
-                                            <div class="col-7 ">
-                                                @Model.workOrder
-                                            </div>
-                                        </div>
-                                        <div class="row subTables">
-                                            <div class="col-5 ">
-                                                Work Order Date
-                                            </div>
-                                            <div class="col-7 ">
-                                                @Model.OrderDate
-                                            </div>
-                                        </div>
-                                        <div class="row subTables">
-                                            <div class="col-5">
-                                                Employee
-                                            </div>
-                                            <div class="col-7">
-                                                @Model.SubmittedEmployee
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
-                                <div class="card-header" style="padding:3px 3px 3px 15px">
-                                    <h6 class="card-title mb-0 d-inline-block">Customer Information</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="container">
-                                        <div class="row subTables">
-                                            <div class="col-5 ">
-                                                Customer Name
-                                            </div>
-                                            <div class="col-7 ">
-                                                @Model.customerInfo.cust_name
-                                            </div>
-                                        </div>
-                                        <div class="row subTables">
-                                            <div class="col-5 ">
-                                                Account Number
-                                            </div>
-                                            <div class="col-7 ">
-                                                @Model.customerInfo.cust_us1
-                                            </div>
-                                        </div>
-                                        <div class="row subTables">
-                                            <div class="col-5">
-                                                Customer Address
-                                            </div>
-                                            <div class="col-7">
-                                                @Model.customerInfo.cust_add1, @Model.customerInfo.cust_state, @Model.customerInfo.cust_zip
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    @using (Html.BeginForm("submitNewOrder", "TreadTracker"))
-                    {
-                        @Html.HiddenFor(m => m.workOrder, new { htmlAttributes = new { @style = "display:none" } })
-                        @Html.HiddenFor(m => m.customerInfo.cust_us1, new { htmlAttributes = new { @style = "display:none" } })
-                        <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
-                            <div class="card-header" style="        padding: 3px 3px 3px 15px
-">
-                                <h6 class="card-title mb-0 d-inline-block">Tire Casing Information</h6>
-                            </div>
-                            <div class="card-body" style="padding-top:10px">
-
-                                <div class="row justify-content-end TableTransactions">
-                                    <a href="@Url.Action("BackPlaceOrder", "TreadTracker")">
-                                        <input type="button" class="btn btn-secondary transcationButtons" style="visibility:visible" value="Back" />
-                                    </a>
-                                    &nbsp;
-                                    <input type="submit" class="btn btn-success transcationButtons" style="visibility:visible" value="Save" />
-                                    &nbsp;
-                                    <a href="@Url.Action("CancelPlaceOrder", "TreadTracker")">
-                                        <input type="button" class="btn btn-danger transcationButtons" style="visibility:visible" value="Cancel" />
-                                    </a>
-                                </div>
-                                <div class="row mainTable">
-                                    <table class="table table-striped">
-                                        @*removing class   table-bordered*@
-                                        <thead class="thead-dark">
-                                            <tr class="textFields">
-                                                <th scope="col">#</th>
-                                                <th scope="col">Line</th>
-                                                <th scope="col">Barcode</th>
-                                                <th scope="col">Serial/DOT</th>
-                                                <th scope="col">Size</th>
-                                                <th scope="col">Brand</th>
-                                                <th scope="col">Tread</th>
-                                                <th scope="col">Unit ID</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="textFields">
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>
-                                                    <input type="text" id="line1" name="line1" maxlength="2" onkeypress="return onlyNumberKey(event)" class="lineStyle" onfocusout="line1Out()">
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="barcode1" onfocusout="validateBarcode(this.value, '#barcode1')" name="barcode1" maxlength="8" onkeypress="return onlyNumberKey(event)">
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="serial1" name="serial1" maxlength="8" style="text-transform:uppercase">
-                                                </td>
-                                                <td>
-                                                    <div id="casing1Div"></div>
-                                                </td>
-                                                <td>
-                                                    <div id="Brand1Div"></div>
-                                                </td>
-                                                <td>
-                                                    <div id="Tread1Div"></div>
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="unit1" name="unit1" onkeypress="return onlyNumberKey(event)">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">2</th>
-                                                <td>
-                                                    <input class="lineStyle" type="text" id="line2" name="line2" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line2Out()">
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="barcode2" onfocusout="validateBarcode(this.value, '#barcode2')" name="barcode2" maxlength="8" onkeypress="return onlyNumberKey(event)">
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="serial2" name="serial2" maxlength="8" style="text-transform:uppercase">
-                                                </td>
-                                                <td>
-                                                    <div id="casing2Div"></div>
-                                                </td>
-                                                <td>
-                                                    <div id="Brand2Div"></div>
-                                                </td>
-                                                <td>
-                                                    <div id="Tread2Div"></div>
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="unit2" name="unit2" onkeypress="return onlyNumberKey(event)">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">3</th>
-                                                <td>
-                                                    <input class="lineStyle" type="text" id="line3" name="line3" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line3Out()">
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="barcode3" onfocusout="validateBarcode(this.value, '#barcode3')" maxlength="8" name="barcode3" onkeypress="return onlyNumberKey(event)">
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="serial3" name="serial3" maxlength="8" style="text-transform: uppercase">
-                                                </td>
-                                                <td>
-                                                    <div id="casing3Div"></div>
-                                                </td>
-                                                <td>
-                                                    <div id="Brand3Div"></div>
-                                                </td>
-                                                <td>
-                                                    <div id="Tread3Div"></div>
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="unit3" name="unit3" onkeypress="return onlyNumberKey(event)">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">4</th>
-                                                <td>
-                                                    <input class="lineStyle" type="text" id="line4" name="line4" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line4Out()">
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="barcode4" onfocusout="validateBarcode(this.value, '#barcode4')" maxlength="8" name="barcode4" onkeypress="return onlyNumberKey(event)">
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="serial4" name="serial4" maxlength="8" style=" text-transform: uppercase ">
-                                                </td>
-                                                <td>
-                                                    <div id="casing4Div"></div>
-                                                </td>
-                                                <td>
-                                                    <div id="Brand4Div"></div>
-                                                </td>
-                                                <td>
-                                                    <div id="Tread4Div"></div>
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="unit4" name="unit4" onkeypress="return onlyNumberKey(event)">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">5</th>
-                                                <td>
-                                                    <input class="lineStyle" type="text" id="line5" name="line5" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line5Out()">
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="barcode5" onfocusout="validateBarcode(this.value, '#barcode5')" name="barcode5" maxlength="8" onkeypress="return onlyNumberKey(event)">
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="serial5" name="serial5" maxlength="8" style="text-transform:uppercase">
-                                                </td>
-                                                <td>
-                                                    <div id="casing5Div"></div>
-                                                </td>
-                                                <td>
-                                                    <div id="Brand5Div"></div>
-                                                </td>
-                                                <td>
-                                                    <div id="Tread5Div"></div>
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="unit5" name="unit5" onkeypress="return onlyNumberKey(event)">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">6</th>
-                                                <td>
-                                                    <input class="lineStyle" type="text" id="line6" name="line6" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line6Out()">
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="barcode6" onfocusout="validateBarcode(this.value, '#barcode6')" name="barcode6" maxlength="8" onkeypress="return onlyNumberKey(event)">
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="serial6" name="serial6" maxlength="8" style="text-transform:uppercase">
-                                                </td>
-                                                <td>
-                                                    <div id="casing6Div"></div>
-                                                </td>
-                                                <td>
-                                                    <div id="Brand6Div"></div>
-                                                </td>
-                                                <td>
-                                                    <div id="Tread6Div"></div>
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="unit6" name="unit6" onkeypress="return onlyNumberKey(event)">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">7</th>
-                                                <td>
-                                                    <input class="lineStyle" type="text" id="line7" name="line7" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line7Out()">
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="barcode7" onfocusout="validateBarcode(this.value, '#barcode7')" name="barcode7" maxlength="8" onkeypress="return onlyNumberKey(event)">
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="serial7" name="serial7" maxlength="8" style="text-transform:uppercase">
-                                                </td>
-                                                <td>
-                                                    <div id="casing7Div"></div>
-                                                </td>
-                                                <td>
-                                                    <div id="Brand7Div"></div>
-                                                </td>
-                                                <td>
-                                                    <div id="Tread7Div"></div>
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="unit7" name="unit7" onkeypress="return onlyNumberKey(event)">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">8</th>
-                                                <td>
-                                                    <input class="lineStyle" type="text" id="line8" name="line8" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line8Out()">
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="barcode8" onfocusout="validateBarcode(this.value, '#barcode8')" name="barcode8" maxlength="8" onkeypress="return onlyNumberKey(event)">
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="serial8" name="serial8" maxlength="8" style="text-transform:uppercase">
-                                                </td>
-                                                <td>
-                                                    <div id="casing8Div"></div>
-                                                </td>
-                                                <td>
-                                                    <div id="Brand8Div"></div>
-                                                </td>
-                                                <td>
-                                                    <div id="Tread8Div"></div>
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="unit8" name="unit8" onkeypress="return onlyNumberKey(event)">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">9</th>
-                                                <td>
-                                                    <input class="lineStyle" type="text" id="line9" name="line9" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line9Out()">
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="barcode9" onfocusout="validateBarcode(this.value, '#barcode9')" name="barcode9" maxlength="8" onkeypress="return onlyNumberKey(event)">
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="serial9" name="serial9" maxlength="8" style="text-transform:uppercase">
-                                                </td>
-                                                <td>
-                                                    <div id="casing9Div"></div>
-                                                </td>
-                                                <td>
-                                                    <div id="Brand9Div"></div>
-                                                </td>
-                                                <td>
-                                                    <div id="Tread9Div"></div>
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="unit9" name="unit9" onkeypress="return onlyNumberKey(event)">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">10</th>
-                                                <td>
-                                                    <input class="lineStyle" type="text" id="line10" name="line10" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line10Out()">
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="barcode10" onfocusout="validateBarcode(this.value, '#barcode10')" name="barcode10" maxlength="8" onkeypress="return onlyNumberKey(event)">
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="serial10" name="serial10" maxlength="8" style="text-transform:uppercase">
-                                                </td>
-                                                <td>
-                                                    <div id="casing10Div"></div>
-                                                </td>
-                                                <td>
-                                                    <div id="Brand10Div"></div>
-                                                </td>
-                                                <td>
-                                                    <div id="Tread10Div"></div>
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="unit10" name="unit10" onkeypress="return onlyNumberKey(event)">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">11</th>
-                                                <td>
-                                                    <input class="lineStyle" type="text" id="line11" name="line11" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line11Out()">
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="barcode11" onfocusout="validateBarcode(this.value, '#barcode11')" name="barcode11" maxlength="8" onkeypress="return onlyNumberKey(event)" style="background-color:black">
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="serial11" name="serial11" maxlength="8" style="text-transform:uppercase">
-                                                </td>
-                                                <td>
-                                                    <div id="casing11Div"></div>
-                                                </td>
-                                                <td>
-                                                    <div id="Brand11Div"></div>
-                                                </td>
-                                                <td>
-                                                    <div id="Tread11Div"></div>
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="unit11" name="unit11" onkeypress="return onlyNumberKey(event)">
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
-                            <div class="card-header" style="padding:3px 3px 3px 15px">
-                                <h6 class="card-title mb-0 d-inline-block">Comments</h6>
-                            </div>
-                            <div class="card-body" style="padding:10px">
-                                <div style="width:100%">
-                                    <textarea id="comments"></textarea>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="modal BarcodeValidation" data-backdrop="static" data-keyboard="false" id="BarcodeValidation">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header" style="background-color:#ff4a4a; padding:5px 2px 0px 2px">
-                                        <h5 style="margin-left:auto; margin-right:auto; color:white">Acknowledgment</h5>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-lg-12 text-center" > <h5 style="margin-left:auto; margin-right:auto">This barcode is already in use</h5> </div>
-                                            <input type="text" style="display:none" id="hiddenID" name="name" value="" />
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer" style="padding: 3px 0px 3px 0px">
-                                        <button style="padding:2px 40px 2px 40px; margin-left:auto; margin-right:auto" class="btn btn-primary" onclick="okClick()" data-dismiss="modal">OK</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    }
-                </div>
-
             </div>
-        </div>
+            <div class="card-body" style="padding:0px">
+                <div class="row ">
+                    <div class="col-md-12">
+                        <div>
+                            @*class="shadow-lg p-3 mb-5 bg-white rounded"*@
+                            <div class="orderMainBody">
+                                @*here i remove class - container*@
+                                <div class="row justify-content-between">
+                                    <div class="col-md-5" style="padding-right:6px">
+                                        <div class="card shadow-sm flex-fill grow" style="        margin: 10px 0px 0px 0px;
+">
+                                            <div class="card-body" id="printThis" style="padding-top:10px; padding-bottom:10px">
+                                                <div class="row" style="padding-left:15px">
+                                                    <div class="col-lg-3">
+                                                        <img style="width:100px" src="~/Content/trdIcon.png" alt="Alternate Text" />
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <div class="row">
+                                                            <h4>Tread Tracker</h4>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-lg-4" style="padding:2px">
+                                                                Work Order #
+                                                            </div>
+                                                            <div class="col-lg-8" style="padding-left:3px !important">
+                                                                <b>@Model.workOrder</b>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-lg-4" style="padding:2px">
+                                                                Creation Date
+                                                            </div>
+                                                            <div class="col-lg-8" style="height:1px; padding:0px !important;">
+                                                                <input type="text" readonly style="outline:none; border-color:transparent; margin-top:0px !important; visibility:visible; text-align:left; width:190px; font-weight:bold; font-size:14px" id="fullDate" name="name" value="" />
+
+                                                                @Html.EditorFor(m => m.InspectionDate, new { htmlAttributes = new { @style = "outline:none; visibility:visible; text-align:center;  background-color:transparent; border-color:transparent; width:54px; height:30px", id = "datepicker", type = "date", @required = "required" } })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7" style="padding-left:6px">
+                                        <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
+                                            <div class="card-body" style="padding-top:10px; padding-bottom:10px">
+                                                <div class="row" style="padding:0px 15px 0px 15px">
+                                                    <div class="col-lg-7" style="padding:0px">
+                                                        <h4>@Model.customerInfo.cust_name</h4>
+                                                    </div>
+                                                    <div class="col-lg-5 text-right" style="padding:0px">
+                                                        <h4 id="customerNumber">@Model.customerInfo.cust_us1</h4>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="row" style="margin-bottom:5px">
+                                                            <div class="col-lg-6">
+                                                                Contact
+                                                            </div>
+                                                            <div class="col-lg-6">
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom:5px">
+                                                            <div class="col-lg-6">
+                                                                Email
+                                                            </div>
+                                                            <div class="col-lg-6">
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6 text-right" style="padding-right:15px">
+                                                        <div class="row" style="margin-bottom:5px">
+                                                            <div class="col-lg-12 text-right">
+                                                                @Model.customerInfo.cust_add1 @Model.customerInfo.cust_add2
+                                                            </div>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom:5px">
+                                                            <div class="col-lg-12 text-right">
+                                                                @Model.customerInfo.cust_city, @Model.customerInfo.cust_state @Model.customerInfo.cust_zip Canada
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @Html.HiddenFor(m => m.workOrder, new { htmlAttributes = new { @style = "display:none" } })
+                                @Html.HiddenFor(m => m.customerInfo.cust_us1, new { htmlAttributes = new { @style = "display:none" } })
+                                <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
+                                    <div class="card-header" style="padding: 3px 3px 3px 15px">
+                                        <h6 class="card-title mb-0 d-inline-block">Tire Casing Information</h6>
+                                    </div>
+                                    <div class="card-body" style="padding:5px 10px 0px 10px;">
+
+                                        @*
+                                            <div class="row justify-content-end TableTransactions">
+                                                <a href="@Url.Action("BackPlaceOrder", "TreadTracker")">
+                                                    <input type="button" class="btn btn-secondary transcationButtons" style="visibility:visible" value="Back" />
+                                                </a>
+                                                &nbsp;
+
+                                                &nbsp;
+                                                <a href="@Url.Action("CancelPlaceOrder", "TreadTracker")">
+                                                    <input type="button" class="btn btn-danger transcationButtons" style="visibility:visible" value="Cancel" />
+                                                </a>
+                                            </div>
+                                        *@
+                                        <table class="table table-striped text-center" style="margin:0px">
+                                            @*removing class   table-bordered*@
+
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th scope="col" style="height:18px; font-size:10px; padding:0px; margin:0px;" class="text-center">#</th>
+                                                    <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Code</th>
+                                                    <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Barcode</th>
+                                                    <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Serial/DOT</th>
+                                                    <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Size</th>
+                                                    <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Brand</th>
+                                                    <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Virgin</th>
+                                                    <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Tread</th>
+                                                    <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Status</th>
+                                                    <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Unit ID</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                <tr>
+                                                    <td style="padding:3px">
+                                                        1
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input type="text" id="line1" name="line1" maxlength="2" onkeypress="return onlyNumberKey(event)" class="lineStyle" onfocusout="line1Out()">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="barcode" type="text" id="barcode1" onfocusout="validateBarcode(this.value, '#barcode1')" name="barcode1" maxlength="8" onkeypress="return onlyNumberKey(event)">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="serialDot" type="text" id="serial1" name="serial1" maxlength="9" style="text-transform:uppercase">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="casing1Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Brand1Div"></div>
+                                                    </td>
+                                                    <td style="padding:0px">
+                                                        <div id="Virgin1Div">
+                                                            <input type="checkbox" id="virgin1" name="virgin1">
+                                                        </div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Tread1Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Status1Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input type="text" id="unit1" name="unit1">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:3px">
+                                                        2
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="lineStyle" type="text" id="line2" name="line2" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line2Out()">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="barcode" type="text" id="barcode2" onfocusout="validateBarcode(this.value, '#barcode2')" name="barcode2" maxlength="8" onkeypress="return onlyNumberKey(event)">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="serialDot" type="text" id="serial2" name="serial2" maxlength="8" style="text-transform:uppercase">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="casing2Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Brand2Div"></div>
+                                                    </td>
+                                                    <td style="padding:0px">
+                                                        <div id="Virgin2Div">
+                                                            <input type="checkbox" id="virgin2" name="virgin2">
+                                                        </div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Tread2Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Status2Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input type="text" id="unit2" name="unit2">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:3px">
+                                                        3
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="lineStyle" type="text" id="line3" name="line3" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line3Out()">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="barcode" type="text" id="barcode3" onfocusout="validateBarcode(this.value, '#barcode3')" maxlength="8" name="barcode3" onkeypress="return onlyNumberKey(event)">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="serialDot" type="text" id="serial3" name="serial3" maxlength="8" style="text-transform: uppercase">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="casing3Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Brand3Div"></div>
+                                                    </td>
+                                                    <td style="padding:0px">
+                                                        <div id="Virgin3Div">
+                                                            <input type="checkbox" id="virgin3" name="virgin3">
+                                                        </div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Tread3Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Status3Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input type="text" id="unit3" name="unit3">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:3px">
+                                                        4
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="lineStyle" type="text" id="line4" name="line4" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line4Out()">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="barcode" type="text" id="barcode4" onfocusout="validateBarcode(this.value, '#barcode4')" maxlength="8" name="barcode4" onkeypress="return onlyNumberKey(event)">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="serialDot" type="text" id="serial4" name="serial4" maxlength="8" style=" text-transform: uppercase ">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="casing4Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Brand4Div"></div>
+                                                    </td>
+                                                    <td style="padding:0px">
+                                                        <div id="Virgin4Div">
+                                                            <input type="checkbox" id="virgin4" name="virgin4">
+                                                        </div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Tread4Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Status4Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input type="text" id="unit4" name="unit4">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:3px">
+                                                        5
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="lineStyle" type="text" id="line5" name="line5" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line5Out()">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="barcode" type="text" id="barcode5" onfocusout="validateBarcode(this.value, '#barcode5')" name="barcode5" maxlength="8" onkeypress="return onlyNumberKey(event)">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="serialDot" type="text" id="serial5" name="serial5" maxlength="8" style="text-transform:uppercase">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="casing5Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Brand5Div"></div>
+                                                    </td>
+                                                    <td style="padding:0px">
+                                                        <div id="Virgin5Div">
+                                                            <input type="checkbox" id="virgin5" name="virgin5">
+                                                        </div>
+                                                    </td>
+                                                    <td style="padding: 3px">
+                                                        <div id="Tread5Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Status5Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input type="text" id="unit5" name="unit5">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:3px">
+                                                        6
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="lineStyle" type="text" id="line6" name="line6" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line6Out()">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="barcode" type="text" id="barcode6" onfocusout="validateBarcode(this.value, '#barcode6')" name="barcode6" maxlength="8" onkeypress="return onlyNumberKey(event)">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="serialDot" type="text" id="serial6" name="serial6" maxlength="8" style="text-transform:uppercase">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="casing6Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Brand6Div"></div>
+                                                    </td>
+                                                    <td style="padding:0px">
+                                                        <div id="Virgin6Div">
+                                                            <input type="checkbox" id="virgin6" name="virgin6">
+                                                        </div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Tread6Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Status6Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input type="text" id="unit6" name="unit6">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:3px">
+                                                        7
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="lineStyle" type="text" id="line7" name="line7" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line7Out()">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="barcode" type="text" id="barcode7" onfocusout="validateBarcode(this.value, '#barcode7')" name="barcode7" maxlength="8" onkeypress="return onlyNumberKey(event)">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="serialDot" type="text" id="serial7" name="serial7" maxlength="8" style="text-transform:uppercase">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="casing7Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Brand7Div"></div>
+                                                    </td>
+                                                    <td style="padding:0px">
+                                                        <div id="Virgin7Div">
+                                                            <input type="checkbox" id="virgin7" name="virgin7">
+                                                        </div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Tread7Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Status7Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input type="text" id="unit7" name="unit7">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:3px">
+                                                        8
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="lineStyle" type="text" id="line8" name="line8" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line8Out()">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="barcode" type="text" id="barcode8" onfocusout="validateBarcode(this.value, '#barcode8')" name="barcode8" maxlength="8" onkeypress="return onlyNumberKey(event)">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="serialDot" type="text" id="serial8" name="serial8" maxlength="8" style="text-transform:uppercase">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="casing8Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Brand8Div"></div>
+                                                    </td>
+                                                    <td style="padding:0px">
+                                                        <div id="Virgin8Div">
+                                                            <input type="checkbox" id="virgin8" name="virgin8">
+                                                        </div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Tread8Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Status8Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input type="text" id="unit8" name="unit8">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:3px">
+                                                        9
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="lineStyle" type="text" id="line9" name="line9" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line9Out()">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="barcode" type="text" id="barcode9" onfocusout="validateBarcode(this.value, '#barcode9')" name="barcode9" maxlength="8" onkeypress="return onlyNumberKey(event)">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="serialDot" type="text" id="serial9" name="serial9" maxlength="8" style="text-transform:uppercase">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="casing9Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Brand9Div"></div>
+                                                    </td>
+                                                    <td style="padding:0px">
+                                                        <div id="Virgin9Div">
+                                                            <input type="checkbox" id="virgin9" name="virgin9">
+                                                        </div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Tread9Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Status9Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input type="text" id="unit9" name="unit9">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:3px">
+                                                        10
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="lineStyle" type="text" id="line10" name="line10" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line10Out()">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="barcode" type="text" id="barcode10" onfocusout="validateBarcode(this.value, '#barcode10')" name="barcode10" maxlength="8" onkeypress="return onlyNumberKey(event)">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="serialDot" type="text" id="serial10" name="serial10" maxlength="8" style="text-transform:uppercase">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="casing10Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Brand10Div"></div>
+                                                    </td>
+                                                    <td style="padding:0px">
+                                                        <div id="Virgin10Div">
+                                                            <input type="checkbox" id="virgin10" name="virgin10">
+                                                        </div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Tread10Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Status10Div"></div>
+                                                    </td>
+                                                    <td style="padding: 3px">
+                                                        <input type="text" id="unit10" name="unit10">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:3px">
+                                                        11
+                                                    </td>
+                                                    <td style="padding: 3px">
+                                                        <input class="lineStyle" type="text" id="line11" name="line11" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line11Out()">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <input class="barcode" type="text" id="barcode11" onfocusout="validateBarcode(this.value, '#barcode11')" name="barcode11" maxlength="8" onkeypress="return onlyNumberKey(event)">
+                                                    </td>
+                                                    <td style=" padding: 3px ">
+                                                        <input class="serialDot" type="text" id="serial11" name="serial11" maxlength="8" style="        text-transform: uppercase">
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="casing11Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Brand11Div"></div>
+                                                    </td>
+                                                    <td style="padding:0px">
+                                                        <div id="Virgin11Div">
+                                                            <input type="checkbox" id="virgin11" name="virgin11">
+                                                        </div>
+                                                    </td>
+                                                    <td style="padding: 3px">
+                                                        <div id="Tread11Div"></div>
+                                                    </td>
+                                                    <td style="padding:3px">
+                                                        <div id="Status11Div"></div>
+                                                    </td>
+                                                    <td style="padding: 3px">
+                                                        <input type="text" id="unit11" name="unit11">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <div class="row" style=" color:#b4b6b8; padding-right:30px">
+                                            <div class="col-md-7">
+                                                <div class="row">
+                                                    <div class="col-md-3 text-right">
+                                                        <span>1 - RET (Retread Only)</span>
+                                                    </div>
+                                                    <div class="col-md-3 text-right">
+                                                        <span>5 - RPO (Repair Only)</span>
+                                                    </div>
+                                                    <div class="col-md-3 text-right">
+                                                        <span>6 - CCR (Casing Credit)</span>
+                                                    </div>
+                                                    <div class="col-md-3 text-right">
+                                                        <span>7 - ADJ (Adjustment)</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="row">
+                                                    <div class="col-md-4 text-right">
+                                                        <span>11 - STK (Stock)</span>
+                                                    </div>
+                                                    <div class="col-md-4 text-right">
+                                                        <span>9 - SCP (Scrap)</span>
+                                                    </div>
+                                                    <div class="col-md-4 text-right">
+                                                        <span>10 - Bank (Bank/Pool)</span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="card shadow-sm flex-fill grow" style="margin: 10px 0px 15px 0px;">
+                                    <div class="card-header" style="        padding: 3px 3px 3px 15px">
+                                        <h6 class="card-title mb-0 d-inline-block">Comments</h6>
+                                    </div>
+                                    <div class="card-body" style="padding: 10px">
+                                        <div style="width:100%">
+                                            <textarea id="comments"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal BarcodeValidation" data-backdrop="static" data-keyboard="false" id="BarcodeValidation">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header" style="background-color:#ff4a4a; padding:5px 2px 0px 2px">
+                                                <h5 style="margin-left:auto; margin-right:auto; color:white">Acknowledgment</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-lg-12 text-center"> <h5 style="margin-left:auto; margin-right:auto">This barcode is already in use</h5> </div>
+                                                    <input type="text" style="display:none" id="hiddenID" name="name" value="" />
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer" style="padding: 3px 0px 3px 0px">
+                                                <button style="padding:2px 40px 2px 40px; margin-left:auto; margin-right:auto" class="btn btn-primary" onclick="okClick()" data-dismiss="modal">OK</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-lg-10"></div>
+                    <div class="col-lg-1">
+                        <input type="submit" id="submitButton" readonly class="btn btn-success transcationButtons" style="float:right; padding-top:1px;width:112px; height:30px; visibility:visible" value="Save" />
+                    </div>
+                    <div class="col-lg-1" style="        padding-right: 10px">
+                        <button type="button" id="Cancelbutton" class="btn btn-danger" data-dismiss="modal" style="float:right; width:112px; padding:2px 30px 2px 30px">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
+
     <script>
+        $(".serialDot").focusout(function () {
+            var code = $(this).val().substr(0, 2)
+            var idis = $(this).attr('id')
+            var lastChar = idis[idis.length - 1];
+
+            
+
+            $.ajax({
+                url: '@Url.Action("getDropdownOptions", "Tools")',
+                data: { value: code },
+                type: 'POST',
+                success: function (data) {
+                    if (data != " ") {
+                        brandID = '#brand' + lastChar
+                        $(brandID).empty()
+
+                        const dropdownArray = data.split(";");
+                        dropdownArray.forEach(function (item) {
+                            item = item.replace(/\s+/g, '');
+                            $(brandID).append($("<option></option>").attr("value",item).text(item));
+                        });
+                    }
+                }
+            });
+            
+            $.ajax({
+                url: '@Url.Action("CheckPlantCodes", "Tools")',
+                data: { value: code },
+                type: 'POST',
+                success: function (data) {
+
+                    if (data != " ") {
+                        brandID = '#brand' + lastChar
+                        $(brandID).val(data)
+                    }
+
+                    
+                    //
+                }
+            });
+
+            var sizecode = $(this).val().substr(2, 2)
+
+            $.ajax({
+                url: '@Url.Action("CheckSizeCodes", "Tools")',
+                data: { value: sizecode },
+                type: 'POST',
+                success: function (data) {
+                    if (data != " ") {
+                        sizeID = '#casing' + lastChar
+                        $(sizeID).val(data)
+                    }
+                    
+                }
+            });
+
+        });
+    </script>
+
+    <script>
+
+        document.getElementById("btnPrint").onclick = function () {
+            window.print();
+        }
+
+
+        $('#submitButton').click(function () {
+            if (document.getElementById('tread1').disabled) {
+                $('#tread1').prop( "disabled", false ).css("background-color", "#fbfbfb").css("border-color", "#dedede").css("outline", "none").css("color", "#7d7d7d");
+            }
+            if (document.getElementById('tread2').disabled) {
+                $('#tread2').prop( "disabled", false ).css("background-color", "#fbfbfb").css("border-color", "#dedede").css("outline", "none").css("color", "#7d7d7d");
+            }
+            if (document.getElementById('tread3').disabled) {
+                $('#tread3').prop( "disabled", false ).css("background-color", "#fbfbfb").css("border-color", "#dedede").css("outline", "none").css("color", "#7d7d7d");
+            }
+            if (document.getElementById('tread4').disabled) {
+                $('#tread4').prop( "disabled", false ).css("background-color", "#fbfbfb").css("border-color", "#dedede").css("outline", "none").css("color", "#7d7d7d");
+            }
+            if (document.getElementById('tread5').disabled) {
+                $('#tread5').prop( "disabled", false ).css("background-color", "#fbfbfb").css("border-color", "#dedede").css("outline", "none").css("color", "#7d7d7d");
+            }
+            if (document.getElementById('tread6').disabled) {
+                $('#tread6').prop( "disabled", false ).css("background-color", "#fbfbfb").css("border-color", "#dedede").css("outline", "none").css("color", "#7d7d7d");
+            }
+            if (document.getElementById('tread7').disabled) {
+                $('#tread7').prop( "disabled", false ).css("background-color", "#fbfbfb").css("border-color", "#dedede").css("outline", "none").css("color", "#7d7d7d");
+            }
+            if (document.getElementById('tread8').disabled) {
+                $('#tread8').prop( "disabled", false ).css("background-color", "#fbfbfb").css("border-color", "#dedede").css("outline", "none").css("color", "#7d7d7d");
+            }
+            if (document.getElementById('tread9').disabled) {
+                $('#tread9').prop( "disabled", false ).css("background-color", "#fbfbfb").css("border-color", "#dedede").css("outline", "none").css("color", "#7d7d7d");
+            }
+            if (document.getElementById('tread10').disabled) {
+                $('#tread10').prop( "disabled", false ).css("background-color", "#fbfbfb").css("border-color", "#dedede").css("outline", "none").css("color", "#7d7d7d");
+            }
+            if (document.getElementById('tread11').disabled) {
+                $('#tread11').prop( "disabled", false ).css("background-color", "#fbfbfb").css("border-color", "#dedede").css("outline", "none").css("color", "#7d7d7d");
+            }
+        });
+
+        datepicker.max = new Date().toISOString().split("T")[0];
+
+        $('#datepicker').change(function () {
+            var d = new Date(moment($('#datepicker').val()).add(1, 'days').format("YYYY-MM-DD"));
+
+            //d = addDays(d, 1);
+            date = d.toString();
+
+            //alert(date)
+
+            var shortDay = date.substring(0, 3);
+            var longDay = "";
+
+            if (shortDay == "Mon") {
+                longDay = "Monday"
+            }
+            else if (shortDay == "Tue")
+            {
+                longDay = "Tuesday"
+            }
+            else if (shortDay == "Wed")
+            {
+                longDay = "Wednesday"
+            }
+            else if (shortDay == "Thu")
+            {
+                longDay = "Thursday"
+            }
+            else if (shortDay == "Fri")
+            {
+                longDay = "Friday"
+            }
+            else if (shortDay == "Sat")
+            {
+                longDay = "Saturday"
+            }
+            else if (shortDay == "Sun")
+            {
+                longDay = "Sunday"
+            }
+
+            var month = date.substring(4, 7);
+
+            var dateNum = date.substring(8, 10);
+
+            var yearNum = date.substring(11, 15);
+
+            $("#fullDate").val(longDay + " - " + month + " " + dateNum + ", " + yearNum);
+
+
+        });
+
+        $( document ).ready(function() {
+            pageLoad();
+        });
+
+        $('#Cancelbutton').click(function () {
+            location.reload();
+        });
 
 
         let stopTabFunction = function(e) {
@@ -737,24 +1018,29 @@
           }
         };
 
-
         function validateBarcode(barcode, id) {
             $.ajax({
                 url: '@Url.Action("validateBarcode", "TreadTracker")',
                 data: { value: barcode },
                 type: 'POST',
                 success: function (data) {
-                    if (data == "Exists") {
-                        document.addEventListener('keydown', stopTabFunction);
-                        $('#BarcodeValidation').modal();
-                        $(id).val("");
-                        $('#hiddenID').val(id);
 
+                    if (data == "Exists") {
+                        //alert(data + " " + id);
+                        //document.addEventListener('keydown', stopTabFunction);
+                        //$('.BarcodeValidation').modal();
+                        //alert($(id).val());
+
+                        alert("This barcode is already in use")
+
+                        $(id).val("");
+                        $(id).focus();
+                        //$('#hiddenID').val(id);
                     }
                     else {
 
                     }
-                    
+
                 }
             });
         }
@@ -766,73 +1052,136 @@
 
 
         $(document).ready(function () {
-                           
+
+
+            $(document).on('keyup keypress', 'form input[type="text"]', function(e) {
+              if(e.which == 13) {
+                e.preventDefault();
+                return false;
+              }
+            });
+
             $('#clickThis').on('click', function () {
                 $('#sidebar').toggleClass('active');
             });
         });
         function line1Out() {
             var lineValue = document.getElementById("line1").value;
+            $('#barcode1').prop('required',true);
+            $('#serial1').prop('required',true);
+            $('#casing1').prop('required',true);
+            $('#brand1').prop('required',true);
+            $('#tread1').prop('required',true);
             commonLineFunction("1", lineValue);
             document.getElementById("barcode1").focus();
         }
 
         function line2Out() {
             var lineValue = document.getElementById("line2").value;
+            $('#barcode2').prop('required',true);
+            $('#serial2').prop('required', true);
+            $('#casing2').prop('required',true);
+            $('#brand2').prop('required',true);
+            $('#tread2').prop('required',true);
             commonLineFunction("2", lineValue);
-            document.getElementById("serial2").focus();
+            document.getElementById("barcode2").focus();
         }
         function line3Out() {
             var lineValue = document.getElementById("line3").value;
+            $('#barcode3').prop('required',true);
+            $('#serial3').prop('required', true);
+            $('#casing3').prop('required',true);
+            $('#brand3').prop('required',true);
+            $('#tread3').prop('required',true);
             commonLineFunction("3", lineValue);
-            document.getElementById("serial3").focus();
+            document.getElementById("barcode3").focus();
         }
         function line4Out() {
             var lineValue = document.getElementById("line4").value;
+            $('#barcode4').prop('required',true);
+            $('#serial4').prop('required', true);
+            $('#casing4').prop('required',true);
+            $('#brand4').prop('required',true);
+            $('#tread4').prop('required',true);
             commonLineFunction("4", lineValue);
-            document.getElementById("serial4").focus();
+            document.getElementById("barcode4").focus();
         }
 
         function line5Out() {
             var lineValue = document.getElementById("line5").value;
+            $('#barcode5').prop('required',true);
+            $('#serial5').prop('required', true);
+            $('#casing5').prop('required',true);
+            $('#brand5').prop('required',true);
+            $('#tread5').prop('required',true);
             commonLineFunction("5", lineValue);
-            document.getElementById("serial5").focus();
+            document.getElementById("barcode5").focus();
         }
 
         function line6Out() {
             var lineValue = document.getElementById("line6").value;
+            $('#barcode6').prop('required',true);
+            $('#serial6').prop('required', true);
+            $('#casing6').prop('required',true);
+            $('#brand6').prop('required',true);
+            $('#tread6').prop('required',true);
             commonLineFunction("6", lineValue);
-            document.getElementById("serial6").focus();
+            document.getElementById("barcode6").focus();
         }
 
         function line7Out() {
             var lineValue = document.getElementById("line7").value;
+            $('#barcode7').prop('required',true);
+            $('#serial7').prop('required', true);
+            $('#casing7').prop('required',true);
+            $('#brand7').prop('required',true);
+            $('#tread7').prop('required',true);
             commonLineFunction("7", lineValue);
-            document.getElementById("serial7").focus();
+            document.getElementById("barcode7").focus();
         }
 
         function line8Out() {
             var lineValue = document.getElementById("line8").value;
+            $('#barcode8').prop('required',true);
+            $('#serial8').prop('required', true);
+            $('#casing8').prop('required',true);
+            $('#brand8').prop('required',true);
+            $('#tread8').prop('required',true);
             commonLineFunction("8", lineValue);
-            document.getElementById("serial8").focus();
+            document.getElementById("barcode8").focus();
         }
 
         function line9Out() {
             var lineValue = document.getElementById("line9").value;
+            $('#barcode9').prop('required',true);
+            $('#serial9').prop('required', true);
+            $('#casing9').prop('required',true);
+            $('#brand9').prop('required',true);
+            $('#tread9').prop('required',true);
             commonLineFunction("9", lineValue);
-            document.getElementById("serial9").focus();
+            document.getElementById("barcode9").focus();
         }
 
         function line10Out() {
             var lineValue = document.getElementById("line10").value;
+            $('#barcode10').prop('required',true);
+            $('#serial10').prop('required', true);
+            $('#casing10').prop('required',true);
+            $('#brand10').prop('required',true);
+            $('#tread10').prop('required',true);
             commonLineFunction("10", lineValue);
-            document.getElementById("serial10").focus();
+            document.getElementById("barcode10").focus();
         }
 
         function line11Out() {
             var lineValue = document.getElementById("line11").value;
+            $('#barcode11').prop('required',true);
+            $('#serial11').prop('required', true);
+            $('#casing11').prop('required',true);
+            $('#brand11').prop('required',true);
+            $('#tread11').prop('required',true);
             commonLineFunction("11", lineValue);
-            document.getElementById("serial11").focus();
+            document.getElementById("barcode11").focus();
         }
 
 
@@ -843,33 +1192,19 @@
             var serial = "serial" + lineNum;
             var casing = "casing" + lineNum;
             var brand = "brand" + lineNum;
+            var virgin = "virgin" + lineNum;
             var tread = "tread" + lineNum;
+            var status = "status" + lineNum;
             var unit = "unit" + lineNum;
+
 
             //alert("Reached")
 
             if (lineValue == 1 || lineValue == 5 || lineValue == 6 || lineValue == 7 || lineValue == 9 || lineValue == 10 || lineValue == 11) {
+
                 if (lineNum != 1) {
                     if (document.getElementById(barcode).value.length == 0) {
                         var barcodeValue = checkBarcodes();
-
-                        $.ajax({
-                            url: '@Url.Action("validateBarcode", "TreadTracker")',
-                            data: { value: barcodeValue },
-                            type: 'POST',
-                            success: function (data) {
-                                if (data == "Exists") {
-                                    document.addEventListener('keydown', stopTabFunction);
-                                    $('#BarcodeValidation').modal();
-                                    $('#'+ barcode).val("");
-                                    $('#hiddenID').val('#'+ barcode);
-                                }
-                                else {
-
-                                }
-                            }
-                         });
-
                         document.getElementById(barcode).value = barcodeValue;
                     }
                 }
@@ -877,14 +1212,30 @@
                 document.getElementById(barcode).style.visibility = "visible";
                 document.getElementById(serial).style.visibility = "visible";
                 document.getElementById(brand).style.visibility = "visible";
+                document.getElementById(virgin).style.visibility = "visible";
                 document.getElementById(unit).style.visibility = "visible";
                 document.getElementById(tread).style.visibility = "visible";
+                document.getElementById(status).style.visibility = "visible";
                 if (lineValue != 5) {
                     document.getElementById(casing).style.visibility = "visible";
+                    document.getElementById(casing).required = true;
                 }
                 else {
                     document.getElementById(casing).style.visibility = "hidden";
+                    document.getElementById(casing).required = false;
+                    $("#"+casing).prop('disabled', true);
                 }
+
+                if (lineValue == 9) {
+                    document.getElementById(status).style.visibility = "visible";
+                    //document.getElementById(casing).required = true;
+                }
+                else {
+                    document.getElementById(status).style.visibility = "hidden";
+                    //document.getElementById(casing).required = false;
+                    //$("#"+casing).prop('disabled', true);
+                }
+
 
                 if (lineValue != 1 || lineValue != 11) {
                     document.getElementById(tread).disabled = true;
@@ -911,22 +1262,30 @@
                     else {
                         document.getElementById(tread).disabled = false;
                         let element = document.getElementById(tread);
-                        element.value = "--Select--";
+                        $("#"+tread+" option[value='REPAIR']").remove();
+                        $("#"+tread+" option[value='TBD']").remove();
+                        $("#"+tread+" option[value='ADJUST']").remove();
+                        $("#"+tread+" option[value='SCRAP']").remove();
+                        element.value = "";
                     }
                 }
-                else {
-                    document.getElementById(tread).removeAttribute("readonly");
-                }
+
 
             }
             else {
                 document.getElementById(line).value = null;
                 document.getElementById(barcode).value = null;
                 document.getElementById(serial).value = null;
-                document.getElementById(casing).value = "--Select--";
-                document.getElementById(brand).value = "--Select--";
-                document.getElementById(tread).value = "--Select--";
+                document.getElementById(casing).value = "";
+                document.getElementById(brand).value = "";
+                document.getElementById(tread).value = "";
                 document.getElementById(unit).value = null;
+
+                document.getElementById(barcode).removeAttribute("required");
+                document.getElementById(serial).removeAttribute("required");
+                document.getElementById(casing).removeAttribute("required");
+                document.getElementById(brand).removeAttribute("required");
+                document.getElementById(tread).removeAttribute("required");
 
 
                 document.getElementById(barcode).style.visibility = "hidden";
@@ -935,11 +1294,12 @@
                 document.getElementById(brand).style.visibility = "hidden";
                 document.getElementById(unit).style.visibility = "hidden";
                 document.getElementById(tread).style.visibility = "hidden";
+                document.getElementById(status).style.visibility = "hidden";
+                document.getElementById(virgin).style.visibility = "hidden";
                 var test = "line2";
                 console.log(document.getElementById(line).value.length)
                 console.log(document.getElementById(line).value)
                 if (document.getElementById(line).value.length != 0) {
-
                     alert("Invalid Entry. Valid entries: 1,5,6,7,9,10 and 11.");
                 }
                 //document.getElementById(line).focus();
@@ -962,12 +1322,23 @@
             var barcode11 = document.getElementById("barcode11").value;
 
             const array = [barcode1, barcode2, barcode3, barcode4, barcode5, barcode6, barcode7, barcode8, barcode9, barcode10, barcode11];
-            var nextBarcode = Math.max(...array);
-                      
 
-            return nextBarcode + 1;
+            var nextBarcode = Math.max(...array);
+
+            //alert(nextBarcode);
+
+            if (nextBarcode.toString().length == 8) {
+                return nextBarcode + 1;
+            }
+            else {
+                return "";
+            }
+
+
 
         }
+
+
         function onlyNumberKey(evt) {
             var charCode = (evt.which) ? evt.which : evt.keyCode;
             if (charCode != 46 && charCode > 31
@@ -976,417 +1347,943 @@
 
             return true;
         }
+
         function pageLoad() {
 
-            var casing = ["--Select--", "11R24.5", "285/75R24.5", "275/80R24.5", "11R22.5", "12R22.5", "315/80R22.5", "295/80R22.5", "295/75R22.5", "275/80R22.5", "275/70R22.5", "265/75R22.5", "255/70R22.5", "265/70R19.5", "245/70R19.5", "225/70R19.5"];
-            var brands = ["--Select--", "BFGoodrich", "Bridgestone", "Continental", "Dayton-NA", "Dayton-CH", "Dunlop", "Firestone", "General", "Goodyear", "Kelly", "Michelin", "Nokian", "Sumitomo", "Toyo", "Uniroyal", "Yokohama", "Chinese-ALL"];
-            var tread = ["--Select--", "G133", "G159", "G167", "G177", "G182", "G182-S", "G282", "G302", "G314", "G338", "G362", "G558", "G572", "G619", "G622", "G647", "G661", "G741", "GRIP", "MDN 2", "MNW", "MZA 2A", "S/A", "W/T", "W/T 2", "REPAIR", "TBD", "ADJUST", "SCRAP"]
-            //Row 1 - Start
-            var casing1Div = document.getElementById("casing1Div");
-            var selectList1 = document.createElement("select");
-            selectList1.setAttribute("id", "casing1");
-            selectList1.setAttribute("name", "casing1");
-            casing1Div.appendChild(selectList1);
-
-            var brand1Div = document.getElementById("Brand1Div");
-            var selectbrandList1 = document.createElement("select");
-            selectbrandList1.setAttribute("id", "brand1");
-            selectbrandList1.setAttribute("name", "brand1");
-            brand1Div.appendChild(selectbrandList1);
-
-            var tread1Div = document.getElementById("Tread1Div");
-            var selecttreadList1 = document.createElement("select");
-            selecttreadList1.setAttribute("id", "tread1");
-            selecttreadList1.setAttribute("name", "tread1");
-            tread1Div.appendChild(selecttreadList1);
-
-            //Row 1 - End
-
-            //Row 2 - Start
-            var casing2Div = document.getElementById("casing2Div");
-            var selectList2 = document.createElement("select");
-            selectList2.setAttribute("id", "casing2");
-            selectList2.setAttribute("name", "casing2");
-            casing2Div.appendChild(selectList2);
-
-            var brand2Div = document.getElementById("Brand2Div");
-            var selectbrandList2 = document.createElement("select");
-            selectbrandList2.setAttribute("id", "brand2");
-            selectbrandList2.setAttribute("name", "brand2");
-            brand2Div.appendChild(selectbrandList2);
-
-            var tread2Div = document.getElementById("Tread2Div");
-            var selecttreadList2 = document.createElement("select");
-            selecttreadList2.setAttribute("id", "tread2");
-            selecttreadList2.setAttribute("name", "tread2");
-            tread2Div.appendChild(selecttreadList2);
-
-            //Row 2 - End
-
-            //Row 3 - Start
-            var casing3Div = document.getElementById("casing3Div");
-            var selectList3 = document.createElement("select");
-            selectList3.setAttribute("id", "casing3");
-            selectList3.setAttribute("name", "casing3");
-            casing3Div.appendChild(selectList3);
-
-            var brand3Div = document.getElementById("Brand3Div");
-            var selectbrandList3 = document.createElement("select");
-            selectbrandList3.setAttribute("id", "brand3");
-            selectbrandList3.setAttribute("name", "brand3");
-            brand3Div.appendChild(selectbrandList3);
-
-            var tread3Div = document.getElementById("Tread3Div");
-            var selecttreadList3 = document.createElement("select");
-            selecttreadList3.setAttribute("id", "tread3");
-            selecttreadList3.setAttribute("name", "tread3");
-            tread3Div.appendChild(selecttreadList3);
-
-            //Row 3 - End
-
-            //Row 4 - Start
-            var casing4Div = document.getElementById("casing4Div");
-            var selectList4 = document.createElement("select");
-            selectList4.setAttribute("id", "casing4");
-            selectList4.setAttribute("name", "casing4");
-            casing4Div.appendChild(selectList4);
-
-            var brand4Div = document.getElementById("Brand4Div");
-            var selectbrandList4 = document.createElement("select");
-            selectbrandList4.setAttribute("id", "brand4");
-            selectbrandList4.setAttribute("name", "brand4");
-            brand4Div.appendChild(selectbrandList4);
-
-            var tread4Div = document.getElementById("Tread4Div");
-            var selecttreadList4 = document.createElement("select");
-            selecttreadList4.setAttribute("id", "tread4");
-            selecttreadList4.setAttribute("name", "tread4");
-            tread4Div.appendChild(selecttreadList4);
-
-            //Row 4 - End
-
-            //Row 5 - Start
-            var casing5Div = document.getElementById("casing5Div");
-            var selectList5 = document.createElement("select");
-            selectList5.setAttribute("id", "casing5");
-            selectList5.setAttribute("name", "casing5");
-            casing5Div.appendChild(selectList5);
-
-            var brand5Div = document.getElementById("Brand5Div");
-            var selectbrandList5 = document.createElement("select");
-            selectbrandList5.setAttribute("id", "brand5");
-            selectbrandList5.setAttribute("name", "brand5");
-            brand5Div.appendChild(selectbrandList5);
-
-            var tread5Div = document.getElementById("Tread5Div");
-            var selecttreadList5 = document.createElement("select");
-            selecttreadList5.setAttribute("id", "tread5");
-            selecttreadList5.setAttribute("name", "tread5");
-            tread5Div.appendChild(selecttreadList5);
-            //Row 5 - End
-
-            //Row 6 - Start
-            var casing6Div = document.getElementById("casing6Div");
-            var selectList6 = document.createElement("select");
-            selectList6.setAttribute("id", "casing6");
-            selectList6.setAttribute("name", "casing6");
-            casing6Div.appendChild(selectList6);
-
-            var brand6Div = document.getElementById("Brand6Div");
-            var selectbrandList6 = document.createElement("select");
-            selectbrandList6.setAttribute("id", "brand6");
-            selectbrandList6.setAttribute("name", "brand6");
-            brand6Div.appendChild(selectbrandList6);
-
-            var tread6Div = document.getElementById("Tread6Div");
-            var selecttreadList6 = document.createElement("select");
-            selecttreadList6.setAttribute("id", "tread6");
-            selecttreadList6.setAttribute("name", "tread6");
-            tread6Div.appendChild(selecttreadList6);
-
-            //Row 6 - End
-
-            //Row 7 - Start
-            var casing7Div = document.getElementById("casing7Div");
-            var selectList7 = document.createElement("select");
-            selectList7.setAttribute("id", "casing7");
-            selectList7.setAttribute("name", "casing7");
-            casing7Div.appendChild(selectList7);
-
-            var brand7Div = document.getElementById("Brand7Div");
-            var selectbrandList7 = document.createElement("select");
-            selectbrandList7.setAttribute("id", "brand7");
-            selectbrandList7.setAttribute("name", "brand7");
-            brand7Div.appendChild(selectbrandList7);
-
-            var tread7Div = document.getElementById("Tread7Div");
-            var selecttreadList7 = document.createElement("select");
-            selecttreadList7.setAttribute("id", "tread7");
-            selecttreadList7.setAttribute("name", "tread7");
-            tread7Div.appendChild(selecttreadList7);
-
-            //Row 7 - End
-
-            //Row 8 - Start
-            var casing8Div = document.getElementById("casing8Div");
-            var selectList8 = document.createElement("select");
-            selectList8.setAttribute("id", "casing8");
-            selectList8.setAttribute("name", "casing8");
-            casing8Div.appendChild(selectList8);
-
-            var brand8Div = document.getElementById("Brand8Div");
-            var selectbrandList8 = document.createElement("select");
-            selectbrandList8.setAttribute("id", "brand8");
-            selectbrandList8.setAttribute("name", "brand8");
-            brand8Div.appendChild(selectbrandList8);
-
-            var tread8Div = document.getElementById("Tread8Div");
-            var selecttreadList8 = document.createElement("select");
-            selecttreadList8.setAttribute("id", "tread8");
-            selecttreadList8.setAttribute("name", "tread8");
-            tread8Div.appendChild(selecttreadList8);
-
-            //Row 8 - End
-
-            //Row 9 - Start
-            var casing9Div = document.getElementById("casing9Div");
-            var selectList9 = document.createElement("select");
-            selectList9.setAttribute("id", "casing9");
-            selectList9.setAttribute("name", "casing9");
-            casing9Div.appendChild(selectList9);
-
-            var brand9Div = document.getElementById("Brand9Div");
-            var selectbrandList9 = document.createElement("select");
-            selectbrandList9.setAttribute("id", "brand9");
-            selectbrandList9.setAttribute("name", "brand9");
-            brand9Div.appendChild(selectbrandList9);
-
-            var tread9Div = document.getElementById("Tread9Div");
-            var selecttreadList9 = document.createElement("select");
-            selecttreadList9.setAttribute("id", "tread9");
-            selecttreadList9.setAttribute("name", "tread9");
-            tread9Div.appendChild(selecttreadList9);
-
-            //Row 9 - End
-
-            //Row 10 - Start
-            var casing10Div = document.getElementById("casing10Div");
-            var selectList10 = document.createElement("select");
-            selectList10.setAttribute("id", "casing10");
-            selectList10.setAttribute("name", "casing10");
-            casing10Div.appendChild(selectList10);
-
-            var brand10Div = document.getElementById("Brand10Div");
-            var selectbrandList10 = document.createElement("select");
-            selectbrandList10.setAttribute("id", "brand10");
-            selectbrandList10.setAttribute("name", "brand10");
-            brand10Div.appendChild(selectbrandList10);
-
-            var tread10Div = document.getElementById("Tread10Div");
-            var selecttreadList10 = document.createElement("select");
-            selecttreadList10.setAttribute("id", "tread10");
-            selecttreadList10.setAttribute("name", "tread10");
-            tread10Div.appendChild(selecttreadList10);
-
-            //Row 10 - End
-
-            //Row 11 - Start
-            var casing11Div = document.getElementById("casing11Div");
-            var selectList11 = document.createElement("select");
-            selectList11.setAttribute("id", "casing11");
-            selectList11.setAttribute("name", "casing11");
-            casing11Div.appendChild(selectList11);
-
-            var brand11Div = document.getElementById("Brand11Div");
-            var selectbrandList11 = document.createElement("select");
-            selectbrandList11.setAttribute("id", "brand11");
-            selectbrandList11.setAttribute("name", "brand11");
-            brand11Div.appendChild(selectbrandList11);
-
-            var tread11Div = document.getElementById("Tread11Div");
-            var selecttreadList11 = document.createElement("select");
-            selecttreadList11.setAttribute("id", "tread11");
-            selecttreadList11.setAttribute("name", "tread11");
-            tread11Div.appendChild(selecttreadList11);
-
-            //Row 11 - End
-
-
-
-            for (i = 0; i < casing.length; i++) {
-                var option1 = document.createElement("option");
-                option1.setAttribute("value", casing[i]);
-                option1.text = casing[i];
-                selectList1.appendChild(option1);
-
-                var option2 = document.createElement("option");
-                option2.setAttribute("value", casing[i]);
-                option2.text = casing[i];
-                selectList2.appendChild(option2);
-
-                var option3 = document.createElement("option");
-                option3.setAttribute("value", casing[i]);
-                option3.text = casing[i];
-                selectList3.appendChild(option3);
-
-                var option4 = document.createElement("option");
-                option4.setAttribute("value", casing[i]);
-                option4.text = casing[i];
-                selectList4.appendChild(option4);
-
-                var option5 = document.createElement("option");
-                option5.setAttribute("value", casing[i]);
-                option5.text = casing[i];
-                selectList5.appendChild(option5);
-
-                var option6 = document.createElement("option");
-                option6.setAttribute("value", casing[i]);
-                option6.text = casing[i];
-                selectList6.appendChild(option6);
-
-
-                var option7 = document.createElement("option");
-                option7.setAttribute("value", casing[i]);
-                option7.text = casing[i];
-                selectList7.appendChild(option7);
-
-                var option8 = document.createElement("option");
-                option8.setAttribute("value", casing[i]);
-                option8.text = casing[i];
-                selectList8.appendChild(option8);
-
-                var option9 = document.createElement("option");
-                option9.setAttribute("value", casing[i]);
-                option9.text = casing[i];
-                selectList9.appendChild(option9);
-
-                var option10 = document.createElement("option");
-                option10.setAttribute("value", casing[i]);
-                option10.text = casing[i];
-                selectList10.appendChild(option10);
-
-                var option11 = document.createElement("option");
-                option11.setAttribute("value", casing[i]);
-                option11.text = casing[i];
-                selectList11.appendChild(option11);
-            }
-
-            for (i = 0; i < brands.length; i++) {
-                var option1 = document.createElement("option");
-                option1.setAttribute("value", brands[i]);
-                option1.text = brands[i];
-                selectbrandList1.appendChild(option1);
-
-                var option2 = document.createElement("option");
-                option2.setAttribute("value", brands[i]);
-                option2.text = brands[i];
-                selectbrandList2.appendChild(option2);
-
-                var option3 = document.createElement("option");
-                option3.setAttribute("value", brands[i]);
-                option3.text = brands[i];
-                selectbrandList3.appendChild(option3);
-
-                var option4 = document.createElement("option");
-                option4.setAttribute("value", brands[i]);
-                option4.text = brands[i];
-                selectbrandList4.appendChild(option4);
-
-                var option5 = document.createElement("option");
-                option5.setAttribute("value", brands[i]);
-                option5.text = brands[i];
-                selectbrandList5.appendChild(option5);
-
-                var option6 = document.createElement("option");
-                option6.setAttribute("value", brands[i]);
-                option6.text = brands[i];
-                selectbrandList6.appendChild(option6);
-
-
-                var option7 = document.createElement("option");
-                option7.setAttribute("value", brands[i]);
-                option7.text = brands[i];
-                selectbrandList7.appendChild(option7);
-
-                var option8 = document.createElement("option");
-                option8.setAttribute("value", brands[i]);
-                option8.text = brands[i];
-                selectbrandList8.appendChild(option8);
-
-                var option9 = document.createElement("option");
-                option9.setAttribute("value", brands[i]);
-                option9.text = brands[i];
-                selectbrandList9.appendChild(option9);
-
-                var option10 = document.createElement("option");
-                option10.setAttribute("value", brands[i]);
-                option10.text = brands[i];
-                selectbrandList10.appendChild(option10);
-
-                var option11 = document.createElement("option");
-                option11.setAttribute("value", brands[i]);
-                option11.text = brands[i];
-                selectbrandList11.appendChild(option11);
-            }
-
-            for (i = 0; i < tread.length; i++) {
-                var option1 = document.createElement("option");
-                option1.setAttribute("value", tread[i]);
-                option1.text = tread[i];
-                selecttreadList1.appendChild(option1);
-
-                var option2 = document.createElement("option");
-                option2.setAttribute("value", tread[i]);
-                option2.text = tread[i];
-                selecttreadList2.appendChild(option2);
-
-                var option3 = document.createElement("option");
-                option3.setAttribute("value", tread[i]);
-                option3.text = tread[i];
-                selecttreadList3.appendChild(option3);
-
-                var option4 = document.createElement("option");
-                option4.setAttribute("value", tread[i]);
-                option4.text = tread[i];
-                selecttreadList4.appendChild(option4);
-
-                var option5 = document.createElement("option");
-                option5.setAttribute("value", tread[i]);
-                option5.text = tread[i];
-                selecttreadList5.appendChild(option5);
-
-                var option6 = document.createElement("option");
-                option6.setAttribute("value", tread[i]);
-                option6.text = tread[i];
-                selecttreadList6.appendChild(option6);
-
-
-                var option7 = document.createElement("option");
-                option7.setAttribute("value", tread[i]);
-                option7.text = tread[i];
-                selecttreadList7.appendChild(option7);
-
-                var option8 = document.createElement("option");
-                option8.setAttribute("value", tread[i]);
-                option8.text = tread[i];
-                selecttreadList8.appendChild(option8);
-
-                var option9 = document.createElement("option");
-                option9.setAttribute("value", tread[i]);
-                option9.text = tread[i];
-                selecttreadList9.appendChild(option9);
-
-                var option10 = document.createElement("option");
-                option10.setAttribute("value", tread[i]);
-                option10.text = tread[i];
-                selecttreadList10.appendChild(option10);
-
-                var option11 = document.createElement("option");
-                option11.setAttribute("value", tread[i]);
-                option11.text = tread[i];
-                selecttreadList11.appendChild(option11);
-            }
-
+            $.ajax({
+                url: '@Url.Action("populateTreads", "TreadTracker")',
+                type: 'POST',
+                success: function (data) {
+
+                    var casing = ["--Select--", "11R24.5", "285/75R24.5", "275/80R24.5", "11R22.5", "12R22.5", "315/80R22.5", "295/80R22.5", "295/75R22.5", "275/80R22.5", "275/70R22.5", "265/75R22.5", "255/70R22.5", "265/70R19.5", "245/70R19.5", "225/70R19.5"];
+                    var status = ["--Select--", "SH1-SHOULDER IMPACT BREAK", "SW6-SIDEWALL IMPACT BRK", "SW8-WEATHER CRACKING  / OZONE", "SWB-SIDEWALL BULGE", "SWC-SIDEWALL CURB DAMAGE / ABRASION", "SWZ-ZIPPER", "TR1-EXPOSED BELTS", "TR3-EXCESSIVE WEAR", "TR6-TREAD IMPACT BREAK", "RE1-TOO MANY NALL HOLES", "SW1-SIDE WALL FATIGUE", "SW2-SIDE WALL CUT", "SW3-SIDE WALL HOLE"];
+                    var brands = ["--Select--", "BFGoodrich", "Bridgestone", "Continental", "Dayton", "Dunlop", "Firestone", "General", "Goodyear", "Kelly", "Michelin", "Nokian", "Sumitomo", "Toyo", "Uniroyal", "Yokohama", "Chinese-ALL"];
+                    var tread =  data.slice(0, 1).concat(data.slice(13, data.length)) ;
+                    var treadCustomer = data
+
+
+                    //Row 1 - Start
+                    var casing1Div = document.getElementById("casing1Div");
+                    var selectList1 = document.createElement("select");
+                    selectList1.setAttribute("id", "casing1");
+                    selectList1.setAttribute("name", "casing1");
+                    casing1Div.appendChild(selectList1);
+
+                    var brand1Div = document.getElementById("Brand1Div");
+                    var selectbrandList1 = document.createElement("select");
+                    selectbrandList1.setAttribute("id", "brand1");
+                    selectbrandList1.setAttribute("name", "brand1");
+                    brand1Div.appendChild(selectbrandList1);
+
+                    var tread1Div = document.getElementById("Tread1Div");
+                    var selecttreadList1 = document.createElement("select");
+                    selecttreadList1.setAttribute("id", "tread1");
+                    selecttreadList1.setAttribute("name", "tread1");
+                    tread1Div.appendChild(selecttreadList1);
+
+                    var status1Div = document.getElementById("Status1Div");
+                    var selectstatusList1 = document.createElement("select");
+                    selectstatusList1.setAttribute("id", "status1");
+                    selectstatusList1.setAttribute("name", "status1");
+                    status1Div.appendChild(selectstatusList1);
+
+                    //Row 1 - End
+
+                    //Row 2 - Start
+                    var casing2Div = document.getElementById("casing2Div");
+                    var selectList2 = document.createElement("select");
+                    selectList2.setAttribute("id", "casing2");
+                    selectList2.setAttribute("name", "casing2");
+                    casing2Div.appendChild(selectList2);
+
+                    var brand2Div = document.getElementById("Brand2Div");
+                    var selectbrandList2 = document.createElement("select");
+                    selectbrandList2.setAttribute("id", "brand2");
+                    selectbrandList2.setAttribute("name", "brand2");
+                    brand2Div.appendChild(selectbrandList2);
+
+                    var tread2Div = document.getElementById("Tread2Div");
+                    var selecttreadList2 = document.createElement("select");
+                    selecttreadList2.setAttribute("id", "tread2");
+                    selecttreadList2.setAttribute("name", "tread2");
+                    tread2Div.appendChild(selecttreadList2);
+
+                    var status2Div = document.getElementById("Status2Div");
+                    var selectstatusList2 = document.createElement("select");
+                    selectstatusList2.setAttribute("id", "status2");
+                    selectstatusList2.setAttribute("name", "status2");
+                    status2Div.appendChild(selectstatusList2);
+
+                    //Row 2 - End
+
+                    //Row 3 - Start
+                    var casing3Div = document.getElementById("casing3Div");
+                    var selectList3 = document.createElement("select");
+                    selectList3.setAttribute("id", "casing3");
+                    selectList3.setAttribute("name", "casing3");
+                    casing3Div.appendChild(selectList3);
+
+                    var brand3Div = document.getElementById("Brand3Div");
+                    var selectbrandList3 = document.createElement("select");
+                    selectbrandList3.setAttribute("id", "brand3");
+                    selectbrandList3.setAttribute("name", "brand3");
+                    brand3Div.appendChild(selectbrandList3);
+
+                    var tread3Div = document.getElementById("Tread3Div");
+                    var selecttreadList3 = document.createElement("select");
+                    selecttreadList3.setAttribute("id", "tread3");
+                    selecttreadList3.setAttribute("name", "tread3");
+                    tread3Div.appendChild(selecttreadList3);
+
+                    var status3Div = document.getElementById("Status3Div");
+                    var selectstatusList3 = document.createElement("select");
+                    selectstatusList3.setAttribute("id", "status3");
+                    selectstatusList3.setAttribute("name", "status3");
+                    status3Div.appendChild(selectstatusList3);
+
+                    //Row 3 - End
+
+                    //Row 4 - Start
+                    var casing4Div = document.getElementById("casing4Div");
+                    var selectList4 = document.createElement("select");
+                    selectList4.setAttribute("id", "casing4");
+                    selectList4.setAttribute("name", "casing4");
+                    casing4Div.appendChild(selectList4);
+
+                    var brand4Div = document.getElementById("Brand4Div");
+                    var selectbrandList4 = document.createElement("select");
+                    selectbrandList4.setAttribute("id", "brand4");
+                    selectbrandList4.setAttribute("name", "brand4");
+                    brand4Div.appendChild(selectbrandList4);
+
+                    var tread4Div = document.getElementById("Tread4Div");
+                    var selecttreadList4 = document.createElement("select");
+                    selecttreadList4.setAttribute("id", "tread4");
+                    selecttreadList4.setAttribute("name", "tread4");
+                    tread4Div.appendChild(selecttreadList4);
+
+                    var status4Div = document.getElementById("Status4Div");
+                    var selectstatusList4 = document.createElement("select");
+                    selectstatusList4.setAttribute("id", "status4");
+                    selectstatusList4.setAttribute("name", "status4");
+                    status4Div.appendChild(selectstatusList4);
+
+                    //Row 4 - End
+
+                    //Row 5 - Start
+                    var casing5Div = document.getElementById("casing5Div");
+                    var selectList5 = document.createElement("select");
+                    selectList5.setAttribute("id", "casing5");
+                    selectList5.setAttribute("name", "casing5");
+                    casing5Div.appendChild(selectList5);
+
+                    var brand5Div = document.getElementById("Brand5Div");
+                    var selectbrandList5 = document.createElement("select");
+                    selectbrandList5.setAttribute("id", "brand5");
+                    selectbrandList5.setAttribute("name", "brand5");
+                    brand5Div.appendChild(selectbrandList5);
+
+                    var tread5Div = document.getElementById("Tread5Div");
+                    var selecttreadList5 = document.createElement("select");
+                    selecttreadList5.setAttribute("id", "tread5");
+                    selecttreadList5.setAttribute("name", "tread5");
+                    tread5Div.appendChild(selecttreadList5);
+
+                    var status5Div = document.getElementById("Status5Div");
+                    var selectstatusList5 = document.createElement("select");
+                    selectstatusList5.setAttribute("id", "status5");
+                    selectstatusList5.setAttribute("name", "status5");
+                    status5Div.appendChild(selectstatusList5);
+
+                    //Row 5 - End
+
+                    //Row 6 - Start
+                    var casing6Div = document.getElementById("casing6Div");
+                    var selectList6 = document.createElement("select");
+                    selectList6.setAttribute("id", "casing6");
+                    selectList6.setAttribute("name", "casing6");
+                    casing6Div.appendChild(selectList6);
+
+                    var brand6Div = document.getElementById("Brand6Div");
+                    var selectbrandList6 = document.createElement("select");
+                    selectbrandList6.setAttribute("id", "brand6");
+                    selectbrandList6.setAttribute("name", "brand6");
+                    brand6Div.appendChild(selectbrandList6);
+
+                    var tread6Div = document.getElementById("Tread6Div");
+                    var selecttreadList6 = document.createElement("select");
+                    selecttreadList6.setAttribute("id", "tread6");
+                    selecttreadList6.setAttribute("name", "tread6");
+                    tread6Div.appendChild(selecttreadList6);
+
+                    var status6Div = document.getElementById("Status6Div");
+                    var selectstatusList6 = document.createElement("select");
+                    selectstatusList6.setAttribute("id", "status6");
+                    selectstatusList6.setAttribute("name", "status6");
+                    status6Div.appendChild(selectstatusList6);
+
+                    //Row 6 - End
+
+                    //Row 7 - Start
+                    var casing7Div = document.getElementById("casing7Div");
+                    var selectList7 = document.createElement("select");
+                    selectList7.setAttribute("id", "casing7");
+                    selectList7.setAttribute("name", "casing7");
+                    casing7Div.appendChild(selectList7);
+
+                    var brand7Div = document.getElementById("Brand7Div");
+                    var selectbrandList7 = document.createElement("select");
+                    selectbrandList7.setAttribute("id", "brand7");
+                    selectbrandList7.setAttribute("name", "brand7");
+                    brand7Div.appendChild(selectbrandList7);
+
+                    var tread7Div = document.getElementById("Tread7Div");
+                    var selecttreadList7 = document.createElement("select");
+                    selecttreadList7.setAttribute("id", "tread7");
+                    selecttreadList7.setAttribute("name", "tread7");
+                    tread7Div.appendChild(selecttreadList7);
+
+                    var status7Div = document.getElementById("Status7Div");
+                    var selectstatusList7 = document.createElement("select");
+                    selectstatusList7.setAttribute("id", "status7");
+                    selectstatusList7.setAttribute("name", "status7");
+                    status7Div.appendChild(selectstatusList7);
+
+                    //Row 7 - End
+
+                    //Row 8 - Start
+                    var casing8Div = document.getElementById("casing8Div");
+                    var selectList8 = document.createElement("select");
+                    selectList8.setAttribute("id", "casing8");
+                    selectList8.setAttribute("name", "casing8");
+                    casing8Div.appendChild(selectList8);
+
+                    var brand8Div = document.getElementById("Brand8Div");
+                    var selectbrandList8 = document.createElement("select");
+                    selectbrandList8.setAttribute("id", "brand8");
+                    selectbrandList8.setAttribute("name", "brand8");
+                    brand8Div.appendChild(selectbrandList8);
+
+                    var tread8Div = document.getElementById("Tread8Div");
+                    var selecttreadList8 = document.createElement("select");
+                    selecttreadList8.setAttribute("id", "tread8");
+                    selecttreadList8.setAttribute("name", "tread8");
+                    tread8Div.appendChild(selecttreadList8);
+
+                    var status8Div = document.getElementById("Status8Div");
+                    var selectstatusList8 = document.createElement("select");
+                    selectstatusList8.setAttribute("id", "status8");
+                    selectstatusList8.setAttribute("name", "status8");
+                    status8Div.appendChild(selectstatusList8);
+
+                    //Row 8 - End
+
+                    //Row 9 - Start
+                    var casing9Div = document.getElementById("casing9Div");
+                    var selectList9 = document.createElement("select");
+                    selectList9.setAttribute("id", "casing9");
+                    selectList9.setAttribute("name", "casing9");
+                    casing9Div.appendChild(selectList9);
+
+                    var brand9Div = document.getElementById("Brand9Div");
+                    var selectbrandList9 = document.createElement("select");
+                    selectbrandList9.setAttribute("id", "brand9");
+                    selectbrandList9.setAttribute("name", "brand9");
+                    brand9Div.appendChild(selectbrandList9);
+
+                    var tread9Div = document.getElementById("Tread9Div");
+                    var selecttreadList9 = document.createElement("select");
+                    selecttreadList9.setAttribute("id", "tread9");
+                    selecttreadList9.setAttribute("name", "tread9");
+                    tread9Div.appendChild(selecttreadList9);
+
+                    var status9Div = document.getElementById("Status9Div");
+                    var selectstatusList9 = document.createElement("select");
+                    selectstatusList9.setAttribute("id", "status9");
+                    selectstatusList9.setAttribute("name", "status9");
+                    status9Div.appendChild(selectstatusList9);
+
+                    //Row 9 - End
+
+                    //Row 10 - Start
+                    var casing10Div = document.getElementById("casing10Div");
+                    var selectList10 = document.createElement("select");
+                    selectList10.setAttribute("id", "casing10");
+                    selectList10.setAttribute("name", "casing10");
+                    casing10Div.appendChild(selectList10);
+
+                    var brand10Div = document.getElementById("Brand10Div");
+                    var selectbrandList10 = document.createElement("select");
+                    selectbrandList10.setAttribute("id", "brand10");
+                    selectbrandList10.setAttribute("name", "brand10");
+                    brand10Div.appendChild(selectbrandList10);
+
+                    var tread10Div = document.getElementById("Tread10Div");
+                    var selecttreadList10 = document.createElement("select");
+                    selecttreadList10.setAttribute("id", "tread10");
+                    selecttreadList10.setAttribute("name", "tread10");
+                    tread10Div.appendChild(selecttreadList10);
+
+                    var status10Div = document.getElementById("Status10Div");
+                    var selectstatusList10 = document.createElement("select");
+                    selectstatusList10.setAttribute("id", "status10");
+                    selectstatusList10.setAttribute("name", "status10");
+                    status10Div.appendChild(selectstatusList10);
+
+                    //Row 10 - End
+
+                    //Row 11 - Start
+                    var casing11Div = document.getElementById("casing11Div");
+                    var selectList11 = document.createElement("select");
+                    selectList11.setAttribute("id", "casing11");
+                    selectList11.setAttribute("name", "casing11");
+                    casing11Div.appendChild(selectList11);
+
+                    var brand11Div = document.getElementById("Brand11Div");
+                    var selectbrandList11 = document.createElement("select");
+                    selectbrandList11.setAttribute("id", "brand11");
+                    selectbrandList11.setAttribute("name", "brand11");
+                    brand11Div.appendChild(selectbrandList11);
+
+                    var tread11Div = document.getElementById("Tread11Div");
+                    var selecttreadList11 = document.createElement("select");
+                    selecttreadList11.setAttribute("id", "tread11");
+                    selecttreadList11.setAttribute("name", "tread11");
+                    tread11Div.appendChild(selecttreadList11);
+
+                    var status11Div = document.getElementById("Status11Div");
+                    var selectstatusList11 = document.createElement("select");
+                    selectstatusList11.setAttribute("id", "status11");
+                    selectstatusList11.setAttribute("name", "status11");
+                    status11Div.appendChild(selectstatusList11);
+
+                    //Row 11 - End
+
+
+                    for (i = 0; i < casing.length; i++) {
+                        var option1 = document.createElement("option");
+                        if (casing[i] == "--Select--") {
+                            option1.setAttribute("value", "");
+                            option1.text = casing[i];
+                        }
+                        else {
+                            option1.setAttribute("value", casing[i]);
+                            option1.text = casing[i];
+                        }
+                        selectList1.appendChild(option1);
+
+                        var option2 = document.createElement("option");
+                        if (casing[i] == "--Select--") {
+                            option2.setAttribute("value", "");
+                            option2.text = casing[i];
+                        }
+                        else {
+                            option2.setAttribute("value", casing[i]);
+                            option2.text = casing[i];
+                        }
+                        selectList2.appendChild(option2);
+
+                        var option3 = document.createElement("option");
+                        if (casing[i] == "--Select--") {
+                            option3.setAttribute("value", "");
+                            option3.text = casing[i];
+                        }
+                        else {
+                            option3.setAttribute("value", casing[i]);
+                            option3.text = casing[i];
+                        }
+                        selectList3.appendChild(option3);
+
+                        var option4 = document.createElement("option");
+                        if (casing[i] == "--Select--") {
+                            option4.setAttribute("value", "");
+                            option4.text = casing[i];
+                        }
+                        else {
+                            option4.setAttribute("value", casing[i]);
+                            option4.text = casing[i];
+                        }
+                        selectList4.appendChild(option4);
+
+                        var option5 = document.createElement("option");
+                        if (casing[i] == "--Select--") {
+                            option5.setAttribute("value", "");
+                            option5.text = casing[i];
+                        }
+                        else {
+                            option5.setAttribute("value", casing[i]);
+                            option5.text = casing[i];
+                        }
+                        selectList5.appendChild(option5);
+
+                        var option6 = document.createElement("option");
+                        if (casing[i] == "--Select--") {
+                            option6.setAttribute("value", "");
+                            option6.text = casing[i];
+                        }
+                        else {
+                            option6.setAttribute("value", casing[i]);
+                            option6.text = casing[i];
+                        }
+                        selectList6.appendChild(option6);
+
+
+                        var option7 = document.createElement("option");
+                        if (casing[i] == "--Select--") {
+                            option7.setAttribute("value", "");
+                            option7.text = casing[i];
+                        }
+                        else {
+                            option7.setAttribute("value", casing[i]);
+                            option7.text = casing[i];
+                        }
+                        selectList7.appendChild(option7);
+
+                        var option8 = document.createElement("option");
+                        if (casing[i] == "--Select--") {
+                            option8.setAttribute("value", "");
+                            option8.text = casing[i];
+                        }
+                        else {
+                            option8.setAttribute("value", casing[i]);
+                            option8.text = casing[i];
+                        }
+                        selectList8.appendChild(option8);
+
+                        var option9 = document.createElement("option");
+                        if (casing[i] == "--Select--") {
+                            option9.setAttribute("value", "");
+                            option9.text = casing[i];
+                        }
+                        else {
+                            option9.setAttribute("value", casing[i]);
+                            option9.text = casing[i];
+                        }
+                        selectList9.appendChild(option9);
+
+                        var option10 = document.createElement("option");
+                        if (casing[i] == "--Select--") {
+                            option10.setAttribute("value", "");
+                            option10.text = casing[i];
+                        }
+                        else {
+                            option10.setAttribute("value", casing[i]);
+                            option10.text = casing[i];
+                        }
+                        selectList10.appendChild(option10);
+
+                        var option11 = document.createElement("option");
+                        if (casing[i] == "--Select--") {
+                            option11.setAttribute("value", "");
+                            option11.text = casing[i];
+                        }
+                        else {
+                            option11.setAttribute("value", casing[i]);
+                            option11.text = casing[i];
+                        }
+                        selectList11.appendChild(option11);
+                    }
+
+                    for (i = 0; i < status.length; i++) {
+                        var option1 = document.createElement("option");
+                        if (status[i] == "--Select--") {
+                            option1.setAttribute("value", "");
+                            option1.text = status[i];
+                        }
+                        else {
+                            option1.setAttribute("value", status[i]);
+                            option1.text = status[i];
+                        }
+                        selectstatusList1.appendChild(option1);
+
+                        var option2 = document.createElement("option");
+                        if (status[i] == "--Select--") {
+                            option2.setAttribute("value", "");
+                            option2.text = status[i];
+                        }
+                        else {
+                            option2.setAttribute("value", status[i]);
+                            option2.text = status[i];
+                        }
+                        selectstatusList2.appendChild(option2);
+
+                        var option3 = document.createElement("option");
+                        if (status[i] == "--Select--") {
+                            option3.setAttribute("value", "");
+                            option3.text = status[i];
+                        }
+                        else {
+                            option3.setAttribute("value", status[i]);
+                            option3.text = status[i];
+                        }
+                        selectstatusList3.appendChild(option3);
+
+                        var option4 = document.createElement("option");
+                        if (status[i] == "--Select--") {
+                            option4.setAttribute("value", "");
+                            option4.text = status[i];
+                        }
+                        else {
+                            option4.setAttribute("value", status[i]);
+                            option4.text = status[i];
+                        }
+                        selectstatusList4.appendChild(option4);
+
+                        var option5 = document.createElement("option");
+                        if (status[i] == "--Select--") {
+                            option5.setAttribute("value", "");
+                            option5.text = status[i];
+                        }
+                        else {
+                            option5.setAttribute("value", status[i]);
+                            option5.text = status[i];
+                        }
+                        selectstatusList5.appendChild(option5);
+
+                        var option6 = document.createElement("option");
+                        if (status[i] == "--Select--") {
+                            option6.setAttribute("value", "");
+                            option6.text = status[i];
+                        }
+                        else {
+                            option6.setAttribute("value", status[i]);
+                            option6.text = status[i];
+                        }
+                        selectstatusList6.appendChild(option6);
+
+
+                        var option7 = document.createElement("option");
+                        if (status[i] == "--Select--") {
+                            option7.setAttribute("value", "");
+                            option7.text = status[i];
+                        }
+                        else {
+                            option7.setAttribute("value", status[i]);
+                            option7.text = status[i];
+                        }
+                        selectstatusList7.appendChild(option7);
+
+                        var option8 = document.createElement("option");
+                        if (status[i] == "--Select--") {
+                            option8.setAttribute("value", "");
+                            option8.text = status[i];
+                        }
+                        else {
+                            option8.setAttribute("value", status[i]);
+                            option8.text = status[i];
+                        }
+                        selectstatusList8.appendChild(option8);
+
+                        var option9 = document.createElement("option");
+                        if (status[i] == "--Select--") {
+                            option9.setAttribute("value", "");
+                            option9.text = status[i];
+                        }
+                        else {
+                            option9.setAttribute("value", status[i]);
+                            option9.text = status[i];
+                        }
+                        selectstatusList9.appendChild(option9);
+
+                        var option10 = document.createElement("option");
+                        if (status[i] == "--Select--") {
+                            option10.setAttribute("value", "");
+                            option10.text = status[i];
+                        }
+                        else {
+                            option10.setAttribute("value", status[i]);
+                            option10.text = status[i];
+                        }
+                        selectstatusList10.appendChild(option10);
+
+                        var option11 = document.createElement("option");
+                        if (status[i] == "--Select--") {
+                            option11.setAttribute("value", "");
+                            option11.text = status[i];
+                        }
+                        else {
+                            option11.setAttribute("value", status[i]);
+                            option11.text = status[i];
+                        }
+                        selectstatusList11.appendChild(option11);
+                    }
+
+                    for (i = 0; i < brands.length; i++) {
+                        var option1 = document.createElement("option");
+                        if (brands[i] == "--Select--") {
+                            option1.setAttribute("value", "");
+                            option1.text = brands[i];
+                        }
+                        else {
+                            option1.setAttribute("value", brands[i]);
+                            option1.text = brands[i];
+                        }
+                        selectbrandList1.appendChild(option1);
+
+                        var option2 = document.createElement("option");
+                        if (brands[i] == "--Select--") {
+                            option2.setAttribute("value", "");
+                            option2.text = brands[i];
+                        }
+                        else {
+                            option2.setAttribute("value", brands[i]);
+                            option2.text = brands[i];
+                        }
+                        selectbrandList2.appendChild(option2);
+
+                        var option3 = document.createElement("option");
+                        if (brands[i] == "--Select--") {
+                            option3.setAttribute("value", "");
+                            option3.text = brands[i];
+                        }
+                        else {
+                            option3.setAttribute("value", brands[i]);
+                            option3.text = brands[i];
+                        }
+                        selectbrandList3.appendChild(option3);
+
+                        var option4 = document.createElement("option");
+                        if (brands[i] == "--Select--") {
+                            option4.setAttribute("value", "");
+                            option4.text = brands[i];
+                        }
+                        else {
+                            option4.setAttribute("value", brands[i]);
+                            option4.text = brands[i];
+                        }
+                        selectbrandList4.appendChild(option4);
+
+                        var option5 = document.createElement("option");
+                        if (brands[i] == "--Select--") {
+                            option5.setAttribute("value", "");
+                            option5.text = brands[i];
+                        }
+                        else {
+                            option5.setAttribute("value", brands[i]);
+                            option5.text = brands[i];
+                        }
+                        selectbrandList5.appendChild(option5);
+
+                        var option6 = document.createElement("option");
+                        if (brands[i] == "--Select--") {
+                            option6.setAttribute("value", "");
+                            option6.text = brands[i];
+                        }
+                        else {
+                            option6.setAttribute("value", brands[i]);
+                            option6.text = brands[i];
+                        }
+                        selectbrandList6.appendChild(option6);
+
+
+                        var option7 = document.createElement("option");
+                        if (brands[i] == "--Select--") {
+                            option7.setAttribute("value", "");
+                            option7.text = brands[i];
+                        }
+                        else {
+                            option7.setAttribute("value", brands[i]);
+                            option7.text = brands[i];
+                        }
+                        selectbrandList7.appendChild(option7);
+
+                        var option8 = document.createElement("option");
+                        if (brands[i] == "--Select--") {
+                            option8.setAttribute("value", "");
+                            option8.text = brands[i];
+                        }
+                        else {
+                            option8.setAttribute("value", brands[i]);
+                            option8.text = brands[i];
+                        }
+                        selectbrandList8.appendChild(option8);
+
+                        var option9 = document.createElement("option");
+                        if (brands[i] == "--Select--") {
+                            option9.setAttribute("value", "");
+                            option9.text = brands[i];
+                        }
+                        else {
+                            option9.setAttribute("value", brands[i]);
+                            option9.text = brands[i];
+                        }
+                        selectbrandList9.appendChild(option9);
+
+                        var option10 = document.createElement("option");
+                        if (brands[i] == "--Select--") {
+                            option10.setAttribute("value", "");
+                            option10.text = brands[i];
+                        }
+                        else {
+                            option10.setAttribute("value", brands[i]);
+                            option10.text = brands[i];
+                        }
+                        selectbrandList10.appendChild(option10);
+
+                        var option11 = document.createElement("option");
+                        if (brands[i] == "--Select--") {
+                            option11.setAttribute("value", "");
+                            option11.text = brands[i];
+                        }
+                        else {
+                            option11.setAttribute("value", brands[i]);
+                            option11.text = brands[i];
+                        }
+                        selectbrandList11.appendChild(option11);
+                    }
+
+                    if ($('#customerNumber').html() == '0578749') {
+                        for (i = 0; i < treadCustomer.length; i++) {
+                            var option1 = document.createElement("option");
+                            if (treadCustomer[i] == "--Select--") {
+                                option1.setAttribute("value", "");
+                                option1.text = treadCustomer[i];
+                            }
+                            else {
+                                option1.setAttribute("value", treadCustomer[i]);
+                                option1.text = treadCustomer[i];
+                            }
+                            selecttreadList1.appendChild(option1);
+
+                            var option2 = document.createElement("option");
+                            if (treadCustomer[i] == "--Select--") {
+                                option2.setAttribute("value", "");
+                                option2.text = treadCustomer[i];
+                            }
+                            else {
+                                option2.setAttribute("value", treadCustomer[i]);
+                                option2.text = treadCustomer[i];
+                            }
+                            selecttreadList2.appendChild(option2);
+
+                            var option3 = document.createElement("option");
+                            if (treadCustomer[i] == "--Select--") {
+                                option3.setAttribute("value", "");
+                                option3.text = treadCustomer[i];
+                            }
+                            else {
+                                option3.setAttribute("value", treadCustomer[i]);
+                                option3.text = treadCustomer[i];
+                            }
+                            selecttreadList3.appendChild(option3);
+
+                            var option4 = document.createElement("option");
+                            if (treadCustomer[i] == "--Select--") {
+                                option4.setAttribute("value", "");
+                                option4.text = treadCustomer[i];
+                            }
+                            else {
+                                option4.setAttribute("value", treadCustomer[i]);
+                                option4.text = treadCustomer[i];
+                            }
+                            selecttreadList4.appendChild(option4);
+
+                            var option5 = document.createElement("option");
+                            if (treadCustomer[i] == "--Select--") {
+                                option5.setAttribute("value", "");
+                                option5.text = treadCustomer[i];
+                            }
+                            else {
+                                option5.setAttribute("value", treadCustomer[i]);
+                                option5.text = treadCustomer[i];
+                            }
+                            selecttreadList5.appendChild(option5);
+
+                            var option6 = document.createElement("option");
+                            if (treadCustomer[i] == "--Select--") {
+                                option6.setAttribute("value", "");
+                                option6.text = treadCustomer[i];
+                            }
+                            else {
+                                option6.setAttribute("value", treadCustomer[i]);
+                                option6.text = treadCustomer[i];
+                            }
+                            selecttreadList6.appendChild(option6);
+
+
+                            var option7 = document.createElement("option");
+                            if (treadCustomer[i] == "--Select--") {
+                                option7.setAttribute("value", "");
+                                option7.text = treadCustomer[i];
+                            }
+                            else {
+                                option7.setAttribute("value", treadCustomer[i]);
+                                option7.text = treadCustomer[i];
+                            }
+                            selecttreadList7.appendChild(option7);
+
+                            var option8 = document.createElement("option");
+                            if (treadCustomer[i] == "--Select--") {
+                                option8.setAttribute("value", "");
+                                option8.text = treadCustomer[i];
+                            }
+                            else {
+                                option8.setAttribute("value", treadCustomer[i]);
+                                option8.text = treadCustomer[i];
+                            }
+                            selecttreadList8.appendChild(option8);
+
+                            var option9 = document.createElement("option");
+                            if (treadCustomer[i] == "--Select--") {
+                                option9.setAttribute("value", "");
+                                option9.text = treadCustomer[i];
+                            }
+                            else {
+                                option9.setAttribute("value", treadCustomer[i]);
+                                option9.text = treadCustomer[i];
+                            }
+                            selecttreadList9.appendChild(option9);
+
+                            var option10 = document.createElement("option");
+                            if (treadCustomer[i] == "--Select--") {
+                                option10.setAttribute("value", "");
+                                option10.text = treadCustomer[i];
+                            }
+                            else {
+                                option10.setAttribute("value", treadCustomer[i]);
+                                option10.text = treadCustomer[i];
+                            }
+                            selecttreadList10.appendChild(option10);
+
+                            var option11 = document.createElement("option");
+                            if (treadCustomer[i] == "--Select--") {
+                                option11.setAttribute("value", "");
+                                option11.text = treadCustomer[i];
+                            }
+                            else {
+                                option11.setAttribute("value", treadCustomer[i]);
+                                option11.text = treadCustomer[i];
+                            }
+                            selecttreadList11.appendChild(option11);
+                        }
+                    }
+                    else {
+                        for (i = 0; i < tread.length; i++) {
+                            var option1 = document.createElement("option");
+                            if (tread[i] == "--Select--") {
+                                option1.setAttribute("value", "");
+                                option1.text = tread[i];
+                            }
+                            else {
+                                option1.setAttribute("value", tread[i]);
+                                option1.text = tread[i];
+                            }
+                            selecttreadList1.appendChild(option1);
+
+                            var option2 = document.createElement("option");
+                            if (tread[i] == "--Select--") {
+                                option2.setAttribute("value", "");
+                                option2.text = tread[i];
+                            }
+                            else {
+                                option2.setAttribute("value", tread[i]);
+                                option2.text = tread[i];
+                            }
+                            selecttreadList2.appendChild(option2);
+
+                            var option3 = document.createElement("option");
+                            if (tread[i] == "--Select--") {
+                                option3.setAttribute("value", "");
+                                option3.text = tread[i];
+                            }
+                            else {
+                                option3.setAttribute("value", tread[i]);
+                                option3.text = tread[i];
+                            }
+                            selecttreadList3.appendChild(option3);
+
+                            var option4 = document.createElement("option");
+                            if (tread[i] == "--Select--") {
+                                option4.setAttribute("value", "");
+                                option4.text = tread[i];
+                            }
+                            else {
+                                option4.setAttribute("value", tread[i]);
+                                option4.text = tread[i];
+                            }
+                            selecttreadList4.appendChild(option4);
+
+                            var option5 = document.createElement("option");
+                            if (tread[i] == "--Select--") {
+                                option5.setAttribute("value", "");
+                                option5.text = tread[i];
+                            }
+                            else {
+                                option5.setAttribute("value", tread[i]);
+                                option5.text = tread[i];
+                            }
+                            selecttreadList5.appendChild(option5);
+
+                            var option6 = document.createElement("option");
+                            if (tread[i] == "--Select--") {
+                                option6.setAttribute("value", "");
+                                option6.text = tread[i];
+                            }
+                            else {
+                                option6.setAttribute("value", tread[i]);
+                                option6.text = tread[i];
+                            }
+                            selecttreadList6.appendChild(option6);
+
+
+                            var option7 = document.createElement("option");
+                            if (tread[i] == "--Select--") {
+                                option7.setAttribute("value", "");
+                                option7.text = tread[i];
+                            }
+                            else {
+                                option7.setAttribute("value", tread[i]);
+                                option7.text = tread[i];
+                            }
+                            selecttreadList7.appendChild(option7);
+
+                            var option8 = document.createElement("option");
+                            if (tread[i] == "--Select--") {
+                                option8.setAttribute("value", "");
+                                option8.text = tread[i];
+                            }
+                            else {
+                                option8.setAttribute("value", tread[i]);
+                                option8.text = tread[i];
+                            }
+                            selecttreadList8.appendChild(option8);
+
+                            var option9 = document.createElement("option");
+                            if (tread[i] == "--Select--") {
+                                option9.setAttribute("value", "");
+                                option9.text = tread[i];
+                            }
+                            else {
+                                option9.setAttribute("value", tread[i]);
+                                option9.text = tread[i];
+                            }
+                            selecttreadList9.appendChild(option9);
+
+                            var option10 = document.createElement("option");
+                            if (tread[i] == "--Select--") {
+                                option10.setAttribute("value", "");
+                                option10.text = tread[i];
+                            }
+                            else {
+                                option10.setAttribute("value", tread[i]);
+                                option10.text = tread[i];
+                            }
+                            selecttreadList10.appendChild(option10);
+
+                            var option11 = document.createElement("option");
+                            if (tread[i] == "--Select--") {
+                                option11.setAttribute("value", "");
+                                option11.text = tread[i];
+                            }
+                            else {
+                                option11.setAttribute("value", tread[i]);
+                                option11.text = tread[i];
+                            }
+                            selecttreadList11.appendChild(option11);
+                        }
+                    }
+                }
+            });
 
 
 

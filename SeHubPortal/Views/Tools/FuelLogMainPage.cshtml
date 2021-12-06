@@ -1,0 +1,452 @@
+﻿
+
+@{
+    ViewBag.Title = "FuelLog";
+    Layout = "~/Views/Shared/_ToolsLayout.cshtml";
+}
+
+@model SeHubPortal.ViewModel.FuelLogViewModel
+
+
+<html lang="en">
+<head>
+    <title>Vehicle Info</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+
+    @if (Model.SehubAccess.plant > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.payroll > 0)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.fleetTVT > 0)
+    {
+        <style>
+            #FleetTVTClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTracker > 0)
+    {
+        <style>
+            #treadTrackereClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_access > 0)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.main > 0)
+    {
+        <style>
+            #mainClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings == 3)
+    {
+        <style>
+            #SettingsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.management == 3)
+    {
+        <style>
+            #ManagementClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+
+
+
+
+
+    @if (Model.SehubAccess.tools_dashboard > 0)
+    {
+        <style>
+            #DashboardLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.customer_reporting > 0)
+    {
+        <style>
+            #CRMLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.employee_id == 10577 || Model.SehubAccess.employee_id == 10901)
+    {
+        <style>
+            #ExpnseClaimLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    <style>
+
+        div.a {
+            white-space: nowrap;
+            width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+
+
+        #FuelLogLink {
+            display: block !important;
+        }
+
+        #toolsClicked {
+            display: block !important;
+        }
+
+        #toolsClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #toolsBtn {
+            color: black;
+            font-weight: bold;
+        }
+
+        #FuelLogLink {
+            color: black;
+            font-weight: 700;
+            background-color: #f0f2f5;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            padding-right: 0 !important;
+        }
+
+        .heading {
+            margin: 10px 0px 0px 0px;
+        }
+
+            .heading h2 {
+                margin-top: 8px;
+            }
+
+        .card-header {
+            background-color: #cde8ca;
+        }
+
+            .card-header h6 {
+                color: black;
+            }
+
+
+
+        .imageClass {
+            width: 100%;
+            height: 90%;
+            border-radius: 10%;
+        }
+
+        .card {
+            border: 1px solid #ededed;
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+
+        .card {
+            position: relative;
+            display: -ms-flexbox;
+            display: flex;
+            height: 250px;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid rgba(0,0,0,.125);
+            border-radius: .25rem;
+        }
+
+        p {
+            font-size: 14px;
+        }
+
+        .dash-stats-list {
+            display: flex;
+            flex-flow: column wrap;
+            flex-grow: 1;
+            padding-left: 5px;
+            background-color: #007bff;
+            margin-right: 5px;
+            border-radius: 10px;
+            color: white;
+        }
+
+        .btn-outline-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .transcationButtons {
+            width: 100px;
+        }
+
+        .transcationButtons {
+            margin: 0px 0px 0px 0px;
+            border-radius: 5px;
+            width: 90px;
+            text-align: center;
+        }
+
+        .AuditButton {
+            margin: 0px 0px 0px 12px;
+            border-radius: 5px;
+            width: 130px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        #example_filter {
+            float: right;
+        }
+
+        #example_paginate {
+            float: right;
+        }
+
+        label {
+            display: inline-flex;
+            margin-bottom: .5rem;
+            margin-top: .5rem;
+        }
+
+        .dataTables_filter {
+            float: right;
+        }
+
+            .dataTables_filter label input {
+                margin-left: 10px;
+            }
+
+        #historyTable_info {
+            float: left;
+        }
+
+        #historyTable_paginate {
+            float: right;
+        }
+
+        #auditTable_info {
+            float: left;
+        }
+
+        #auditTable_paginate {
+            float: right;
+        }
+
+        .example::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .example {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+
+        div.scrollmenu {
+            overflow: auto;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="row heading">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Tools")">Tools</a></li>
+                    <li class="breadcrumb-item " aria-current="page">Fuel Log</li>
+
+                </ol>
+            </nav>
+        </div>
+        <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+            <i class="fa fa-bars" style="font-size:25px"></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+    <div class="row" style="padding-left:15px">
+
+
+        @if (Model.SehubAccess.fuel_log >= 1)
+        {
+            <div class="col-lg-2">
+                <a href="@Url.Action("FuelLog", "Tools", new { VIN = "", loc = ""})">
+                    <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#InspectionChecklist" style="width:260px; height:360px">
+                        <div class="card-body text-center" style="height:270px; padding-top:55px">
+                            <img src="~/Content/fuelLog.png" style="margin-top:0px; margin-bottom:35px; width:160px;">
+                            <h5 style="margin-left:0px"><b>Fleet Fuel Log</b></h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-lg-2">
+                <a href="@Url.Action("FuelInvoice", "Tools")">
+                    <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#InspectionChecklist" style="width:260px; height:360px">
+                        <div class="card-body text-center" style="height:270px; padding-top:55px">
+                            <img src="~/Content/InvoiceCustomer.png" style="margin-top:0px; margin-bottom:35px; width:165px;">
+                            <h5 style="margin-left:0px"><b>Fuel Invoiced to Customer</b></h5>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+            <div class="col-lg-2">
+                <a href="@Url.Action("ShopSupplies", "Tools")">
+                    <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#InspectionChecklist" style="width:260px; height:360px">
+                        <div class="card-body text-center" style="height:270px; padding-top:55px">
+                            <img src="~/Content/ShopSupplier.png" style="margin-top:0px; margin-bottom:35px; width:170px;">
+                            <h5 style="margin-left:0px"><b>Shop Supplies Fuel Log</b></h5>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+        }
+
+    </div>
+
+
+
+    <script>
+
+
+        $(document).ready(function () {
+
+             $('#audit-tab').css({ "font-weight": "normal", "color": "#24a0ed" });
+             $('#history-tab').css({ "font-weight": "bold", "color": "black" });
+             $('#history-tab').on("click", function () {
+                 $('#audit-tab').css({ "font-weight": "normal","color": "#24a0ed"});
+                 $('#history-tab').css({ "font-weight": "bold", "color": "black" });
+             })
+
+             $('#audit-tab').on("click", function () {
+                 $('#audit-tab').css({ "font-weight": "bold", "color": "black" });
+                 $('#history-tab').css({ "font-weight": "normal", "color": "#24a0ed" });
+             })
+
+
+             $('#clickThis').on('click', function () {
+                 $('#sidebar').toggleClass('active');
+             });
+
+
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+
+             $('.deleteFuelTransactionBtn').click(function () {
+                var id = $(this).data('id');
+
+                console.log(id);
+                $.ajax({
+                            url: '@Url.Action("DeleteFuelTransaction", "Tools")',
+                            data: { value: id },
+                            type: 'GET',
+                            success: function (data) {
+                                $("#DeleteFuelTransactionDiv").html(data);
+                    }
+                });
+            });
+
+            $.noConflict(true);
+
+            $('#historyTable').DataTable(
+
+                {
+
+                    "aLengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
+                    "iDisplayLength": 10,
+                    "bLengthChange": false,
+                    "orderFixed": [0, "desc"]
+
+                }
+            );
+
+
+            $('#auditTable').DataTable(
+
+                {
+
+                    "aLengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
+                    "iDisplayLength": 10,
+                    "bLengthChange": false,
+                    "orderFixed": [0, "desc"]
+
+                }
+            );
+
+
+        });
+
+
+
+    </script>
+
+</body>
+</html>
+
+
+
+

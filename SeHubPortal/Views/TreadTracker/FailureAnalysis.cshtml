@@ -1,0 +1,1242 @@
+﻿@model SeHubPortal.ViewModel.FailurAnalysisViewmodel
+@{
+    ViewBag.Title = "FailureAnalysis";
+    Layout = "~/Views/Shared/_TreadTrackerLayout.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/NewOrder.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    @if (Model.SehubAccess.plant > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.tools > 0)
+    {
+        <style>
+            #toolsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.management > 0)
+    {
+        <style>
+            #ManagementClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings > 0)
+    {
+        <style>
+            #SettingsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.payroll > 0)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.fleetTVT > 0)
+    {
+        <style>
+            #FleetTVTClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.main > 0)
+    {
+        <style>
+            #mainClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_access > 0)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTrackerDashboard > 0)
+    {
+        <style>
+            #DashboardLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTracker_production_report > 0)
+    {
+        <style>
+            #ProductionReportLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTracker_customers > 0)
+    {
+        <style>
+            #CustomersLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    <style type="text/css">
+
+        #treadTrackereClicked {
+            display: block !important;
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #treadTrackerButton {
+            color: black;
+            font-weight: 600;
+        }
+
+
+        #FailureAnalysisLink {
+            display: block !important;
+            color: black;
+            font-weight: 700;
+            background-color: #f0f2f5;
+        }
+
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .heading {
+            margin: 10px 0px 0px 0px;
+        }
+
+            .heading h2 {
+                margin-top: 8px;
+            }
+
+        .card-header {
+            background-color: #cde8ca;
+        }
+
+            .card-header h6 {
+                color: black;
+            }
+
+        .orderMainBody {
+            margin: 15px 15px 0px 15px;
+            /*background-color:antiquewhite;*/
+        }
+
+        .subHeading {
+            text-align: center;
+            background-color: #e9ecef;
+            margin: 15px 0px 0px 0px;
+        }
+
+        .subTables {
+            margin: 0px 0px 0px 0px;
+        }
+
+        .tableBorders {
+            border-style: solid;
+            border-width: thin;
+            margin: 0px 0px 0px 0px;
+            border-color: #e9ecef;
+        }
+
+        .mainTable {
+            margin: 25px 0px 0px 0px;
+        }
+
+        .textFields {
+            text-align: center;
+        }
+
+        input {
+            text-align: center;
+        }
+
+        .lineStyle {
+            width: 60px;
+            visibility: visible;
+            height: 32px;
+        }
+
+        select {
+            color: black;
+            height: 32px;
+        }
+
+        input, select {
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+
+        .commentsHeader {
+            background-color: #343a40;
+            margin: 0px 3px 0px 3px;
+        }
+
+        .commentsSection {
+            margin: 10px 0px 0px 0px;
+        }
+
+        #comments {
+            width: 100%;
+            height: 100px;
+            box-sizing: border-box;
+        }
+
+        #NewOrderSubmit {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            background-color: #343a40;
+            border-color: #343a40;
+        }
+
+        .SearchInputs {
+            width: 100%;
+            visibility: visible;
+            border-color: black;
+            border-width: 2px;
+        }
+
+        .generateBtn {
+            width: 100%;
+            text-align: center;
+            height: 35px;
+            visibility: visible;
+        }
+
+
+        .fieldStyle {
+            width: 100%;
+            visibility: visible;
+            border-color: gray;
+            border-width: 1px;
+            height: 35px;
+        }
+
+        .TextStyle {
+            vertical-align: middle;
+            color: black;
+        }
+
+        .SearchWith {
+            width: 100%;
+            visibility: visible;
+            border-color: gray;
+            border-width: 1px;
+            height: 32px;
+        }
+
+        .SearchWithBtn {
+            text-align: center;
+            height: 35px;
+        }
+
+        .example::-webkit-scrollbar {
+            display: none;
+        }
+
+        .example {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+
+
+        @@media screen {
+            #printSection {
+                display: none;
+            }
+
+            #dontshow {
+                display: none;
+            }
+        }
+
+        @@media print {
+
+
+            .dontShowInPrint {
+                display: none;
+            }
+
+            #printSection, #printSection * {
+                visibility: visible;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="row dontShowInPrint">
+        <div class="col-lg-12">
+            <div class="row heading">
+                <div class="col">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
+                            <li class="breadcrumb-item"><a href="@Url.Action("FailureAnalysis", "TreadTracker")">Tread Tracker</a></li>
+                            <li class="breadcrumb-item " aria-current="page">Failure Analysis</li>
+                        </ol>
+                    </nav>
+                </div>
+                <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+                    <i class="fa fa-bars" style="font-size:25px"></i>
+                    <span class="sr-only">Toggle Menu</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-left:15px">
+        <div class="col-lg-4 dontShowInPrint">
+            <div class="row" style="height:745px; background-color:white; padding:15px">
+                <div class="col-lg-12">
+                    <div class="row" style="margin-bottom:10px;">
+                        <div class="col-lg-12" style="padding:0px">
+                            <div class="card" style="border:2px solid #aeafb0">
+                                <div class="card-header" style="height:35px; background-color: #c0c2c4 !important; padding:1px 0px 1px 15px;">
+                                    <div class="row">
+                                        <div class="col-lg-2" style="padding-top:1px;">
+                                            <button style="width: 30px; height: 30px; border-radius: 25px; background-color: gray; color: white; border: 2px solid white; font-weight: bold; font-size: 12px ">1</button>
+                                        </div>
+                                        <div class="col-lg-7" style="padding-top:3px">
+                                            <h4 style="font-weight:bold; color:white">Customers</h4>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="card-body" style="padding:10px 35px 5px 35px">
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <div class="row">
+                                                <label id="customerAllLable" style="margin-right:7px; margin-left:0px; font-weight:bold">
+                                                    All
+                                                </label>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" style="width:40px; height:20px" class="custom-control-input" id="customersCheckBox">
+                                                    <label class="custom-control-label" for="customersCheckBox">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-9">
+                                            <div class="row">
+                                                @Html.DropDownListFor(m => m.Customer, Model.Customers, "Select Customer", new { @disabled = "true", @style = "width:100%; height:25px", @id = "customersDropDown", @onchange = "CustomerChange(this.value)" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-bottom:10px;">
+                        <div class="col-lg-12" style="padding:0px">
+                            <div class="card" style="border:2px solid #aeafb0">
+                                <div class="card-header" style="height:35px; background-color: #c0c2c4 !important; padding:1px 0px 1px 15px;">
+                                    <div class="row">
+                                        <div class="col-lg-2" style="padding-top:1px;">
+                                            <button style="width: 30px; height: 30px; border-radius: 25px; background-color: gray; color: white; border: 2px solid white; font-weight: bold; font-size: 12px ">2</button>
+                                        </div>
+                                        <div class="col-lg-7" style="padding-top:3px">
+                                            <h4 style="font-weight:bold; color:white">CTA Locations</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body" style="padding:10px 35px 5px 35px">
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <div class="row">
+                                                <label id="locationAllLable" style="margin-right:7px; margin-left:0px; font-weight:bold">
+                                                    All
+                                                </label>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" style="width:40px; height:20px" class="custom-control-input" id="locationsCheckBox">
+                                                    <label class="custom-control-label" for="locationsCheckBox">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-9">
+                                            <div class="row">
+                                                @Html.DropDownListFor(m => m.Location, Model.Locations, new { @disabled = "true", @style = "width:100%; height:25px", @id = "locationsDropDown", @onchange = "changeLocation(this.value)" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-bottom:10px;">
+                        <div class="col-lg-12" style="padding:0px">
+                            <div class="card" style="border:2px solid #aeafb0">
+                                <div class="card-header" style="height:35px; background-color: #c0c2c4 !important; padding:1px 0px 1px 15px;">
+                                    <div class="row">
+                                        <div class="col-lg-2" style="padding-top:1px;">
+                                            <button style="width: 30px;height: 30px;border-radius: 25px;background-color: gray;color: white;border: 2px solid white;font-weight: bold;font-size: 12px">3</button>
+                                        </div>
+                                        <div class="col-lg-7" style="padding-top:3px">
+                                            <h4 style="font-weight:bold; color:white">Date Range</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body" style="padding:10px 35px 10px 45px">
+                                    <div class="row">
+                                        <div class="col-lg-2" style="padding-left:5px">
+                                            <div class="row">
+                                                <label id="dateAllLable" style="margin-right:7px; margin-left:0px; font-weight:bold">
+                                                    All
+                                                </label>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" style="width:40px; height:20px" class="custom-control-input" id="dateCheckBox">
+                                                    <label class="custom-control-label" for="dateCheckBox">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-10">
+                                            <div class="row">
+                                                <div class="col-lg-3">
+                                                    <h6>Start</h6>
+                                                </div>
+                                                <div class="col-lg-9">
+                                                    <input disabled id="startDateSelection" style="width:195px; height:25px" type="date" name="name" value="" />
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-top:10px;">
+                                                <div class="col-lg-3">
+                                                    <h6>End</h6>
+                                                </div>
+                                                <div class="col-lg-9">
+                                                    <input disabled id="endDateSelection" style="width:195px; height:25px" type="date" name="name" value="" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-bottom:10px;">
+                        <div class="col-lg-12" style="padding:0px">
+                            <div class="card" style="border:2px solid #aeafb0">
+                                <div class="card-header" style="height:35px; background-color: #c0c2c4 !important; padding:1px 0px 1px 15px;">
+                                    <div class="row">
+                                        <div class="col-lg-2" style="padding-top:1px;">
+                                            <button style="width: 30px; height: 30px; border-radius: 25px; background-color: gray; color: white; border: 2px solid white; font-weight: bold; font-size: 12px ">4</button>
+                                        </div>
+                                        <div class="col-lg-7" style="padding-top:3px">
+                                            <h4 style="font-weight:bold; color:white">Work Station</h4>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="card-body" style="padding:10px 35px 10px 10px">
+
+                                    <div class="example" style="overflow-y:auto; height:60px; margin-top:0px">
+
+                                        <div class="row">
+                                            <div class="col-lg-6" style="padding-right:0px;">
+                                                <div class="row" style="padding:0px 10px 0px 10px">
+                                                    <div class="col-lg-12">
+                                                        <input id="PR" type="checkbox" checked name="name" value="" />
+                                                        <label style="margin-left:15px; padding-top:0px; font-size:11px">
+                                                            Preliminary Inspection
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="row" style="padding:0px 10px 0px 10px">
+                                                    <div class="col-lg-12">
+                                                        <input id="NR" type="checkbox" checked name="name" value="" />
+                                                        <label style="margin-left:15px; font-size:11px">
+                                                            NDT Station
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="row" style="padding:0px 10px 0px 10px">
+                                                    <div class="col-lg-12">
+                                                        <input id="BR" type="checkbox" checked name="name" value="" />
+                                                        <label style="margin-left:15px; font-size:11px">
+                                                            Buffer-Builder
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="row" style="padding:0px 10px 0px 10px">
+                                                    <div class="col-lg-12">
+                                                        <input id="FR" type="checkbox" checked name="name" value="" />
+                                                        <label style="margin-left:15px; font-size:11px">
+                                                            Final Inspection
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-bottom:10px;">
+                        <div class="col-lg-12" style="padding:0px">
+                            <div class="card" style="height: 215px; border:2px solid #aeafb0">
+                                <div class="card-header" style="height:35px; background-color: #c0c2c4 !important; padding:1px 0px 1px 15px;">
+                                    <div class="row">
+                                        <div class="col-lg-2" style="padding-top:1px;">
+                                            <button style="width: 30px; height: 30px; border-radius: 25px; background-color: gray; color: white; border: 2px solid white; font-weight: bold; font-size: 12px ">5</button>
+                                        </div>
+                                        <div class="col-lg-7" style="padding-top:3px">
+                                            <h4 style="font-weight:bold; color:white">Failure Codes</h4>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="card-body" style="padding:10px 35px 10px 10px">
+                                    <div class="row" style="padding-left:25px">
+                                        <div class="col-lg-12 text-center">
+                                            <div class="row">
+                                                <label id="failureCodesCheckAllLable" style="margin-right:7px; margin-left:0px; font-weight:bold">
+                                                    Check All
+                                                </label>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" style="width:40px; height:20px" class="custom-control-input" id="ToggleForFailureCodes">
+                                                    <label id="failureCodesUnCheckAllLable" class="custom-control-label" for="ToggleForFailureCodes">
+                                                        Un-Check All
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <hr style="margin-left:auto; margin-right: auto; margin-top:0px; margin-bottom:5px; width:363px; border-color:#969a9e" />
+
+                                    <div class="example" style="overflow-y:auto; height:120px">
+                                        @foreach (var item in Model.FailureCodes)
+                                        {
+                                            <div class="row" style="padding:0px 10px 0px 10px">
+                                                <div class="col-lg-1">
+                                                    <input class="checkBoxControlFailureCodes" id="@item.code" type="checkbox" checked name="name" value="" />
+                                                </div>
+                                                <div class="col-lg-2" style="font-size:12px;">
+                                                    @item.code
+                                                </div>
+                                                <div class="col-lg-8" style="font-size:12px;">
+                                                    @item.description
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+
+
+                                    <span id="span" style="display:none">
+                                        @foreach (var item in Model.FailureCodes)
+                                        {
+                                            <text>
+                                                @item.code;@item.description,
+                                            </text>
+                                        }
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12" style="padding-right:0px">
+                            <button id="clear" class="btn btn-danger" style="float:right;margin-left:10px; padding: 3px 20px 3px 20px">Clear</button>
+                            <button id="build" class="btn btn-primary" style="float:right; margin-left:10px; padding: 3px 20px 3px 20px">Build</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 text-center" style="display:none; padding-top:17%" id="lodingWheel">
+            <img style="width:150px" src="~/Content/giphy.gif" alt="Alternate Text" />
+        </div>
+        <div class="col-lg-8" id="RightPane" style="display:none; padding-right:30px">
+            <div class="row text-center" id="dontshow">
+                <div class="col-md-4"></div>
+                <div class="col-md-4 text-center"><img src="~/Content/LoginLogo.png" style="margin-left: auto;margin-right: auto; width:300px;"></div>
+                <div class="col-md-4 text-right" style="padding-right:15px; padding-top:40px">
+                    <p style="margin: 0px; padding: 0px; line-height : 10px"><u><b>HEAD OFFICE</b></u></p>
+                    <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">1123 Topsail Road, P.O. Box 549</font></p>
+                    <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Mount Pearl, NL A1N 2W4</font></p>
+                    <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Tel: (709) 364-6808 • Fax: (709) 364-0074</font></p>
+                    <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">24 Hour: (709) 368-5971</font></p>
+                    <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Email: cta@citytire.com • www.citytire.com</font></p>
+                </div>
+            </div>
+            <div class="card" style="height:100%">
+                <div class="card-header dontShowInPrint" style="padding-bottom:5px; background-color:white">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h5>Failure Analysis</h5>
+                        </div>
+                        <div class="col-lg-6">
+                            <input id="btnPrint" class="btn btn-primary" style="padding-top:2px; margin-top:0px; width:100px; height:30px; float:right" type="text" readonly name="name" value="print" />
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body" id="printThis" style="padding:0px 15px 15px 15px">
+
+
+                    <table style="margin:10px 0px 10px 0px; width:100%; border:1px solid #dee0e3">
+                        <tr id="title">
+                            <td style="padding:10px; width:5%; text-align:center">
+                                <img style="width:80px" src="~/Content/trdIcon.png" alt="Alternate Text" />
+                            </td>
+                            <td style="padding:20px; width:23%">
+                                <div class="row">
+                                    <div class="col-lg-12 text-left">
+                                        <h5>Tread </h5>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 text-left">
+                                        <h5>Tracker </h5>
+                                    </div>
+                                </div>
+
+                            </td>
+                            <td style="padding:10px; width:33%">
+                                <div class="row">
+                                    <div class="col-lg-12 text-center">
+                                        <h3>Failure Analysis</h3>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="padding-right:30px; width:33%">
+                                <div class="row">
+                                    <div class="col-lg-12 text-right">
+                                        <h5>@DateTime.Today.ToString("dddd") @DateTime.Today.ToString("MMM dd,yyyy") </h5>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="row" style="padding:0px 15px 10px 15px">
+                        <div class="card" style="width:100%">
+                            <div class="card-header text-center" style="padding:3px 0px 0px 0px; background-color:#84888c;">
+                                <h6 style="color:white">
+                                    Failure Codes
+                                </h6>
+                            </div>
+                            <div class="card-body" style="padding:0px">
+                                <table style="width:100%; border:1px solid #dee0e3">
+                                    <tr id="title">
+                                        <td style="padding:10px; width:15%">
+                                            <div class="row" >
+                                                <div class="col-lg-7">
+                                                    Location
+                                                </div>
+                                                <div class="col-lg-5 location" style="font-weight:bold">
+
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="padding:10px; width:30%">
+                                            <div class="row">
+                                                <div class="col-lg-4">
+                                                    Customer
+                                                </div>
+                                                <div class="col-lg-8 customer" style="font-weight:bold">
+
+                                                </div>
+                                            </div>
+
+                                        </td>
+
+                                        <td style="padding:10px; width:25%">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    Start Date
+                                                </div>
+                                                <div class="col-lg-7 startDate" style="font-weight:bold">
+
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                        <td style="padding:10px; width:25%">
+                                            <div class="row" style="margin-top:10px">
+                                                <div class="col-lg-4">
+                                                    End Date
+                                                </div>
+                                                <div class="col-lg-8 endDate" style="font-weight:bold">
+
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-header" style="padding:0px; background-color:#84888c;">
+                                    <div class="row">
+                                        <div class="col-lg-2"></div>
+                                        <div class="col-lg-8 text-center">
+                                            <h6 style="color:white">
+                                                Failure Codes
+                                            </h6>
+                                        </div>
+                                        <div class="col-lg-2 text-right" style="padding-right:20px; padding-top:3px">
+                                            <input id="min_failure_codes_card" class="btn btn-secondary dontShowInPrint" readonly style="float:right; font-size:25px; color:white; width:30px; height:20px" value="+" />
+                                            <input id="max_failure_codes_card" class="btn btn-secondary dontShowInPrint" readonly style="float:right; display:none; font-size:25px; color:white; width:30px; height:20px" value="-" />
+
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="card-body example" id="failure_codes_card" style="padding-top:10px; height:110px; overflow:auto">
+
+                                    
+                                    <div class="row" id="failureCodesRw" style="font-size:8px; padding:0px 15px 0px 15px">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top:10px">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-header text-center" style="padding:3px 0px 0px 0px; background-color:#84888c;">
+                                    <div class="row">
+                                        <div class="col-lg-2"></div>
+                                        <div class="col-lg-8 text-center">
+                                            <h6 style="color:white">
+                                                Barcode Info
+                                            </h6>
+                                        </div>
+                                        <div class="col-lg-2 text-right" style="padding-right:20px; padding-top:3px">
+                                            <input id="min_barcode_card" class="btn btn-secondary dontShowInPrint" readonly style="float:right; font-size:25px; color:white; width:30px; height:20px" value="+" />
+                                            <input id="max_barcode_card" class="btn btn-secondary dontShowInPrint" readonly style="float:right; display:none; font-size:25px; color:white; width:30px; height:20px" value="-" />
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body" style="padding:10px 30px 0px 30px">
+
+                                    <div class="row" style="padding:0px 15px 0px 15px">
+                                        <table>
+                                            <thead style="background-color:#84888c; color:white">
+                                                <tr style="width:100%; border:1px solid #d7dbde">
+                                                    <th scope="col" style="width:60px; font-size:10px; padding:0px; margin:0px;" class="text-center">Line Code</th>
+                                                    <th scope="col" style="width:100px; font-size:10px; padding:0px; margin:0px;" class="text-center">Barcode</th>
+                                                    <th scope="col" style="width:110px; font-size:10px; padding:0px; margin:0px;" class="text-center">Serial/Dot</th>
+                                                    <th scope="col" style="width:130px; font-size:10px; padding:0px; margin:0px;" class="text-center">Size</th>
+                                                    <th scope="col" style="width:140px; font-size:10px; padding:0px; margin:0px;" class="text-center">Brand</th>
+                                                    <th scope="col" style="width:70px; font-size:10px; padding:0px; margin:0px;" class="text-center">Tread</th>
+                                                    <th scope="col" style="width:70px; font-size:10px; padding:0px; margin:0px;" class="text-center">Pre result</th>
+                                                    <th scope="col" style="width:70px; font-size:10px; padding:0px; margin:0px;" class="text-center">NDT result</th>
+                                                    <th scope="col" style="width:70px; font-size:10px; padding:0px; margin:0px;" class="text-center">Buffer result</th>
+                                                    <th scope="col" style="width:70px; font-size:10px; padding:0px; margin:0px;" class="text-center">Final result</th>
+                                                    <th scope="col" style="width:80px; font-size:10px; padding:0px; margin:0px;" class="text-center">Loc ID</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+
+
+
+                                    <div class="row example" id="bar_codes_card" style="height:230px; margin-bottom:10px; overflow:auto; padding:0px 15px 0px 15px;">
+                                        <table id="mainTable" class="table example" style="margin-left:auto; margin-right:auto">
+                                            <tbody style="border-bottom:1px solid #d7dbde">
+                                                @{
+                                                    var BarcodeWorkOrderJoin1 = (from a in Model.barcodeInfo
+                                                                                 join b in Model.workOrderInfo on a.retread_workorder equals b.retread_workorder
+                                                                                 orderby a.preliminary_inspection_date
+                                                                                 select new
+                                                                                 {
+                                                                                     line_code = a.line_code,
+                                                                                     barcode = a.barcode,
+                                                                                     serial_dot = a.serial_dot,
+                                                                                     casing_size = a.casing_size,
+                                                                                     casing_brand = a.casing_brand,
+                                                                                     retread_design = a.retread_design,
+                                                                                     preliminary_inspection_result = a.preliminary_inspection_result,
+                                                                                     ndt_machine_result = a.ndt_machine_result,
+                                                                                     buffer_builder_result = a.buffer_builder_result,
+                                                                                     final_inspection_result = a.final_inspection_result,
+                                                                                     ship_to_location = a.ship_to_location,
+                                                                                     loc = b.loc_Id,
+                                                                                     preliminary_inspection_date = a.preliminary_inspection_date,
+                                                                                     customer_number = b.customer_number
+                                                                                 }).ToList();
+                                                }
+
+                                                @foreach (var item in BarcodeWorkOrderJoin1)
+                                                {
+                                                    string PrimRes = item.preliminary_inspection_result + "_PR";
+                                                    string NDTRes = item.ndt_machine_result + "_NR";
+                                                    string BuffRes = item.buffer_builder_result + "_BR";
+                                                    string FinalRes = item.final_inspection_result + "_FR";
+                                                    string Loc = item.loc;
+                                                    string CustomerNumber = item.customer_number;
+
+                                                    <tr class="@item.preliminary_inspection_date @Loc @CustomerNumber commonClass @PrimRes @NDTRes @BuffRes @FinalRes" style="display:block;">
+                                                        <td style="width:60px !important; font-size:13px; text-align:center; padding:5px; border-left:1px solid #d7dbde; ">@item.line_code</td>
+                                                        <td style="width:100px !important; font-size:13px; text-align:center; padding:5px; ">@item.barcode</td>
+                                                        <td style="width:110px !important; font-size:13px; text-align:center; padding:5px">@item.serial_dot</td>
+                                                        <td style="width:130px !important; font-size:13px; text-align:center; padding:5px">@item.casing_size</td>
+                                                        <td style="width:140px !important; font-size:13px; text-align:center; padding:5px">@item.casing_brand</td>
+                                                        <td style="width:70px !important; font-size:13px; text-align:center; padding:5px">@item.retread_design</td>
+                                                        <td style="width:70px !important; font-size:13px; text-align:center; padding:5px">@item.preliminary_inspection_result</td>
+                                                        <td style="width:70px !important; font-size:13px; text-align:center; padding:5px">@item.ndt_machine_result</td>
+                                                        <td style="width:70px !important; font-size:13px; text-align:center; padding:5px">@item.buffer_builder_result</td>
+                                                        <td style="width:70px !important; font-size:13px; text-align:center; padding:5px">@item.final_inspection_result</td>
+                                                        <td style="width:80px !important; font-size:13px; text-align:center; padding:5px; border-right:1px solid #d7dbde">@item.loc</td>
+                                                    </tr>
+                                                }
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("btnPrint").onclick = function () {
+            $('#bar_codes_card').css("height", "auto")
+            $('#failure_codes_card').css("height", "auto")
+            print();
+            $('#bar_codes_card').css("height", "230px")
+            $('#failure_codes_card').css("height", "110px")
+        }
+
+
+        $('#min_failure_codes_card').click(function () {
+            $('#failure_codes_card').css("height", "auto");
+            $('#min_failure_codes_card').css("display", "none");
+            $('#max_failure_codes_card').css("display", "block");
+        });
+
+        $('#max_failure_codes_card').click(function () {
+            $('#failure_codes_card').css("height", "110px")
+            $('#min_failure_codes_card').css("display", "block");
+            $('#max_failure_codes_card').css("display", "none");
+        });
+
+        $('#min_barcode_card').click(function () {
+            $('#bar_codes_card').css("height", "auto");
+            $('#min_barcode_card').css("display", "none");
+            $('#max_barcode_card').css("display", "block");
+        });
+
+        $('#max_barcode_card').click(function () {
+            $('#bar_codes_card').css("height", "230px")
+            $('#min_barcode_card').css("display", "block");
+            $('#max_barcode_card').css("display", "none");
+        });
+
+
+
+        $('#build').click(function () {
+
+            var startDate = new Date($('#startDateSelection').val());
+            var endDate = new Date($('#endDateSelection').val());
+
+            $('.commonClass').css("display" , "none")
+            $('#failureCodesRw').html("")
+            var obj = $('#span').html().split(",")        
+            obj.forEach(function (code) {
+                if (document.getElementById(code.split(";")[0].trim()).checked == true) {
+                    //alert(code.split(";")[0].trim())
+                    $('#failureCodesRw').html($('#failureCodesRw').html() + '<div class="col-md-3" style="font-size:9px"><div class="row"><div class="col-md-1 text-center" style="padding:0px;">' + code.split(";")[0].trim() + '</div><div class="col-md-11">' + code.split(";")[1] + '</div></div></div>')
+                    //$('#failureCodesRw').html($('#failureCodesRw').html()+ "&nbsp;" + "&nbsp;" + "&nbsp;"+ "&nbsp;" + "&nbsp;" + "&nbsp;"+ "&nbsp;" + "&nbsp;" + "&nbsp;"+ "&nbsp;" + "&nbsp;" + code.split(";")[0].trim() + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + " " + code.split(";")[1]) + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;"
+
+                    if ($('#dateCheckBox').is(':checked')) {
+
+                        if (document.getElementById("PR").checked == true) {                        
+                            $('.' + code.split(";")[0].trim() + '_PR').each(function () {
+                                //alert(jQuery(this).attr('class').split(' ')[0])
+                                if (startDate < new Date(jQuery(this).attr('class').split(' ')[0]) && new Date(jQuery(this).attr('class').split(' ')[0]) < endDate) {
+                                    $(this).css("display", "block")
+                                }
+                                else {
+                                    $(this).css("display", "none")
+                                }
+                            })
+                        }
+                        else {
+                            $('.' + code.split(";")[0].trim() + '_PR').css("display", "none");
+                        }
+
+                        if (document.getElementById("NR").checked == true) {
+                            $('.' + code.split(";")[0].trim() + '_NR').each(function () {
+                                //alert(jQuery(this).attr('class').split(' ')[0])
+                                if (startDate < new Date(jQuery(this).attr('class').split(' ')[0]) && new Date(jQuery(this).attr('class').split(' ')[0]) < endDate) {
+                                    $(this).css("display", "block")
+                                }
+                                else {
+                                    $(this).css("display", "none")
+                                }
+                            })
+                        }
+                        else {
+                            $('.' + code.split(";")[0].trim() + '_NR').css("display", "none");
+                        }
+
+                        if (document.getElementById("BR").checked == true) {
+                            $('.' + code.split(";")[0].trim() + '_BR').each(function () {
+                                //alert(jQuery(this).attr('class').split(' ')[0])
+                                if (startDate < new Date(jQuery(this).attr('class').split(' ')[0]) && new Date(jQuery(this).attr('class').split(' ')[0]) < endDate) {
+                                    $(this).css("display", "block")
+                                }
+                                else {
+                                    $(this).css("display", "none")
+                                }
+                            })
+                        }
+                        else {
+                            $('.' + code.split(";")[0].trim() + '_BR').css("display", "none");
+                        }
+
+                        if (document.getElementById("FR").checked == true) {
+                            $('.' + code.split(";")[0].trim() + '_FR').each(function () {
+                                //alert(jQuery(this).attr('class').split(' ')[0])
+                                if (startDate < new Date(jQuery(this).attr('class').split(' ')[0]) && new Date(jQuery(this).attr('class').split(' ')[0]) < endDate) {
+                                    $(this).css("display", "block")
+                                }
+                                else {
+                                    $(this).css("display", "none")
+                                }
+                            })
+                        }
+                        else {
+                            $('.' + code.split(";")[0].trim() + '_FR').css("display", "none");
+                        }
+
+                    }
+                    else {
+                        if (document.getElementById("PR").checked == true) {
+                            $('.' + code.split(";")[0].trim() + '_PR').css("display", "block");
+                        }
+                        else {
+                            $('.' + code.split(";")[0].trim() + '_PR').css("display", "none");
+                        }
+
+                        if (document.getElementById("NR").checked == true) {
+                            $('.' + code.split(";")[0].trim() + '_NR').css("display", "block");
+                        }
+                        else {
+                            $('.' + code.split(";")[0].trim() + '_NR').css("display", "none");
+                        }
+
+                        if (document.getElementById("BR").checked == true) {
+                            $('.' + code.split(";")[0].trim() + '_BR').css("display", "block");
+                        }
+                        else {
+                            $('.' + code.split(";")[0].trim() + '_BR').css("display", "none");
+                        }
+
+                        if (document.getElementById("FR").checked == true) {
+                            $('.' + code.split(";")[0].trim() + '_FR').css("display", "block");
+                        }
+                        else {
+                            $('.' + code.split(";")[0].trim() + '_FR').css("display", "none");
+                        }
+                    }
+
+                    if ($('#locationsCheckBox').is(':checked') && $("#locationsDropDown").val() != "") {
+                        $("#mainTable tbody tr:not(."+$("#locationsDropDown").val()+ ')').hide();
+                    }
+                    
+                    $('#RightPane').fadeIn();
+                }
+            });
+        });
+
+        function final() {
+
+            $('#lodingWheel').fadeOut();
+
+            //$("tr").each(function () {
+                //if ($(this).css("display") == "block") {
+                    //alert("Reached")
+                //}
+            //});
+        }
+
+        $('#clear').click(function () {
+            $('#RightPane').fadeOut();
+        });
+
+        $("#ToggleForFailureCodes").on('change', function () {
+            if ($('#ToggleForFailureCodes').is(':checked')) {
+                $('.commonClass').css("display", "none")
+                $('.checkBoxControlFailureCodes').prop("checked", false);
+
+                $('#failureCodesUnCheckAllLable').css("font-weight", "bold");
+                $('#failureCodesCheckAllLable').css("font-weight", "normal");
+
+                $('#failureCodesUnCheckAllLable').css("color", "black");
+                $('#failureCodesCheckAllLable').css("color", "#a6a8ab");
+            }
+            else {
+                //$('.commonClass').css("display" , "none")
+                $('.checkBoxControlFailureCodes').prop("checked", true);
+
+                $('#failureCodesUnCheckAllLable').css("font-weight", "normal");
+                $('#failureCodesCheckAllLable').css("font-weight", "bold");
+
+                $('#failureCodesUnCheckAllLable').css("color", "#a6a8ab");
+                $('#failureCodesCheckAllLable').css("color", "black");
+
+            }
+        });
+
+
+        $('#customersCheckBox').change(function () {
+            if ($('#customersCheckBox').is(':checked')) {
+
+                $('.customer').html("Select Customer");
+
+                $('#customerAllLable').css("font-weight", "normal");
+                $('#customerAllLable').css("color", "#a6a8ab");
+
+                $('#customersDropDown').prop("disabled", false);
+            }
+            else {
+                $('.customer').html("All Customers");
+                $('#customersDropDown').val("");
+                $('#customerAllLable').css("font-weight", "bold");
+                $('#customerAllLable').css("color", "black");
+
+                $('#customersDropDown').prop("disabled", true);
+            }
+
+        });
+
+
+        $('#locationsCheckBox').change(function () {
+            if ($('#locationsCheckBox').is(':checked')) {
+
+                //$('.location').html("Select Location");
+
+                $('#locationAllLable').css("font-weight", "normal");
+                $('#locationAllLable').css("color", "#a6a8ab");
+
+                $('#locationsDropDown').prop("disabled", false);
+
+            }
+            else {
+                //$('.location').html("All Locations");
+                $('#locationsDropDown').val("");
+                $('#locationAllLable').css("font-weight", "bold");
+                $('#locationAllLable').css("color", "black");
+
+                $('#locationsDropDown').prop("disabled", true);
+
+            }
+
+        });
+
+        $('#dateCheckBox').change(function () {
+            if ($('#dateCheckBox').is(':checked')) {
+                $('.startDate').html("Select Start Date");
+                $('.endDate').html("Select End Date");
+
+
+                $('#dateAllLable').css("font-weight", "normal");
+                $('#dateAllLable').css("color", "#a6a8ab");
+
+                $('#startDateSelection').prop("disabled", false);
+                $('#endDateSelection').prop("disabled", false);
+            }
+            else {
+                $('.startDate').html("All Dates");
+                $('.endDate').html("All Dates");
+
+                $('#startDateSelection').val("");
+                $('#endDateSelection').val("");
+
+                $('#dateAllLable').css("font-weight", "bold");
+                $('#dateAllLable').css("color", "black");
+
+                $('#startDateSelection').prop("disabled", true);
+                $('#endDateSelection').prop("disabled", true);
+            }
+
+        });
+
+
+        $(document).ready(function () {
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+
+        });
+
+
+        function CustomerChange(value1) {
+            $('.customer').html($("#customersDropDown option:selected").text());
+        };
+
+        function changeLocation(value1) {
+            $('.location').html($("#locationsDropDown option:selected").text());
+        };
+
+        $('#startDateSelection').change(function () {
+
+            $('#dateCheckBox').prop('checked', true);
+
+            var d = new Date($('#startDateSelection').val());
+
+            date = d.toString();
+
+            var shortDay = date.substring(0, 3);
+            var longDay = "";
+
+            if (shortDay == "Mon") {
+                longDay = "Monday"
+            }
+            else if (shortDay == "Tue") {
+                longDay = "Tuesday"
+            }
+            else if (shortDay == "Wed") {
+                longDay = "Wednesday"
+            }
+            else if (shortDay == "Thu") {
+                longDay = "Thursday"
+            }
+            else if (shortDay == "Fri") {
+                longDay = "Friday"
+            }
+            else if (shortDay == "Sat") {
+                longDay = "Saturday"
+            }
+            else if (shortDay == "Sun") {
+                longDay = "Sunday"
+            }
+
+            var month = date.substring(4, 7);
+
+            var dateNum = date.substring(8, 10);
+
+            var yearNum = date.substring(11, 15);
+
+
+            $(".startDate").html(longDay + " - " + month + " " + dateNum + ", " + yearNum);
+
+        });
+
+        $('#endDateSelection').change(function () {
+
+            $('#dateCheckBox').prop('checked', true);
+
+            var d = new Date($('#endDateSelection').val());
+
+            date = d.toString();
+
+            var shortDay = date.substring(0, 3);
+            var longDay = "";
+
+            if (shortDay == "Mon") {
+                longDay = "Monday"
+            }
+            else if (shortDay == "Tue") {
+                longDay = "Tuesday"
+            }
+            else if (shortDay == "Wed") {
+                longDay = "Wednesday"
+            }
+            else if (shortDay == "Thu") {
+                longDay = "Thursday"
+            }
+            else if (shortDay == "Fri") {
+                longDay = "Friday"
+            }
+            else if (shortDay == "Sat") {
+                longDay = "Saturday"
+            }
+            else if (shortDay == "Sun") {
+                longDay = "Sunday"
+            }
+
+            var month = date.substring(4, 7);
+
+            var dateNum = date.substring(8, 10);
+
+            var yearNum = date.substring(11, 15);
+
+
+            $(".endDate").html(longDay + " - " + month + " " + dateNum + ", " + yearNum);
+
+        });
+
+
+    </script>
+</body>
+</html>
+

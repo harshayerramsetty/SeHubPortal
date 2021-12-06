@@ -100,5 +100,10 @@ namespace SeHubPortal.ViewModel
         public int wed_2_sel_id { get; set; }
         public int thurs_2_sel_id { get; set; }
         public int fri_2_sel_id { get; set; }
+
+        public double vacation { get; set; }
+        public double vacation_buyin { get; set; }
+        public string compensation_type { get; set; }
+        public string position { get; set; }
     }
 }

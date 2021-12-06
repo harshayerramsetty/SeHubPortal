@@ -1,0 +1,866 @@
+﻿
+@{
+    ViewBag.Title = "EditOrder";
+    //Layout = "~/Views/Shared/_TreadTrackerLayout.cshtml";
+}
+@model SeHubPortal.ViewModel.EditOrderModel
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <link href="~/Content/NewOrder.css" rel="stylesheet" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>*@
+
+
+    <style type="text/css">
+
+        .card-header {
+            background-color: #cde8ca;
+        }
+
+            .card-header h6 {
+                color: black;
+            }
+
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .heading {
+            margin: 10px 0px 0px 0px;
+        }
+
+            .heading h2 {
+                margin-top: 8px;
+            }
+
+        .orderMainBody {
+            margin: 0px 15px 0px 15px;
+        }
+
+        .subHeading {
+            text-align: center;
+            background-color: #e9ecef;
+            margin: 15px 0px 0px 0px;
+            color: gray;
+        }
+
+        .subTables {
+            margin: 0px 0px 0px 0px;
+        }
+
+        .tableBorders {
+            border-style: solid;
+            border-width: thin;
+            margin: 0px 0px 0px 0px;
+            border-color: #e9ecef;
+            color: black;
+        }
+
+        thead th {
+            /*font-size: 1em;*/
+            padding: 1px !important;
+            height: 25px;
+            font-size: 13px;
+        }
+
+        .mainTable {
+            margin: 5px 0px 0px 0px;
+        }
+
+        .textFields {
+            text-align: center;
+        }
+
+        input {
+            text-align: center;
+            visibility: visible;
+            height: 32px;
+        }
+
+        .lineStyle {
+            width: 60px;
+            visibility: visible;
+            height: 32px;
+        }
+
+        .LineValues {
+            width: 60px;
+        }
+
+        .SerialValues {
+            text-transform: uppercase;
+        }
+
+        select {
+            color: black;
+            visibility: visible;
+            height: 32px;
+        }
+
+        input, select {
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+
+        .commentsHeader {
+            background-color: #343a40;
+            margin: 0px 0px 0px 0px;
+            font-size: 1em;
+            padding: 1px !important;
+            height: 25px;
+        }
+
+        .TableTransactions {
+            margin: 0px 0px 0px 0px;
+        }
+
+            .TableTransactions button {
+                margin: 0px 0px 0px 10px;
+            }
+
+        .transcationButtons {
+            margin: 0px 0px 0px 0px;
+            border-radius: 5px;
+            width: 90px;
+            height: 35px;
+        }
+
+        .commentsSection {
+            margin: 10px 0px 0px 0px;
+        }
+
+        #comments {
+            width: 100%;
+            height: 80px;
+            box-sizing: border-box;
+        }
+
+        #NewOrderSubmit {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            background-color: #343a40;
+            border-color: #343a40;
+        }
+
+        .SearchInputs {
+            width: 100%;
+            visibility: visible;
+            border-color: black;
+            border-width: 2px;
+        }
+
+        .generateBtn {
+            width: 100%;
+            visibility: visible;
+        }
+
+        #CustId {
+            visibility: visible;
+        }
+
+        #WorkOrderNumber {
+            width: 100%;
+            visibility: visible;
+            border-color: black;
+            border-width: 2px;
+        }
+
+        #DropDownClass {
+            border-color: transparent;
+            background-color: transparent;
+        }
+
+        .example::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .example {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+
+        select {
+            height: 25px;
+            width: 150px
+        }
+
+        input[type=text] {
+            height: 25px
+        }
+
+        @@media screen {
+            #printSection {
+                display: none;
+            }
+
+            #dontshow {
+                display: none;
+            }
+        }
+
+        @@media print {
+            #btnPrint {
+                display: none;
+            }
+
+            .dontShowInPrint {
+                display: none;
+            }
+
+            body * {
+                visibility: hidden;
+            }
+
+            #printSection, #printSection * {
+                visibility: visible;
+            }
+
+            #printSection {
+                position: absolute;
+                left: 0;
+                top: 0;
+                -webkit-transform: rotate(270deg) scaleX(1.4) scaleY(1.2);
+                top: 3.5in;
+                left: 0.2in;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div id="EditForm">
+            <div class="card-header" style="padding:5px 30px 5px 0px; background-color:white">
+                <div class="row">
+                    <div class="col-md-7" style="padding-left: 30px; padding-top: 5px; padding-bottom: 0px">
+                        <h4><b>View Work Order</b></h4>
+                    </div>
+                    <div class="col-md-5 text-right" style="padding-right:0px">
+
+                        <input type="button" class="btn btn-primary transcationButtons" style=" margin-top:5px; padding-top:0px; width:110px; height: 30px; margin-right:10px; visibility:visible" id="emailButton" value="Email" />
+
+                        <input class="btn btn-primary dontShowInPrint" id="btnPrint" style="float:right; margin-top:5px; width:110px; height: 30px; padding-top:0px" type="text" readonly name="name" value="print" />
+
+                        @if (Model.SehubAccess.treadTrackerDashboard >= 2)
+                        {
+                            <button id="EditFormOpen" type="button" class="btn btn-primary" style="        margin-right: 10px;
+        float: right;
+        margin-top: 5px;
+        width: 110px;
+        padding: 2px 20px 2px 20px">
+                                Edit
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="card-body" id="printThis" style="padding:0px">
+                <div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div>
+                                @*class="shadow-lg p-3 mb-5 bg-white rounded"*@
+
+                                <div class="orderMainBody">
+                                    @*here i remove class - container*@
+
+                                    @*
+          <div class="row justify-content-end TableTransactions">
+            <input type="submit" class="btn btn-success transcationButtons" style="visibility:visible" value="Save" />
+            &nbsp;
+            <a href="@Url.Action("CanceEditOrderOrder", "TreadTracker", new { workOrder = @Model.WorkOrderInfo.retread_workorder.ToString()})">
+                <input type="button" class="btn btn-danger transcationButtons" style="visibility:visible" value="Cancel" />
+            </a>
+        </div>
+                                    *@
+
+                                    <div class="row text-center" id="dontshow">
+                                        <div class="col-md-4"></div>
+                                        <div class="col-md-4 text-center"><img src="~/Content/LoginLogo.png" style="margin-left: auto;margin-right: auto; width:300px;"></div>
+                                        <div class="col-md-4 text-right" style="padding-top:30px">
+                                            <p style="margin: 0px; padding: 0px; line-height : 10px">
+                                                <font size="2">
+                                                    @ViewBag.addressSTREET1, @if (ViewBag.addressSTREET2 != null)
+                                                    {
+                                                        @ViewBag.addressSTREET2
+                                                    }
+                                                </font>
+                                            </p>
+                                            <p style=" margin: 5px 0px 5px 10px; padding: 0px; line-height: 10px"><font size="2">@ViewBag.addressCITY, @ViewBag.addressPROVINCE, @ViewBag.addressPOSTAL</font></p>
+                                <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Phone : @ViewBag.locPHONE</font></p>
+                                <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Fax : @ViewBag.locFAX</font></p>
+                                <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">www.citytire.com</font></p>
+                                </div>
+                                </div>
+
+                                <div class="row text-center" id="dontshowemail" style="display:none">
+                                    <div class="col-lg-12">
+                                        <div class="row">
+                                            <div class="col-lg-4"></div>
+                                            <div class="col-lg-4 text-center"><img src="~/Content/LoginLogo.png" style="margin-left: auto;margin-right: auto; width:350px;"></div>
+
+                                            <div class="col-md-4 text-right" style="padding-right:33px; padding-top:40px">
+                                                <p style="margin: 0px; padding: 0px; line-height : 10px">
+                                                    <font size="2">
+                                                        @ViewBag.addressSTREET1, @if (ViewBag.addressSTREET2 != null)
+                                                        {
+                                                            @ViewBag.addressSTREET2
+                                                        }
+                                                    </font>
+                                                </p>
+                                                <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">@ViewBag.addressCITY, @ViewBag.addressPROVINCE, @ViewBag.addressPOSTAL</font></p>
+                                                <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Phone : @ViewBag.locPHONE</font></p>
+                                                <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Fax : @ViewBag.locFAX</font></p>
+                                                <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">www.citytire.com</font></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row justify-content-between">
+                                    <div class="col-md-5" style="padding-right:6px">
+                                        <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
+                                            <div class="card-body" style="background-color:white; padding-top:10px; padding-bottom:10px">
+                                                <div class="row" style="padding-left:15px">
+                                                    <div class="col-md-3">
+                                                        <img style="width:90%; height:90%" src="~/Content/trdIcon.png" alt="Alternate Text" />
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="row">
+                                                            <h4>Tread Tracker</h4>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-5" style="padding:2px">
+                                                                Work Order #
+                                                            </div>
+                                                            <div class="col-md-7" style="padding-left:3px !important">
+                                                                <b>@Model.WorkOrderInfo.retread_workorder</b>
+                                                                <input type="text" id="EditOrderWorkOrder" style="display:none" name="name" value="@Model.WorkOrderInfo.retread_workorder" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-5" style="padding:2px">
+                                                                Creation Date
+                                                            </div>
+                                                            @*<div class="col-lg-8" style="height:1px; padding:0px !important;">
+                                    @Html.DisplayFor(m => m.WorkOrderInfo.creation_date)
+                                </div>*@
+                                                            <div class="col-md-7" style="height:1px; padding:0px !important;">
+                                                                <span id="fullDate">
+
+                                                                </span>
+
+
+                                                                <input style="display:none" type="text" name="name" value="@Model.WorkOrderInfo.creation_date" id="datepicker" />
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7" style="padding-left:6px">
+                                        <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
+                                            <div class="card-body" style="padding-top:10px; padding-bottom:10px">
+                                                <div class="row" style="padding:0px 15px 0px 15px">
+                                                    <div class="col-md-9" style="padding:0px">
+                                                        <h4>@Model.CustomerInfo.cust_name</h4>
+                                                    </div>
+                                                    <div class="col-md-3 text-right" style="padding:0px">
+                                                        <h4>@Model.CustomerInfo.cust_us1</h4>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="row" style="margin-bottom:5px">
+                                                            <div class="col-md-6">
+                                                                Contact
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom:5px">
+                                                            <div class="col-md-6">
+                                                                Email
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 text-right" style="padding-right:15px">
+                                                        <div class="row" style="margin-bottom:5px">
+                                                            <div class="col-md-12 text-right">
+                                                                @Model.CustomerInfo.cust_add1 @Model.CustomerInfo.cust_add2
+                                                            </div>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom:5px">
+                                                            <div class="col-md-12 text-right">
+                                                                @Model.CustomerInfo.cust_city, @Model.CustomerInfo.cust_state @Model.CustomerInfo.cust_zip Canada
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
+                                    <div class="card-header" style="padding:3px 3px 3px 15px">
+                                        <h6 class="card-title mb-0 d-inline-block">Order Details</h6>
+                                    </div>
+                                    <div class="card-body" style="padding:5px 15px 0px 15px">
+
+                                        <div class="row mainTable">
+                                            <table class="table table-striped">
+                                                @*removing class   table-bordered*@
+                                                <thead class="thead-dark">
+                                                    <tr>
+                                                        <th scope="col" style="height:18px; font-size:10px; padding:0px; margin:0px;" class="text-center">#</th>
+                                                        <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Code</th>
+                                                        <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Barcode</th>
+                                                        <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Serial/DOT</th>
+                                                        <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Size</th>
+                                                        <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Brand</th>
+                                                        <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Virgin</th>
+                                                        <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Tread</th>
+                                                        <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Unit ID</th>
+                                                        <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Status</th>
+                                                        <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Production Progress</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="textFields">
+                                                    @{
+                                                        var incVal = 0;
+                                                    }
+                                                    @*@foreach (var barcodes in Model.BarcodeInformation)*@
+                                                    @for (int i = 0; i < Model.BarcodeInformation.Count; i++)
+                                                    {
+                                                        var j = i + 1;
+                                                        if (true)
+                                                        {@*Model.BarcodeInformation[i].ndt_machine_result is null*@
+                                                        <tr>
+                                                            <td style="padding:3px">@(++incVal)</td>
+                                                            <td style="padding:3px">
+                                                                @*<input type="text" id="line1" name="line1" maxlength="2" onkeypress="return onlyNumberKey(event)" class="lineStyle" onfocusout="line1Out()">*@
+                                                                @*@Html.EditorFor(modelItem => barcodes.line_code)*@
+                                                                @Html.DisplayFor(m => m.BarcodeInformation[i].line_code, new { htmlAttributes = new { @class = "LineValues", @type = "text", @maxlength = "2", @id = "Line" + j + "Value", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "line" + j + "Out()" } })
+                                                            </td>
+                                                            <td style="display:none; padding:3px">
+                                                                @*<input type="text" id="barcode1" name="barcode1" maxlength="8" onkeypress="return onlyNumberKey(event)">*@
+                                                                @*@Html.EditorFor(modelItem => barcodes.barcode)*@
+                                                                @Html.HiddenFor(m => m.BarcodeInformation[i].barcode, new { htmlAttributes = new { @maxlength = "8", @onkeypress = "return onlyNumberKey(event)", } })
+                                                            </td>
+                                                            <td style="padding:3px">
+                                                                @*<input type="text" id="barcode1" name="barcode1" maxlength="8" onkeypress="return onlyNumberKey(event)">*@
+                                                                @*@Html.EditorFor(modelItem => barcodes.barcode)*@
+                                                                @Html.DisplayFor(m => m.BarcodeInformation[i].changed_barcode, new { htmlAttributes = new { @maxlength = "8", @onkeypress = "return onlyNumberKey(event)", @style = "width:120px" } })
+                                                            </td>
+                                                            <td style="padding:3px">
+                                                                @*<input type="text" id="serial1" name="serial1" maxlength="8" style="text-transform:uppercase">*@
+                                                                @*@Html.EditorFor(modelItem => barcodes.serial_dot)*@
+                                                                @Html.DisplayFor(m => m.BarcodeInformation[i].serial_dot, new { htmlAttributes = new { @class = "SerialValues", @style = "width:120px" } })
+                                                            </td>
+                                                            <td style="padding:3px">
+                                                                @*<div id="casing1Div"></div>*@
+                                                                @*@Html.DropDownListFor(modelItem => barcodes.casing_size, new SelectList(ViewBag.CasingSizeList, "size_id", "casing_size", barcodes.size_id))*@
+                                                                @Html.DisplayFor(m => m.BarcodeInformation[i].casing_size, new { htmlAttributes = new { @id = "casing" + j + "size" } })
+                                                            </td>
+
+                                                            <td style="padding:3px">
+                                                                @*<div id="Brand1Div"></div>*@
+                                                                @*@Html.EditorFor(modelItem => barcodes.casing_brand)*@
+                                                                @*@Html.DropDownListFor(modelItem => barcodes.casing_brand, new SelectList(ViewBag.CasingBrandList, "brand_id", "casing_brand", barcodes.brand_id))*@
+                                                                @Html.DisplayFor(m => m.BarcodeInformation[i].casing_brand)
+                                                            </td>
+                                                            @if (Model.BarcodeInformation[i].barcode != null)
+                                                            {
+                                                                <td style="padding:0px">
+                                                                    @*<div id="Brand1Div"></div>*@
+                                                                    @*@Html.EditorFor(modelItem => barcodes.casing_brand)*@
+                                                                    @*@Html.DropDownListFor(modelItem => barcodes.casing_brand, new SelectList(ViewBag.CasingBrandList, "brand_id", "casing_brand", barcodes.brand_id))*@
+                                                                    @Html.CheckBoxFor(m => m.BarcodeInformation[i].virgin, new { onclick = "return false", @style = "margin:0px" })
+                                                                </td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td></td>
+                                                            }
+                                                            <td style="padding:3px">
+                                                                @*<div id="Tread1Div"></div>*@
+                                                                @*@Html.EditorFor(modelItem => barcodes.retread_design)*@
+                                                                @*@Html.DropDownListFor(modelItem => barcodes.retread_design, new SelectList(ViewBag.CasingTreadList, "tread_id", "tread_design", barcodes.tread_id))*@
+                                                                @Html.DisplayFor(m => m.BarcodeInformation[i].retread_design, new { htmlAttributes = new { @required = "required" } })
+                                                            </td>
+                                                            <td style="padding:3px">
+                                                                @*<input type="text" id="unit1" name="unit1" onkeypress="return onlyNumberKey(event)">*@
+                                                                @*@Html.EditorFor(modelItem => barcodes.unit_ID)*@
+                                                                @Html.DisplayFor(m => m.BarcodeInformation[i].unit_ID, new { htmlAttributes = new { @onkeypress = "return onlyNumberKey(event)", @style = "width:120px" } })
+                                                            </td>
+
+                                                            <td style="padding:3px">
+                                                                @if (Model.BarcodeInformation[i].final_inspection_result == null)
+                                                                {
+                                                                    if (Model.BarcodeInformation[i].buffer_builder_result == null)
+                                                                    {
+                                                                        if (Model.BarcodeInformation[i].ndt_machine_result == null)
+                                                                        {
+                                                                            @Model.BarcodeInformation[i].preliminary_inspection_result
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            @Model.BarcodeInformation[i].ndt_machine_result
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        @Model.BarcodeInformation[i].buffer_builder_result
+                                                                    }
+
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (Model.BarcodeInformation[i].final_inspection_result == "GOOD")
+                                                                    {
+                                                                        <lable>COMPLETE</lable>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <lable>@Model.BarcodeInformation[i].final_inspection_result</lable>
+                                                                    }
+                                                                }
+
+                                                            </td>
+                                                            @if (Model.BarcodeInformation[i].barcode != null)
+                                                            {
+                                                                <td style="width:270px; padding:3px">
+                                                                    @if (Model.BarcodeInformation[i].final_inspection_result == null)
+                                                                    {
+                                                                        if (Model.BarcodeInformation[i].buffer_builder_result == null)
+                                                                        {
+                                                                            if (Model.BarcodeInformation[i].ndt_machine_result == null)
+                                                                            {
+                                                                                if (Model.BarcodeInformation[i].preliminary_inspection_result.ToUpper() == "GOOD")
+                                                                                {
+                                                                                    <div class="progress">
+                                                                                        <div class="progress-bar bg-success  progress-bar-animated" role="progressbar" style="width:25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                    </div>
+
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <div class="progress">
+                                                                                        <div class="progress-bar bg-danger  progress-bar-animated" role="progressbar" style="width:25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                    </div>
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                if (Model.BarcodeInformation[i].ndt_machine_result.ToUpper() == "GOOD")
+                                                                                {
+                                                                                    <div class="progress">
+                                                                                        <div class="progress-bar bg-success  progress-bar-animated" role="progressbar" style="width:50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                    </div>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <div class="progress">
+                                                                                        <div class="progress-bar bg-danger  progress-bar-animated" role="progressbar" style="width:50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                    </div>
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            if (Model.BarcodeInformation[i].buffer_builder_result.ToUpper() == "GOOD")
+                                                                            {
+                                                                                <div class="progress">
+                                                                                    <div class="progress-bar bg-success  progress-bar-animated" role="progressbar" style="width:75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                </div>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <div class="progress">
+                                                                                    <div class="progress-bar bg-danger  progress-bar-animated" role="progressbar" style="width:75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                </div>
+                                                                            }
+
+                                                                        }
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (Model.BarcodeInformation[i].final_inspection_result.ToUpper() == "GOOD")
+                                                                        {
+                                                                            <div class="progress">
+                                                                                <div class="progress-bar bg-success progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                            </div>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <div class="progress">
+                                                                                <div class="progress-bar bg-danger progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                            </div>
+                                                                        }
+
+                                                                    }
+
+                                                                </td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td></td>
+                                                            }
+                                                        </tr>
+                                                    }
+                                                    else
+                                                    {
+                                                        <tr>
+                                                            <td>@(++incVal)</td>
+                                                            <td>
+                                                                @*<input type="text" id="line1" name="line1" maxlength="2" onkeypress="return onlyNumberKey(event)" class="lineStyle" onfocusout="line1Out()">*@
+                                                                @*@Html.EditorFor(modelItem => barcodes.line_code)*@
+                                                                @Html.DisplayFor(m => m.BarcodeInformation[i].line_code, new { htmlAttributes = new { @class = "LineValues", @type = "text", @maxlength = "2", @onkeypress = "return onlyNumberKey(event)" } })
+                                                            </td>
+                                                            <td>
+                                                                @*<input type="text" id="barcode1" name="barcode1" maxlength="8" onkeypress="return onlyNumberKey(event)">*@
+                                                                @*@Html.EditorFor(modelItem => barcodes.barcode)*@
+                                                                @Html.DisplayFor(m => m.BarcodeInformation[i].barcode, new { htmlAttributes = new { @maxlength = "8", @onkeypress = "return onlyNumberKey(event)" } })
+                                                            </td>
+                                                            <td>
+                                                                @*<input type="text" id="serial1" name="serial1" maxlength="8" style="text-transform:uppercase">*@
+                                                                @*@Html.EditorFor(modelItem => barcodes.serial_dot)*@
+                                                                @Html.DisplayFor(m => m.BarcodeInformation[i].serial_dot, new { htmlAttributes = new { @class = "SerialValues" } })
+                                                            </td>
+                                                            <td>
+                                                                @*<div id="casing1Div"></div>*@
+                                                                @*@Html.DropDownListFor(modelItem => barcodes.casing_size, new SelectList(ViewBag.CasingSizeList, "size_id", "casing_size", barcodes.size_id))*@
+                                                                @Html.HiddenFor(m => m.BarcodeInformation[i].size_id)
+                                                                @Html.DropDownListFor(m => m.BarcodeInformation[i].casing_size, new SelectList(ViewBag.CasingSizeList, "size_id", "casing_size", Model.BarcodeInformation[i].size_id), new { @disabled = "disabled", @id = "DropDownClass" })
+                                                            </td>
+
+                                                            <td>
+                                                                @*<div id="Brand1Div"></div>*@
+                                                                @*@Html.EditorFor(modelItem => barcodes.casing_brand)*@
+                                                                @*@Html.DropDownListFor(modelItem => barcodes.casing_brand, new SelectList(ViewBag.CasingBrandList, "brand_id", "casing_brand", barcodes.brand_id))*@
+                                                                @Html.HiddenFor(m => m.BarcodeInformation[i].brand_id)
+                                                                @Html.DropDownListFor(m => m.BarcodeInformation[i].casing_brand, new SelectList(ViewBag.CasingBrandList, "brand_id", "casing_brand", Model.BarcodeInformation[i].brand_id), new { @disabled = "disabled", @id = "DropDownClass" })
+                                                            </td>
+                                                            <td>
+                                                                @*<div id="Tread1Div"></div>*@
+                                                                @*@Html.EditorFor(modelItem => barcodes.retread_design)*@
+                                                                @*@Html.DropDownListFor(modelItem => barcodes.retread_design, new SelectList(ViewBag.CasingTreadList, "tread_id", "tread_design", barcodes.tread_id))*@
+                                                                @Html.HiddenFor(m => m.BarcodeInformation[i].tread_id)
+                                                                @Html.DropDownListFor(m => m.BarcodeInformation[i].retread_design, new SelectList(ViewBag.CasingTreadList, "tread_id", "tread_design", Model.BarcodeInformation[i].tread_id), new { @disabled = "disabled", @id = "DropDownClass" })
+                                                            </td>
+                                                            <td>
+                                                                @*<input type="text" id="unit1" name="unit1" onkeypress="return onlyNumberKey(event)">*@
+                                                                @*@Html.EditorFor(modelItem => barcodes.unit_ID)*@
+                                                                @Html.DisplayFor(m => m.BarcodeInformation[i].unit_ID, new { htmlAttributes = new { @onkeypress = "return onlyNumberKey(event)" } })
+                                                            </td>
+                                                        </tr>
+                                                    }
+
+                                                }
+                                                </tbody>
+
+                                            </table>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                @*//Here begin form*@
+
+                                <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 10px 0px;">
+                                    <div class="card-header" style="padding:3px 3px 3px 15px">
+                                        <h6 class="card-title mb-0 d-inline-block">Comments</h6>
+                                    </div>
+                                    <div class="card-body" style="padding:10px">
+                                        <div style="width:100%">
+                                            <textarea id="comments"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-lg-10"></div>
+                    <div class="col-lg-1">
+
+                    </div>
+                    <div class="col-lg-1" style="padding-right:10px">
+                        <button type="button" id="Cancelbutton" class="btn btn-danger" data-dismiss="modal" style="float:right; width:112px; padding:2px 30px 2px 30px">Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.5/dist/html2canvas.min.js">
+    </script>
+
+    <script>
+        var d = new Date(moment($('#datepicker').val()).add(1, 'days').format("YYYY-MM-DD"));
+        //d = addDays(d, 1);
+        date = d.toString();
+
+        //alert(date)
+
+        var shortDay = date.substring(0, 3);
+        var longDay = "";
+
+        if (shortDay == "Mon") {
+            longDay = "Monday"
+        }
+        else if (shortDay == "Tue") {
+            longDay = "Tuesday"
+        }
+        else if (shortDay == "Wed") {
+            longDay = "Wednesday"
+        }
+        else if (shortDay == "Thu") {
+            longDay = "Thursday"
+        }
+        else if (shortDay == "Fri") {
+            longDay = "Friday"
+        }
+        else if (shortDay == "Sat") {
+            longDay = "Saturday"
+        }
+        else if (shortDay == "Sun") {
+            longDay = "Sunday"
+        }
+
+        var month = date.substring(4, 7);
+
+        var dateNum = date.substring(8, 10);
+
+        var yearNum = date.substring(11, 15);
+
+        $("#fullDate").html(longDay + " - " + month + " " + dateNum + ", " + yearNum);
+
+    </script>
+
+    <script>
+
+        document.getElementById("btnPrint").onclick = function () {
+            printElement(document.getElementById("printThis"));
+        }
+
+        function printElement(elem) {
+            var domClone = elem.cloneNode(true);
+
+            var $printSection = document.getElementById("printSection");
+
+            if (!$printSection) {
+                var $printSection = document.createElement("div");
+                $printSection.id = "printSection";
+                document.body.appendChild($printSection);
+            }
+
+            $printSection.innerHTML = "";
+            $printSection.appendChild(domClone);
+            window.print();
+        }
+
+        $('#EditFormOpen').click(function () {
+
+            var workOrder = $('#EditOrderWorkOrder').val();
+            $.ajax({
+                url: '@Url.Action("EditOrder", "TreadTracker")',
+                data: {orderNumber: workOrder },
+                type: 'GET',
+                success: function (data) {
+                    $("#EditForm").html(data);
+                }
+            });
+
+        });
+
+        $('#Cancelbutton').click(function () {
+            location.reload();
+        });
+
+        $(document).ready(function () {
+
+            $(document).on('keyup keypress', 'form input[type="text"]', function(e) {
+              if(e.which == 13) {
+                e.preventDefault();
+                return false;
+              }
+            });
+        });
+
+
+        $("#emailButton").click(function () {
+
+            document.getElementById("printThis").style.padding = "60px";
+            document.getElementById("printThis").style.border = "thin solid black";
+
+            email();
+
+            changepadding();
+        });
+
+        function changepadding() {
+            document.getElementById("printThis").style.padding = "0px";
+            document.getElementById("printThis").style.borderRight = "none";
+            document.getElementById("printThis").style.borderLeft = "none";
+            document.getElementById("printThis").style.borderTop = "none";
+            document.getElementById("printThis").style.borderBottom = "none";
+        }
+
+
+        function email() {
+            let div = document.getElementById('printThis'); 
+
+            
+
+            $('#dontshowemail').show();
+
+            html2canvas(div).then(
+                function (canvas) { 
+                    $('#dontshowemail').hide();
+                    //document.getElementById('output').appendChild(canvas); 
+                    //var imgsrc = canvas.toDataURL("image/png"); 
+                    //$("#newimg").attr('src', imgsrc);                         
+                        var dataURL = canvas.toDataURL(); 
+                        $.ajax({ 
+                            type: "POST", 
+                            url: '@Url.Action("MailImageOpenOrder", "TreadTracker")',
+                            data: { 
+                                imgBase64: dataURL 
+                            }, 
+                            success: function (data) {
+                                alert("Mailed Successfully")
+                            }
+                        })
+                }
+            )
+        }
+
+
+    </script>
+</body>
+</html>
+

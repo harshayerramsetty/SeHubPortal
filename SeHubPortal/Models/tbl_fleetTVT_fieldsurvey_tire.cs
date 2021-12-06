@@ -30,5 +30,7 @@ namespace SeHubPortal.Models
         public string condition_wheel { get; set; }
         public string condition_tire { get; set; }
         public string comments { get; set; }
+        public Nullable<double> percent_worn { get; set; }
+        public Nullable<double> inflation { get; set; }
     }
 }

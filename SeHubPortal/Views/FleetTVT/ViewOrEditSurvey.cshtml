@@ -8,17 +8,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta name="viewport" content="width=device-width" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="~/Content/NewOrder.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" rel="stylesheet" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.css" rel="stylesheet" media="print" />
 
-
+    @if (Model.SehubAccess.plant > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
 
     @if (Model.SehubAccess.tools > 0)
     {
@@ -111,7 +116,14 @@
         </style>
     }
 
-
+    @if (Model.SehubAccess.fleetTvt_snapshot > 0)
+    {
+        <style>
+            #FleetSnapShotLink {
+                display: block !important;
+            }
+        </style>
+    }
 
     <style>
 
@@ -143,9 +155,9 @@
             margin-bottom: 0px;
         }
 
-        .nav-tabs > li.active {
-            margin-bottom: -1px;
-        }
+            .nav-tabs > li.active {
+                margin-bottom: -1px;
+            }
 
         #FleetTVTClicked {
             display: block !important;
@@ -211,39 +223,14 @@
         <div class="col-lg-3">
             <div class="row" style="height:745px; background-color:white; padding:15px">
                 <div class="col-lg-12">
-
-                    <div class="row" style="margin-bottom:15px;">
-                        <div class="col-lg-12" style="padding:0px">
-                            <div class="card" style="border:2px solid #aeafb0">
-                                <div class="card-header" style="background-color: #c0c2c4 !important; padding:2px 2px 0px 15px">
-                                    <div class="row">
-                                        <div class="col-lg-2" style="padding-top:1px;">
-                                            <button style="width: 40px; height: 40px; border-radius: 25px; background-color: gray; color: white; border: 3px solid white; font-weight: bold; font-size: 20px ">1</button>
-                                        </div>
-                                        <div class="col-lg-7" style="padding-top:5px; padding-bottom:0px;">
-                                            <h4 style="font-weight:bold; color:white">Survey Date</h4>
-                                        </div>
-                                        <div class="col-lg-3 text-right" style="padding-top:0px; padding-right:20px">
-                                            <input type="date" style="text-align:center;  background-color:transparent; border-color:transparent; width:54px; height:45px" id="datepicker" value="this is a test" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-body" style="padding:0px">
-                                    <input type="text" readonly style="border-color: transparent;  font-size:25px; text-align:center; width:100%; height:50px" id="fullDate" name="name" value="" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div id="Step2" style="visibility:hidden">
+                    <div id="Step2">
                         <div class="row" style="margin-bottom:10px; background-color:#b6b8ba">
                             <div class="col-lg-12" style="padding:0px">
                                 <div class="card" style="border:2px solid #aeafb0">
                                     <div class="card-header" style="background-color: #c0c2c4 !important; padding:0px 2px 2px 15px">
                                         <div class="row">
                                             <div class="col-lg-2" style="padding-top:3px;">
-                                                <button style="width:40px; height:40px; border-radius:25px; background-color:gray; color:white; border:3px solid white; font-weight:bold; font-size:20px">2</button>
+                                                <button style="width:40px; height:40px; border-radius:25px; background-color:gray; color:white; border:3px solid white; font-weight:bold; font-size:20px">1</button>
                                             </div>
                                             <div class="col-lg-8" style="padding-top:5px; padding-bottom:0px;">
                                                 <h4 style="font-weight:bold; color:white">Select Customer</h4>
@@ -256,7 +243,7 @@
 
                                     <div class="card-body" style="padding:0px">
 
-                                        <div class="row" style="margin:10px; height:145px">
+                                        <div class="row" style="margin:10px;">
                                             <div class="col-lg-12">
                                                 <div class="row" style="margin-bottom:5px;">
                                                     <div class="col-lg-12">
@@ -264,7 +251,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="custDetailsRow" id="custDetailsDiv" style="height:115px; overflow-x:hidden; overflow-y:auto; font-size:13px; display:none">
+                                                <div class="custDetailsRow" id="custDetailsDiv" style="height:115px; font-size:13px; display:none">
                                                     <div class="row" style="display:none; margin-bottom:5px">
                                                         <div class="col-lg-5">
                                                             Customer Number
@@ -337,7 +324,7 @@
                                     <div class="card-header" style="background-color: #c0c2c4 !important; padding:2px 2px 2px 15px">
                                         <div class="row">
                                             <div class="col-lg-2" style="padding-top:3px;">
-                                                <button style="width:40px; height:40px; border-radius:25px; background-color:gray; color:white; border:3px solid white; font-weight:bold; font-size:20px">3</button>
+                                                <button style="width:40px; height:40px; border-radius:25px; background-color:gray; color:white; border:3px solid white; font-weight:bold; font-size:20px">2</button>
                                             </div>
                                             <div class="col-lg-8" style="padding-top:5px; padding-bottom:0px;">
                                                 <h4 style="font-weight:bold; color:white">Select Equipment</h4>
@@ -349,7 +336,7 @@
                                     </div>
                                     <div class="card-body" style="padding:0px">
 
-                                        <div class="row" style="height:145px">
+                                        <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="row" style="margin:8px 50px 0px 7px; ">
                                                     <div class="col-lg-5 text-left">
@@ -424,6 +411,40 @@
                                     <div class="card-header" style="background-color: #c0c2c4 !important; padding:2px 2px 2px 15px">
                                         <div class="row">
                                             <div class="col-lg-2" style="padding-top:3px;">
+                                                <button style="width:40px; height:40px; border-radius:25px; background-color:gray; color:white; border:3px solid white; font-weight:bold; font-size:20px">3</button>
+                                            </div>
+                                            <div class="col-lg-8" style="padding-top:5px; padding-bottom:0px;">
+                                                <h4 style="font-weight:bold; color:white">Select Survey</h4>
+                                            </div>
+                                            <div class="col-lg-2" style="padding-top:8px;">
+                                                <button id="myButton" style="display:none; padding-top:0px; width:30px; height:30px; background-color:gray; color:white; font-weight:bold; font-size:18px">+</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body" style="padding:0px">
+                                        <div class="row" style="margin:10px 50px 0px 7px;">
+                                            <div class="col-lg-5 text-left">
+                                                <label>Select Survey </label>
+                                            </div>
+                                            <div class="col-lg-7 text-left" id="dateExpired">
+                                                <select onchange="pullSurveyinfo(this.value)" style="text-align-last: center; width:200px; height:25px; " id="SurveyDropdown"></select>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="Step5" style="visibility:hidden">
+                        <div class="row" style="margin-bottom: 10px;background-color: #b6b8ba">
+                            <div class="col-lg-12 text-center" style="padding:0px">
+                                <div class="card" style="border:2px solid #aeafb0">
+                                    <div class="card-header" style="background-color: #c0c2c4 !important; padding:2px 2px 2px 15px">
+                                        <div class="row">
+                                            <div class="col-lg-2" style="padding-top:3px;">
                                                 <button style="width:40px; height:40px; border-radius:25px; background-color:gray; color:white; border:3px solid white; font-weight:bold; font-size:20px">4</button>
                                             </div>
                                             <div class="col-lg-8" style="padding-top:5px; padding-bottom:0px;">
@@ -461,7 +482,7 @@
                                         <div class="row text-center" style="margin: 5px 0px 10px 0px">
                                             <div class="col-lg-4"></div>
                                             <div class="col-lg-8">
-                                                <input style="visibility:hidden; margin-left: auto; margin-right: auto; width: 210px" id="submiSurvey" class="btn btn-success" readonly type="text" name="name" value="Submit Field Survey" />
+                                                <input style="margin-left: auto; margin-right: auto; width: 210px" id="submiSurvey" class="btn btn-success" readonly type="text" name="name" value="Submit Field Survey" />
                                             </div>
 
                                         </div>
@@ -475,14 +496,14 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-6 noselect">
+        <div class="col-lg-6 noselect CenterAndRight" style="display:none">
 
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" id="unitTab">
                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Equipment Survey</a>
                 </li>
                 <li class="nav-item" id="tireTab">
-                    <a style="padding-right:42px; padding-left:42px" class="nav-link disabled" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Tire Survey</a>
+                    <a style="padding-right:42px; padding-left:42px" class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Tire Survey</a>
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">
@@ -542,7 +563,7 @@
                                         <div class="col-lg-6">
                                             <div class="row">
                                                 <div class="col-lg-5">
-                                                    <label>Mileage * </label>
+                                                    <label>Mileage </label>
                                                 </div>
                                                 <div class="col-lg-7">
                                                     <input disabled id="mileageInput" onkeypress="return isNumberKey(event)" onfocusout="check_requiredFileds_unit()" style="width:200px" type="text" name="name" value="" />
@@ -553,7 +574,7 @@
                                         <div class="col-lg-6">
                                             <div class="row">
                                                 <div class="col-lg-5">
-                                                    <label>Date Expired *</label>
+                                                    <label>Date Expired</label>
                                                 </div>
                                                 <div class="col-lg-7">
                                                     <input id="dateExpiredUnitSurvey" onfocusout="check_requiredFileds_unit()" style="width:195px" type="date" name="name" value="" />
@@ -568,7 +589,7 @@
                                         <div class="col-lg-6">
                                             <div class="row">
                                                 <div class="col-lg-5">
-                                                    <label>Survey Location *</label>
+                                                    <label>Survey Location</label>
                                                 </div>
                                                 <div class="col-lg-7">
                                                     <input id="surveyLocationUnit" onfocusout="check_requiredFileds_unit()" style="width:200px" type="text" name="name" value="" />
@@ -579,7 +600,7 @@
                                         <div class="col-lg-6">
                                             <div class="row">
                                                 <div class="col-lg-5">
-                                                    <label>Technician *</label>
+                                                    <label>Technician</label>
                                                 </div>
                                                 <div class="col-lg-7">
                                                     <select onchange="check_requiredFileds_unit()" style="text-align-last: center;  width:195px; height:30px; " id="EmpsDropdown" name="EmpsDropdown"></select>
@@ -592,7 +613,7 @@
 
                                 <div class="row" style="margin-bottom:5px">
                                     <div class="col-lg-4">
-                                        <label>Comments </label>
+                                        <label>Comments (Optional)</label>
                                     </div>
                                 </div>
 
@@ -604,7 +625,7 @@
 
                                 <div class="row" style="margin-bottom:40px">
                                     <div class="col-lg-12" style="color:red">
-                                        ** fields with asterisk are required **
+
                                     </div>
                                 </div>
 
@@ -1860,7 +1881,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-3" autocomplete="off">
+        <div class="col-lg-3 CenterAndRight" autocomplete="off" style="display:none">
             <div class="row" style="padding: 15px;margin-right: 15px;height: 745px;background-color: white">
                 <div class="col-lg-12">
                     <div class="row">
@@ -4012,7 +4033,6 @@
         </div>
     </div>
 
-
     <div class="modal SavedSuccessfully" id="SavedSuccessfully">
         <div class="modal-dialog" style="width:300px">
             <div class="modal-content">
@@ -4038,13 +4058,736 @@
         </div>
 
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+    <script>
+        $(".one").click(function () {
 
+            $("#right_tire1_pressure").val($("#centre_tire1_pressure").html());
+            $("#right_tire1_depth").val($("#centre_tire1_depth").html());
+            $("#right_tire1_brand").val($("#centre_tire1_brand").html());
+            $("#right_tire1_model").val($("#centre_tire1_model").html());
+            $("#right_tire1_size").val($("#centre_tire1_size").html())
+            $("#right_tire1_wear").val($("#centre_tire1_wear").html())
+            $("#right_tire1_valve").val($("#centre_tire1_valve").html())
+
+            $("#right_tire1_Tire").val($("#centre_tire1_Tire").html())
+            $("#right_tire1_Wheel").val($("#centre_tire1_Wheel").html())
+
+            $("#right_tire1_comments").val($("#centre_tire1_comments").html())
+
+            selectOnlyOneExceptRest();
+
+            document.getElementById("one").style.opacity = "1";
+            $('#onet').css("border", "2px solid black");
+            $('.1').fadeIn();
+
+        });
+        $(".two").click(function () {
+
+            $("#right_tire2_pressure").val($("#centre_tire2_pressure").html());
+            $("#right_tire2_depth").val($("#centre_tire2_depth").html());
+            $("#right_tire2_brand").val($("#centre_tire2_brand").html());
+            $("#right_tire2_model").val($("#centre_tire2_model").html());
+            $("#right_tire2_size").val($("#centre_tire2_size").html())
+            $("#right_tire2_wear").val($("#centre_tire2_wear").html())
+            $("#right_tire2_valve").val($("#centre_tire2_valve").html())
+
+            $("#right_tire2_Tire").val($("#centre_tire2_Tire").html())
+            $("#right_tire2_Wheel").val($("#centre_tire2_Wheel").html())
+
+            $("#right_tire2_comments").val($("#centre_tire2_comments").html())
+
+            selectOnlyOneExceptRest();
+
+            document.getElementById("two").style.opacity = "1";
+            $('#twot').css("border", "2px solid black");
+            $('.2').fadeIn();
+        });
+        $(".three").click(function () {
+
+            $("#right_tire3_pressure").val($("#centre_tire3_pressure").html());
+            $("#right_tire3_depth").val($("#centre_tire3_depth").html());
+            $("#right_tire3_brand").val($("#centre_tire3_brand").html());
+            $("#right_tire3_model").val($("#centre_tire3_model").html());
+            $("#right_tire3_size").val($("#centre_tire3_size").html())
+            $("#right_tire3_wear").val($("#centre_tire3_wear").html())
+            $("#right_tire3_valve").val($("#centre_tire3_valve").html())
+
+            $("#right_tire3_Tire").val($("#centre_tire3_Tire").html())
+            $("#right_tire3_Wheel").val($("#centre_tire3_Wheel").html())
+
+            $("#right_tire3_comments").val($("#centre_tire3_comments").html())
+
+            selectOnlyOneExceptRest();
+            document.getElementById("three").style.opacity = "1";
+            $('#threet').css("border", "2px solid black");
+            $('.3').fadeIn();
+
+        });
+        $(".four").click(function () {
+
+            $("#right_tire4_pressure").val($("#centre_tire4_pressure").html());
+            $("#right_tire4_depth").val($("#centre_tire4_depth").html());
+            $("#right_tire4_brand").val($("#centre_tire4_brand").html());
+            $("#right_tire4_model").val($("#centre_tire4_model").html());
+            $("#right_tire4_size").val($("#centre_tire4_size").html())
+            $("#right_tire4_wear").val($("#centre_tire4_wear").html())
+            $("#right_tire4_valve").val($("#centre_tire4_valve").html())
+
+            $("#right_tire4_Tire").val($("#centre_tire4_Tire").html())
+            $("#right_tire4_Wheel").val($("#centre_tire4_Wheel").html())
+
+            $("#right_tire4_comments").val($("#centre_tire4_comments").html())
+
+            selectOnlyOneExceptRest();
+            document.getElementById("four").style.opacity = "1";
+            $('#fourt').css("border", "2px solid black");
+            $('.4').fadeIn();
+        });
+        $(".five").click(function () {
+
+            $("#right_tire5_pressure").val($("#centre_tire5_pressure").html());
+            $("#right_tire5_depth").val($("#centre_tire5_depth").html());
+            $("#right_tire5_brand").val($("#centre_tire5_brand").html());
+            $("#right_tire5_model").val($("#centre_tire5_model").html());
+            $("#right_tire5_size").val($("#centre_tire5_size").html())
+            $("#right_tire5_wear").val($("#centre_tire5_wear").html())
+            $("#right_tire5_valve").val($("#centre_tire5_valve").html())
+
+            $("#right_tire5_Tire").val($("#centre_tire5_Tire").html())
+            $("#right_tire5_Wheel").val($("#centre_tire5_Wheel").html())
+
+            $("#right_tire5_comments").val($("#centre_tire5_comments").html())
+
+            selectOnlyOneExceptRest();
+            document.getElementById("five").style.opacity = "1";
+            $('#fivet').css("border", "2px solid black");
+            $('.5').fadeIn();
+        });
+        $(".six").click(function () {
+
+            $("#right_tire6_pressure").val($("#centre_tire6_pressure").html());
+            $("#right_tire6_depth").val($("#centre_tire6_depth").html());
+            $("#right_tire6_brand").val($("#centre_tire6_brand").html());
+            $("#right_tire6_model").val($("#centre_tire6_model").html());
+            $("#right_tire6_size").val($("#centre_tire6_size").html())
+            $("#right_tire6_wear").val($("#centre_tire6_wear").html())
+            $("#right_tire6_valve").val($("#centre_tire6_valve").html())
+
+            $("#right_tire6_Tire").val($("#centre_tire6_Tire").html())
+            $("#right_tire6_Wheel").val($("#centre_tire6_Wheel").html())
+
+            $("#right_tire6_comments").val($("#centre_tire6_comments").html())
+
+            selectOnlyOneExceptRest();
+            document.getElementById("six").style.opacity = "1";
+            $('#sixt').css("border", "2px solid black");
+            $('.6').fadeIn();
+        });
+        $(".seven").click(function () {
+
+            $("#right_tire7_pressure").val($("#centre_tire7_pressure").html());
+            $("#right_tire7_depth").val($("#centre_tire7_depth").html());
+            $("#right_tire7_brand").val($("#centre_tire7_brand").html());
+            $("#right_tire7_model").val($("#centre_tire7_model").html());
+            $("#right_tire7_size").val($("#centre_tire7_size").html())
+            $("#right_tire7_wear").val($("#centre_tire7_wear").html())
+            $("#right_tire7_valve").val($("#centre_tire7_valve").html())
+
+            $("#right_tire7_Tire").val($("#centre_tire7_Tire").html())
+            $("#right_tire7_Wheel").val($("#centre_tire7_Wheel").html())
+
+            $("#right_tire7_comments").val($("#centre_tire7_comments").html())
+
+            selectOnlyOneExceptRest();
+            document.getElementById("seven").style.opacity = "1";
+            $('#sevent').css("border", "2px solid black");
+            $('.7').fadeIn();
+        });
+        $(".eight").click(function () {
+
+            $("#right_tire8_pressure").val($("#centre_tire8_pressure").html());
+            $("#right_tire8_depth").val($("#centre_tire8_depth").html());
+            $("#right_tire8_brand").val($("#centre_tire8_brand").html());
+            $("#right_tire8_model").val($("#centre_tire8_model").html());
+            $("#right_tire8_size").val($("#centre_tire8_size").html())
+            $("#right_tire8_wear").val($("#centre_tire8_wear").html())
+            $("#right_tire8_valve").val($("#centre_tire8_valve").html())
+
+            $("#right_tire8_Tire").val($("#centre_tire8_Tire").html())
+            $("#right_tire8_Wheel").val($("#centre_tire8_Wheel").html())
+
+            $("#right_tire8_comments").val($("#centre_tire8_comments").html())
+
+            selectOnlyOneExceptRest();
+            document.getElementById("eight").style.opacity = "1";
+            $('#eightt').css("border", "2px solid black");
+            $('.8').fadeIn();
+        });
+        $(".nine").click(function () {
+
+            $("#right_tire9_pressure").val($("#centre_tire9_pressure").html());
+            $("#right_tire9_depth").val($("#centre_tire9_depth").html());
+            $("#right_tire9_brand").val($("#centre_tire9_brand").html());
+            $("#right_tire9_model").val($("#centre_tire9_model").html());
+            $("#right_tire9_size").val($("#centre_tire9_size").html())
+            $("#right_tire9_wear").val($("#centre_tire9_wear").html())
+            $("#right_tire9_valve").val($("#centre_tire9_valve").html())
+
+            $("#right_tire9_Tire").val($("#centre_tire9_Tire").html())
+            $("#right_tire9_Wheel").val($("#centre_tire9_Wheel").html())
+
+            $("#right_tire9_comments").val($("#centre_tire9_comments").html())
+
+            selectOnlyOneExceptRest();
+            document.getElementById("nine").style.opacity = "1";
+            $('#ninet').css("border", "2px solid black");
+            $('.9').fadeIn();
+        });
+        $(".ten").click(function () {
+
+            $("#right_tire10_pressure").val($("#centre_tire10_pressure").html());
+            $("#right_tire10_depth").val($("#centre_tire10_depth").html());
+            $("#right_tire10_brand").val($("#centre_tire10_brand").html());
+            $("#right_tire10_model").val($("#centre_tire10_model").html());
+            $("#right_tire10_size").val($("#centre_tire10_size").html())
+            $("#right_tire10_wear").val($("#centre_tire10_wear").html())
+            $("#right_tire10_valve").val($("#centre_tire10_valve").html())
+
+            $("#right_tire10_Tire").val($("#centre_tire10_Tire").html())
+            $("#right_tire10_Wheel").val($("#centre_tire10_Wheel").html())
+
+            $("#right_tire10_comments").val($("#centre_tire10_comments").html())
+
+            selectOnlyOneExceptRest();
+            document.getElementById("ten").style.opacity = "1";
+            $('#tent').css("border", "2px solid black");
+            $('.10').fadeIn();
+        });
+        $(".eleven").click(function () {
+
+            $("#right_tire11_pressure").val($("#centre_tire11_pressure").html());
+            $("#right_tire11_depth").val($("#centre_tire11_depth").html());
+            $("#right_tire11_brand").val($("#centre_tire11_brand").html());
+            $("#right_tire11_model").val($("#centre_tire11_model").html());
+            $("#right_tire11_size").val($("#centre_tire11_size").html())
+            $("#right_tire11_wear").val($("#centre_tire11_wear").html())
+            $("#right_tire11_valve").val($("#centre_tire11_valve").html())
+
+            $("#right_tire11_Tire").val($("#centre_tire11_Tire").html())
+            $("#right_tire11_Wheel").val($("#centre_tire11_Wheel").html())
+
+            $("#right_tire11_comments").val($("#centre_tire11_comments").html())
+
+            selectOnlyOneExceptRest();
+            document.getElementById("eleven").style.opacity = "1";
+            $('#elevent').css("border", "2px solid black");
+            $('.11').fadeIn();
+        });
+        $(".twelve").click(function () {
+
+            $("#right_tire12_pressure").val($("#centre_tire12_pressure").html());
+            $("#right_tire12_depth").val($("#centre_tire12_depth").html());
+            $("#right_tire12_brand").val($("#centre_tire12_brand").html());
+            $("#right_tire12_model").val($("#centre_tire12_model").html());
+            $("#right_tire12_size").val($("#centre_tire12_size").html())
+            $("#right_tire12_wear").val($("#centre_tire12_wear").html())
+            $("#right_tire12_valve").val($("#centre_tire12_valve").html())
+
+            $("#right_tire12_Tire").val($("#centre_tire12_Tire").html())
+            $("#right_tire12_Wheel").val($("#centre_tire12_Wheel").html())
+
+            $("#right_tire12_comments").val($("#centre_tire12_comments").html())
+
+
+            selectOnlyOneExceptRest();
+            document.getElementById("twelve").style.opacity = "1";
+            $('#twelvet').css("border", "2px solid black");
+            $('.12').fadeIn();
+        });
+        $(".tharteen").click(function () {
+
+            $("#right_tire13_pressure").val($("#centre_tire13_pressure").html());
+            $("#right_tire13_depth").val($("#centre_tire13_depth").html());
+            $("#right_tire13_brand").val($("#centre_tire13_brand").html());
+            $("#right_tire13_model").val($("#centre_tire13_model").html());
+            $("#right_tire13_size").val($("#centre_tire13_size").html())
+            $("#right_tire13_wear").val($("#centre_tire13_wear").html())
+            $("#right_tire13_valve").val($("#centre_tire13_valve").html())
+
+            $("#right_tire13_Tire").val($("#centre_tire13_Tire").html())
+            $("#right_tire13_Wheel").val($("#centre_tire13_Wheel").html())
+
+            $("#right_tire13_comments").val($("#centre_tire13_comments").html())
+
+            selectOnlyOneExceptRest();
+            document.getElementById("tharteen").style.opacity = "1";
+            $('#tharteent').css("border", "2px solid black");
+            $('.13').fadeIn();
+        });
+        $(".fourteen").click(function () {
+
+            $("#right_tire14_pressure").val($("#centre_tire14_pressure").html());
+            $("#right_tire14_depth").val($("#centre_tire14_depth").html());
+            $("#right_tire14_brand").val($("#centre_tire14_brand").html());
+            $("#right_tire14_model").val($("#centre_tire14_model").html());
+            $("#right_tire14_size").val($("#centre_tire14_size").html())
+            $("#right_tire14_wear").val($("#centre_tire14_wear").html())
+            $("#right_tire14_valve").val($("#centre_tire14_valve").html())
+
+            $("#right_tire14_Tire").val($("#centre_tire14_Tire").html())
+            $("#right_tire14_Wheel").val($("#centre_tire14_Wheel").html())
+
+            $("#right_tire14_comments").val($("#centre_tire14_comments").html())
+
+
+            selectOnlyOneExceptRest();
+            document.getElementById("fourteen").style.opacity = "1";
+            $('#fourteent').css("border", "2px solid black");
+            $('.14').fadeIn();
+        });
+        $(".fifteen").click(function () {
+
+            $("#right_tire15_pressure").val($("#centre_tire15_pressure").html());
+            $("#right_tire15_depth").val($("#centre_tire15_depth").html());
+            $("#right_tire15_brand").val($("#centre_tire15_brand").html());
+            $("#right_tire15_model").val($("#centre_tire15_model").html());
+            $("#right_tire15_size").val($("#centre_tire15_size").html())
+            $("#right_tire15_wear").val($("#centre_tire15_wear").html())
+            $("#right_tire15_valve").val($("#centre_tire15_valve").html())
+
+            $("#right_tire15_Tire").val($("#centre_tire15_Tire").html())
+            $("#right_tire15_Wheel").val($("#centre_tire15_Wheel").html())
+
+            $("#right_tire15_comments").val($("#centre_tire15_comments").html())
+
+
+            selectOnlyOneExceptRest();
+            document.getElementById("fifteen").style.opacity = "1";
+            $('#fifteent').css("border", "2px solid black");
+            $('.15').fadeIn();
+        });
+        $(".sixteen").click(function () {
+
+            $("#right_tire16_pressure").val($("#centre_tire16_pressure").html());
+            $("#right_tire16_depth").val($("#centre_tire16_depth").html());
+            $("#right_tire16_brand").val($("#centre_tire16_brand").html());
+            $("#right_tire16_model").val($("#centre_tire16_model").html());
+            $("#right_tire16_size").val($("#centre_tire16_size").html())
+            $("#right_tire16_wear").val($("#centre_tire16_wear").html())
+            $("#right_tire16_valve").val($("#centre_tire16_valve").html())
+
+            $("#right_tire16_Tire").val($("#centre_tire16_Tire").html())
+            $("#right_tire16_Wheel").val($("#centre_tire16_Wheel").html())
+
+            $("#right_tire16_comments").val($("#centre_tire16_comments").html())
+
+
+            selectOnlyOneExceptRest();
+            document.getElementById("sixteen").style.opacity = "1";
+            $('#sixteent').css("border", "2px solid black");
+            $('.16').fadeIn();
+        });
+        $(".seventeen").click(function () {
+
+            $("#right_tire17_pressure").val($("#centre_tire17_pressure").html());
+            $("#right_tire17_depth").val($("#centre_tire17_depth").html());
+            $("#right_tire17_brand").val($("#centre_tire17_brand").html());
+            $("#right_tire17_model").val($("#centre_tire17_model").html());
+            $("#right_tire17_size").val($("#centre_tire17_size").html())
+            $("#right_tire17_wear").val($("#centre_tire17_wear").html())
+            $("#right_tire17_valve").val($("#centre_tire17_valve").html())
+
+            $("#right_tire17_Tire").val($("#centre_tire17_Tire").html())
+            $("#right_tire17_Wheel").val($("#centre_tire17_Wheel").html())
+
+            $("#right_tire17_comments").val($("#centre_tire17_comments").html())
+
+
+            selectOnlyOneExceptRest();
+            document.getElementById("seventeen").style.opacity = "1";
+            $('#seventeent').css("border", "2px solid black");
+            $('.17').fadeIn();
+        });
+        $(".eighteen").click(function () {
+
+            $("#right_tire18_pressure").val($("#centre_tire18_pressure").html());
+            $("#right_tire18_depth").val($("#centre_tire18_depth").html());
+            $("#right_tire18_brand").val($("#centre_tire18_brand").html());
+            $("#right_tire18_model").val($("#centre_tire18_model").html());
+            $("#right_tire18_size").val($("#centre_tire18_size").html())
+            $("#right_tire18_wear").val($("#centre_tire18_wear").html())
+            $("#right_tire18_valve").val($("#centre_tire18_valve").html())
+
+            $("#right_tire18_Tire").val($("#centre_tire18_Tire").html())
+            $("#right_tire18_Wheel").val($("#centre_tire18_Wheel").html())
+
+            $("#right_tire18_comments").val($("#centre_tire18_comments").html())
+
+            selectOnlyOneExceptRest();
+            document.getElementById("eighteen").style.opacity = "1";
+            $('#eighteent').css("border", "2px solid black");
+            $('.18').fadeIn();
+        });
+        $(".ninteen").click(function () {
+
+            $("#right_tire19_pressure").val($("#centre_tire19_pressure").html());
+            $("#right_tire19_depth").val($("#centre_tire19_depth").html());
+            $("#right_tire19_brand").val($("#centre_tire19_brand").html());
+            $("#right_tire19_model").val($("#centre_tire19_model").html());
+            $("#right_tire19_size").val($("#centre_tire19_size").html())
+            $("#right_tire19_wear").val($("#centre_tire19_wear").html())
+            $("#right_tire19_valve").val($("#centre_tire19_valve").html())
+
+            $("#right_tire19_Tire").val($("#centre_tire19_Tire").html())
+            $("#right_tire19_Wheel").val($("#centre_tire19_Wheel").html())
+
+            $("#right_tire19_comments").val($("#centre_tire19_comments").html())
+
+
+            selectOnlyOneExceptRest();
+            document.getElementById("ninteen").style.opacity = "1";
+            $('#ninteent').css("border", "2px solid black");
+            $('.19').fadeIn();
+        });
+        $(".twenty").click(function () {
+
+            $("#right_tire20_pressure").val($("#centre_tire20_pressure").html());
+            $("#right_tire20_depth").val($("#centre_tire20_depth").html());
+            $("#right_tire20_brand").val($("#centre_tire20_brand").html());
+            $("#right_tire20_model").val($("#centre_tire20_model").html());
+            $("#right_tire20_size").val($("#centre_tire20_size").html())
+            $("#right_tire20_wear").val($("#centre_tire20_wear").html())
+            $("#right_tire20_valve").val($("#centre_tire20_valve").html())
+
+            $("#right_tire20_Tire").val($("#centre_tire20_Tire").html())
+            $("#right_tire20_Wheel").val($("#centre_tire20_Wheel").html())
+
+            $("#right_tire20_comments").val($("#centre_tire20_comments").html())
+
+
+            selectOnlyOneExceptRest();
+            document.getElementById("twenty").style.opacity = "1";
+            $('#twentyt').css("border", "2px solid black");
+            $('.20').fadeIn();
+        });
+    </script>
 
     <script>
 
+        $('#submiSurvey').click(function () {
+
+            var Type = document.getElementById("surveyType").innerHTML;
+
+            var value = document.getElementById("configuration").innerHTML;
+
+            $.ajax({
+                url: '@Url.Action("GetConfigurationDetails", "FleetTVT")',
+                data: { type: Type, config: value },
+                type: 'POST',
+                success: function (data) {
+                    var ConfigDetails = JSON.parse(data);
+
+                    if (ConfigDetails.one_lo != 0) {
+                        UpdateRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "1_lo", "centre_tire1_pressure", "centre_tire1_depth", "centre_tire1_wear", "centre_tire1_brand", "centre_tire1_model", "centre_tire1_size", "centre_tire1_valve", "centre_tire1_comments");
+                    }
+
+                    if (ConfigDetails.one_li != 0) {
+                        UpdateRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "1_li", "centre_tire2_pressure", "centre_tire2_depth", "centre_tire2_wear", "centre_tire2_brand", "centre_tire2_model", "centre_tire2_size", "centre_tire2_valve", "centre_tire2_comments");
+                    }
+
+                    if (ConfigDetails.one_ri != 0) {
+                        UpdateRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "1_ri", "centre_tire3_pressure", "centre_tire3_depth", "centre_tire3_wear", "centre_tire3_brand", "centre_tire3_model", "centre_tire3_size", "centre_tire3_valve", "centre_tire3_comments");
+                    }
+
+                    if (ConfigDetails.one_ro != 0) {
+                        UpdateRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "1_ro", "centre_tire4_pressure", "centre_tire4_depth", "centre_tire4_wear", "centre_tire4_brand", "centre_tire4_model", "centre_tire4_size", "centre_tire4_valve", "centre_tire4_comments");
+                    }
+
+                    if (ConfigDetails.two_lo != 0) {
+                        UpdateRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "2_lo", "centre_tire5_pressure", "centre_tire5_depth", "centre_tire5_wear", "centre_tire5_brand", "centre_tire5_model", "centre_tire5_size", "centre_tire5_valve", "centre_tire5_comments");
+                    }
+
+                    if (ConfigDetails.two_li != 0) {
+                        UpdateRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "2_li", "centre_tire6_pressure", "centre_tire6_depth", "centre_tire6_wear", "centre_tire6_brand", "centre_tire6_model", "centre_tire6_size", "centre_tire6_valve", "centre_tire6_comments");
+                    }
+
+                    if (ConfigDetails.two_ri != 0) {
+                        UpdateRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "2_ri", "centre_tire7_pressure", "centre_tire7_depth", "centre_tire7_wear", "centre_tire7_brand", "centre_tire7_model", "centre_tire7_size", "centre_tire7_valve", "centre_tire7_comments");
+                    }
+
+                    if (ConfigDetails.two_ro != 0) {
+                        UpdateRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "2_ro", "centre_tire8_pressure", "centre_tire8_depth", "centre_tire8_wear", "centre_tire8_brand", "centre_tire8_model", "centre_tire8_size", "centre_tire8_valve", "centre_tire8_comments");
+                    }
+
+                    if (ConfigDetails.three_lo != 0) {
+                        UpdateRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "3_lo", "centre_tire9_pressure", "centre_tire9_depth", "centre_tire9_wear", "centre_tire9_brand", "centre_tire9_model", "centre_tire9_size", "centre_tire9_valve", "centre_tire9_comments");
+                    }
+
+                    if (ConfigDetails.three_li != 0) {
+                        UpdateRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "3_li", "centre_tire10_pressure", "centre_tire10_depth", "centre_tire10_wear", "centre_tire10_brand", "centre_tire10_model", "centre_tire10_size", "centre_tire10_valve", "centre_tire10_comments");
+                    }
+
+                    if (ConfigDetails.three_ri != 0) {
+                        UpdateRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "3_ri", "centre_tire11_pressure", "centre_tire11_depth", "centre_tire11_wear", "centre_tire11_brand", "centre_tire11_model", "centre_tire11_size", "centre_tire11_valve", "centre_tire11_comments");
+                    }
+
+                    if (ConfigDetails.three_ro != 0) {
+                        UpdateRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "3_ro", "centre_tire12_pressure", "centre_tire12_depth", "centre_tire12_wear", "centre_tire12_brand", "centre_tire12_model", "centre_tire12_size", "centre_tire12_valve", "centre_tire12_comments");
+                    }
+
+                    if (ConfigDetails.four_lo != 0) {
+                        UpdateRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "4_lo", "centre_tire13_pressure", "centre_tire13_depth", "centre_tire13_wear", "centre_tire13_brand", "centre_tire13_model", "centre_tire13_size", "centre_tire13_valve", "centre_tire13_comments");
+                    }
+
+                    if (ConfigDetails.four_li != 0) {
+                        UpdateRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "4_li", "centre_tire14_pressure", "centre_tire14_depth", "centre_tire14_wear", "centre_tire14_brand", "centre_tire14_model", "centre_tire14_size", "centre_tire14_valve", "centre_tire14_comments");
+                    }
+
+                    if (ConfigDetails.four_ri != 0) {
+                        UpdateRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "4_ri", "centre_tire15_pressure", "centre_tire15_depth", "centre_tire15_wear", "centre_tire15_brand", "centre_tire15_model", "centre_tire15_size", "centre_tire15_valve", "centre_tire15_comments");
+                    }
+
+                    if (ConfigDetails.four_ro != 0) {
+                        UpdateRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "4_ro", "centre_tire16_pressure", "centre_tire16_depth", "centre_tire16_wear", "centre_tire16_brand", "centre_tire16_model", "centre_tire16_size", "centre_tire16_valve", "centre_tire16_comments");
+                    }
+
+                    if (ConfigDetails.five_lo != 0) {
+                        UpdateRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "5_lo", "centre_tire17_pressure", "centre_tire17_depth", "centre_tire17_wear", "centre_tire17_brand", "centre_tire17_model", "centre_tire17_size", "centre_tire17_valve", "centre_tire17_comments");
+                    }
+
+                    if (ConfigDetails.five_li != 0) {
+                        UpdateRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "5_li", "centre_tire18_pressure", "centre_tire18_depth", "centre_tire18_wear", "centre_tire18_brand", "centre_tire18_model", "centre_tire18_size", "centre_tire18_valve", "centre_tire18_comments");
+                    }
+
+                    if (ConfigDetails.five_ri != 0) {
+                        UpdateRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "5_ri", "centre_tire19_pressure", "centre_tire19_depth", "centre_tire19_wear", "centre_tire19_brand", "centre_tire19_model", "centre_tire19_size", "centre_tire19_valve", "centre_tire19_comments");
+                    }
+
+                    if (ConfigDetails.five_ro != 0) {
+                        UpdateRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "5_ro", "centre_tire20_pressure", "centre_tire20_depth", "centre_tire20_wear", "centre_tire20_brand", "centre_tire20_model", "centre_tire20_size", "centre_tire20_valve", "centre_tire20_comments");
+                    }
+
+                    var cust = document.getElementById("customerNumberEquipSurvey").innerHTML
+                    var unit = document.getElementById("unitNumberEquipSurvey").innerHTML
+                    var mileage = $('#mileageInput').val()
+                    var surveyLocation = $('#surveyLocationUnit').val()
+                    var expDate = $('#dateExpiredUnitSurvey').val()
+                    var emp = document.getElementById('EmpsDropdown').value
+                    var comments = $("#unitSurveyComments").val()
+                    var Surveydate = $("#SurveyDropdown").val();
+
+                    $.ajax({
+                        url: '@Url.Action("UpdateRecordToFleetSurveyUnit", "FleetTVT")',
+                        data: { cu: cust, un: unit, mlg: mileage, loct: surveyLocation, dat: expDate, empl: emp, cmts: comments, sdat: Surveydate},
+                        type: 'POST',
+                        success: function (data) {
+
+                        }
+                    });
+
+                    $('#SavedSuccessfully').modal();
+
+                }
+            });
+
+        });
+
+        function UpdateRecordToFleetSurveyTire(customerID, unitID, dateID, position, pressureID, trdDepthID, wearID, brandID, modelID, sizeID, valveID, commentsID) {
+
+            var customer = document.getElementById(customerID).value;
+            var unit = document.getElementById(unitID).value;
+            var date = $("#SurveyDropdown").val();
+            var pstn = position;
+            
+            var pressure = document.getElementById(pressureID).innerHTML;
+            var trdDepth = document.getElementById(trdDepthID).innerHTML;
+            var wear = document.getElementById(wearID).innerHTML
+            var brand = document.getElementById(brandID).innerHTML
+            var model = document.getElementById(modelID).innerHTML
+            var size = document.getElementById(sizeID).innerHTML
+            var valve = document.getElementById(valveID).innerHTML
+            var comments = document.getElementById(commentsID).innerHTML
+
+            
+
+            $.ajax({
+                url: '@Url.Action("UpdateRecordToFleetSurveyTire", "FleetTVT")',
+                data: { cust: customer, unt: unit, dat: date, pn: pstn, pres: pressure, trdDpth: trdDepth, wr: wear, brnd: brand, mdl: model, sze: size, vlv: valve, com: comments },
+                type: 'POST',
+                success: function (data) {
+                    
+                }
+            });
 
 
+        }
 
+
+    </script>
+
+    <script>
+
+        function pullSurveyinfo(val) {
+            $('#Step5').css("visibility" , "visible")
+            $('.CenterAndRight').css("display", "block")
+
+            var Type = document.getElementById("surveyType").innerHTML;
+
+            var value = document.getElementById("configuration").innerHTML;
+
+            var cust = $('#customer').val();
+            var unt = $("#UnitsDropdown option:selected").text()
+            var dat = $("#SurveyDropdown option:selected").text()
+
+            $.ajax({
+                url: '@Url.Action("PullEquipmentSurvey", "FleetTVT")',
+                data: { customer: cust, unit: unt, date: dat},
+                type: 'POST',
+                success: function (data) {
+                    var EqpDetails = JSON.parse(data);
+
+                    $('#EmpsDropdown').val(EqpDetails.employee_id);
+                    $('#surveyLocationUnit').val(EqpDetails.survey_location);
+                    $('#mileageInput').val(EqpDetails.mileage);
+                    //$('#dateExpiredUnitSurvey').val(EqpDetails.employee_id);
+                    $('#unitSurveyComments').val(EqpDetails.comments);
+
+                }
+            });
+
+            $.ajax({
+                url: '@Url.Action("GetConfigurationDetails", "FleetTVT")',
+                data: { type: Type, config: value },
+                type: 'POST',
+                success: function (data) {
+                    var ConfigDetails = JSON.parse(data);
+
+
+                    if (ConfigDetails.one_lo != 0) {
+                        getTireInfo("1_lo", "centre_tire1_pressure", "centre_tire1_depth", "centre_tire1_brand", "centre_tire1_model", "centre_tire1_size", "centre_tire1_wear", "centre_tire1_valve", "centre_tire1_Tire", "centre_tire1_Wheel", "centre_tire1_comments")
+                    }
+
+                    if (ConfigDetails.one_li != 0) {
+                        getTireInfo("1_li", "centre_tire2_pressure", "centre_tire2_depth", "centre_tire2_brand", "centre_tire2_model", "centre_tire2_size", "centre_tire2_wear", "centre_tire2_valve", "centre_tire2_Tire", "centre_tire2_Wheel", "centre_tire2_comments")
+                    }
+
+                    if (ConfigDetails.one_ri != 0) {
+                        getTireInfo("1_ri", "centre_tire3_pressure", "centre_tire3_depth", "centre_tire3_brand", "centre_tire3_model", "centre_tire3_size", "centre_tire3_wear", "centre_tire3_valve", "centre_tire3_Tire", "centre_tire3_Wheel", "centre_tire3_comments")
+                    }
+
+                    if (ConfigDetails.one_ro != 0) {
+                        getTireInfo("1_ro", "centre_tire4_pressure", "centre_tire4_depth", "centre_tire4_brand", "centre_tire4_model", "centre_tire4_size", "centre_tire4_wear", "centre_tire4_valve", "centre_tire4_Tire", "centre_tire4_Wheel", "centre_tire4_comments")
+                    }
+
+                    if (ConfigDetails.two_lo != 0) {
+                        getTireInfo("2_lo", "centre_tire5_pressure", "centre_tire5_depth", "centre_tire5_brand", "centre_tire5_model", "centre_tire5_size", "centre_tire5_wear", "centre_tire5_valve", "centre_tire5_Tire", "centre_tire5_Wheel", "centre_tire5_comments")
+                    }
+
+                    if (ConfigDetails.two_li != 0) {
+                        getTireInfo("2_li", "centre_tire6_pressure", "centre_tire6_depth", "centre_tire6_brand", "centre_tire6_model", "centre_tire6_size", "centre_tire6_wear", "centre_tire6_valve", "centre_tire6_Tire", "centre_tire6_Wheel", "centre_tire6_comments")
+                    }
+
+                    if (ConfigDetails.two_ri != 0) {
+                        getTireInfo("2_ri", "centre_tire7_pressure", "centre_tire7_depth", "centre_tire7_brand", "centre_tire7_model", "centre_tire7_size", "centre_tire7_wear", "centre_tire7_valve", "centre_tire7_Tire", "centre_tire7_Wheel", "centre_tire7_comments")
+                    }
+
+                    if (ConfigDetails.two_ro != 0) {
+                        getTireInfo("2_ro", "centre_tire8_pressure", "centre_tire8_depth", "centre_tire8_brand", "centre_tire8_model", "centre_tire8_size", "centre_tire8_wear", "centre_tire8_valve", "centre_tire8_Tire", "centre_tire8_Wheel", "centre_tire8_comments")
+                    }
+
+                    if (ConfigDetails.three_lo != 0) {
+                        getTireInfo("3_lo", "centre_tire9_pressure", "centre_tire9_depth", "centre_tire9_brand", "centre_tire9_model", "centre_tire9_size", "centre_tire9_wear", "centre_tire9_valve", "centre_tire9_Tire", "centre_tire9_Wheel", "centre_tire9_comments")
+                    }
+
+                    if (ConfigDetails.three_li != 0) {
+                        getTireInfo("3_li", "centre_tire10_pressure", "centre_tire10_depth", "centre_tire10_brand", "centre_tire10_model", "centre_tire10_size", "centre_tire10_wear", "centre_tire10_valve", "centre_tire10_Tire", "centre_tire10_Wheel", "centre_tire10_comments")
+                    }
+
+                    if (ConfigDetails.three_ri != 0) {
+                        getTireInfo("3_ri", "centre_tire11_pressure", "centre_tire11_depth", "centre_tire11_brand", "centre_tire11_model", "centre_tire11_size", "centre_tire11_wear", "centre_tire11_valve", "centre_tire11_Tire", "centre_tire11_Wheel", "centre_tire11_comments")
+                    }
+
+                    if (ConfigDetails.three_ro != 0) {
+                        getTireInfo("3_ro", "centre_tire12_pressure", "centre_tire12_depth", "centre_tire12_brand", "centre_tire12_model", "centre_tire12_size", "centre_tire12_wear", "centre_tire12_valve", "centre_tire12_Tire", "centre_tire12_Wheel", "centre_tire12_comments")
+                    }
+
+                    if (ConfigDetails.four_lo != 0) {
+                        getTireInfo("4_lo", "centre_tire13_pressure", "centre_tire13_depth", "centre_tire13_brand", "centre_tire13_model", "centre_tire13_size", "centre_tire13_wear", "centre_tire13_valve", "centre_tire13_Tire", "centre_tire13_Wheel", "centre_tire13_comments")
+                    }
+
+                    if (ConfigDetails.four_li != 0) {
+                        getTireInfo("4_li", "centre_tire14_pressure", "centre_tire14_depth", "centre_tire14_brand", "centre_tire14_model", "centre_tire14_size", "centre_tire14_wear", "centre_tire14_valve", "centre_tire14_Tire", "centre_tire14_Wheel", "centre_tire14_comments")
+                    }
+
+                    if (ConfigDetails.four_ri != 0) {
+                        getTireInfo("4_ri", "centre_tire15_pressure", "centre_tire15_depth", "centre_tire15_brand", "centre_tire15_model", "centre_tire15_size", "centre_tire15_wear", "centre_tire15_valve", "centre_tire15_Tire", "centre_tire15_Wheel", "centre_tire15_comments")
+                    }
+
+                    if (ConfigDetails.four_ro != 0) {
+                        getTireInfo("4_ro", "centre_tire16_pressure", "centre_tire16_depth", "centre_tire16_brand", "centre_tire16_model", "centre_tire16_size", "centre_tire16_wear", "centre_tire16_valve", "centre_tire16_Tire", "centre_tire16_Wheel", "centre_tire16_comments")
+                    }
+
+                    if (ConfigDetails.five_lo != 0) {
+                        getTireInfo("5_lo", "centre_tire17_pressure", "centre_tire17_depth", "centre_tire17_brand", "centre_tire17_model", "centre_tire17_size", "centre_tire17_wear", "centre_tire17_valve", "centre_tire17_Tire", "centre_tire17_Wheel", "centre_tire17_comments")
+                    }
+
+                    if (ConfigDetails.five_li != 0) {
+                        getTireInfo("5_li", "centre_tire18_pressure", "centre_tire18_depth", "centre_tire18_brand", "centre_tire18_model", "centre_tire18_size", "centre_tire18_wear", "centre_tire18_valve", "centre_tire18_Tire", "centre_tire18_Wheel", "centre_tire18_comments")
+                    }
+
+                    if (ConfigDetails.five_ri != 0) {
+                        getTireInfo("5_ri", "centre_tire19_pressure", "centre_tire19_depth", "centre_tire19_brand", "centre_tire19_model", "centre_tire19_size", "centre_tire19_wear", "centre_tire19_valve", "centre_tire19_Tire", "centre_tire19_Wheel", "centre_tire19_comments")
+                    }
+
+
+                    if (ConfigDetails.five_ro != 0) {
+                        getTireInfo("5_ro", "centre_tire20_pressure", "centre_tire20_depth", "centre_tire20_brand", "centre_tire20_model", "centre_tire20_size", "centre_tire20_wear", "centre_tire20_valve", "centre_tire20_Tire", "centre_tire20_Wheel", "centre_tire20_comments")
+                    }
+
+                }
+            });
+
+            $('.unitProgress').css('width', "100%").text("100%");
+            $('.tireProgress').css('width', "100%").text("100%");
+
+        }
+
+        function getTireInfo(position, pressure, depth, brand, model, size, wear, valve, Tire, Wheel, comments) {
+
+            var cust = $('#customer').val();
+            var unt = $("#UnitsDropdown option:selected").text()
+            var dat = $("#SurveyDropdown option:selected").text()
+
+            //alert(cust + unt + dat + position);
+
+            
+
+            $.ajax({
+                url: '@Url.Action("GetTireInfo", "FleetTVT")',
+                data: { customer: cust, unit: unt, date: dat, pos: position},
+                type: 'POST',
+                success: function (data) {
+                    var TireDetails = JSON.parse(data);
+                    $("#"+pressure).html(TireDetails.actual_psi);
+                    $("#"+depth).html(TireDetails.actual_32nds);
+                    $("#"+brand).html(TireDetails.brand);
+                    $("#"+model).html(TireDetails.model);
+                    $("#"+size).html(TireDetails.size);
+                    $("#"+wear).html(TireDetails.condition_wear);
+                    $("#"+valve).html(TireDetails.valve);
+
+                    $("#"+Tire).html(TireDetails.condition_tire);
+                    $("#"+Wheel).html(TireDetails.condition_wheel);
+
+                    $("#" + comments).html(TireDetails.comments);
+
+                    
+
+                }
+            });
+        }
 
         $.ajax({
                 url: '@Url.Action("PullEmployeesChangeLocation", "FleetTVT")',
@@ -4059,6 +4802,7 @@
                     $("#EmpsDropdown").html(s);
                 }
         });
+
 
 
 
@@ -4131,9 +4875,7 @@
             });
         }
 
-
         datepicker.max = new Date().toISOString().split("T")[0];
-
 
         function addDays(date, days) {
           var result = new Date(date);
@@ -4148,7 +4890,6 @@
                 return false;
             return true;
         }
-
 
         $('#unitTab').click(function () {
             deselectEverything();
@@ -4165,171 +4906,14 @@
         });
 
 
-        $('#submiSurvey').click(function () {
-
-            var Type = document.getElementById("surveyType").innerHTML;
-
-            var value = document.getElementById("configuration").innerHTML;
-
-            $.ajax({
-                url: '@Url.Action("GetConfigurationDetails", "FleetTVT")',
-                data: { type: Type, config: value },
-                type: 'POST',
-                success: function (data) {
-                    var ConfigDetails = JSON.parse(data);
-
-
-                    if (ConfigDetails.one_lo != 0) {
-                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "1_lo", "centre_tire1_pressure", "centre_tire1_depth", "centre_tire1_wear", "centre_tire1_brand", "centre_tire1_model", "centre_tire1_size", "centre_tire1_valve", "centre_tire1_comments");
-                    }
-
-                    if (ConfigDetails.one_li != 0) {
-                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "1_li", "centre_tire2_pressure", "centre_tire2_depth", "centre_tire2_wear", "centre_tire2_brand", "centre_tire2_model", "centre_tire2_size", "centre_tire2_valve", "centre_tire2_comments");
-                    }
-
-                    if (ConfigDetails.one_ri != 0) {
-                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "1_ri", "centre_tire3_pressure", "centre_tire3_depth", "centre_tire3_wear", "centre_tire3_brand", "centre_tire3_model", "centre_tire3_size", "centre_tire3_valve", "centre_tire3_comments");
-                    }
-
-                    if (ConfigDetails.one_ro != 0) {
-                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "1_ro", "centre_tire4_pressure", "centre_tire4_depth", "centre_tire4_wear", "centre_tire4_brand", "centre_tire4_model", "centre_tire4_size", "centre_tire4_valve", "centre_tire4_comments");
-                    }
-
-                    if (ConfigDetails.two_lo != 0) {
-                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "2_lo", "centre_tire5_pressure", "centre_tire5_depth", "centre_tire5_wear", "centre_tire5_brand", "centre_tire5_model", "centre_tire5_size", "centre_tire5_valve", "centre_tire5_comments");
-                    }
-
-                    if (ConfigDetails.two_li != 0) {
-                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "2_li", "centre_tire6_pressure", "centre_tire6_depth", "centre_tire6_wear", "centre_tire6_brand", "centre_tire6_model", "centre_tire6_size", "centre_tire6_valve", "centre_tire6_comments");
-                    }
-
-                    if (ConfigDetails.two_ri != 0) {
-                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "2_ri", "centre_tire7_pressure", "centre_tire7_depth", "centre_tire7_wear", "centre_tire7_brand", "centre_tire7_model", "centre_tire7_size", "centre_tire7_valve", "centre_tire7_comments");
-                    }
-
-                    if (ConfigDetails.two_ro != 0) {
-                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "2_ro", "centre_tire8_pressure", "centre_tire8_depth", "centre_tire8_wear", "centre_tire8_brand", "centre_tire8_model", "centre_tire8_size", "centre_tire8_valve", "centre_tire8_comments");
-                    }
-
-                    if (ConfigDetails.three_lo != 0) {
-                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "3_lo", "centre_tire9_pressure", "centre_tire9_depth", "centre_tire9_wear", "centre_tire9_brand", "centre_tire9_model", "centre_tire9_size", "centre_tire9_valve", "centre_tire9_comments");
-                    }
-
-                    if (ConfigDetails.three_li != 0) {
-                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "3_li", "centre_tire10_pressure", "centre_tire10_depth", "centre_tire10_wear", "centre_tire10_brand", "centre_tire10_model", "centre_tire10_size", "centre_tire10_valve", "centre_tire10_comments");
-                    }
-
-                    if (ConfigDetails.three_ri != 0) {
-                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "3_ri", "centre_tire11_pressure", "centre_tire11_depth", "centre_tire11_wear", "centre_tire11_brand", "centre_tire11_model", "centre_tire11_size", "centre_tire11_valve", "centre_tire11_comments");
-                    }
-
-                    if (ConfigDetails.three_ro != 0) {
-                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "3_ro", "centre_tire12_pressure", "centre_tire12_depth", "centre_tire12_wear", "centre_tire12_brand", "centre_tire12_model", "centre_tire12_size", "centre_tire12_valve", "centre_tire12_comments");
-                    }
-
-                    if (ConfigDetails.four_lo != 0) {
-                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "4_lo", "centre_tire13_pressure", "centre_tire13_depth", "centre_tire13_wear", "centre_tire13_brand", "centre_tire13_model", "centre_tire13_size", "centre_tire13_valve", "centre_tire13_comments");
-                    }
-
-                    if (ConfigDetails.four_li != 0) {
-                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "4_li", "centre_tire14_pressure", "centre_tire14_depth", "centre_tire14_wear", "centre_tire14_brand", "centre_tire14_model", "centre_tire14_size", "centre_tire14_valve", "centre_tire14_comments");
-                    }
-
-                    if (ConfigDetails.four_ri != 0) {
-                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "4_ri", "centre_tire15_pressure", "centre_tire15_depth", "centre_tire15_wear", "centre_tire15_brand", "centre_tire15_model", "centre_tire15_size", "centre_tire15_valve", "centre_tire15_comments");
-                    }
-
-                    if (ConfigDetails.four_ro != 0) {
-                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "4_ro", "centre_tire16_pressure", "centre_tire16_depth", "centre_tire16_wear", "centre_tire16_brand", "centre_tire16_model", "centre_tire16_size", "centre_tire16_valve", "centre_tire16_comments");
-                    }
-
-                    if (ConfigDetails.five_lo != 0) {
-                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "5_lo", "centre_tire17_pressure", "centre_tire17_depth", "centre_tire17_wear", "centre_tire17_brand", "centre_tire17_model", "centre_tire17_size", "centre_tire17_valve", "centre_tire17_comments");
-                    }
-
-                    if (ConfigDetails.five_li != 0) {
-                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "5_li", "centre_tire18_pressure", "centre_tire18_depth", "centre_tire18_wear", "centre_tire18_brand", "centre_tire18_model", "centre_tire18_size", "centre_tire18_valve", "centre_tire18_comments");
-                    }
-
-                    if (ConfigDetails.five_ri != 0) {
-                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "5_ri", "centre_tire19_pressure", "centre_tire19_depth", "centre_tire19_wear", "centre_tire19_brand", "centre_tire19_model", "centre_tire19_size", "centre_tire19_valve", "centre_tire19_comments");
-                    }
-
-
-                    if (ConfigDetails.five_ro != 0) {
-                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "5_ro", "centre_tire20_pressure", "centre_tire20_depth", "centre_tire20_wear", "centre_tire20_brand", "centre_tire20_model", "centre_tire20_size", "centre_tire20_valve", "centre_tire20_comments");
-                    }
-
-
-                    var cust = document.getElementById("customerNumberEquipSurvey").innerHTML
-                    var unit = document.getElementById("unitNumberEquipSurvey").innerHTML
-                    var mileage = $('#mileageInput').val()
-                    var surveyLocation = $('#surveyLocationUnit').val()
-                    var expDate = $('#dateExpiredUnitSurvey').val()
-                    var emp = document.getElementById('EmpsDropdown').value
-                    var comments = $("#unitSurveyComments").val()
-
-
-
-
-
-                    $.ajax({
-                        url: '@Url.Action("InsertRecordToFleetSurveyUnit", "FleetTVT")',
-                        data: { cu: cust, un: unit, mlg: mileage, loct: surveyLocation, dat: expDate, empl: emp, cmts: comments},
-                        type: 'POST',
-                        success: function (data) {
-
-                        }
-                    });
-
-
-                    $('#SavedSuccessfully').modal();
-
-                }
-            });
-
-
-        });
-
-
-        function InsertRecordToFleetSurveyTire(customerID, unitID, dateID, position, pressureID, trdDepthID, wearID, brandID, modelID, sizeID, valveID, commentsID) {
-
-
-
-
-            var customer = document.getElementById(customerID).value;
-            var unit = document.getElementById(unitID).value;
-            var date = document.getElementById(dateID).value;
-            var pstn = position;
-
-            var pressure = document.getElementById(pressureID).innerHTML;
-            var trdDepth = document.getElementById(trdDepthID).innerHTML;
-            var wear = document.getElementById(wearID).innerHTML
-            var brand = document.getElementById(brandID).innerHTML
-            var model = document.getElementById(modelID).innerHTML
-            var size = document.getElementById(sizeID).innerHTML
-            var valve = document.getElementById(valveID).innerHTML
-            var comments = document.getElementById(commentsID).innerHTML
-
-
-            $.ajax({
-                url: '@Url.Action("InsertRecordToFleetSurveyTire", "FleetTVT")',
-                data: { cust: customer, unt: unit, dat: date, pn: pstn, pres: pressure, trdDpth: trdDepth, wr: wear, brnd: brand, mdl: model, sze: size, vlv: valve, com: comments },
-                type: 'POST',
-                success: function (data) {
-                }
-            });
-
-
-        }
-
-
+        
         $('#NewSurvey').click(function () {
             location.reload();
         });
 
-
         function pullUnitInfo(unitNum) {
+
+            $('.CenterAndRight').css("display", "none")
 
             var str = $("#customer option:selected").text();
             var res = str.replace("(" + document.getElementById('customer').value + ")", "");
@@ -4338,8 +4922,10 @@
             $("#customerNumberEquipSurvey").text(document.getElementById('customer').value);
             $("#unitNumberEquipSurvey").text(document.getElementById('UnitsDropdown').value);
 
-
             $("#unitDetails").css('visibility', 'visible');
+
+            $("#Step4").css('visibility', 'visible');
+            $("#Step5").css('visibility', 'hidden');
 
             $("#equipmentSurveyDiv").css('visibility', 'visible');
 
@@ -4349,10 +4935,7 @@
 
             $(".clearBackgroundColorOnUnitChange").css("background-color", "white");
 
-
-
             deselectEverything();
-
 
             $.ajax({
                 url: '@Url.Action("pullUnitInfo", "FleetTVT")',
@@ -4362,6 +4945,9 @@
                     var UnitDetails = JSON.parse(data);
                     $("#unitName").html(UnitDetails.unti_name);
                     $("#surveyType").html(UnitDetails.survey_type);
+
+                    jsFunction(UnitDetails.survey_configuration, UnitDetails.spec_psi_1, UnitDetails.spec_psi_2, UnitDetails.spec_psi_3);
+
                     $("#configuration").html(UnitDetails.survey_configuration);
                     $("#plateNumber").html(UnitDetails.plate_number);
                     $("#year").html(UnitDetails.year);
@@ -4369,16 +4955,34 @@
                     var date = new Date(parseFloat(num)); //converting to date
                     $("#dateExpired").html(date.getMonth() + 1 + "-" + date.getDate() + '-' + date.getFullYear());
 
-                    jsFunction(UnitDetails.survey_configuration);
-
                 }
 
             });
 
+            $("#SurveyDropdown").html("");
 
+            $.ajax({
+                url: '@Url.Action("GetSurveyDates", "FleetTVT")',
+                data: { unit: unitNum },
+                type: "POST",
+                success: function (data) {
+                    var s = '<option value="-1">Select Survey</option>';
+                    for (var i = 0; i < data.length; i++) {
+
+                        var d = new Date();
+                        var year = d.getFullYear();
+                        var date1 = moment(data[i]).add(1, 'days');
+                        var finalDate = moment(date1).format("YYYY-MM-DD");
+
+                        //alert(date1)
+
+                        s += '<option value="' + finalDate + '">' + finalDate + '</option>';
+                    }
+                    $("#SurveyDropdown").html(s);
+                }
+            });
 
         }
-
 
         function deselectEverything() {
             document.getElementById("one").style.opacity = "0.3";
@@ -4445,7 +5049,6 @@
             $('.19').css("display", "none");
             $('.20').css("display", "none");
         }
-
 
         $('#datepicker').change(function () {
             $("#Step2").css('visibility', 'visible');
@@ -4534,6 +5137,8 @@
 
         function InitiateStep3(value1) {
 
+            $('.CenterAndRight').css("display" , "none")
+
             $('.tireProgress').css('width', "0%").text("");
 
             $("#equipmentSurveyDiv").css('visibility', 'hidden');
@@ -4557,6 +5162,7 @@
             $("#UnitsDropdown").val("Please Select Customer")
 
             $("#Step3").css('visibility', 'visible');
+            $("#Step5").css('visibility', 'hidden');
             $("#unitDetails").css('visibility', 'hidden');
             $.ajax({
                 url: '@Url.Action("PullCustomerInfo", "FleetTVT")',
@@ -4615,7 +5221,6 @@
             $('.E').css('visibility', 'hidden');
 
         }
-
 
         function tire1_update() {
 
@@ -5469,418 +6074,7 @@
         }
 
 
-        $(".one").click(function () {
-
-            $("#right_tire1_pressure").val($("#centre_tire1_pressure").html());
-            $("#right_tire1_depth").val($("#centre_tire1_depth").html());
-            $("#right_tire1_brand").val($("#centre_tire1_brand").html());
-            $("#right_tire1_model").val($("#centre_tire1_model").html());
-            $("#right_tire1_size").val($("#centre_tire1_size").html())
-            $("#right_tire1_wear").val($("#centre_tire1_wear").html())
-            $("#right_tire1_valve").val($("#centre_tire1_valve").html())
-
-            $("#right_tire1_Tire").val($("#centre_tire1_Tire").html())
-            $("#right_tire1_Wheel").val($("#centre_tire1_Wheel").html())
-
-            $("#right_tire1_comments").val($("#centre_tire1_comments").html())
-
-            selectOnlyOneExceptRest();
-
-            document.getElementById("one").style.opacity = "1";
-            $('#onet').css("border", "2px solid black");
-            $('.1').fadeIn();
-
-        });
-        $(".two").click(function () {
-
-            $("#right_tire2_pressure").val($("#centre_tire2_pressure").html());
-            $("#right_tire2_depth").val($("#centre_tire2_depth").html());
-            $("#right_tire2_brand").val($("#centre_tire2_brand").html());
-            $("#right_tire2_model").val($("#centre_tire2_model").html());
-            $("#right_tire2_size").val($("#centre_tire2_size").html())
-            $("#right_tire2_wear").val($("#centre_tire2_wear").html())
-            $("#right_tire2_valve").val($("#centre_tire2_valve").html())
-
-            $("#right_tire2_Tire").val($("#centre_tire2_Tire").html())
-            $("#right_tire2_Wheel").val($("#centre_tire2_Wheel").html())
-
-            $("#right_tire2_comments").val($("#centre_tire2_comments").html())
-
-            selectOnlyOneExceptRest();
-
-            document.getElementById("two").style.opacity = "1";
-            $('#twot').css("border", "2px solid black");
-            $('.2').fadeIn();
-        });
-        $(".three").click(function () {
-
-            $("#right_tire3_pressure").val($("#centre_tire3_pressure").html());
-            $("#right_tire3_depth").val($("#centre_tire3_depth").html());
-            $("#right_tire3_brand").val($("#centre_tire3_brand").html());
-            $("#right_tire3_model").val($("#centre_tire3_model").html());
-            $("#right_tire3_size").val($("#centre_tire3_size").html())
-            $("#right_tire3_wear").val($("#centre_tire3_wear").html())
-            $("#right_tire3_valve").val($("#centre_tire3_valve").html())
-
-            $("#right_tire3_Tire").val($("#centre_tire3_Tire").html())
-            $("#right_tire3_Wheel").val($("#centre_tire3_Wheel").html())
-
-            $("#right_tire3_comments").val($("#centre_tire3_comments").html())
-
-            selectOnlyOneExceptRest();
-            document.getElementById("three").style.opacity = "1";
-            $('#threet').css("border", "2px solid black");
-            $('.3').fadeIn();
-
-        });
-        $(".four").click(function () {
-
-            $("#right_tire4_pressure").val($("#centre_tire4_pressure").html());
-            $("#right_tire4_depth").val($("#centre_tire4_depth").html());
-            $("#right_tire4_brand").val($("#centre_tire4_brand").html());
-            $("#right_tire4_model").val($("#centre_tire4_model").html());
-            $("#right_tire4_size").val($("#centre_tire4_size").html())
-            $("#right_tire4_wear").val($("#centre_tire4_wear").html())
-            $("#right_tire4_valve").val($("#centre_tire4_valve").html())
-
-            $("#right_tire4_Tire").val($("#centre_tire4_Tire").html())
-            $("#right_tire4_Wheel").val($("#centre_tire4_Wheel").html())
-
-            $("#right_tire4_comments").val($("#centre_tire4_comments").html())
-
-            selectOnlyOneExceptRest();
-            document.getElementById("four").style.opacity = "1";
-            $('#fourt').css("border", "2px solid black");
-            $('.4').fadeIn();
-        });
-        $(".five").click(function () {
-
-            $("#right_tire5_pressure").val($("#centre_tire5_pressure").html());
-            $("#right_tire5_depth").val($("#centre_tire5_depth").html());
-            $("#right_tire5_brand").val($("#centre_tire5_brand").html());
-            $("#right_tire5_model").val($("#centre_tire5_model").html());
-            $("#right_tire5_size").val($("#centre_tire5_size").html())
-            $("#right_tire5_wear").val($("#centre_tire5_wear").html())
-            $("#right_tire5_valve").val($("#centre_tire5_valve").html())
-
-            $("#right_tire5_Tire").val($("#centre_tire5_Tire").html())
-            $("#right_tire5_Wheel").val($("#centre_tire5_Wheel").html())
-
-            $("#right_tire5_comments").val($("#centre_tire5_comments").html())
-
-            selectOnlyOneExceptRest();
-            document.getElementById("five").style.opacity = "1";
-            $('#fivet').css("border", "2px solid black");
-            $('.5').fadeIn();
-        });
-        $(".six").click(function () {
-
-            $("#right_tire6_pressure").val($("#centre_tire6_pressure").html());
-            $("#right_tire6_depth").val($("#centre_tire6_depth").html());
-            $("#right_tire6_brand").val($("#centre_tire6_brand").html());
-            $("#right_tire6_model").val($("#centre_tire6_model").html());
-            $("#right_tire6_size").val($("#centre_tire6_size").html())
-            $("#right_tire6_wear").val($("#centre_tire6_wear").html())
-            $("#right_tire6_valve").val($("#centre_tire6_valve").html())
-
-            $("#right_tire6_Tire").val($("#centre_tire6_Tire").html())
-            $("#right_tire6_Wheel").val($("#centre_tire6_Wheel").html())
-
-            $("#right_tire6_comments").val($("#centre_tire6_comments").html())
-
-            selectOnlyOneExceptRest();
-            document.getElementById("six").style.opacity = "1";
-            $('#sixt').css("border", "2px solid black");
-            $('.6').fadeIn();
-        });
-        $(".seven").click(function () {
-
-            $("#right_tire7_pressure").val($("#centre_tire7_pressure").html());
-            $("#right_tire7_depth").val($("#centre_tire7_depth").html());
-            $("#right_tire7_brand").val($("#centre_tire7_brand").html());
-            $("#right_tire7_model").val($("#centre_tire7_model").html());
-            $("#right_tire7_size").val($("#centre_tire7_size").html())
-            $("#right_tire7_wear").val($("#centre_tire7_wear").html())
-            $("#right_tire7_valve").val($("#centre_tire7_valve").html())
-
-            $("#right_tire7_Tire").val($("#centre_tire7_Tire").html())
-            $("#right_tire7_Wheel").val($("#centre_tire7_Wheel").html())
-
-            $("#right_tire7_comments").val($("#centre_tire7_comments").html())
-
-            selectOnlyOneExceptRest();
-            document.getElementById("seven").style.opacity = "1";
-            $('#sevent').css("border", "2px solid black");
-            $('.7').fadeIn();
-        });
-        $(".eight").click(function () {
-
-            $("#right_tire8_pressure").val($("#centre_tire8_pressure").html());
-            $("#right_tire8_depth").val($("#centre_tire8_depth").html());
-            $("#right_tire8_brand").val($("#centre_tire8_brand").html());
-            $("#right_tire8_model").val($("#centre_tire8_model").html());
-            $("#right_tire8_size").val($("#centre_tire8_size").html())
-            $("#right_tire8_wear").val($("#centre_tire8_wear").html())
-            $("#right_tire8_valve").val($("#centre_tire8_valve").html())
-
-            $("#right_tire8_Tire").val($("#centre_tire8_Tire").html())
-            $("#right_tire8_Wheel").val($("#centre_tire8_Wheel").html())
-
-            $("#right_tire8_comments").val($("#centre_tire8_comments").html())
-
-            selectOnlyOneExceptRest();
-            document.getElementById("eight").style.opacity = "1";
-            $('#eightt').css("border", "2px solid black");
-            $('.8').fadeIn();
-        });
-        $(".nine").click(function () {
-
-            $("#right_tire9_pressure").val($("#centre_tire9_pressure").html());
-            $("#right_tire9_depth").val($("#centre_tire9_depth").html());
-            $("#right_tire9_brand").val($("#centre_tire9_brand").html());
-            $("#right_tire9_model").val($("#centre_tire9_model").html());
-            $("#right_tire9_size").val($("#centre_tire9_size").html())
-            $("#right_tire9_wear").val($("#centre_tire9_wear").html())
-            $("#right_tire9_valve").val($("#centre_tire9_valve").html())
-
-            $("#right_tire9_Tire").val($("#centre_tire9_Tire").html())
-            $("#right_tire9_Wheel").val($("#centre_tire9_Wheel").html())
-
-            $("#right_tire9_comments").val($("#centre_tire9_comments").html())
-
-            selectOnlyOneExceptRest();
-            document.getElementById("nine").style.opacity = "1";
-            $('#ninet').css("border", "2px solid black");
-            $('.9').fadeIn();
-        });
-        $(".ten").click(function () {
-
-            $("#right_tire10_pressure").val($("#centre_tire10_pressure").html());
-            $("#right_tire10_depth").val($("#centre_tire10_depth").html());
-            $("#right_tire10_brand").val($("#centre_tire10_brand").html());
-            $("#right_tire10_model").val($("#centre_tire10_model").html());
-            $("#right_tire10_size").val($("#centre_tire10_size").html())
-            $("#right_tire10_wear").val($("#centre_tire10_wear").html())
-            $("#right_tire10_valve").val($("#centre_tire10_valve").html())
-
-            $("#right_tire10_Tire").val($("#centre_tire10_Tire").html())
-            $("#right_tire10_Wheel").val($("#centre_tire10_Wheel").html())
-
-            $("#right_tire10_comments").val($("#centre_tire10_comments").html())
-
-            selectOnlyOneExceptRest();
-            document.getElementById("ten").style.opacity = "1";
-            $('#tent').css("border", "2px solid black");
-            $('.10').fadeIn();
-        });
-        $(".eleven").click(function () {
-
-            $("#right_tire11_pressure").val($("#centre_tire11_pressure").html());
-            $("#right_tire11_depth").val($("#centre_tire11_depth").html());
-            $("#right_tire11_brand").val($("#centre_tire11_brand").html());
-            $("#right_tire11_model").val($("#centre_tire11_model").html());
-            $("#right_tire11_size").val($("#centre_tire11_size").html())
-            $("#right_tire11_wear").val($("#centre_tire11_wear").html())
-            $("#right_tire11_valve").val($("#centre_tire11_valve").html())
-
-            $("#right_tire11_Tire").val($("#centre_tire11_Tire").html())
-            $("#right_tire11_Wheel").val($("#centre_tire11_Wheel").html())
-
-            $("#right_tire11_comments").val($("#centre_tire11_comments").html())
-
-
-            selectOnlyOneExceptRest();
-            document.getElementById("eleven").style.opacity = "1";
-            $('#elevent').css("border", "2px solid black");
-            $('.11').fadeIn();
-        });
-        $(".twelve").click(function () {
-
-            $("#right_tire12_pressure").val($("#centre_tire12_pressure").html());
-            $("#right_tire12_depth").val($("#centre_tire12_depth").html());
-            $("#right_tire12_brand").val($("#centre_tire12_brand").html());
-            $("#right_tire12_model").val($("#centre_tire12_model").html());
-            $("#right_tire12_size").val($("#centre_tire12_size").html())
-            $("#right_tire12_wear").val($("#centre_tire12_wear").html())
-            $("#right_tire12_valve").val($("#centre_tire12_valve").html())
-
-            $("#right_tire12_Tire").val($("#centre_tire12_Tire").html())
-            $("#right_tire12_Wheel").val($("#centre_tire12_Wheel").html())
-
-            $("#right_tire12_comments").val($("#centre_tire12_comments").html())
-
-
-            selectOnlyOneExceptRest();
-            document.getElementById("twelve").style.opacity = "1";
-            $('#twelvet').css("border", "2px solid black");
-            $('.12').fadeIn();
-        });
-        $(".tharteen").click(function () {
-
-            $("#right_tire13_pressure").val($("#centre_tire13_pressure").html());
-            $("#right_tire13_depth").val($("#centre_tire13_depth").html());
-            $("#right_tire13_brand").val($("#centre_tire13_brand").html());
-            $("#right_tire13_model").val($("#centre_tire13_model").html());
-            $("#right_tire13_size").val($("#centre_tire13_size").html())
-            $("#right_tire13_wear").val($("#centre_tire13_wear").html())
-            $("#right_tire13_valve").val($("#centre_tire13_valve").html())
-
-            $("#right_tire13_Tire").val($("#centre_tire13_Tire").html())
-            $("#right_tire13_Wheel").val($("#centre_tire13_Wheel").html())
-
-            $("#right_tire13_comments").val($("#centre_tire13_comments").html())
-
-            selectOnlyOneExceptRest();
-            document.getElementById("tharteen").style.opacity = "1";
-            $('#tharteent').css("border", "2px solid black");
-            $('.13').fadeIn();
-        });
-        $(".fourteen").click(function () {
-
-            $("#right_tire14_pressure").val($("#centre_tire14_pressure").html());
-            $("#right_tire14_depth").val($("#centre_tire14_depth").html());
-            $("#right_tire14_brand").val($("#centre_tire14_brand").html());
-            $("#right_tire14_model").val($("#centre_tire14_model").html());
-            $("#right_tire14_size").val($("#centre_tire14_size").html())
-            $("#right_tire14_wear").val($("#centre_tire14_wear").html())
-            $("#right_tire14_valve").val($("#centre_tire14_valve").html())
-
-            $("#right_tire14_Tire").val($("#centre_tire14_Tire").html())
-            $("#right_tire14_Wheel").val($("#centre_tire14_Wheel").html())
-
-            $("#right_tire14_comments").val($("#centre_tire14_comments").html())
-
-
-            selectOnlyOneExceptRest();
-            document.getElementById("fourteen").style.opacity = "1";
-            $('#fourteent').css("border", "2px solid black");
-            $('.14').fadeIn();
-        });
-        $(".fifteen").click(function () {
-
-            $("#right_tire15_pressure").val($("#centre_tire15_pressure").html());
-            $("#right_tire15_depth").val($("#centre_tire15_depth").html());
-            $("#right_tire15_brand").val($("#centre_tire15_brand").html());
-            $("#right_tire15_model").val($("#centre_tire15_model").html());
-            $("#right_tire15_size").val($("#centre_tire15_size").html())
-            $("#right_tire15_wear").val($("#centre_tire15_wear").html())
-            $("#right_tire15_valve").val($("#centre_tire15_valve").html())
-
-            $("#right_tire15_Tire").val($("#centre_tire15_Tire").html())
-            $("#right_tire15_Wheel").val($("#centre_tire15_Wheel").html())
-
-            $("#right_tire15_comments").val($("#centre_tire15_comments").html())
-
-
-            selectOnlyOneExceptRest();
-            document.getElementById("fifteen").style.opacity = "1";
-            $('#fifteent').css("border", "2px solid black");
-            $('.15').fadeIn();
-        });
-        $(".sixteen").click(function () {
-
-            $("#right_tire16_pressure").val($("#centre_tire16_pressure").html());
-            $("#right_tire16_depth").val($("#centre_tire16_depth").html());
-            $("#right_tire16_brand").val($("#centre_tire16_brand").html());
-            $("#right_tire16_model").val($("#centre_tire16_model").html());
-            $("#right_tire16_size").val($("#centre_tire16_size").html())
-            $("#right_tire16_wear").val($("#centre_tire16_wear").html())
-            $("#right_tire16_valve").val($("#centre_tire16_valve").html())
-
-            $("#right_tire16_Tire").val($("#centre_tire16_Tire").html())
-            $("#right_tire16_Wheel").val($("#centre_tire16_Wheel").html())
-
-            $("#right_tire16_comments").val($("#centre_tire16_comments").html())
-
-
-            selectOnlyOneExceptRest();
-            document.getElementById("sixteen").style.opacity = "1";
-            $('#sixteent').css("border", "2px solid black");
-            $('.16').fadeIn();
-        });
-        $(".seventeen").click(function () {
-
-            $("#right_tire17_pressure").val($("#centre_tire17_pressure").html());
-            $("#right_tire17_depth").val($("#centre_tire17_depth").html());
-            $("#right_tire17_brand").val($("#centre_tire17_brand").html());
-            $("#right_tire17_model").val($("#centre_tire17_model").html());
-            $("#right_tire17_size").val($("#centre_tire17_size").html())
-            $("#right_tire17_wear").val($("#centre_tire17_wear").html())
-            $("#right_tire17_valve").val($("#centre_tire17_valve").html())
-
-            $("#right_tire17_Tire").val($("#centre_tire17_Tire").html())
-            $("#right_tire17_Wheel").val($("#centre_tire17_Wheel").html())
-
-            $("#right_tire17_comments").val($("#centre_tire17_comments").html())
-
-
-            selectOnlyOneExceptRest();
-            document.getElementById("seventeen").style.opacity = "1";
-            $('#seventeent').css("border", "2px solid black");
-            $('.17').fadeIn();
-        });
-        $(".eighteen").click(function () {
-
-            $("#right_tire18_pressure").val($("#centre_tire18_pressure").html());
-            $("#right_tire18_depth").val($("#centre_tire18_depth").html());
-            $("#right_tire18_brand").val($("#centre_tire18_brand").html());
-            $("#right_tire18_model").val($("#centre_tire18_model").html());
-            $("#right_tire18_size").val($("#centre_tire18_size").html())
-            $("#right_tire18_wear").val($("#centre_tire18_wear").html())
-            $("#right_tire18_valve").val($("#centre_tire18_valve").html())
-
-            $("#right_tire18_Tire").val($("#centre_tire18_Tire").html())
-            $("#right_tire18_Wheel").val($("#centre_tire18_Wheel").html())
-
-            $("#right_tire18_comments").val($("#centre_tire18_comments").html())
-
-            selectOnlyOneExceptRest();
-            document.getElementById("eighteen").style.opacity = "1";
-            $('#eighteent').css("border", "2px solid black");
-            $('.18').fadeIn();
-        });
-        $(".ninteen").click(function () {
-
-            $("#right_tire19_pressure").val($("#centre_tire19_pressure").html());
-            $("#right_tire19_depth").val($("#centre_tire19_depth").html());
-            $("#right_tire19_brand").val($("#centre_tire19_brand").html());
-            $("#right_tire19_model").val($("#centre_tire19_model").html());
-            $("#right_tire19_size").val($("#centre_tire19_size").html())
-            $("#right_tire19_wear").val($("#centre_tire19_wear").html())
-            $("#right_tire19_valve").val($("#centre_tire19_valve").html())
-
-            $("#right_tire19_Tire").val($("#centre_tire19_Tire").html())
-            $("#right_tire19_Wheel").val($("#centre_tire19_Wheel").html())
-
-            $("#right_tire19_comments").val($("#centre_tire19_comments").html())
-
-
-            selectOnlyOneExceptRest();
-            document.getElementById("ninteen").style.opacity = "1";
-            $('#ninteent').css("border", "2px solid black");
-            $('.19').fadeIn();
-        });
-        $(".twenty").click(function () {
-
-            $("#right_tire20_pressure").val($("#centre_tire20_pressure").html());
-            $("#right_tire20_depth").val($("#centre_tire20_depth").html());
-            $("#right_tire20_brand").val($("#centre_tire20_brand").html());
-            $("#right_tire20_model").val($("#centre_tire20_model").html());
-            $("#right_tire20_size").val($("#centre_tire20_size").html())
-            $("#right_tire20_wear").val($("#centre_tire20_wear").html())
-            $("#right_tire20_valve").val($("#centre_tire20_valve").html())
-
-            $("#right_tire20_Tire").val($("#centre_tire20_Tire").html())
-            $("#right_tire20_Wheel").val($("#centre_tire20_Wheel").html())
-
-            $("#right_tire20_comments").val($("#centre_tire20_comments").html())
-
-
-            selectOnlyOneExceptRest();
-            document.getElementById("twenty").style.opacity = "1";
-            $('#twentyt').css("border", "2px solid black");
-            $('.20').fadeIn();
-        });
+        
 
         function jsFunction(value) {
 

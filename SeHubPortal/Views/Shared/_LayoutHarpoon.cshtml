@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - City Tire</title>
+    <link rel="shortcut icon" type="image/x-icon" href="~/Content/title_logo_2.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    @*<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>*@
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <style>
+        
+        body {
+         overflow-x: hidden!important;
+         overflow-y: hidden;
+        }
+
+
+        #TabLinks {
+            margin-left: 7%;
+        }
+
+        .tabLinksSpace {
+            margin-left: 40px;
+        }
+
+        #mainButton:focus {
+            box-shadow: none;
+        }
+
+        #libraryBtn:focus {
+            box-shadow: none;
+        }
+
+        #treadTrackerButton:focus {
+            box-shadow: none;
+        }
+
+        #managementBtn:focus {
+            box-shadow: none;
+        }
+
+        #toolsBtn:focus {
+            box-shadow: none;
+        }
+
+        #payrollBtn:focus {
+            box-shadow: none;
+        }
+
+        #upload{
+            padding-left:10%
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-light bg-white" style="border:2px solid  #f0f2f5">
+        @*<a href="#" class="navbar-brand">City Tire</a>*@
+        <img src="~/Content/Harpoon.png" style="height:90px;width:150px; padding-left:70px" class="navbar-brand" />
+        
+
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav" id="TabLinks">
+
+                <a id="ManagementClicked" href="@Url.Action("Dashboard", "SettingsHarpoon")" style="margin-left: 20px;margin-right: 20px;padding: 10px;border-radius: 5px" class="text-center">
+                    <img src="~/Content/man.png" /><br />
+                    <input type="button" id="managementBtn" class="btn btn-outline my-2 my-sm-0" style="visibility:visible;border-color:transparent;font-size:18px;color:black;" value="Management" />
+                </a>
+
+                <a id="SettingsClicked" href="@Url.Action("Employees", "SettingsHarpoon")" style="margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center">
+
+                    <img style="height:20px;" src="~/Content/settings.png" /><br />
+                    <input type="button" id="libraryBtn" class="btn btn-outline my-2 my-sm-0 settingsBtn" style="visibility:visible;border-color:transparent;font-size:18px;color:black;" value="Settings" />
+                </a>
+
+            </div>
+        </div>
+        <div class="flex-grow-0" id="profileBlock" style="padding:0px !important">
+
+        </div>
+
+        <div class="modal fade" id="upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="width:300px">
+
+                    @using (Html.BeginForm("UploadProfileImage", "Main", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <div class="modal-header text-center" style="padding:3px 3px 0px 3px">
+                            <h5 style="margin-left:auto; margin-right:auto">Upload Profile Picture</h5>
+                        </div>
+                        <div class="modal-body text-center">
+                            <input style="display:none" name="EmployeeImage" type='file' id="imgInp" />
+                            <input for="imgInp" type="text" readonly style="margin-bottom:15px; height:23px; width:100px;" value="Upload" class="btn btn-primary" onclick="document.getElementById('imgInp').click()" />
+                            <img id="UploatImage" style="border-radius:100%; width:200px" src="~/Content/profilepic.jpg" alt="ProfilePic" />
+
+                        </div>
+                        <div class="modal-footer" style="padding:3px">
+                            <button type="button" class="btn btn-danger" style="padding:2px 22px 2px 22px" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-success" style="padding:2px 30px 2px 30px">Save</button>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+        <script>
+
+
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#UploatImage').attr('src', e.target.result);
+                    }
+
+                    reader.readAsDataURL(input.files[0]); // convert to base64 string
+                }
+            }
+
+            $("#imgInp").change(function () {
+                readURL(this);
+            });
+
+            
+        </script>
+
+
+
+        <div>
+            <a style="float:right" href="@Url.Action("LogOut", "Main")" class="btn">
+                <img src="~/Content/power.png" />
+            </a>
+        </div>
+    </nav>
+    <div id="MainDiv">
+        @RenderBody()
+    </div>
+    <script>
+        $.ajax({
+            url: '@Url.Action("ProfileBlock", "Main")',
+            success: function (data) {
+                $('#profileBlock').html(data)
+            }
+        });
+    </script>
+    @Scripts.Render("~/bundles/jquery")   @*I commented this line because datatables in the fuel log page is not working properly. please uncomment if you face any issue with other pages*@
+    @Scripts.Render("~/bundles/fullcalendarjs")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

@@ -18,7 +18,14 @@
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 
-
+    @if (Model.SehubAccess.plant > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
 
     @if (Model.SehubAccess.tools > 0)
     {
@@ -112,8 +119,17 @@
         </style>
     }
 
+    @if (Model.SehubAccess.fleetTvt_snapshot > 0)
+    {
+        <style>
+            #FleetSnapShotLink {
+                display: block !important;
+            }
+        </style>
+    }
 
-    <style>       
+
+    <style>
 
 
         #FleetTVTClicked {
@@ -127,6 +143,12 @@
 
         .Trailer {
             display: none;
+        }
+
+        #FleetTVTDashboardClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: bold;
         }
 
         #FleetTVTClicked {
@@ -184,41 +206,32 @@
 
         <div class="col-lg-2">
             <div class="row" style="padding-left: 15px">
-                <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#exampleModal" style="width:260px; height:360px">
-                    <div class="card-body text-center" style="height:270px; padding-top:65px">
-                        <img src="~/Content/checklist icon.png" style="margin-top:0px; margin-bottom:37px; width:130px;">
-                        <h5><b>Generic Survey Print</b></h5>
-                    </div>
-                </div>
-            </div>
-            <div class="row" style="margin-top:15px; padding-left: 15px">
-                <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#InspectionChecklist" style="width:260px; height:360px">
-                    <div class="card-body text-center" style="height:270px; padding-top:75px">
-                        <img src="~/Content/fleet snapshot.png" style="margin-top:0px; margin-bottom:37px; width:160px;">
-                        <h5><b>Fleet Snap Shot</b></h5>
+                <div id="GenerateSurveyPrint" class="card shadow-lg " type="button" data-toggle="modal" data-target="#exampleModal" style="width:260px; height:360px">
+                    <div class="card-body text-center" style="height:270px; padding-top:50px">
+                        <img src="~/Content/checklist icon.png" style="margin-top:0px; margin-bottom:30px; width:130px;">
+                        <div class="row" style="padding:0px 60px 0px 60px">
+                            <h5><b>Survey Field Sheet</b></h5>
+                        </div>
+                        <span id="invisibleSpan" style="display:none">@Model.URL</span>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-lg-2">
             <div class="row" style="padding-left: 15px">
-                <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#InspectionChecklist" style="width:260px; height:360px">
-                    <div class="card-body text-center" style="height:270px; padding-top:80px; padding-left:0px">
-                        <img src="~/Content/fleet_report.png" style="margin-top:0px; margin-bottom:20px; width:180px;">
-                        <h5 style="margin-left:20px"><b>Generate Survey Print</b></h5>
-                    </div>
-                </div>
-            </div>
-            <div class="row" style="margin-top:15px; padding-left: 15px">
-                <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#InspectionChecklist" style="width:260px; height:360px">
-                    <div class="card-body text-center" style="height:270px; padding-top:65px">
-
+                <div id="UnitPrint" class="card shadow-lg " type="button" data-toggle="modal" data-target="#exampleModal" style="width:260px; height:360px">
+                    <div class="card-body text-center" style="height:270px; padding-top:50px">
+                        <img src="~/Content/checklist icon.png" style="margin-top:0px; margin-bottom:30px; width:130px;">
+                        <div class="row" style="padding:0px 60px 0px 60px">
+                            <h5><b>New Unit Field Sheet</b></h5>
+                        </div>
+                        <span id="invisibleSpanUnit" style="display:none">@Model.UnitURI</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-2">
+        <div class="col-lg-2" style="padding-right:5px;">
             <div class="card shadow-lg " data-toggle="modal" data-target="#InspectionChecklist" style="height:735px">
                 <div class="card-header text-center" style="padding: 6px 6px 0px 6px">
                     <h5>Equipment Type</h5>
@@ -249,6 +262,7 @@
                                 });
                             }
                             @Html.DropDownListFor(m => m.Type, listItems, new { @id = "Type", @class = "text-center", @style = "text-align-last: center; width:110px; height:30px; margin-left:0px", @required = "required", @onchange = "jsFunction(this.value);" })
+
                         </div>
                     </div>
                     <div class="row" style="padding-left:10px; margin-top:10px">
@@ -258,12 +272,16 @@
                         <div class="col-lg-8 text-right" style="padding-right:20px;">
                             @Html.DropDownListFor(m => m.Configuration, Model.ConfigurationsListTractor, new { @id = "Configuration", @class = "text Tractor", @style = "margin-left: 27px; text-align-last: center; width:110px; height:30px", @required = "required", @onchange = "jsFunction(this.value);" })
                             @Html.DropDownListFor(m => m.Configuration, Model.ConfigurationsListTrailer, new { @id = "Configuration", @class = "text Trailer", @style = "margin-left: 27px; text-align-last: center; width:110px; height:30px", @required = "required", @onchange = "jsFunction(this.value);" })
+
                         </div>
                     </div>
 
-                    <hr style="height:2px; margin:10px 10px 0px 10px; border:none; background-color:lightgray;">
+                    <hr style="        height: 2px;
+        margin: 10px 10px 0px 10px;
+        border: none;
+        background-color: lightgray;">
 
-                    <div class="row" >
+                    <div class="row">
                         <div class="col-lg-12">
                             <div class="row" style="margin-top:5px">
                                 <div class="col-lg-12 text-center">
@@ -300,11 +318,11 @@
                             <table class="table table-striped table-bordered">
                                 <thead style="background-color:gray; color:white">
                                     <tr>
-                                        <th style="padding:0px" scope="col">Customer</th>
-                                        <th style="padding:0px" scope="col">Unit#</th>
-                                        <th style="padding:0px" scope="col"># of tires</th>
-                                        <th style="padding:0px" scope="col">Last survey</th>
-                                        <th style="padding:0px" scope="col">Day overdue</th>
+                                        <th style="font-size:10px; padding:0px" scope="col">Customer</th>
+                                        <th style="font-size:10px; padding:0px" scope="col">Unit#</th>
+                                        <th style="font-size:10px; padding:0px" scope="col"># of tires</th>
+                                        <th style="font-size:10px; padding:0px" scope="col">Last survey</th>
+                                        <th style="font-size:10px; padding:0px" scope="col">Day overdue</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -387,8 +405,23 @@
             <div class="row" style="margin-top:15px">
                 <div class="col-lg-12">
                     <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#AddDocuments" style="width:790px; height:360px">
-                        <div class="card-header text-center" style="padding:6px 6px 0px 6px">
-                            <h5>Enrolled Customers</h5>
+                        <div class="card-header text-center" style="padding:6px 15px 0px 15px">
+                            <div class="row">
+                                <div class="col-lg-2"></div>
+                                <div class="col-lg-8 text-center">
+                                    <h5>Enrolled Customers</h5>
+                                </div>
+                                <div class="col-lg-2 text-right">
+
+                                    @if (Model.SehubAccess.fleetTvt_dashboard >= 3)
+                                    {
+                                        <input data-toggle="modal" data-target="#AddCust" readonly type="text" style="float:right; font-weight:bold; padding:0px; width:32px; height:26px" class="btn btn-secondary" name="name" value="+" />
+                                    }
+
+                                </div>
+                            </div>
+
+
                         </div>
                         <div class="card-body text-center" style="height:270px">
 
@@ -396,16 +429,17 @@
                                 <table class="table table-striped table-bordered">
                                     <thead style="background-color:gray; color:white">
                                         <tr>
-                                            <th style="padding:0px" scope="col">Name</th>
-                                            <th style="padding:0px" scope="col">Number</th>
-                                            <th style="padding:0px" scope="col">Size</th>
-                                            <th style="padding:0px" scope="col">Report</th>
-                                            <th style="padding:0px" scope="col">Address</th>
-                                            <th style="padding:0px" scope="col">Frequency</th>
+                                            <th style="font-size:10px; padding:0px" scope="col">Name</th>
+                                            <th style="font-size:10px; padding:0px" scope="col">Number</th>
+                                            <th style="font-size:10px; padding:0px" scope="col">Size</th>
+                                            <th style="font-size:10px; padding:0px" scope="col">Report</th>
+                                            <th style="font-size:10px; padding:0px" scope="col">Address</th>
+                                            <th style="font-size:10px; padding:0px" scope="col">Frequency</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (var item in Model.customer_table) {
+                                        @foreach (var item in Model.customer_table)
+                                        {
                                             <tr>
                                                 <td style="font-size:11px">@item.customer_name</td>
                                                 <td style="font-size:11px">@item.customer_number</td>
@@ -415,16 +449,12 @@
                                                 <td style="font-size:11px">@item.reporting_frequency</td>
                                             </tr>
                                         }
-                                        
+
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="row" style="margin-top:5px; margin-left:0px">
-                                <input type="text" style="font-weight:bold; padding:0px; width:32px; height:26px" class="btn btn-secondary" name="name" value="+" />
-                                <label style="font-size:13px; padding-top:2px; padding-left:5px">Add Customer</label>
-                            </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -436,16 +466,167 @@
             <div class="modal-content" style="height:980px; width:900px">
                 <div class="modal-body" style="padding:0px">
                     <div>
-                        <iframe id="modal_content" src="@Model.URL" style="width:100%;height:980px;"></iframe>
+                        <iframe id="modal_content" src="" style="width:100%;height:980px;"></iframe>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="modal fade" id="AddCust" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog " role="document">
+
+            @using (Html.BeginForm("AddCustomer", "FleetTVT", FormMethod.Post))
+            {
+                <div class="modal-content">
+                    <div class="modal-header" style="padding:3px 3px 0px 15px">
+                        <h5>Customer Addition Request</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-5">
+                                Customer #
+                            </div>
+                            <div class="col-lg-7">
+                                @Html.DropDownListFor(m => m.AddCustomer.custNum, Model.CustList, "Select Customer", new {@id = "custNum", @onchange="CheckRequiredFeilds()", @style = "width:100%; height:30px", @required = "required" })
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:10px">
+                            <div class="col-lg-5">
+                                Reporting Contact
+                            </div>
+                            <div class="col-lg-7">
+                                @Html.EditorFor(m => m.AddCustomer.reportingContact, new { htmlAttributes = new {@id = "reportingContact",  @onkeydown="CheckRequiredFeilds()", @style = "width:100%", @required = "required" } })
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:10px">
+                            <div class="col-lg-5">
+                                Reporting Email
+                            </div>
+                            <div class="col-lg-7">
+                                @Html.EditorFor(m => m.AddCustomer.reportingEmail, new { htmlAttributes = new { @id = "reportingEmail", @onkeydown="CheckRequiredFeilds()", @style = "width:100%", @required = "required" } })
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:10px">
+                            <div class="col-lg-5">
+                                Mileage Required
+                            </div>
+                            <div class="col-lg-7">
+                                @Html.CheckBoxFor(m => m.AddCustomer.mileageRequired, new { @style = "width:25px; height:25px", @required = "required"  })
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top:10px">
+                            <div class="col-lg-5">
+                                Inspection Date Expired
+                            </div>
+                            <div class="col-lg-7">
+                                @Html.CheckBoxFor(m => m.AddCustomer.dateExpired, new { @style = "width:25px; height:25px", @required = "required"  })
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top:10px">
+                            <div class="col-lg-5">
+                                Pull Point - Steer
+                            </div>
+                            <div class="col-lg-7">
+                                @Html.EditorFor(m => m.AddCustomer.pullPointSteer, new { htmlAttributes = new { @id = "pullPointSteer", @onkeydown="CheckRequiredFeilds()", @style = "width:60px", @required = "required" } })  / 32nds
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top:10px">
+                            <div class="col-lg-5">
+                                Pull Point - Drive
+                            </div>
+                            <div class="col-lg-7">
+                                @Html.EditorFor(m => m.AddCustomer.pullPointDrive, new { htmlAttributes = new {  @id = "pullPointDrive", @onkeydown="CheckRequiredFeilds()", @style = "width:60px", @required = "required" } })  / 32nds
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top:10px">
+                            <div class="col-lg-5">
+                                Pull Point - Trailer
+                            </div>
+                            <div class="col-lg-7">
+                                @Html.EditorFor(m => m.AddCustomer.pullPointTrailer, new { htmlAttributes = new { @id = "pullPointTrailer", @onkeydown ="CheckRequiredFeilds()", @style = "width:60px", @required = "required" } })  / 32nds
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer" style="padding:3px">
+                        <button data-dismiss="modal" class="btn btn-danger" style="padding:3px 20px 3px 20px">Cancel</button>
+                        <button id="SubmitBtn" type="submit" class="btn btn-success" style="display:none; padding:3px 20px 3px 20px">Submit</button>
+                    </div>
+                </div>
+            }
+
+
+        </div>
+    </div>
+
 
 
     <script>
+
+        function CheckRequiredFeilds() {
+            if ($('#custNum').val() != "" && $('#reportingContact').val() != "" && $('#reportingEmail').val() != "" && $('#pullPointSteer').val() != "" && $('#pullPointDrive').val() != "" && $('#pullPointTrailer').val() != "") {
+                $('#SubmitBtn').css("display", "block")
+            }
+            else {
+                $('#SubmitBtn').css("display", "none")
+            }
+        }
+
+        function pullUnitInfo(unitNum) {
+
+            $('#mileage').text("")
+            $('#surveyLocation').text("")
+
+            $.ajax({
+                url: '@Url.Action("pullUnitLatestSurvey", "FleetTVT")',
+                data: { value: unitNum },
+                type: 'POST',
+                success: function (data) {
+                    var UnitDetails = JSON.parse(data);
+                    //alert(UnitDetails.mileage + " " + UnitDetails.survey_location);
+                    $('#mileage').text(UnitDetails.mileage)
+                    $('#surveyLocation').text(UnitDetails.survey_location)
+                }
+
+            });
+        }
+
+        function InitiateStep3(value1) {
+
+            $.ajax({
+                url: '@Url.Action("PullUnits", "FleetTVT")',
+                data: { value: value1 },
+                type: "POST",
+                success: function (data) {
+                    var s = '<option value="-1">Select Unit Number</option>';
+                    for (var i = 0; i < data.length; i++) {
+                        s += '<option value="' + data[i].value + '">' + data[i].text + '</option>';
+                        console.log('<option value="' + data[i].value + '">' + data[i].text + '</option>');
+                    }
+                    $("#UnitsDropdown").html(s);
+                }
+            });
+
+            $("#UnitsDropdown").val("Please Select Customer")
+
+            $("#Step3").css('visibility', 'visible');
+        }
+
+        $('#GenerateSurveyPrint').click(function () {
+            $('#modal_content').attr('src', $('#invisibleSpan').html());
+        });
+
+        $('#UnitPrint').click(function () {
+            $('#modal_content').attr('src', $('#invisibleSpanUnit').html());
+        });
+
+
+
         $(document).ready(function () {
             $('#clickThis').on('click', function () {
                 $('#sidebar').toggleClass('active');

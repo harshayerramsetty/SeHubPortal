@@ -11,5 +11,8 @@ namespace SeHubPortal.ViewModel
         public string EmailAddress { get; set; }
         public string password { get; set; }
         public string LoginErrorMessage { get; set; }
+
+        public string ip { get; set; }
+
     }
 }

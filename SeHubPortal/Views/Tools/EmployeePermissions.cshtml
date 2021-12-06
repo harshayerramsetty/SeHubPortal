@@ -15,7 +15,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 
 
-
+    @if (Model.SehubAccess.plant > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
 
     @if (Model.SehubAccess.tools > 0)
     {
@@ -40,6 +47,15 @@
     {
         <style>
             #SettingsLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings_administration > 0)
+    {
+        <style>
+            #AdministrationLink {
                 display: block !important;
             }
         </style>
@@ -175,13 +191,13 @@
         <div class="col">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
-                    <li class="breadcrumb-item"><a href="@Url.Action("Calculator", "Tools")">Tools</a></li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Settings")">Settings</a></li>
                     <li class="breadcrumb-item " aria-current="page">Manage Permissions</li>
-                    <div style="margin-left:1163px">
+                    <div style="margin-left:1150px">
                         @using (Html.BeginForm("EmployeePermissionsChangelocation", "Tools", FormMethod.Post))
                         {
                             <span style="margin-right:3px;color:black;">Location:</span>
-                            @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "All", new { @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:6px;"  })
+                            @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, new { @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:6px;"  })
                             <noscript> <input class="btn btn-success" type="submit" value="Search" /></noscript>
                         }
                     </div>

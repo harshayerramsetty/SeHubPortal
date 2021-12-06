@@ -20,5 +20,10 @@ namespace SeHubPortal.Models
         public string reporting_frequency { get; set; }
         public Nullable<int> mileage_required { get; set; }
         public string fleet_size { get; set; }
+        public byte[] logo { get; set; }
+        public Nullable<double> pull_point_1 { get; set; }
+        public Nullable<double> pull_point_2 { get; set; }
+        public Nullable<double> pull_point_3 { get; set; }
+        public Nullable<int> exp_date_required { get; set; }
     }
 }

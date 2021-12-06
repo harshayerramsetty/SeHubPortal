@@ -17,7 +17,7 @@ namespace SeHubPortal.Models
         public string submission_id { get; set; }
         public int payroll_id { get; set; }
         public string location_id { get; set; }
-        public Nullable<int> employee_id { get; set; }
+        public int employee_id { get; set; }
         public string submitted_by { get; set; }
         public Nullable<System.DateTime> submission_date { get; set; }
         public Nullable<double> regular { get; set; }
@@ -33,5 +33,21 @@ namespace SeHubPortal.Models
         public Nullable<int> recordFlag { get; set; }
         public Nullable<double> PaidLeave { get; set; }
         public Nullable<double> NonPaidLeave { get; set; }
+        public string adjustment_type { get; set; }
+        public string compensation_type { get; set; }
+        public string comments { get; set; }
+        public string plus_minus { get; set; }
+        public Nullable<double> adjustmentPay2 { get; set; }
+        public string adjustment_type2 { get; set; }
+        public string plus_minus2 { get; set; }
+        public Nullable<double> adjustmentPay1 { get; set; }
+        public string adjustment_type1 { get; set; }
+        public string plus_minus1 { get; set; }
+        public Nullable<double> adjustmentPay_validate { get; set; }
+        public string adjustmentCategory_validate { get; set; }
+        public string plus_minus_validate { get; set; }
+        public Nullable<double> adjustmentPay_validate1 { get; set; }
+        public string adjustmentCategory_validate1 { get; set; }
+        public string plus_minus_validate1 { get; set; }
     }
 }

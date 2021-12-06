@@ -32,5 +32,6 @@ namespace SeHubPortal.Models
         public string final_inspection_result { get; set; }
         public Nullable<System.DateTime> final_inspection_date { get; set; }
         public string ship_to_location { get; set; }
+        public Nullable<int> virgin { get; set; }
     }
 }

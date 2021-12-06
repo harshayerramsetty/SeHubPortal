@@ -25,6 +25,7 @@ namespace SeHubPortal.ViewModel
         public List<SelectListItem> ValveList { get; set; }
         public List<SelectListItem> TireConditionList { get; set; }
         public List<SelectListItem> WheelConditionList { get; set; }
+        public List<SelectListItem> ModelList { get; set; }
 
         public string Brand { get; set; }
         public string Size { get; set; }
@@ -33,6 +34,7 @@ namespace SeHubPortal.ViewModel
         public string Valve { get; set; }
         public string Tire { get; set; }
         public string Wheel { get; set; }
+        public string model { get; set; }
         
 
     }

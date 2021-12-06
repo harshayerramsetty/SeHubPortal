@@ -10,11 +10,11 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.IO;
-using System;
 using Newtonsoft.Json.Linq;
-
-
-
+using Microsoft.Azure.Storage.Blob;
+using Microsoft.Azure.Storage;
+using System.Net.Mime;
+using System.Net.Mail;
 
 
 namespace SeHubPortal.Controllers
@@ -25,6 +25,185 @@ namespace SeHubPortal.Controllers
         public string Loc_ID;
         int NewSequenceNum;
         public string locId;
+
+
+        [HttpPost]
+        public ActionResult DashboardChangeLocation(FileURL model)
+        {
+            return RedirectToAction("Dashboard", new { loc = model.Location_ID });
+        }
+
+        public ActionResult Dashboard(tbl_tire_adjustment model, string loc)
+        {
+
+            if (Session["userID"] == null)
+            {
+                Session["userID"] = 61000;
+            }
+
+            tbl_sehub_access Access = new tbl_sehub_access();
+
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+
+            Access = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
+
+            ViewBag.TypeSelectionList = populateLocationsPermissions(empId);
+
+            if (Access.tools == 0)
+            {
+                return RedirectToAction("Dashboard", "TreadTracker");
+            }
+
+            if (Access.tools_dashboard == 0)
+            {
+                return RedirectToAction("FuelLog", "Tools");
+            }
+
+
+            ViewData["usrid"] = empId;
+
+            ViewData["tools_dashboard"] = Access.tools_dashboard;
+            ViewData["fuel_log"] = Access.fuel_log;
+            ViewData["crm"] = Access.customer_reporting;
+            ViewData["main"] = Access.main;
+            ViewData["library"] = Access.library_access;
+            ViewData["management"] = Access.management;
+            ViewData["treadTracker"] = Access.treadTracker;
+            ViewData["fleetTVT"] = Access.fleetTVT;
+            ViewData["payroll"] = Access.payroll;
+            ViewData["settings"] = Access.settings;
+            ViewData["plant"] = Access.plant;
+            ViewData["UserEmail"] = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.cta_email).FirstOrDefault();
+
+
+            string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            var empDetails = db.tbl_employee.Where(x => x.employee_id == empId).FirstOrDefault();
+            string locatId = empDetails.loc_ID;
+
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                string query = "select top 1 * from tbl_tire_adjustment where Tire_Adjustment_id like '%" + locatId + "%' order by Tire_Adjustment_id desc";
+                //Debug.WriteLine(query);
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    cmd.Connection = con;
+                    con.Open();
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+
+                        while (sdr.Read())
+                        {
+
+                            Current_sequence = Convert.ToString(sdr["Tire_Adjustment_id"]);
+                            Debug.WriteLine(Current_sequence);
+                            if (Current_sequence != null)
+                            {
+
+                                //Debug.WriteLine(Current_sequence.Substring(7));
+                                NewSequenceNum = Convert.ToInt32(Current_sequence.Substring(6)) + 1;
+                            }
+                            else
+                            {
+                                NewSequenceNum = 0;
+                            }
+                        }
+
+                    }
+                    con.Close();
+                }
+            }
+
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+
+                string query = "select * from tbl_employee where employee_id = '" + empId + "'";
+                //Debug.WriteLine(query);
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    cmd.Connection = con;
+                    con.Open();
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+
+                        while (sdr.Read())
+                        {
+
+                            model.cta_employee_name = Convert.ToString(sdr["full_name"]);
+                            model.location_id = Convert.ToString(sdr["loc_ID"]);
+                            locId = model.location_id;
+                            model.Tire_Adjustment_id = "TA-" + locId + "XXXXX";
+                            //Debug.WriteLine("test1");
+                            //Debug.WriteLine(model.Tire_Adjustment_id);
+                        }
+
+                    }
+                    con.Close();
+                }
+
+            }
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                string query = "select top 1 * from tbl_tire_adjustment a, tblLocation b where a.location_id = b.locID";
+                Debug.WriteLine(query);
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    cmd.Connection = con;
+                    con.Open();
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+
+                        while (sdr.Read())
+                        {
+
+                            model.non_sig_number = Convert.ToString(sdr["locNONSIG"]);
+                        }
+
+                    }
+                    con.Close();
+                }
+            }
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                string query = "select * from tblLocation where locID = '" + locId + "'";
+                //Debug.WriteLine(query);
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    cmd.Connection = con;
+                    con.Open();
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+
+                        while (sdr.Read())
+                        {
+
+                            ViewBag.locID = Convert.ToString(sdr["locID"]);
+                            ViewBag.addressSTREET1 = Convert.ToString(sdr["addressSTREET1"]);
+                            ViewBag.addressSTREET2 = Convert.ToString(sdr["addressSTREET2"]);
+                            ViewBag.addressCITY = Convert.ToString(sdr["addressCITY"]);
+                            ViewBag.addressPROVINCE = Convert.ToString(sdr["addressPROVINCE"]);
+                            ViewBag.addressPOSTAL = Convert.ToString(sdr["addressPOSTAL"]);
+                            ViewBag.locPHONE = Convert.ToString(sdr["locPHONE"]);
+                            ViewBag.locFAX = Convert.ToString(sdr["locFAX"]);
+                        }
+
+                    }
+                    con.Close();
+                }
+
+                if (loc != null)
+                {
+                    model.location_id = loc;
+                }
+                else
+                {
+                    model.location_id = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
+                }
+
+            }
+            return View(model);
+        }
 
         public tbl_sehub_access CheckPermissions()
         {
@@ -38,17 +217,19 @@ namespace SeHubPortal.Controllers
         [HttpPost]
         public (double, double) PartsPricing(double value)
         {
-            Debug.WriteLine(value);
+            //Debug.WriteLine(value);
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             var parts = db.tbl_calculator_GM_parts.ToList();
 
             double retail_price = 0;
             double N_A_price = 0;
 
-            for (int i = 1; i < parts.Count; i++)
+            for (int i = 0; i < parts.Count; i++)
             {
+
                 if (parts[i].minimum_cost <= value && value <= parts[i].maximum_cost)
                 {
+                    //Trace.WriteLine("Reached and present in table");
                     retail_price = Convert.ToDouble(value / (1 - parts[i].GrossMargin));
                     N_A_price = Convert.ToDouble(value / (1 - parts[i].GrossMargin_NA));
 
@@ -62,7 +243,6 @@ namespace SeHubPortal.Controllers
 
             return (Math.Round(retail_price, 2), Math.Round(N_A_price, 2));
         }
-
 
         [HttpPost]
         public (double, double) TirePricing(double value)
@@ -94,7 +274,7 @@ namespace SeHubPortal.Controllers
                         retail_price = Convert.ToDouble(value / (1 - Tire[i].GrossMargin));
                         N_A_price = Convert.ToDouble(value / (1 - Tire[i].GrossMargin_NA));
 
-                        Debug.WriteLine(Tire[i].minimum_cost + " LowerBound " + value + " UpperBound " + Tire[i].maximum_cost + "and the GM is " + Tire[i].GrossMargin);
+                        //Debug.WriteLine(Tire[i].minimum_cost + " LowerBound " + value + " UpperBound " + Tire[i].maximum_cost + "and the GM is " + Tire[i].GrossMargin);
 
                     }
                 }
@@ -106,14 +286,52 @@ namespace SeHubPortal.Controllers
         }
 
         [HttpPost]
-        public string FreightPricing(string value)
+        public (double, double) WheelPricing(double value)
         {
-            Debug.WriteLine(value);
+            //Debug.WriteLine(value);
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            var Wheel = db.tbl_calculator_GP_fixed.Where(x => x.category == "Wheels, Rims & Lugs").FirstOrDefault();
 
+            double retail_price = 0;
+            double N_A_price = 0;
 
+            retail_price = Convert.ToDouble(value + ((Wheel.retail / 100) * value));
+            N_A_price = Convert.ToDouble(value + ((Wheel.national_account / 100) * value));
 
-            return "Freight";
+            return (Math.Round(retail_price, 2), Math.Round(N_A_price, 2));
         }
+
+        [HttpPost]
+        public (double, double) FreightPricing(double value)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            var Freight = db.tbl_calculator_GP_fixed.Where(x => x.category == "Freight").FirstOrDefault();
+
+            double retail_price = 0;
+            double N_A_price = 0;
+
+            retail_price = Convert.ToDouble(value + ((Freight.retail / 100) * value));
+            N_A_price = Convert.ToDouble(value + ((Freight.national_account / 100) * value));
+
+            return (Math.Round(retail_price, 2), Math.Round(N_A_price, 2));
+        }
+
+        [HttpPost]
+        public (double, double) SCSPricing(double value)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            var SCS = db.tbl_calculator_GP_fixed.Where(x => x.category == "subcontracted").FirstOrDefault();
+
+            double retail_price = 0;
+            double N_A_price = 0;
+
+            retail_price = Convert.ToDouble(value + ((SCS.retail / 100) * value));
+            N_A_price = Convert.ToDouble(value + ((SCS.national_account / 100) * value));
+
+            return (Math.Round(retail_price, 2), Math.Round(N_A_price, 2));
+        }
+
+
 
 
         [HttpPost]
@@ -128,18 +346,16 @@ namespace SeHubPortal.Controllers
 
         }
 
-
         [HttpPost]
         public ActionResult FuelLogChangeLocation(EmployeePayrollModel model)
         {
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
 
-            var vehicalsList = db.tbl_vehicle_info.Where(x => x.loc_id == model.MatchedLocID);
+            var vehicalsList = db.tbl_vehicle_info.Where(x => x.loc_id == model.MatchedLocID && x.vehicle_status == 1).FirstOrDefault();
 
-            if (vehicalsList.Count() == 1)
+            if (vehicalsList != null)
             {
-                var soloVehicalDetails = vehicalsList.Where(x => x.loc_id == model.MatchedLocID).FirstOrDefault();
-                return RedirectToAction("FuelLog", new { VIN = soloVehicalDetails.VIN, loc = model.MatchedLocID });
+                return RedirectToAction("FuelLog", new { VIN = vehicalsList.VIN, loc = model.MatchedLocID });
             }
             else
             {
@@ -148,13 +364,175 @@ namespace SeHubPortal.Controllers
 
         }
 
-
         [HttpPost]
-        public ActionResult ChangeVehicalFuelLog(FuelLogViewModel model)
+        public ActionResult SaveExpenseClaim(ExpenseClaimViewModel model)
         {
-            return RedirectToAction("FuelLog", new { VIN = model.MatchedVehicle, loc = model.MatchedLocID });
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            Trace.WriteLine(model.Claim1.exp_date + model.Claim1.exp_description);
+
+            SequenceNumberAction(model.empid, "2021-07-15");
+
+            if (model.Claim1.exp_date != null)
+            {
+                tbl_expense_claim claim = new tbl_expense_claim();
+                claim = model.Claim1;
+                claim.transaction_number = model.empid + "-" + claim.exp_date.Value.ToString("yyyy-MM-dd") + "-" + SequenceNumberAction(model.empid, model.Claim1.exp_date.Value.ToString("yyyy-MM-dd"));
+                claim.empid = model.empid;
+                db.tbl_expense_claim.Add(claim);
+                db.SaveChanges();
+            }
+            if (model.Claim2.exp_date != null)
+            {
+                tbl_expense_claim claim = new tbl_expense_claim();
+                claim = model.Claim2;
+                claim.transaction_number = model.empid + "-" + claim.exp_date.Value.ToString("yyyy-MM-dd") + "-" + SequenceNumberAction(model.empid, model.Claim2.exp_date.Value.ToString("yyyy-MM-dd"));
+                claim.empid = model.empid;
+                db.tbl_expense_claim.Add(claim);
+                db.SaveChanges();
+            }
+            if (model.Claim3.exp_date != null)
+            {
+                tbl_expense_claim claim = new tbl_expense_claim();
+                claim = model.Claim3;
+                claim.transaction_number = model.empid + "-" + claim.exp_date.Value.ToString("yyyy-MM-dd") + "-" + SequenceNumberAction(model.empid, model.Claim3.exp_date.Value.ToString("yyyy-MM-dd"));
+                claim.empid = model.empid;
+                db.tbl_expense_claim.Add(claim);
+                db.SaveChanges();
+            }
+            if (model.Claim4.exp_date != null)
+            {
+                tbl_expense_claim claim = new tbl_expense_claim();
+                claim = model.Claim4;
+                claim.transaction_number = model.empid + "-" + claim.exp_date.Value.ToString("yyyy-MM-dd") + "-" + SequenceNumberAction(model.empid, model.Claim4.exp_date.Value.ToString("yyyy-MM-dd"));
+                claim.empid = model.empid;
+                db.tbl_expense_claim.Add(claim);
+                db.SaveChanges();
+            }
+            if (model.Claim5.exp_date != null)
+            {
+                tbl_expense_claim claim = new tbl_expense_claim();
+                claim = model.Claim5;
+                claim.transaction_number = model.empid + "-" + claim.exp_date.Value.ToString("yyyy-MM-dd") + "-" + SequenceNumberAction(model.empid, model.Claim5.exp_date.Value.ToString("yyyy-MM-dd"));
+                claim.empid = model.empid;
+                db.tbl_expense_claim.Add(claim);
+                db.SaveChanges();
+            }
+            if (model.Claim6.exp_date != null)
+            {
+                tbl_expense_claim claim = new tbl_expense_claim();
+                claim = model.Claim6;
+                claim.transaction_number = model.empid + "-" + claim.exp_date.Value.ToString("yyyy-MM-dd") + "-" + SequenceNumberAction(model.empid, model.Claim6.exp_date.Value.ToString("yyyy-MM-dd"));
+                claim.empid = model.empid;
+                db.tbl_expense_claim.Add(claim);
+                db.SaveChanges();
+            }
+            if (model.Claim7.exp_date != null)
+            {
+                tbl_expense_claim claim = new tbl_expense_claim();
+                claim = model.Claim7;
+                claim.transaction_number = model.empid + "-" + claim.exp_date.Value.ToString("yyyy-MM-dd") + "-" + SequenceNumberAction(model.empid, model.Claim7.exp_date.Value.ToString("yyyy-MM-dd"));
+                claim.empid = model.empid;
+                db.tbl_expense_claim.Add(claim);
+                db.SaveChanges();
+            }
+            if (model.Claim8.exp_date != null)
+            {
+                tbl_expense_claim claim = new tbl_expense_claim();
+                claim = model.Claim8;
+                claim.transaction_number = model.empid + "-" + claim.exp_date.Value.ToString("yyyy-MM-dd") + "-" + SequenceNumberAction(model.empid, model.Claim8.exp_date.Value.ToString("yyyy-MM-dd"));
+                claim.empid = model.empid;
+                db.tbl_expense_claim.Add(claim);
+                db.SaveChanges();
+            }
+            if (model.Claim9.exp_date != null)
+            {
+                tbl_expense_claim claim = new tbl_expense_claim();
+                claim = model.Claim9;
+                claim.transaction_number = model.empid + "-" + claim.exp_date.Value.ToString("yyyy-MM-dd") + "-" + SequenceNumberAction(model.empid, model.Claim9.exp_date.Value.ToString("yyyy-MM-dd"));
+                claim.empid = model.empid;
+                db.tbl_expense_claim.Add(claim);
+                db.SaveChanges();
+            }
+            if (model.Claim10.exp_date != null)
+            {
+                tbl_expense_claim claim = new tbl_expense_claim();
+                claim = model.Claim10;
+                claim.transaction_number = model.empid + "-" + claim.exp_date.Value.ToString("yyyy-MM-dd") + "-" + SequenceNumberAction(model.empid, model.Claim10.exp_date.Value.ToString("yyyy-MM-dd"));
+                claim.empid = model.empid;
+                db.tbl_expense_claim.Add(claim);
+                db.SaveChanges();
+            } 
+            
+
+            return RedirectToAction("ExpnseClaim");
+        }
+        
+        public string SequenceNumberAction(string empid, string date)
+        {
+
+            Trace.WriteLine("These are the inputs " + empid + date);
+
+            string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                string query = "select top 1 * from tbl_expense_claim where transaction_number like '" + empid + "-" + date + "%' order by transaction_number desc ";
+                Trace.WriteLine(query);
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    cmd.Connection = con;
+                    con.Open();
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+
+                        while (sdr.Read())
+                        {
+
+                            string ClaimTN = Convert.ToString(sdr["transaction_number"]);
+                            string NewTN = ClaimTN.Substring(17);
+
+                            if(ClaimTN == null)
+                            {
+                                return "0";
+                            }
+                            else
+                            {
+                                return (Convert.ToInt32(NewTN) + 1).ToString();
+                            }
+
+                        }
+                    }
+                    con.Close();
+                }
+                return "0";
+            }
+
         }
 
+        public ActionResult ExpnseClaim(ExpenseClaimViewModel model)
+        {
+
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+            var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
+            
+            model.SehubAccess = empDetails;
+            model.Locations = populateLocationsExp();
+            model.Acounts = populateExpAccount();
+            model.empid = empId.ToString();
+            model.employy = db.tbl_employee.Where(x => x.employee_id == empId).FirstOrDefault();
+            model.ExpClaims = populateExpClaims();
+
+            model.seq = SequenceNumberAction(model.empid, System.DateTime.Today.ToString("yyyy-MM-dd"));
+
+            return View(model);
+        }
+
+        public ActionResult ChangeVehicalFuelLog(string vin, string loc)
+        {
+            return RedirectToAction("FuelLog", new { VIN = vin, loc = loc });
+        }
 
         // GET: Tools
 
@@ -170,8 +548,6 @@ namespace SeHubPortal.Controllers
 
             return Json("file uploaded successfully");
         }
-
-
 
         [HttpPost]
         public ActionResult TireAdjustment(tbl_tire_adjustment model)
@@ -192,8 +568,8 @@ namespace SeHubPortal.Controllers
 
                 using (SqlConnection con = new SqlConnection(constr))
                 {
-                    string query = "select top 1 * from tbl_tire_adjustment where Tire_Adjustment_id like '%" + locId + "%' order by Tire_Adjustment_id desc";
-                    Debug.WriteLine(query);
+                    string query = "select top 1 * from tbl_tire_adjustment where location_id = '" + locId + "' order by date desc";
+                    //Debug.WriteLine(query);
                     using (SqlCommand cmd = new SqlCommand(query))
                     {
                         cmd.Connection = con;
@@ -205,11 +581,11 @@ namespace SeHubPortal.Controllers
                             {
 
                                 Current_sequence = Convert.ToString(sdr["Tire_Adjustment_id"]);
-                                Debug.WriteLine(Current_sequence);
+                                //Debug.WriteLine(Current_sequence);
                                 if (Current_sequence != null)
                                 {
 
-                                    Debug.WriteLine(Current_sequence.Substring(7));
+                                    //Debug.WriteLine(Current_sequence.Substring(7));
                                     NewSequenceNum = Convert.ToInt32(Current_sequence.Substring(6)) + 1;
                                 }
                                 else
@@ -238,8 +614,7 @@ namespace SeHubPortal.Controllers
                 data.location_id = empDetails.loc_ID;
                 data.replacement_invoice = model.replacement_invoice;
 
-
-                Debug.WriteLine("********************************This is the name" + model.name);
+                //Debug.WriteLine("********************************This is the name" + model.name);
 
                 data.name = model.name;
                 data.phone = model.phone;
@@ -321,19 +696,21 @@ namespace SeHubPortal.Controllers
             return RedirectToAction("Dashboard");
         }
 
-
         [HttpPost]
         public string SaveTireAdjustment(string value)
         {
+
+            //Trace.WriteLine("Reached till here");
+
             int empId = Convert.ToInt32(Session["userID"].ToString());
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             var empDetails = db.tbl_employee.Where(x => x.employee_id == empId).FirstOrDefault();
             string locId = empDetails.loc_ID;
             string cta_emp_name = empDetails.full_name;
-            Debug.Write("Reached");
+            //Debug.Write("Reached");
             var TADetails = JObject.Parse(value);
 
-            Debug.Write(TADetails["replacement_invoice"]);
+            //Debug.Write(TADetails["replacement_invoice"]);
 
             string TAID = Convert.ToString(TADetails["Tire_Adjustment_id"]);
 
@@ -341,8 +718,8 @@ namespace SeHubPortal.Controllers
             string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             using (SqlConnection con = new SqlConnection(constr))
             {
-                string query = "select top 1 * from tbl_tire_adjustment where Tire_Adjustment_id like '%" + locId + "%' order by Tire_Adjustment_id desc";
-                Debug.WriteLine(query);
+                string query = "select top 1 * from tbl_tire_adjustment where Tire_Adjustment_id like '%TA-" + locId + "%' order by Tire_Adjustment_id desc";
+                //Debug.WriteLine(query);
                 using (SqlCommand cmd = new SqlCommand(query))
                 {
                     cmd.Connection = con;
@@ -354,11 +731,11 @@ namespace SeHubPortal.Controllers
                         {
 
                             Current_sequence = Convert.ToString(sdr["Tire_Adjustment_id"]);
-                            Debug.WriteLine(Current_sequence);
+                            //Debug.WriteLine(Current_sequence);
                             if (Current_sequence != null)
                             {
 
-                                Debug.WriteLine(Current_sequence.Substring(7));
+                                //Debug.WriteLine(Current_sequence.Substring(7));
                                 NewSequenceNum = Convert.ToInt32(Current_sequence.Substring(6)) + 1;
                             }
                             else
@@ -375,11 +752,16 @@ namespace SeHubPortal.Controllers
             {
                 db.tbl_tire_adjustment.Remove(present);
                 NewSequenceNum = Convert.ToInt32(Convert.ToString(TADetails["Tire_Adjustment_id"]).Substring(Convert.ToString(TADetails["Tire_Adjustment_id"]).Length - 5));
+
             }
+
+            //Trace.WriteLine("Reached till here 2 ");
 
             tbl_tire_adjustment data = new tbl_tire_adjustment();
 
             data.Tire_Adjustment_id = "TA-" + locId + NewSequenceNum.ToString("D5");
+
+            //Trace.WriteLine("Reached till here " + data.Tire_Adjustment_id);
 
             data.date = System.DateTime.Today.Date;
             data.cta_employee_name = Convert.ToString(TADetails["cta_employee_name"]);
@@ -387,7 +769,7 @@ namespace SeHubPortal.Controllers
             data.location_id = Convert.ToString(TADetails["location_id"]);
             data.replacement_invoice = Convert.ToString(TADetails["replacement_invoice"]);
 
-
+            //Trace.WriteLine("Reached till here 3 ");
 
             data.name = Convert.ToString(TADetails["name"]);
             data.phone = Convert.ToString(TADetails["phone"]);
@@ -399,7 +781,7 @@ namespace SeHubPortal.Controllers
             data.tread = Convert.ToString(TADetails["tread"]);
             data.size = Convert.ToString(TADetails["size"]);
 
-
+            //Trace.WriteLine("Reached till here 4 ");
 
             if (TADetails["quantity"] != null && Convert.ToString(TADetails["quantity"]) != "")
             {
@@ -558,6 +940,7 @@ namespace SeHubPortal.Controllers
 
             data.additional_comments = Convert.ToString(TADetails["additional_comments"]);
 
+            //Trace.WriteLine("Reached till here 5 ");
 
             db.tbl_tire_adjustment.Add(data);
             db.SaveChanges();
@@ -565,170 +948,131 @@ namespace SeHubPortal.Controllers
             return data.Tire_Adjustment_id;
         }
 
-        public ActionResult Dashboard(tbl_tire_adjustment model)
+        [HttpPost]
+        public string CheckPlantCodes(string value)
         {
-            tbl_sehub_access Access = new tbl_sehub_access();
-
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
-            int empId = Convert.ToInt32(Session["userID"].ToString());
-            Access = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
 
-            if (Access.tools == 0)
+            var plantCode = db.tbl_source_DOT_plantcodes.Where(x => x.code == value).Select(x => x.DefaultSelection).FirstOrDefault();
+
+            if(plantCode != null)
             {
-                return RedirectToAction("Dashboard", "TreadTracker");
+                return plantCode;
+            }
+            else
+            {
+                return " ";
             }
 
-            if (Access.tools_dashboard == 0)
-            {
-                return RedirectToAction("FuelLog", "Tools");
-            }
-
-
-            ViewData["tools_dashboard"] = Access.tools_dashboard;
-            ViewData["fuel_log"] = Access.fuel_log;
-            ViewData["crm"] = Access.customer_reporting;
-            ViewData["main"] = Access.main;
-            ViewData["library"] = Access.library_access;
-            ViewData["management"] = Access.management;
-            ViewData["treadTracker"] = Access.treadTracker;
-            ViewData["fleetTVT"] = Access.fleetTVT;
-            ViewData["payroll"] = Access.payroll;
-            ViewData["settings"] = Access.settings;
-
-
-            string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            var empDetails = db.tbl_employee.Where(x => x.employee_id == empId).FirstOrDefault();
-            string locatId = empDetails.loc_ID;
-
-            using (SqlConnection con = new SqlConnection(constr))
-            {
-                string query = "select top 1 * from tbl_tire_adjustment where Tire_Adjustment_id like '%" + locatId + "%' order by Tire_Adjustment_id desc";
-                Debug.WriteLine(query);
-                using (SqlCommand cmd = new SqlCommand(query))
-                {
-                    cmd.Connection = con;
-                    con.Open();
-                    using (SqlDataReader sdr = cmd.ExecuteReader())
-                    {
-
-                        while (sdr.Read())
-                        {
-
-                            Current_sequence = Convert.ToString(sdr["Tire_Adjustment_id"]);
-                            Debug.WriteLine(Current_sequence);
-                            if (Current_sequence != null)
-                            {
-
-                                Debug.WriteLine(Current_sequence.Substring(7));
-                                NewSequenceNum = Convert.ToInt32(Current_sequence.Substring(6)) + 1;
-                            }
-                            else
-                            {
-                                NewSequenceNum = 0;
-                            }
-                        }
-
-                    }
-                    con.Close();
-                }
-            }
-
-            using (SqlConnection con = new SqlConnection(constr))
-            {
-
-                string query = "select * from tbl_employee where employee_id = '" + empId + "'";
-                Debug.WriteLine(query);
-                using (SqlCommand cmd = new SqlCommand(query))
-                {
-                    cmd.Connection = con;
-                    con.Open();
-                    using (SqlDataReader sdr = cmd.ExecuteReader())
-                    {
-
-                        while (sdr.Read())
-                        {
-
-                            model.cta_employee_name = Convert.ToString(sdr["full_name"]);
-                            model.location_id = Convert.ToString(sdr["loc_ID"]);
-                            locId = model.location_id;
-                            model.Tire_Adjustment_id = "TA-" + locId + "XXXXX";
-                            Debug.WriteLine("test1");
-                            Debug.WriteLine(model.Tire_Adjustment_id);
-                        }
-
-                    }
-                    con.Close();
-                }
-
-            }
-            using (SqlConnection con = new SqlConnection(constr))
-            {
-                string query = "select top 1 * from tbl_tire_adjustment a, tblLocation b where a.location_id = b.locID";
-                Debug.WriteLine(query);
-                using (SqlCommand cmd = new SqlCommand(query))
-                {
-                    cmd.Connection = con;
-                    con.Open();
-                    using (SqlDataReader sdr = cmd.ExecuteReader())
-                    {
-
-                        while (sdr.Read())
-                        {
-
-                            model.non_sig_number = Convert.ToString(sdr["locNONSIG"]);
-                        }
-
-                    }
-                    con.Close();
-                }
-            }
-            using (SqlConnection con = new SqlConnection(constr))
-            {
-                string query = "select * from tblLocation where locID = '" + locId + "'";
-                Debug.WriteLine(query);
-                using (SqlCommand cmd = new SqlCommand(query))
-                {
-                    cmd.Connection = con;
-                    con.Open();
-                    using (SqlDataReader sdr = cmd.ExecuteReader())
-                    {
-
-                        while (sdr.Read())
-                        {
-
-                            ViewBag.locID = Convert.ToString(sdr["locID"]);
-                            ViewBag.addressSTREET1 = Convert.ToString(sdr["addressSTREET1"]);
-                            ViewBag.addressSTREET2 = Convert.ToString(sdr["addressSTREET2"]);
-                            ViewBag.addressCITY = Convert.ToString(sdr["addressCITY"]);
-                            ViewBag.addressPROVINCE = Convert.ToString(sdr["addressPROVINCE"]);
-                            ViewBag.addressPOSTAL = Convert.ToString(sdr["addressPOSTAL"]);
-                            ViewBag.locPHONE = Convert.ToString(sdr["locPHONE"]);
-                            ViewBag.locFAX = Convert.ToString(sdr["locFAX"]);
-                        }
-
-                    }
-                    con.Close();
-                }
-            }
-            return View(model);
+            
         }
 
 
+        [HttpPost]
+        public string getDropdownOptions(string value)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            var plantCode = db.tbl_source_DOT_plantcodes.Where(x => x.code == value).Select(x => x.DefaultSelection).FirstOrDefault();
+
+            var dropdownItems = db.tbl_source_DOT_plantcodes.Where(x => x.DefaultSelection == plantCode && x.Manufacturerlist != null).Select(x => x.Manufacturerlist).FirstOrDefault();
+
+            if (dropdownItems != null)
+            {
+                return dropdownItems;
+            }
+            else
+            {
+                return " ";
+            }
+
+
+        }
+
+
+        [HttpPost]
+        public string CheckSizeCodes(string value)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            var sizeCode = db.tbl_source_DOT_sizecodes.Where(x => x.code == value).Select(x => x.size).FirstOrDefault();
+
+            if(sizeCode != null)
+            {
+                return sizeCode;
+            }
+            else
+            {
+                return " ";
+            }
+
+            
+        }
+
+
+
+        public ActionResult ExpenseClaim ()
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+
+            string userEmailID = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.cta_email).FirstOrDefault();
+
+            MailMessage email = new MailMessage();
+
+            MailMessage msg = new MailMessage();
+            msg.To.Add(new MailAddress(userEmailID, "IT Team")); //jordan.blackwood     harsha.yerramsetty     payroll
+            msg.From = new MailAddress("noreply@citytire.com", "Sehub");
+            msg.Subject = "Expense Claim";
+            msg.Body = "";
+            msg.IsBodyHtml = true;
+
+            string path1 = Path.Combine(Server.MapPath("~/Content/ExpenseClaimXL.XLSM"));
+            msg.Attachments.Add(new Attachment(path1));
+
+            SmtpClient client = new SmtpClient();
+            client.UseDefaultCredentials = false;
+            client.Credentials = new System.Net.NetworkCredential("noreply@citytire.com", "U8LH>WpBdXg}");
+            client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
+            client.Host = "smtp.office365.com";
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.EnableSsl = true;
+            try
+            {
+                client.Send(msg);
+                //Debug.WriteLine("Message Sent Succesfully");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+
+
+            return RedirectToAction("Dashboard", "Tools");
+        }
+
         [HttpGet]
         public ActionResult FuelLog(string VIN, string loc)
-        {
+        {            
+
             if (Session["userID"] == null)
             {
                 return RedirectToAction("SignIn", "Login");
             }
-
-            Debug.WriteLine("*********************************************************************" + loc + "********************************************************************");
-
-
-            Debug.WriteLine("In AssetControl");
+            
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             int empId = Convert.ToInt32(Session["userID"].ToString());
 
+            if (loc == null || loc == "")
+            {
+                loc = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
+            }
+
+            if (VIN == null || VIN == ""){
+                VIN = db.tbl_vehicle_info.Where(x => x.loc_id == loc && x.vehicle_status == 1).Select(x => x.VIN).FirstOrDefault();
+            }
+
+            //Trace.WriteLine("This is the Vin Number" + VIN + "and this is the location" + loc);
 
             //Debug.WriteLine("empId:" + empId);
             var result = db.tbl_employee.Where(a => a.employee_id.Equals(empId)).FirstOrDefault();
@@ -765,22 +1109,23 @@ namespace SeHubPortal.Controllers
                     VehicleDetails = db.tbl_vehicle_info.Where(x => x.loc_id == locationid).OrderBy(x => x.vehicle_short_id);
                 }
             }
+
             if (VIN is null || VIN == "")
             {
                 FuelLogViewModel fuelLogModel = new FuelLogViewModel();
 
-                fuelLogModel.MatchedLocs = populateLocations();
+                fuelLogModel.MatchedLocs = populateLocationsPermissions(empId);
                 var empDetail = db.tbl_employee.Where(x => x.employee_id == empId).FirstOrDefault();
 
                 if (loc != null && loc != "")
                 {
                     fuelLogModel.MatchedLocID = loc;
-                    Debug.WriteLine("This is the chosen location id" + loc);
+                    //Debug.WriteLine("This is the chosen location id" + loc);
                 }
                 else
                 {
                     fuelLogModel.MatchedLocID = empDetail.loc_ID;
-                    Debug.WriteLine("Current location is reaching");
+                    //Debug.WriteLine("Current location is reaching");
                 }
 
                 var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
@@ -794,14 +1139,14 @@ namespace SeHubPortal.Controllers
                 fuelLogModel.fuel_log_access = permission_level;
                 if (VehicleDetails != null)
                 {
-                    Debug.WriteLine("Vehicle info there are details");
+                    //Debug.WriteLine("Vehicle info there are details");
                     fuelLogModel.vehicleInfoList = VehicleDetails.ToList();
 
                     return View(fuelLogModel);
                 }
                 else
                 {
-                    Debug.WriteLine("Vehicle info empty");
+                    //Debug.WriteLine("Vehicle info empty");
 
                     return View(fuelLogModel);
                 }
@@ -811,7 +1156,7 @@ namespace SeHubPortal.Controllers
             {
 
                 tbl_vehicle_info selectVehicleInfo = new tbl_vehicle_info();
-                List<tbl_fuel_log> fuelList = new List<tbl_fuel_log>();
+                List<tbl_fuel_log_fleet> fuelList = new List<tbl_fuel_log_fleet>();
 
                 selectVehicleInfo.VIN = "";
                 selectVehicleInfo.vehicle_short_id = "";
@@ -826,7 +1171,7 @@ namespace SeHubPortal.Controllers
 
                 FuelLogViewModel fuelLogModel = new FuelLogViewModel();
 
-                fuelLogModel.MatchedLocs = populateLocations();
+                fuelLogModel.MatchedLocs = populateLocationsPermissions(empId);
                 fuelLogModel.MatchedVehicle = "101-20003";//selectVehicleInfo.vehicle_short_id;
 
                 var empDetail = db.tbl_employee.Where(x => x.employee_id == empId).FirstOrDefault();
@@ -834,12 +1179,12 @@ namespace SeHubPortal.Controllers
                 if (loc != null && loc != "")
                 {
                     fuelLogModel.MatchedLocID = loc;
-                    Debug.WriteLine("This is the chosen location id" + loc);
+                    //Debug.WriteLine("This is the chosen location id" + loc);
                 }
                 else
                 {
                     fuelLogModel.MatchedLocID = empDetail.loc_ID;
-                    Debug.WriteLine("Current location is reaching");
+                    //Debug.WriteLine("Current location is reaching");
                 }
 
                 var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
@@ -852,7 +1197,7 @@ namespace SeHubPortal.Controllers
 
                 if (VehicleDetails != null)
                 {
-                    Debug.WriteLine("Vehicle info there are details");
+                    //Debug.WriteLine("Vehicle info there are details");
                     fuelLogModel.vehicleInfoList = VehicleDetails.ToList();
                     fuelLogModel.fuelLogList = fuelList.ToList();
                     fuelLogModel.selectedVIN = VIN;
@@ -864,14 +1209,15 @@ namespace SeHubPortal.Controllers
                 }
                 else
                 {
-                    Debug.WriteLine("Vehicle info empty");
+                    //Debug.WriteLine("Vehicle info empty");
                     fuelLogModel.fuel_log_access = permission_level;
                     return View(fuelLogModel);
                 }
             }
             else
             {
-                var fuelList = db.tbl_fuel_log.Where(x => x.VIN == VIN).OrderByDescending(x => x.date_of_purchase);
+                
+                var fuelList = db.tbl_fuel_log_fleet.Where(x => x.VIN == VIN).OrderByDescending(x => x.odometer);
                 var selectVehicleInfo = db.tbl_vehicle_info.Where(x => x.VIN == VIN).FirstOrDefault();
 
                 FuelLogViewModel fuelLogModel = new FuelLogViewModel();
@@ -885,12 +1231,12 @@ namespace SeHubPortal.Controllers
                 if (loc != null && loc != "")
                 {
                     fuelLogModel.MatchedLocID = loc;
-                    Debug.WriteLine("This is the chosen location id" + loc);
+                    //Debug.WriteLine("This is the chosen location id" + loc);
                 }
                 else
                 {
                     fuelLogModel.MatchedLocID = empDetail.loc_ID;
-                    Debug.WriteLine("Current location is reaching");
+                    //Debug.WriteLine("Current location is reaching");
                 }
 
                 var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
@@ -903,99 +1249,147 @@ namespace SeHubPortal.Controllers
 
                 if (VehicleDetails != null)
                 {
-                    Debug.WriteLine("Vehicle info there are details");
+                    //Debug.WriteLine("Vehicle info there are details");
                     fuelLogModel.vehicleInfoList = VehicleDetails.ToList();
                     fuelLogModel.fuelLogList = fuelList.ToList();
                     fuelLogModel.selectedVIN = VIN;
                     fuelLogModel.SelectedVehicleInfo = selectVehicleInfo;
                     fuelLogModel.fuel_log_access = permission_level;
-                    fuelLogModel.MatchedLocs = populateLocations();
+                    fuelLogModel.MatchedLocs = populateLocationsPermissions(empId);
                     fuelLogModel.MatchedVehicals = populateVehicles(loc, selectVehicleInfo.vehicle_short_id);
                     fuelLogModel.MatchedVehicle = selectVehicleInfo.vehicle_short_id;
-                    Debug.WriteLine("-------------++++++++++++" + fuelLogModel.MatchedVehicle + "+++++++++-----------");
+
+                    //Trace.WriteLine("Reached");
 
                     return View(fuelLogModel);
                 }
                 else
                 {
-                    Debug.WriteLine("Vehicle info empty");
+                    //Debug.WriteLine("Vehicle info empty");
                     fuelLogModel.fuel_log_access = permission_level;
                     return View(fuelLogModel);
                 }
             }
 
         }
+
+        [HttpGet]
+        public ActionResult FuelLogMainPage()
+        {
+
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
+
+            //Debug.WriteLine("In AssetControl");
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+
+            FuelLogViewModel model = new FuelLogViewModel();
+
+            model.SehubAccess = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
+
+            return View(model);
+
+        }
+
+        [HttpGet]
+        public ActionResult FuelInvoice(FuelInvoiceViewModel modal)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+            var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
+            modal.SehubAccess = empDetails;
+            modal.LocationsList = populateLocationsPermissions(empId);
+
+            if (modal.MatchedLocation != null)
+            {
+
+            }
+            else
+            {
+                modal.MatchedLocation = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
+            }
+
+            modal.fuelLogInvoicedList = db.tbl_fuel_log_invoiced.Where(x => x.loc_id == modal.MatchedLocation).ToList();
+
+            
+
+            return View(modal);
+        }
+
+        [HttpGet]
+        public ActionResult ShopSupplies(ShopSuppliesViewModel modal)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+            var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
+            modal.SehubAccess = empDetails;
+
+            if (modal.MatchedLocation != null)
+            {
+
+            }
+            else
+            {
+                modal.MatchedLocation = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
+            }
+
+            modal.fuelLogShopSuppliesList = db.tbl_fuel_log_shopSupplies.Where(x => x.transaction_number.Contains(modal.MatchedLocation)).ToList();
+            modal.LocationsList = populateLocationsPermissions(empId);
+            
+            
+
+            return View(modal);
+        }
+
         [HttpPost]
         public ActionResult SubmitAuditStatus(FuelLogViewModel model)
         {
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             foreach (var items in model.fuelLogList)
             {
-                var result = db.tbl_fuel_log.Where(a => a.transaction_number.Equals(items.transaction_number)).FirstOrDefault();
+                var result = db.tbl_fuel_log_fleet.Where(a => a.transaction_number.Equals(items.transaction_number)).FirstOrDefault();
                 if (result != null)
                 {
-                    Debug.WriteLine("items.audit_status:" + items.audit_status);
+                    //Debug.WriteLine("items.audit_status:" + items.audit_status);
                     result.audit_status = items.audit_status;
                 }
                 else
                 {
-                    Debug.WriteLine("Null");
+                    //Debug.WriteLine("Null");
                 }
             }
             db.SaveChanges();
             return RedirectToAction("FuelLog", new { VIN = model.SelectedVehicleInfo.VIN });
         }
 
-
         [HttpGet]
         public ActionResult DeleteFuelTransaction(string value)
         {
 
-            Debug.WriteLine("In EditVehicleInfo:" + value);
-            tbl_fuel_log fuelLog = new tbl_fuel_log();
+            Trace.WriteLine("In EditVehicleInfo:" + value);
+            tbl_fuel_log_fleet fuelLog = new tbl_fuel_log_fleet();
             fuelLog.transaction_number = value;
-            //CityTireAndAutoEntities db = new CityTireAndAutoEntities();
-            //var vehicleInfoObj = db.tbl_vehicle_info.Where(x => x.VIN == value).FirstOrDefault();
-            //string employeeNameValue = "";
-            //if (vehicleInfoObj.assigned_to is null)
-            //{
-            //    //Do Nothing
-            //}
-            //else
-            //{
-            //    if (vehicleInfoObj.assigned_to != 0)
-            //    {
-            //        var employeeTableCheck = db.tbl_employee.Where(x => x.employee_id == vehicleInfoObj.assigned_to).FirstOrDefault();
-            //        employeeNameValue = employeeTableCheck.full_name;
-            //    }
-
-            //}
-
-            //AddNewVehicleViewModel obj = new AddNewVehicleViewModel();
-            //obj.VehicleInfo = vehicleInfoObj;
-            //obj.MatchedLocs = populateLocations();
-            //obj.MatchedLocID = vehicleInfoObj.loc_id;
-            //Debug.WriteLine("Full Name:" + employeeNameValue);
-
-            //obj.MatchedEmployeeName = employeeNameValue;
-            //Debug.WriteLine("In EditVehicleInfo date:" + vehicleInfoObj.inspection_due_date);
             return PartialView(fuelLog);
         }
+
         [HttpPost]
-        public ActionResult DeleteFuelTransaction(tbl_fuel_log model)
+        public ActionResult DeleteFuelTransaction(tbl_fuel_log_fleet model)
         {
             string transcationNumber = model.transaction_number;
             string VinNumber = model.transaction_number.ToString().Split('-')[0];
 
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
-            var fuelInfo = db.tbl_fuel_log.Where(x => x.transaction_number == transcationNumber).FirstOrDefault();
+            var fuelInfo = db.tbl_fuel_log_fleet.Where(x => x.transaction_number == transcationNumber).FirstOrDefault();
 
             if (fuelInfo != null)
             {
-                db.tbl_fuel_log.Remove(fuelInfo);
+                db.tbl_fuel_log_fleet.Remove(fuelInfo);
             }
             db.SaveChanges();
-            Debug.WriteLine("Vin Number:" + VinNumber);
+            //Debug.WriteLine("Vin Number:" + VinNumber);
             return RedirectToAction("FuelLog", new { VIN = VinNumber });
 
         }
@@ -1004,14 +1398,13 @@ namespace SeHubPortal.Controllers
         public ActionResult SaveFuelReceipt(FuelLogViewModel model)
         {
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
-            Debug.WriteLine(model.SelectedVehicleInfo.VIN);
-            Debug.WriteLine(model.fuelLogTableValues.no_of_liters);
+            //Debug.WriteLine(model.SelectedVehicleInfo.VIN);
+            //Debug.WriteLine(model.fuelLogTableValues.no_of_liters);
             model.fuelLogTableValues.VIN = model.SelectedVehicleInfo.VIN;
             model.fuelLogTableValues.employee_id = model.SelectedVehicleInfo.assigned_to;
 
-
             string transactionReceiptNumber = Convert.ToDateTime(model.fuelLogTableValues.date_of_purchase).ToString("yyyyMMdd");
-            var fuelList = db.tbl_fuel_log.Where(x => x.VIN == model.SelectedVehicleInfo.VIN && x.transaction_number.Contains(model.SelectedVehicleInfo.VIN + "-" + transactionReceiptNumber)).OrderByDescending(x => x.transaction_number).FirstOrDefault();
+            var fuelList = db.tbl_fuel_log_fleet.Where(x => x.VIN == model.SelectedVehicleInfo.VIN && x.transaction_number.Contains(model.SelectedVehicleInfo.VIN + "-" + transactionReceiptNumber)).OrderByDescending(x => x.transaction_number).FirstOrDefault();
 
             int lastTwoSequence = 0;
             if (fuelList != null)
@@ -1027,30 +1420,97 @@ namespace SeHubPortal.Controllers
             {
                 model.fuelLogTableValues.transaction_number = model.SelectedVehicleInfo.VIN + "-" + Convert.ToDateTime(model.fuelLogTableValues.date_of_purchase).ToString("yyyyMMdd") + "-" + (lastTwoSequence + 1).ToString();
             }
-            model.fuelLogTableValues.employee_id = 10902;
-            model.fuelLogTableValues.change_type = "Irving Account";
 
             model.fuelLogTableValues.audit_status = false;
-            db.tbl_fuel_log.Add(model.fuelLogTableValues);
+            db.tbl_fuel_log_fleet.Add(model.fuelLogTableValues);
 
             db.SaveChanges();
 
             return RedirectToAction("FuelLog", new { VIN = model.SelectedVehicleInfo.VIN });
         }
 
+        [HttpPost]
+        public ActionResult SaveFuelInvoiceReceipt(FuelInvoiceViewModel model)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+            string transactionReceiptNumber = Convert.ToDateTime(model.fuelLogInvoiceTableValues.date_of_purchase).ToString("yyyyMMdd");
+            var fuelInvoiceList = db.tbl_fuel_log_invoiced.Where(x => x.invoice_number == model.fuelLogInvoiceTableValues.invoice_number && x.transaction_number.Contains(model.fuelLogInvoiceTableValues.invoice_number + "-" + transactionReceiptNumber)).OrderByDescending(x => x.transaction_number).FirstOrDefault();
+
+            int lastTwoSequence = 0;
+            if (fuelInvoiceList != null)
+            {
+                lastTwoSequence = Convert.ToInt32(fuelInvoiceList.transaction_number.ToString().Substring(fuelInvoiceList.transaction_number.ToString().Length - 1));
+            }
+
+            if (lastTwoSequence == 0)
+            {
+                model.fuelLogInvoiceTableValues.transaction_number = model.fuelLogInvoiceTableValues.invoice_number + "-" + Convert.ToDateTime(model.fuelLogInvoiceTableValues.date_of_purchase).ToString("yyyyMMdd") + "-" + "1";
+            }
+            else
+            {
+                model.fuelLogInvoiceTableValues.transaction_number = model.fuelLogInvoiceTableValues.invoice_number + "-" + Convert.ToDateTime(model.fuelLogInvoiceTableValues.date_of_purchase).ToString("yyyyMMdd") + "-" + (lastTwoSequence + 1).ToString();
+            }
+
+            model.fuelLogInvoiceTableValues.loc_id = model.MatchedLocation;
+            model.fuelLogInvoiceTableValues.audit_status = false;
+            model.fuelLogInvoiceTableValues.employee_id = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.employee_id).FirstOrDefault();
+            db.tbl_fuel_log_invoiced.Add(model.fuelLogInvoiceTableValues);
+
+            db.SaveChanges();
+
+            return RedirectToAction("FuelInvoice");
+        }
+
+        [HttpPost]
+        public ActionResult SaveFuelShopSuppliesReceipt(ShopSuppliesViewModel model)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+            string transactionReceiptNumber = Convert.ToDateTime(model.fuelLogShopSuppliesTableValues.date_of_purchase).ToString("yyyyMMdd");
+            var fuelShopSuppliesList = db.tbl_fuel_log_shopSupplies.Where(x => x.date_of_purchase == model.fuelLogShopSuppliesTableValues.date_of_purchase && x.transaction_number.Contains(model.MatchedLocation + "-" + transactionReceiptNumber)).OrderByDescending(x => x.transaction_number).FirstOrDefault();
+
+            int lastTwoSequence = 0;
+            if (fuelShopSuppliesList != null)
+            {
+                lastTwoSequence = Convert.ToInt32(fuelShopSuppliesList.transaction_number.ToString().Substring(fuelShopSuppliesList.transaction_number.ToString().Length - 1));
+                
+            }
+
+            if (lastTwoSequence == 0)
+            {
+                model.fuelLogShopSuppliesTableValues.transaction_number = model.MatchedLocation + "-" + Convert.ToDateTime(model.fuelLogShopSuppliesTableValues.date_of_purchase).ToString("yyyyMMdd") + "-" + "1";
+                
+            }
+            else
+            {
+                model.fuelLogShopSuppliesTableValues.transaction_number = model.MatchedLocation + "-" + Convert.ToDateTime(model.fuelLogShopSuppliesTableValues.date_of_purchase).ToString("yyyyMMdd") + "-" + (lastTwoSequence + 1).ToString();
+                
+            }
+
+            model.fuelLogShopSuppliesTableValues.audit_status = false;
+            model.fuelLogShopSuppliesTableValues.employee_id = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.employee_id).FirstOrDefault();
+            db.tbl_fuel_log_shopSupplies.Add(model.fuelLogShopSuppliesTableValues);
+
+            db.SaveChanges();
+
+            return RedirectToAction("ShopSupplies");
+        }
+
         public ActionResult DeleteTransaction(string id)
         {
-            Debug.WriteLine("Value to be delated:" + id);
+            //Debug.WriteLine("Value to be delated:" + id);
             return RedirectToAction("FuelLog", new { VIN = id.Split(';')[1] });
         }
+
         public void updateFuelLogTable()
         {
             List<string> items = new List<string>();
             string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             using (SqlConnection con = new SqlConnection(constr))
             {
-                string query = "select VIN,date_of_purchase From tbl_fuel_log";
-                Debug.WriteLine("Query:" + query);
+                string query = "select VIN,date_of_purchase From tbl_fuel_log_fleet";
+                //Debug.WriteLine("Query:" + query);
                 using (SqlCommand cmd = new SqlCommand(query))
                 {
                     cmd.Connection = con;
@@ -1073,7 +1533,7 @@ namespace SeHubPortal.Controllers
 
             foreach (object item in items)
             {
-                Debug.WriteLine("value:" + item);
+                //Debug.WriteLine("value:" + item);
                 string[] itemval = item.ToString().Split(';');
                 using (SqlConnection connection = new SqlConnection(constr))
                 {
@@ -1081,7 +1541,7 @@ namespace SeHubPortal.Controllers
                     StringBuilder sb = new StringBuilder();
 
                     sb.Append("UPDATE ");
-                    sb.Append("tbl_fuel_log ");
+                    sb.Append("tbl_fuel_log_fleet ");
                     sb.Append("SET transaction_number = @atNumber  ");
                     sb.Append("WHERE VIN = @vin AND date_of_purchase=@date_of_purchase  ");
 
@@ -1100,7 +1560,6 @@ namespace SeHubPortal.Controllers
                 }
             }
         }
-
 
         [HttpGet]
         public ActionResult EmployeePermissions(string locId)
@@ -1164,12 +1623,12 @@ namespace SeHubPortal.Controllers
             //        obj.profile_pic = item.profile_pic;
             //        emplyAttList.Add(obj);
             //    }
-
             //}
-            var employeeList = db.tbl_employee.Where(x => x.loc_ID.Contains(location) && x.status == 1).OrderBy(x => x.employee_id).ToList();
+            var employeeList = db.tbl_employee.Where(x => (x.loc_ID.Contains(location) && x.status == 1) || x.status == null ).OrderBy(x => x.employee_id).ToList();
             model.EmployeesList = employeeList;
-            model.MatchedLocs = populateLocations();
             int empId = Convert.ToInt32(Session["userID"].ToString());
+            model.MatchedLocs = populateLocationsPermissions(empId);
+            
             var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
             model.SehubAccess = empDetails;
 
@@ -1181,6 +1640,7 @@ namespace SeHubPortal.Controllers
             return View(model);
         }
         [HttpPost]
+
         public ActionResult EmployeePermissionsChangelocation(EmployeePermissionsViewModel model)
         {
             return RedirectToAction("EmployeePermissions", new { locId = model.MatchedLocID });
@@ -1190,7 +1650,7 @@ namespace SeHubPortal.Controllers
         public ActionResult ManageEmployeePermisssions(string value)
         {
 
-            Debug.WriteLine("In ManageEmployeePermisssions:" + value);
+            //Debug.WriteLine("In ManageEmployeePermisssions:" + value);
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             int empId = Convert.ToInt32(value);
             var credentialsObj = db.tbl_employee_credentials.Where(x => x.employee_id == empId).FirstOrDefault();
@@ -1224,6 +1684,12 @@ namespace SeHubPortal.Controllers
                 newAccess.manufacturing_plant = 0;
                 newAccess.user_management = 0;
                 newAccess.customer_reporting = 0;
+                newAccess.employee_folder = 0;
+                newAccess.settings = 0;
+                newAccess.settings_managePermissions = 0;
+                newAccess.settings_administration = 0;
+                newAccess.treadTracker_customers = 0;
+
                 db.tbl_sehub_access.Add(newAccess);
                 db.SaveChanges();
             }
@@ -1256,14 +1722,96 @@ namespace SeHubPortal.Controllers
             {
                 obj.appAccess = true;
             }
-            if (empDetails.pic_status == 0)
+
+            if (obj.SehubAccess.loc_001 == 1)
             {
-                obj.monitorEmployee = false;
+                obj.loc_001 = true;
             }
             else
             {
-                obj.monitorEmployee = true;
+                obj.loc_001 = false;
             }
+            if (obj.SehubAccess.loc_002 == 1)
+            {
+                obj.loc_002 = true;
+            }
+            else
+            {
+                obj.loc_002 = false;
+            }
+            if (obj.SehubAccess.loc_003 == 1)
+            {
+                obj.loc_003 = true;
+            }
+            else
+            {
+                obj.loc_003 = false;
+            }
+            if (obj.SehubAccess.loc_004 == 1)
+            {
+                obj.loc_004 = true;
+            }
+            else
+            {
+                obj.loc_004 = false;
+            }
+            if (obj.SehubAccess.loc_005 == 1)
+            {
+                obj.loc_005 = true;
+            }
+            else
+            {
+                obj.loc_005 = false;
+            }
+            if (obj.SehubAccess.loc_007 == 1)
+            {
+                obj.loc_007 = true;
+            }
+            else
+            {
+                obj.loc_007 = false;
+            }
+            if (obj.SehubAccess.loc_009 == 1)
+            {
+                obj.loc_009 = true;
+            }
+            else
+            {
+                obj.loc_009 = false;
+            }
+            if (obj.SehubAccess.loc_010 == 1)
+            {
+                obj.loc_010 = true;
+            }
+            else
+            {
+                obj.loc_010 = false;
+            }
+            if (obj.SehubAccess.loc_011 == 1)
+            {
+                obj.loc_011 = true;
+            }
+            else
+            {
+                obj.loc_011 = false;
+            }
+            if (obj.SehubAccess.loc_347 == 1)
+            {
+                obj.loc_347 = true;
+            }
+            else
+            {
+                obj.loc_347 = false;
+            }
+            if (obj.SehubAccess.loc_AHO == 1)
+            {
+                obj.loc_AHO = true;
+            }
+            else
+            {
+                obj.loc_AHO = false;
+            }
+
             obj.empDetails = empDetails;
             return PartialView(obj);
         }
@@ -1271,8 +1819,8 @@ namespace SeHubPortal.Controllers
         [HttpPost]
         public ActionResult ManageEmployeePermisssions(ModifyEmployeePermissions model)
         {
-            Debug.WriteLine("App access:" + model.SehubAccess.app_access);
-            Debug.WriteLine("Library access:" + model.SehubAccess.library_access);
+            //Debug.WriteLine("App access:" + model.SehubAccess.app_access);
+            //Debug.WriteLine("Library access:" + model.SehubAccess.library_access);
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             var SehubAccessObj = db.tbl_sehub_access.Where(x => x.employee_id == model.EmployeeCredentials.employee_id).FirstOrDefault();
             var credentialsObj = db.tbl_employee_credentials.Where(x => x.employee_id == model.EmployeeCredentials.employee_id).FirstOrDefault();
@@ -1294,11 +1842,113 @@ namespace SeHubPortal.Controllers
                 {
                     SehubAccessObj.app_access = 0;
                 }
+
+                if (model.loc_001 == true)
+                {
+                    SehubAccessObj.loc_001 = 1;
+                }
+                else
+                {
+                    SehubAccessObj.loc_001 = 0;
+                }
+
+                if (model.loc_002 == true)
+                {
+                    SehubAccessObj.loc_002 = 1;
+                }
+                else
+                {
+                    SehubAccessObj.loc_002 = 0;
+                }
+
+                if (model.loc_003 == true)
+                {
+                    SehubAccessObj.loc_003 = 1;
+                }
+                else
+                {
+                    SehubAccessObj.loc_003 = 0;
+                }
+
+                if (model.loc_004 == true)
+                {
+                    SehubAccessObj.loc_004 = 1;
+                }
+                else
+                {
+                    SehubAccessObj.loc_004 = 0;
+                }
+
+                if (model.loc_005 == true)
+                {
+                    SehubAccessObj.loc_005 = 1;
+                }
+                else
+                {
+                    SehubAccessObj.loc_005 = 0;
+                }
+
+                if (model.loc_007 == true)
+                {
+                    SehubAccessObj.loc_007 = 1;
+                }
+                else
+                {
+                    SehubAccessObj.loc_007 = 0;
+                }
+
+                if (model.loc_009 == true)
+                {
+                    SehubAccessObj.loc_009 = 1;
+                }
+                else
+                {
+                    SehubAccessObj.loc_009 = 0;
+                }
+
+                if (model.loc_010 == true)
+                {
+                    SehubAccessObj.loc_010 = 1;
+                }
+                else
+                {
+                    SehubAccessObj.loc_010 = 0;
+                }
+
+                if (model.loc_011 == true)
+                {
+                    SehubAccessObj.loc_011 = 1;
+                }
+                else
+                {
+                    SehubAccessObj.loc_011 = 0;
+                }
+
+                if (model.loc_347 == true)
+                {
+                    SehubAccessObj.loc_347 = 1;
+                }
+                else
+                {
+                    SehubAccessObj.loc_347 = 0;
+                }
+
+                if (model.loc_AHO == true)
+                {
+                    SehubAccessObj.loc_AHO = 1;
+                }
+                else
+                {
+                    SehubAccessObj.loc_AHO = 0;
+                }
+
+
+
                 SehubAccessObj.dashboard = model.SehubAccess.dashboard;
                 SehubAccessObj.calendar = model.SehubAccess.calendar;
                 SehubAccessObj.newsletter = model.SehubAccess.newsletter;
-                SehubAccessObj.neworder = model.SehubAccess.neworder;
-                SehubAccessObj.openorder = model.SehubAccess.openorder;
+                SehubAccessObj.treadTracker_failure_analysis = model.SehubAccess.treadTracker_failure_analysis;
+                SehubAccessObj.treadTracker_production_report = model.SehubAccess.treadTracker_production_report;
                 SehubAccessObj.my_staff = model.SehubAccess.my_staff;
                 SehubAccessObj.payroll = model.SehubAccess.payroll;
                 SehubAccessObj.attendance = model.SehubAccess.attendance;
@@ -1325,6 +1975,7 @@ namespace SeHubPortal.Controllers
                 SehubAccessObj.fleetTvt_dashboard = model.SehubAccess.fleetTvt_dashboard;
                 SehubAccessObj.fleetTvt_EditAccount = model.SehubAccess.fleetTvt_EditAccount;
                 SehubAccessObj.fleetTvt_fieldSurvey = model.SehubAccess.fleetTvt_fieldSurvey;
+                SehubAccessObj.fleetTvt_snapshot = model.SehubAccess.fleetTvt_snapshot;
                 SehubAccessObj.settings_dashboard = model.SehubAccess.settings_dashboard;
                 SehubAccessObj.settings_managePermissions = model.SehubAccess.settings_managePermissions;
                 SehubAccessObj.settings_customers = model.SehubAccess.settings_customers;
@@ -1335,20 +1986,14 @@ namespace SeHubPortal.Controllers
                 SehubAccessObj.tools_dashboard = model.SehubAccess.tools_dashboard;
                 SehubAccessObj.library_customer_Documents = model.SehubAccess.library_customer_Documents;
                 SehubAccessObj.fleetTVT_vier_or_edit_survey = model.SehubAccess.fleetTVT_vier_or_edit_survey;
+                SehubAccessObj.employee_folder = model.SehubAccess.employee_folder;
+                SehubAccessObj.settings_administration = model.SehubAccess.settings_administration;
+                SehubAccessObj.treadTracker_customers = model.SehubAccess.treadTracker_customers;
 
             }
             if (Empdetails != null)
             {
                 Empdetails.rfid_number = model.empDetails.rfid_number;
-                Empdetails.loc_ID = model.empDetails.loc_ID;
-                if (model.monitorEmployee == true)
-                {
-                    Empdetails.pic_status = 1;
-                }
-                else
-                {
-                    Empdetails.pic_status = 0;
-                }
             }
 
             if (empAttendace != null)
@@ -1374,11 +2019,17 @@ namespace SeHubPortal.Controllers
         public ActionResult CRM(string CustId)
         {
 
-            Debug.WriteLine("In CustomerReporting:" + CustId);
+            //Debug.WriteLine("In CustomerReporting:" + CustId);
             CustomerReportingViewModel modal = new CustomerReportingViewModel();
 
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            modal.emp_tbl = db.tbl_employee.ToList();
+
             int empId = Convert.ToInt32(Session["userID"].ToString());
+
+            modal.username = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.full_name).FirstOrDefault();
+
             var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
             modal.SehubAccess = empDetails;
 
@@ -1386,32 +2037,31 @@ namespace SeHubPortal.Controllers
             {
                 return RedirectToAction("Dashboard", "TreadTracker");
             }
-
+             
             if (CustId == "")
             {
-                Debug.WriteLine("Null");
+                //Debug.WriteLine("Null");
                 modal.Customers = PopulateCustomers("Nothing");
             }
             else
             {
                 modal.Custname = CustId;
-                Debug.WriteLine("Custoomer details:" + CustId);
+                //Debug.WriteLine("Custoomer details:" + CustId);
                 modal.Customers = PopulateCustomers(CustId);
 
-                var result = db.tbl_customer_list.Where(a => a.cust_us1.Equals(CustId) && a.cust_us2 == "0").FirstOrDefault();
+                var result = db.tbl_customer_list.Where(a => a.cust_us1.Equals(CustId) && (a.cust_us2 == "0" || a.cust_us2 == "000")).FirstOrDefault();
                 if (result != null)
                 {
                     modal.customerDetails = result;
                 }
 
 
-
                 List<tbl_customer_reporting_viewmodel> customerReportingTable = new List<tbl_customer_reporting_viewmodel>();
                 string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
                 using (SqlConnection con = new SqlConnection(constr))
                 {
-                    string query = "select * from tbl_customer_reporting a, tbl_employee b where a.cta_employee_number= b.employee_id and customer_number='" + CustId + "'";
-                    Debug.WriteLine(query);
+                    string query = "select * from tbl_customer_reporting a, tbl_employee b where a.cta_employee_number= b.employee_id and customer_number='" + CustId + "' order by visit_date";
+                    //Debug.WriteLine(query);
                     using (SqlCommand cmd = new SqlCommand(query))
                     {
                         cmd.Connection = con;
@@ -1434,7 +2084,6 @@ namespace SeHubPortal.Controllers
                                 cust_report_tbl.submission_date = Convert.ToDateTime(sdr["submission_date"]);
                                 cust_report_tbl.EmployeeName = sdr["full_name"].ToString();
                                 customerReportingTable.Add(cust_report_tbl);
-
                             }
 
                         }
@@ -1447,7 +2096,7 @@ namespace SeHubPortal.Controllers
                 using (SqlConnection con = new SqlConnection(constr))
                 {
                     string query = "select * from tbl_dispute_resolution";
-                    Debug.WriteLine(query);
+                    //Debug.WriteLine(query);
                     using (SqlCommand cmd = new SqlCommand(query))
                     {
                         cmd.Connection = con;
@@ -1484,7 +2133,7 @@ namespace SeHubPortal.Controllers
                 using (SqlConnection con = new SqlConnection(constr))
                 {
                     string query = "select * from tbl_target_accounts";
-                    Debug.WriteLine(query);
+                    //Debug.WriteLine(query);
                     using (SqlCommand cmd = new SqlCommand(query))
                     {
                         cmd.Connection = con;
@@ -1533,95 +2182,186 @@ namespace SeHubPortal.Controllers
             return View(modal);
         }
 
-
         [HttpPost]
-        public ActionResult CRMSelectedCustomer(CustomerReportingViewModel model)
+        public string forward(string CustomerNum)
         {
-            Debug.WriteLine("Custoomer details:" + model.Custname);
-            return RedirectToAction("CRM", new { CustId = model.Custname });
-
-        }
-        [HttpPost]
-        public ActionResult AddNewCRMDetails(CustomerReportingViewModel model)
-        {
-            int empId = Convert.ToInt32(Session["userID"].ToString());
-            Debug.WriteLine("In AddNewCRMDetails");
-            Debug.WriteLine(model.customerDetails.cust_us1);
-            Debug.WriteLine(model.AddCRM.visit_type);
-            string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            try
-            {
-
-                using (SqlConnection connection = new SqlConnection(constr))
-                {
-                    connection.Open();
-                    StringBuilder sb = new StringBuilder();
-                    sb.Append("INSERT INTO tbl_customer_reporting VALUES (@empId, @visittype, 'Call Report', @custName, @custId, @custContact,@visitDate,null,@Comments,@remainders,@submissionDate)");
-
-                    string sql = sb.ToString();
-                    Debug.WriteLine(sql);
-                    using (SqlCommand command = new SqlCommand(sql, connection))
-                    {
-                        command.Parameters.AddWithValue("@empId", empId);
-                        command.Parameters.AddWithValue("@visittype", model.AddCRM.visit_type);
-                        command.Parameters.AddWithValue("@custId", model.customerDetails.cust_us1);
-                        command.Parameters.AddWithValue("@custName", model.customerDetails.cust_name);
-                        command.Parameters.AddWithValue("@Comments", model.AddCRM.discusssion_details);
-                        command.Parameters.AddWithValue("@remainders", model.AddCRM.remainder);
-                        command.Parameters.AddWithValue("@visitDate", model.AddCRM.visit_date.Date);
-                        command.Parameters.AddWithValue("@custContact", model.AddCRM.customer_contact);
-                        command.Parameters.AddWithValue("@submissionDate", System.DateTime.Today.Date);
-
-
-                        command.ExecuteNonQuery();
-                        command.Parameters.Clear();
-                    }
-                    connection.Close();
-                }
-            }
-            catch (SqlException e)
-            {
-                System.Diagnostics.Debug.WriteLine(e.ToString());
-            }
-
-            return RedirectToAction("CRM", new { CustId = "" });
-        }
-        private static List<SelectListItem> PopulateCustomers(string value)
-        {
-            Debug.WriteLine("Inside PopulateCustomers with value:" + value);
-            List<SelectListItem> items = new List<SelectListItem>();
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            List<tbl_customer_reporting_viewmodel> customerReportingTable = new List<tbl_customer_reporting_viewmodel>();
             string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             using (SqlConnection con = new SqlConnection(constr))
             {
-                string query = "select cust_name,cust_us1 FRom tbl_customer_list  where cust_us2='0' order by cust_name";
+                string query = "select * from tbl_customer_reporting a, tbl_employee b where a.cta_employee_number= b.employee_id and customer_number='" + CustomerNum + "' order by visit_date";
+                //Debug.WriteLine(query);
                 using (SqlCommand cmd = new SqlCommand(query))
                 {
                     cmd.Connection = con;
                     con.Open();
                     using (SqlDataReader sdr = cmd.ExecuteReader())
                     {
-                        if (value == "Nothing")
+
+                        while (sdr.Read())
                         {
-                            while (sdr.Read())
-                            {
-                                items.Add(new SelectListItem
-                                {
-                                    Text = sdr["cust_name"].ToString(),
-                                    Value = sdr["cust_us1"].ToString(),
-                                    //Selected = sdr["cust_name"].ToString() == "CITY TIRE AND AUTO CENTRE LTD" ? true : false
-                                });
-                            }
+                            tbl_customer_reporting_viewmodel cust_report_tbl = new tbl_customer_reporting_viewmodel();
+                            cust_report_tbl.cta_employee_number = Convert.ToInt32(sdr["cta_employee_number"]);
+                            cust_report_tbl.visit_type = sdr["visit_type"].ToString();
+                            cust_report_tbl.report_type = sdr["report_type"].ToString();
+                            cust_report_tbl.customer_name = sdr["customer_name"].ToString();
+                            cust_report_tbl.customer_number = sdr["customer_number"].ToString();
+                            cust_report_tbl.customer_contact = sdr["customer_contact"].ToString();
+                            cust_report_tbl.visit_date = Convert.ToDateTime(sdr["visit_date"]);
+                            cust_report_tbl.discusssion_details = sdr["discussion_details"].ToString();
+                            cust_report_tbl.remainder = sdr["reminders"].ToString();
+                            cust_report_tbl.submission_date = Convert.ToDateTime(sdr["submission_date"]);
+                            cust_report_tbl.EmployeeName = sdr["full_name"].ToString();
+                            customerReportingTable.Add(cust_report_tbl);
                         }
-                        else
+
+                    }
+                    con.Close();
+                }
+            }
+
+            var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            string custDetailsJson = serializer.Serialize(customerReportingTable);
+
+            //Trace.WriteLine("Reached");
+
+            return custDetailsJson;
+        }
+
+        [HttpPost]
+        public ActionResult CRMSelectedCustomer(CustomerReportingViewModel model)
+        {
+            //Debug.WriteLine("Custoomer details:" + model.Custname);
+            return RedirectToAction("CRM", new { CustId = model.Custname });
+
+        }
+
+        [HttpPost]
+        public ActionResult AddNewCRMDetails(CustomerReportingViewModel model)
+        {
+
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            MailMessage msg = new MailMessage();
+            msg.To.Add(new MailAddress("customerreporting@citytire.com")); //jordan.blackwood          customerreporting
+            msg.From = new MailAddress(db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.cta_email).FirstOrDefault(), "Sehub");
+            msg.CC.Add(new MailAddress(db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.cta_email).FirstOrDefault()));
+
+            msg.Subject = "SE-HUB: Customer Reporting - " + model.customerDetails.cust_name + ", " + DateTime.Today.ToString().Substring(0, 10);
+            msg.Body =
+                "Hello," +
+                "<br /><br />" +
+                "Immediately below are the details of my customer visitation report." +
+                "<br /><br />" +
+                "<i><b><font size=3>Call Report - " + model.AddCRM.visit_type + " Visit</font></b></i>" +
+                "<br /><br />" +
+                "<u><b>Customer</b></u>: " + model.customerDetails.cust_name +
+                "<br /><br />" +
+                "<u><b>Contact</b></u>: " + model.AddCRM.customer_contact +
+                "<br /><br />" +
+                "<u><b>Date of Visit</b></u>: " + Convert.ToDateTime(model.AddCRM.visit_date.Date).ToString("dddd, MMMM dd, yyyy") +
+                "<br /><br />" +
+                "<u><b>Discussion Details</b></u>: " + model.AddCRM.discusssion_details +
+                "<br /><br />" +
+                "<u><b>Reminders</b></u>: " + model.AddCRM.remainder +
+                "<br /><br /><br />" +
+                "<b>Thank You,</b>" +
+                "<br />" +
+                db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.full_name).FirstOrDefault();
+            msg.IsBodyHtml = true;
+
+            SmtpClient client = new SmtpClient();
+            client.UseDefaultCredentials = false;
+            client.Credentials = new System.Net.NetworkCredential( db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.cta_email).FirstOrDefault() , db.tbl_employee_credentials.Where(x => x.employee_id == empId).Select(x => x.password365).FirstOrDefault());
+            client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
+            client.Host = "smtp.office365.com";
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.EnableSsl = true;
+            try
+            {
+                client.Send(msg);
+                //Debug.WriteLine("Message Sent Succesfully");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+
+
+            //Debug.WriteLine("In AddNewCRMDetails");
+            //Debug.WriteLine(model.customerDetails.cust_us1);
+            //Debug.WriteLine(model.AddCRM.visit_type);
+            string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(constr))
+            {
+                connection.Open();
+                StringBuilder sb = new StringBuilder();
+                sb.Append("INSERT INTO tbl_customer_reporting VALUES (@empId, @visittype, 'Call Report', @custName, @custId, @custContact,@visitDate,null,@Comments,@remainders,@submissionDate)");
+
+                string sql = sb.ToString();
+                Debug.WriteLine(sql);
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@empId", empId);
+                    command.Parameters.AddWithValue("@visittype", model.AddCRM.visit_type);
+                    command.Parameters.AddWithValue("@custId", model.customerDetails.cust_us1);
+                    command.Parameters.AddWithValue("@custName", model.customerDetails.cust_name);
+                    command.Parameters.AddWithValue("@Comments", model.AddCRM.discusssion_details);
+
+                    if(model.AddCRM.remainder != null)
+                    {
+                        command.Parameters.AddWithValue("@remainders", model.AddCRM.remainder);
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@remainders", "");
+                    }
+
+                    
+                    command.Parameters.AddWithValue("@visitDate", model.AddCRM.visit_date.Date);
+                    command.Parameters.AddWithValue("@custContact", model.AddCRM.customer_contact);
+                    command.Parameters.AddWithValue("@submissionDate", System.DateTime.Today.Date);
+
+
+                    command.ExecuteNonQuery();
+                    command.Parameters.Clear();
+                }
+                connection.Close();
+            }
+
+            return RedirectToAction("CRM", new { CustId = model.customerDetails.cust_us1 });
+        }
+
+        private static List<SelectListItem> PopulateCustomers(string value)
+        {
+
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            //Debug.WriteLine("Inside PopulateCustomers with value:" + value);
+            List<SelectListItem> items = new List<SelectListItem>();
+            string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                string query = "select distinct a.customer_number from tbl_customer_reporting_customers a, tbl_customer_reporting b, tbl_customer_list c where a.customer_number = b.customer_number and a.customer_number = c.cust_us1 and b.report_type = 'Call Report'";
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    cmd.Connection = con;
+                    con.Open();
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+                        while (sdr.Read())
                         {
-                            Debug.WriteLine("In else");
-                            while (sdr.Read())
+                            string custNum = sdr["customer_number"].ToString();
+
+                            if(custNum != null)
                             {
                                 items.Add(new SelectListItem
                                 {
-                                    Text = sdr["cust_name"].ToString(),
-                                    Value = sdr["cust_us1"].ToString(),
-                                    Selected = sdr["cust_name"].ToString() == value ? true : false
+
+                                    Value = sdr["customer_number"].ToString(),
+                                    Text = db.tbl_customer_list.Where(x => x.cust_us1 == custNum).Select(x => x.cust_name).FirstOrDefault()
                                 });
                             }
                         }
@@ -1631,14 +2371,74 @@ namespace SeHubPortal.Controllers
                 }
             }
 
-            return items;
+            List<SelectListItem> items1 = new List<SelectListItem>();
+
+            items1 = items.OrderBy(x => x.Text).ToList();
+
+            return items1;
         }
 
         [HttpPost]
         public ActionResult AddNewTADetails(CustomerReportingViewModel model)
         {
             int empId = Convert.ToInt32(Session["userID"].ToString());
-            Debug.WriteLine("In AddNewCRMDetails");
+            //Debug.WriteLine("In AddNewCRMDetails");
+
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            /*
+
+            MailMessage msg = new MailMessage();
+            msg.To.Add(new MailAddress("customerreporting@citytire.com")); //jordan.blackwood     harsha.yerramsetty     customerreporting
+            msg.From = new MailAddress("noreply@citytire.com", "Sehub");
+            msg.CC.Add(new MailAddress(db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.cta_email).FirstOrDefault()));
+
+            msg.Subject = "SE-HUB: Customer Reporting - " + model.customerDetails.cust_name + ", " + DateTime.Today;
+            msg.Body =
+                "Hello," +
+                "<br /><br />" +
+                "Immediately below are the details of my customer visitation report." +
+                "<br /><br />" +
+                "<i><b><font size=3>Target Account - " + model.AddCRM.visit_type + " Visit</font></b></i>" +
+                "<br /><br />" +
+                "<u><b>Customer</b></u>: " + model.customerDetails.cust_name +
+                "<br /><br />" +
+                "<u><b>Contact</b></u>: " + model.AddCRM.customer_contact +
+                "<br /><br />" +
+                "<u><b>Date of Visit</b></u>: " + Convert.ToDateTime(model.AddCRM.visit_date.Date).ToString("dddd, MMMM dd, yyyy") +
+                "<br /><br />" +
+                "<u><b>Date of Next Visit</b></u>: " + " Not Required" +
+                "<br /><br />" +
+                "<u><b>Discussion Details</b></u>: " + model.AddCRM.discusssion_details +
+                "<br /><br />" +
+                "<u><b>Reminders</b></u>: " + model.AddCRM.remainder +
+                "<br /><br /><br />" +
+                "<b>Thank You,</b>" +
+                "<br />" +
+                db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.full_name).FirstOrDefault();
+            msg.IsBodyHtml = true;
+
+            SmtpClient client = new SmtpClient();
+            client.UseDefaultCredentials = false;
+            client.Credentials = new System.Net.NetworkCredential("noreply@citytire.com", "U8LH>WpBdXg}");
+            client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
+            client.Host = "smtp.office365.com";
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.EnableSsl = true;
+            try
+            {
+                client.Send(msg);
+                //Debug.WriteLine("Message Sent Succesfully");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+
+            */
+
+
+
             string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             try
             {
@@ -1650,7 +2450,7 @@ namespace SeHubPortal.Controllers
                     sb.Append("INSERT INTO tbl_target_accounts VALUES (@cta_employee_number, @visittype, 'customer_name', @customer_contact, @visit_date, @discussion_details,@reminders,@submission_date)");
 
                     string sql = sb.ToString();
-                    Debug.WriteLine(sql);
+                    //Debug.WriteLine(sql);
                     using (SqlCommand command = new SqlCommand(sql, connection))
                     {
                         command.Parameters.AddWithValue("@cta_employee_number", empId);
@@ -1673,15 +2473,14 @@ namespace SeHubPortal.Controllers
                 System.Diagnostics.Debug.WriteLine(e.ToString());
             }
 
-            return RedirectToAction("CustomerReporting", new { CustId = "" });
+            return RedirectToAction("CRM", new { CustId = "" });
         }
-
 
         [HttpPost]
         public ActionResult AddNewDRDetails(CustomerReportingViewModel model)
         {
             int empId = Convert.ToInt32(Session["userID"].ToString());
-            Debug.WriteLine("In AddNewCRMDetails");
+            //Debug.WriteLine("In AddNewCRMDetails");
             string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             try
             {
@@ -1693,7 +2492,7 @@ namespace SeHubPortal.Controllers
                     sb.Append("INSERT INTO tbl_dispute_resolution VALUES (@invoice_number, @date_dispute, @mileage_dispute, @date_service, @mileage_service, @customer_number,@customer_name_NoAccount,@employee_id,@details,@recommandation,null ,@final_outcome, @complete)");
 
                     string sql = sb.ToString();
-                    Debug.WriteLine(sql);
+                    //Debug.WriteLine(sql);
                     using (SqlCommand command = new SqlCommand(sql, connection))
                     {
                         command.Parameters.AddWithValue("@invoice_number", model.AddDR.invoice_number);
@@ -1731,7 +2530,220 @@ namespace SeHubPortal.Controllers
             using (SqlConnection con = new SqlConnection(constr))
             {
                 string query = "select loc_id From tbl_cta_location_info where loc_status=1";
-                Debug.WriteLine("Query:" + query);
+                //Debug.WriteLine("Query:" + query);
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    cmd.Connection = con;
+                    con.Open();
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+
+                        while (sdr.Read())
+                        {
+                            items.Add(new SelectListItem
+                            {
+                                Text = sdr["loc_id"].ToString(),
+                                Value = sdr["loc_id"].ToString()
+                            });
+                        }
+
+
+                    }
+                    con.Close();
+                }
+            }
+
+            return items;
+        }
+
+        private static List<SelectListItem> populateLocationsExp()
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            var locaList = db.tbl_cta_location_info.ToList();
+
+            foreach(var loc in locaList)
+            {
+
+                if(loc.loc_id == "001")
+                {
+                    items.Add(new SelectListItem
+                    {
+                        Text = loc.loc_id.ToString() + "_AOH",
+                        Value = loc.loc_id.ToString()
+                    });
+                }
+                else
+                {
+                    items.Add(new SelectListItem
+                    {
+                        Text = loc.loc_id.ToString(),
+                        Value = loc.loc_id.ToString()
+                    });
+                }
+
+                
+            }
+
+            return items;
+        }
+
+        private static List<SelectListItem> populateLocationsPermissions(int empId)
+        {
+
+            List<SelectListItem> items = new List<SelectListItem>();
+
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            var locaList = db.tbl_cta_location_info.ToList();
+
+            var sehubloc = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
+
+            if (sehubloc.loc_001 == 1)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "001",
+                    Value = "001"
+                });
+            }
+            if (sehubloc.loc_002 == 1)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "002",
+                    Value = "002"
+                });
+            }
+            if (sehubloc.loc_003 == 1)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "003",
+                    Value = "003"
+                });
+            }
+            if (sehubloc.loc_004 == 1)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "004",
+                    Value = "004"
+                });
+            }
+            if (sehubloc.loc_005 == 1)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "005",
+                    Value = "005"
+                });
+            }
+            if (sehubloc.loc_007 == 1)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "007",
+                    Value = "007"
+                });
+            }
+            if (sehubloc.loc_009 == 1)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "009",
+                    Value = "009"
+                });
+            }
+            if (sehubloc.loc_010 == 1)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "010",
+                    Value = "010"
+                });
+            }
+            if (sehubloc.loc_011 == 1)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "011",
+                    Value = "011"
+                });
+            }
+            if (sehubloc.loc_347 == 1)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "347",
+                    Value = "347"
+                });
+            }
+            if (sehubloc.loc_AHO == 1)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "AHO",
+                    Value = "AHO"
+                });
+            }
+
+
+            return items;
+        }
+
+        private static List<SelectListItem> populateExpAccount()
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            var Accounts = db.tbl_expense_claim_account.ToList();
+
+            foreach (var act in Accounts)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = act.account_description.ToString(),
+                    Value = act.account_number.ToString()
+                });
+
+            }
+
+            return items;
+        }
+
+        private static List<SelectListItem> populateExpClaims()
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            var Accounts = db.tbl_expense_claim.ToList();
+
+            foreach (var act in Accounts)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = act.transaction_number.ToString(),
+                    Value = act.transaction_number.ToString()
+                });
+
+            }
+
+            return items;
+        }
+
+        private static List<SelectListItem> populateLocationsFleet()
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+            string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                string query = "select distinct loc_id from tbl_vehicle_info where vehicle_status = 1";
+                //Debug.WriteLine("Query:" + query);
                 using (SqlCommand cmd = new SqlCommand(query))
                 {
                     cmd.Connection = con;
@@ -1763,7 +2775,7 @@ namespace SeHubPortal.Controllers
 
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
 
-            var veh = db.tbl_vehicle_info.Where(x => x.loc_id == location && x.vehicle_short_id != vehicle && x.vehicle_status == 1).ToList();
+            var veh = db.tbl_vehicle_info.Where(x => x.loc_id == location && x.vehicle_status == 1).ToList();
 
             foreach (var val in veh)
             {
@@ -1774,6 +2786,38 @@ namespace SeHubPortal.Controllers
                 });
             }
             return items;
+        }
+
+        [HttpPost]
+        public string LoadEXform(string value)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            var EX = db.tbl_expense_claim.Where(a => a.transaction_number == value).FirstOrDefault();
+
+            var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            return serializer.Serialize(EX);
+
+        }
+
+        [HttpPost]
+        public string validateBarcode(string value)
+        {
+
+            Trace.WriteLine(value + "This is the work order");
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            var barcode = db.tbl_treadtracker_barcode.Where(x => x.barcode == value).Select(x => x.barcode).FirstOrDefault();
+
+            if (barcode != null)
+            {
+                return "Exists";
+            }
+            else
+            {
+                return "Proceed";
+            }
+
         }
 
     }

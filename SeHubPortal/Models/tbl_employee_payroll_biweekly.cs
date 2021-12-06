@@ -93,5 +93,9 @@ namespace SeHubPortal.Models
         public Nullable<double> timeClock_sun1 { get; set; }
         public Nullable<double> timeClock_sun2 { get; set; }
         public string loc_id { get; set; }
+        public Nullable<double> vacation { get; set; }
+        public Nullable<double> vacation_buyin { get; set; }
+        public string compensation_type { get; set; }
+        public string position { get; set; }
     }
 }

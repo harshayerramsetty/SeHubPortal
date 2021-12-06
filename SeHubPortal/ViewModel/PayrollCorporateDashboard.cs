@@ -15,5 +15,7 @@ namespace SeHubPortal.ViewModel
         public string corpSubmitter { get; set; }
         public string corpSubmissionDate { get; set; }
         public int employeCountAtLocation { get; set; }
+        public int lockStatusbranch { get; set; }
+        public int corpSaveStatus { get; set; }
     }
 }

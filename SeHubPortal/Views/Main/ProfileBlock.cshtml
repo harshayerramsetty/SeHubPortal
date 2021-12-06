@@ -1,0 +1,66 @@
+﻿@model SeHubPortal.Models.tbl_employee
+
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title></title>
+    </head>
+    <body>
+        <div class="row" style="padding:0px; width:230px; ">
+
+            @{
+                string base64ProfilePic = "";
+                if (Model.profile_pic is null)
+                {
+                    base64ProfilePic = "";
+                }
+                else
+                {
+                    base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(Model.profile_pic);
+                }
+            }
+
+            <div class="col-lg-3">
+
+                @if (base64ProfilePic == "")
+                {
+                    <img class="imageClass" data-toggle="modal" data-target="#upload" style="border-radius:40px; width:70px" src="~/Content/profilepic.jpg" alt="ProfilePic" />
+                }
+                else
+                {
+                    <img class="imageClass" data-toggle="modal" data-target="#upload" style="border-radius:30px; width:50px" alt="profilePic" src="@base64ProfilePic" />
+                }
+
+
+            </div>
+            @if (base64ProfilePic == "")
+            {
+                <div class="col-lg-9 text-left" style="padding:10px 0px 0px 25px">
+                    <p style="margin:0px; font-size:13px"><span><b>@Model.full_name</b></span></p>
+                    <p style="margin:0px; font-size:13px">@Model.employee_id</p>
+                    <p style="margin:0px; font-size:10px">@Model.cta_position</p>
+                </div>
+            }
+            else
+            {
+                <div class="col-lg-9 text-left" style="padding:0px 0px 0px 20px">
+                    <p style="margin:0px; font-size:13px"><b>@Model.full_name</b></p>
+                    <p style="margin:0px; font-size:13px">@Model.employee_id</p>
+                    <p style="margin:0px; font-size:10px">@Model.cta_position</p>
+                </div>
+            }
+
+            <input id="base64string" type="text" style="display:none" name="name" value="@base64ProfilePic" />
+        </div>
+
+        <script>
+
+            if ($('#base64string').val() != "" && $('#base64string').val() != null) {
+                $('#UploatImage').attr("src", $('#base64string').val());
+            }
+                        
+        </script>
+
+    </body>
+    </html>
+
+

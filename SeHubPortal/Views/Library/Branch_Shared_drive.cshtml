@@ -17,6 +17,15 @@
 
 
 
+@if (Model.SehubAccess.plant > 0)
+{
+    <style>
+        #PlantClicked {
+            display: block !important;
+        }
+    </style>
+}
+
 
 @if (Model.SehubAccess.tools > 0)
 {
@@ -155,6 +164,11 @@
     .modal {
         padding-right: 7%;
     }
+
+    #BranchShareDriveManage {
+        padding-left: 15%;
+    }
+
 </style>
 
 <body style="overflow-y: hidden;">
@@ -165,28 +179,22 @@
                     <li class="breadcrumb-item"><a href="@Url.Action("Branch_Shared_drive", "Library")">Library</a></li>
                     <li class="breadcrumb-item " aria-current="page">Branch Shared Drive</li>
 
-                    @using (Html.BeginForm("UploadBranchShareDrive", "Library", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                    {
-                        <input type="text" readonly style="visibility:visible; height:23px; width:100px; margin-left:459px" class="btn btn-success Upload" name="name" value="Upload" onclick="document.getElementById('Upload').click()" />
-                        <input id="Upload" type="file" name="BranchShareDrive" style="visibility:hidden; height: 23px;width: 100px;margin-left: 450px;display: none" onchange="form.submit()" />
-                        <input id="1" type="text" readonly data-toggle="modal" data-target="#BranchShareDriveManage" style="visibility:visible; height: 23px; width: 100px; margin-left: 20px" class="btn btn-primary Manage" name="name" value="Manage" />
-                        @Html.EditorFor(m => m.Location_ID, new { htmlAttributes = new { @class = "text-center", @style = "height:28px; display:none" } })
-                    }
-
-
-
                     @if (Model.SehubAccess.library_branch_shared_drive >= 2)
                     {
-                        <label style="margin: 0px 3px 0px 490px ">Location</label>
-                        <div>
+                        using (Html.BeginForm("UploadBranchShareDrive", "Library", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            <input type="text" readonly style="visibility:visible; height:23px; width:100px; margin-left:459px" class="btn btn-success Upload" name="name" value="Upload" onclick="document.getElementById('Upload').click()" />
+                            <input id="Upload" type="file" name="BranchShareDrive" style="visibility:hidden; height: 23px;width: 100px;margin-left: 450px;display: none" onchange="form.submit()" />
+                            <input id="1" type="text" readonly data-toggle="modal" data-target="#BranchShareDriveManage" style="visibility:visible; height: 23px; width: 100px; margin-left: 20px" class="btn btn-primary Manage" name="name" value="Manage" />
+                            @Html.EditorFor(m => m.Location_ID, new { htmlAttributes = new { @class = "text-center", @style = "height:28px; display:none" } })
+                            @Html.EditorFor(m => m.Pane, new { htmlAttributes = new { @id = "pane", @class = "text-center", @style = "height:28px; display:none", @Value = "1" } })
+                        }
 
-                            @if (Model.SehubAccess.library_branch_shared_drive == 3)
+                        <label style="margin: 0px 3px 0px 480px ">Location</label>
+                        <div>
+                            @using (Html.BeginForm("Branch_Shared_drive_ChangeLocation", "Library", FormMethod.Post))
                             {
-                                @Html.DropDownListFor(m => m.Location_ID, Model.LocationsList, new { @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
-                            }
-                            else if (Model.SehubAccess.library_branch_shared_drive == 2)
-                            {
-                                @Html.DropDownListFor(m => m.Location_ID, Model.LocationsList, new { @disabled = "True", @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
+                                @Html.DropDownListFor(m => m.Location_ID, Model.LocationsList, new { @onChange = "this.form.submit()", @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
                             }
 
 
@@ -208,119 +216,526 @@
     {
 
         <div class="row">
-            @foreach (var items in Model.URLName)
-            {
-                if (items.Value.Substring(0, 3) == "001")
-                {
-                    <div class="col-md-2 text-center 001" style="display:none; padding: 20px">
-                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
-                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
-                            <strong>@items.Value.Substring(4)</strong>
-                        </div>
-                    </div>
-                }
+            <div class="col-md-12" style="padding:0px 30px 0px 30px">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a onclick="changePane(this.id)" style="width:200px; text-align:center" class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">OH & S</a>
+                    </li>
+                    <li class="nav-item">
+                        <a onclick="changePane(this.id)" style="width:200px; text-align:center" class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">ISO 9001</a>
+                    </li>
+                    <li class="nav-item">
+                        <a onclick="changePane(this.id)" style="width:200px; text-align:center" class="nav-link" id="msds-tab" data-toggle="tab" href="#msds" role="tab" aria-controls="profile" aria-selected="false">MSDS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a onclick="changePane(this.id)" style="width:200px; text-align:center" class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">MISC</a>
+                    </li>
+                </ul>
+                <script>
+                    function changePane(val) {
+                        if (val == "home-tab") {
+                            $('#pane').val("1")
+                            $('._1_').css("display", "block")
+                            $('._2_').css("display", "none")
+                            $('._3_').css("display", "none")
+                            $('._4_').css("display", "none")
+                        }
+                        else if (val == "profile-tab") {
+                            $('#pane').val("2")
+                            $('._1_').css("display", "none")
+                            $('._2_').css("display", "block")
+                            $('._3_').css("display", "none")
+                            $('._4_').css("display", "none")
+                        }
+                        else if (val == "msds-tab") {
+                            $('#pane').val("3")
+                            $('._1_').css("display", "none")
+                            $('._2_').css("display", "none")
+                            $('._3_').css("display", "block")
+                            $('._4_').css("display", "none")
+                        }
+                        else if (val == "contact-tab") {
+                            $('#pane').val("4")
+                            $('._1_').css("display", "none")
+                            $('._2_').css("display", "none")
+                            $('._3_').css("display", "none")
+                            $('._4_').css("display", "block")
+                        }
 
-                if (items.Value.Substring(0, 3) == "002")
-                {
-                    <div class="col-md-2 text-center 002" style="display:none; padding: 20px">
-                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
-                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
-                            <strong>@items.Value.Substring(4)</strong>
-                        </div>
-                    </div>
-                }
+                    }
+                </script>
+                <div class="tab-content" style="height:700px; background-color:white" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="row">
+                            @foreach (var items in Model.URLName)
+                            {
+                                if (items.Value.Substring(0, 6) == "001_1_")
+                                {
+                                    <div class="col-md-2 text-center 001" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
 
-                if (items.Value.Substring(0, 3) == "003")
-                {
-                    <div class="col-md-2 text-center 003" style="display:none; padding: 20px">
-                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
-                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
-                            <strong>@items.Value.Substring(4)</strong>
-                        </div>
-                    </div>
-                }
+                                if (items.Value.Substring(0, 6) == "002_1_")
+                                {
+                                    <div class="col-md-2 text-center 002" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
 
-                if (items.Value.Substring(0, 3) == "004")
-                {
-                    <div class="col-md-2 text-center 004" style="display:none; padding: 20px">
-                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display: none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
-                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
-                            <strong>@items.Value.Substring(4)</strong>
-                        </div>
-                    </div>
-                }
+                                if (items.Value.Substring(0, 6) == "003_1_")
+                                {
+                                    <div class="col-md-2 text-center 003" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
 
-                if (items.Value.Substring(0, 3) == "005")
-                {
-                    <div class="col-md-2 text-center 005" style="display:none; padding: 20px">
-                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
-                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
-                            <strong>@items.Value.Substring(4)</strong>
-                        </div>
-                    </div>
-                }
+                                if (items.Value.Substring(0, 6) == "004_1_")
+                                {
+                                    <div class="col-md-2 text-center 004" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display: none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
 
-                if (items.Value.Substring(0, 3) == "007")
-                {
-                    <div class="col-md-2 text-center 007" style="display:none; padding: 20px">
-                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
-                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
-                            <strong>@items.Value.Substring(4)</strong>
-                        </div>
-                    </div>
-                }
+                                if (items.Value.Substring(0, 6) == "005_1_")
+                                {
+                                    <div class="col-md-2 text-center 005" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
 
-                if (items.Value.Substring(0, 3) == "009")
-                {
-                    <div class="col-md-2 text-center 009" style="display:none; padding: 20px">
-                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
-                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
-                            <strong>@items.Value.Substring(4)</strong>
-                        </div>
-                    </div>
-                }
+                                if (items.Value.Substring(0, 6) == "007_1_")
+                                {
+                                    <div class="col-md-2 text-center 007" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
 
-                if (items.Value.Substring(0, 3) == "010")
-                {
-                    <div class="col-md-2 text-center 010" style="display:none; padding: 20px">
-                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
-                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
-                            <strong>@items.Value.Substring(4)</strong>
-                        </div>
-                    </div>
-                }
+                                if (items.Value.Substring(0, 6) == "009_1_")
+                                {
+                                    <div class="col-md-2 text-center 009" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
 
-                if (items.Value.Substring(0, 3) == "011")
-                {
-                    <div class="col-md-2 text-center 011" style="display:none; padding: 20px">
-                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
-                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
-                            <strong>@items.Value.Substring(4)</strong>
-                        </div>
-                    </div>
-                }
+                                if (items.Value.Substring(0, 6) == "010_1_")
+                                {
+                                    <div class="col-md-2 text-center 010" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
 
-                if (items.Value.Substring(0, 3) == "101")
-                {
-                    <div class="col-md-2 text-center 101" style="display:none; padding: 20px">
-                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
-                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
-                            <strong>@items.Value.Substring(4)</strong>
-                        </div>
-                    </div>
-                }
+                                if (items.Value.Substring(0, 6) == "011_1_")
+                                {
+                                    <div class="col-md-2 text-center 011" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
 
-                if (items.Value.Substring(0, 3) == "347")
-                {
-                    <div class="col-md-2 text-center 347" style="display:none; padding: 20px">
-                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
-                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
-                            <strong>@items.Value.Substring(4)</strong>
+                                if (items.Value.Substring(0, 6) == "AHO_1_")
+                                {
+                                    <div class="col-md-2 text-center AHO" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "347_1_")
+                                {
+                                    <div class="col-md-2 text-center 347" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+                            }
                         </div>
                     </div>
-                }
-            }
+                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <div class="row">
+                            @foreach (var items in Model.URLName)
+                            {
+                                if (items.Value.Substring(0, 6) == "001_2_")
+                                {
+                                    <div class="col-md-2 text-center 001" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "002_2_")
+                                {
+                                    <div class="col-md-2 text-center 002" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "003_2_")
+                                {
+                                    <div class="col-md-2 text-center 003" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "004_2_")
+                                {
+                                    <div class="col-md-2 text-center 004" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display: none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "005_2_")
+                                {
+                                    <div class="col-md-2 text-center 005" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "007_2_")
+                                {
+                                    <div class="col-md-2 text-center 007" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "009_2_")
+                                {
+                                    <div class="col-md-2 text-center 009" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "010_2_")
+                                {
+                                    <div class="col-md-2 text-center 010" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "011_2_")
+                                {
+                                    <div class="col-md-2 text-center 011" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "AHO_2_")
+                                {
+                                    <div class="col-md-2 text-center AHO" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "347_2_")
+                                {
+                                    <div class="col-md-2 text-center 347" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="msds" role="tabpanel" aria-labelledby="profile-tab">
+                        <div class="row">
+                            @foreach (var items in Model.URLName)
+                            {
+                                if (items.Value.Substring(0, 6) == "001_3_")
+                                {
+                                    <div class="col-md-2 text-center 001" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "002_3_")
+                                {
+                                    <div class="col-md-2 text-center 002" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "003_3_")
+                                {
+                                    <div class="col-md-2 text-center 003" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "004_3_")
+                                {
+                                    <div class="col-md-2 text-center 004" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display: none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "005_3_")
+                                {
+                                    <div class="col-md-2 text-center 005" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "007_3_")
+                                {
+                                    <div class="col-md-2 text-center 007" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "009_3_")
+                                {
+                                    <div class="col-md-2 text-center 009" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "010_3_")
+                                {
+                                    <div class="col-md-2 text-center 010" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "011_3_")
+                                {
+                                    <div class="col-md-2 text-center 011" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "AHO_3_")
+                                {
+                                    <div class="col-md-2 text-center AHO" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "347_3_")
+                                {
+                                    <div class="col-md-2 text-center 347" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                        <div class="row">
+                            @foreach (var items in Model.URLName)
+                            {
+                                if (items.Value.Substring(0, 6) == "001_4_")
+                                {
+                                    <div class="col-md-2 text-center 001" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "002_4_")
+                                {
+                                    <div class="col-md-2 text-center 002" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "003_4_")
+                                {
+                                    <div class="col-md-2 text-center 003" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "004_4_")
+                                {
+                                    <div class="col-md-2 text-center 004" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display: none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "005_4_")
+                                {
+                                    <div class="col-md-2 text-center 005" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "007_4_")
+                                {
+                                    <div class="col-md-2 text-center 007" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "009_4_")
+                                {
+                                    <div class="col-md-2 text-center 009" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "010_4_")
+                                {
+                                    <div class="col-md-2 text-center 010" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "011_4_")
+                                {
+                                    <div class="col-md-2 text-center 011" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "AHO_4_")
+                                {
+                                    <div class="col-md-2 text-center AHO" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+
+                                if (items.Value.Substring(0, 6) == "347_4_")
+                                {
+                                    <div class="col-md-2 text-center 347" style="display:none; padding: 20px">
+                                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px;color: cornflowerblue; font-size: 15px; margin-left:30px; margin-right:30px">
+                                            <strong>@items.Value.Substring(6)</strong>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        
+
+        
 
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -358,46 +773,50 @@
 
                                             using (Html.BeginForm("RenameBranchSharedDriveBlob", "Library", new { currentFileName = items.Value }, FormMethod.Post))
                                             {
-                                                <div id="div" class="row" style="padding:10px 20px 10px 10px; margin-top:0px">
-                                                    <div class="col-md-2" style="padding-left:0px">
-                                                        <a id="anchor" class="btn" data-toggle="modal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 60px; border-color: white"></p></a>
-                                                    </div>
-                                                    <div class="col-md-6" style="color: cornflowerblue; font-size: 15px; padding-top:22px">
-                                                        <strong>@items.Value.Substring(4)</strong>
-                                                    </div>
-                                                    <div class="col-md-2 text-right" style="padding-top:20px">
-                                                        <a class="btn btn-primary" style="height:30px" data-toggle="collapse" href=@Rename role="button" aria-expanded="false" aria-controls="collapseExample">
-                                                            Rename
-                                                        </a>
-                                                        @*<a style="width:100px; height:30px; font-size:15px" class="btn btn-primary rename" href="@Url.Action("RenameSupplireBlob", "Library", new {currentFileName = items.Value, newFileName = "RenamedFile.pdf"})">Rename</a>*@
-                                                    </div>
-                                                    <div class="col-md-2 text-right" style="padding-top:9px">
-                                                        <a class="btn" data-toggle="collapse" href=@Delete role="button" aria-expanded="false" aria-controls=@Deleteid><img style="height:35px" src="~/Content/trash.png" /></a>
-                                                        @*onclick="location.href='@Url.Action("DeleteSupplireBlob", "Library", new { fileName = items.Value})';"*@
-                                                    </div>
-                                                    @Html.EditorFor(m => m.Location_ID, new { htmlAttributes = new { @class = "text-center", @style = "height:28px; display:none" } })
+                                                <div id="div" class="row @items.Value.Substring(3, 3)" style="padding:10px 20px 10px 10px; margin-top:0px">
+                                                    <div class="col-lg-12">
+                                                        <div class="row">
+                                                            <div class="col-lg-2" style="padding-left:0px">
+                                                                <a id="anchor" class="btn" data-toggle="modal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 60px; border-color: white"></p></a>
+                                                            </div>
+                                                            <div class="col-lg-6" style="color: cornflowerblue; font-size: 15px; padding-top:22px">
+                                                                <strong>@items.Value.Substring(6)</strong>
+                                                            </div>
+                                                            <div class="col-lg-2 text-right" style="padding-top:20px">
+                                                                <a class="btn btn-primary" style="height:30px" data-toggle="collapse" href=@Rename role="button" aria-expanded="false" aria-controls="collapseExample">
+                                                                    Rename
+                                                                </a>
+                                                                @*<a style="width:100px; height:30px; font-size:15px" class="btn btn-primary rename" href="@Url.Action("RenameSupplireBlob", "Library", new {currentFileName = items.Value, newFileName = "RenamedFile.pdf"})">Rename</a>*@
+                                                            </div>
+                                                            <div class="col-lg-2 text-right" style="padding-top:9px">
+                                                                <a class="btn" data-toggle="collapse" href=@Delete role="button" aria-expanded="false" aria-controls=@Deleteid><img style="height:35px" src="~/Content/trash.png" /></a>
+                                                                @*onclick="location.href='@Url.Action("DeleteSupplireBlob", "Library", new { fileName = items.Value})';"*@
+                                                            </div>
+                                                            @Html.EditorFor(m => m.Location_ID, new { htmlAttributes = new { @class = "text-center", @style = "height:28px; display:none" } })
 
-                                                    <div class="collapse" id=@Deleteid style="margin-bottom:10px">
-                                                        <div class="card card-body" style="width:645px;padding:0px; margin:0px">
-                                                            <div class="row" style="padding:0px; margin:0px">
-                                                                <div class="col-md-8" style="padding-top:17px"><label>Delete: @items.Value</label></div>
-                                                                <div class="col-md-2" style="padding-top:4px"><a type="text" class="btn" href="@Url.Action("DeleteBranchSharedDriveBlob", "Library", new {fileName = items.Value})"><img style="height:40px" src="~/Content/Tick.png" /></a></div>
-                                                                <div class="col-md-2" style="padding-top:4px"><button class="btn" style="margin-left:8px" type="button" data-toggle="collapse" data-dismiss=@Deleteid aria-expanded="false" aria-controls=@Deleteid data-target=@Delete><img style="height:40px" src="~/Content/Cross.png" /></button></div>
+                                                            <div class="collapse" id=@Deleteid style="margin-bottom:10px">
+                                                                <div class="card card-body" style="width:645px;padding:0px; margin:0px">
+                                                                    <div class="row" style="padding:0px; margin:0px">
+                                                                        <div class="col-md-8" style="padding-top:17px"><label>Delete: @items.Value</label></div>
+                                                                        <div class="col-md-2" style="padding-top:4px"><a type="text" class="btn" href="@Url.Action("DeleteBranchSharedDriveBlob", "Library", new {fileName = items.Value})"><img style="height:40px" src="~/Content/Tick.png" /></a></div>
+                                                                        <div class="col-md-2" style="padding-top:4px"><button class="btn" style="margin-left:8px" type="button" data-toggle="collapse" data-dismiss=@Deleteid aria-expanded="false" aria-controls=@Deleteid data-target=@Delete><img style="height:40px" src="~/Content/Cross.png" /></button></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="collapse" id=@Renameid>
+                                                                <div class="card card-body" style="width:645px;padding:0px; margin:0px">
+                                                                    <div class="row" style="padding:0px; margin:0px">
+                                                                        <div class="col-md-8" style="padding-top:12px">@Html.EditorFor(m => m.RenameString, new { htmlAttributes = new { @required = "required", @style = "height:28px; width:350px", @value = @items.Value } })</div>
+                                                                        <div class="col-md-2" style="padding-top:1px"><button class="btn" type="submit"><img style="height:40px" src="~/Content/Tick.png" /></button></div>
+                                                                        <div class="col-md-2 text-right" style="padding-top:1px"><button class="btn" data-dismiss="modal"><img style="height:40px" src="~/Content/Cross.png" /></button></div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="collapse" id=@Renameid>
-                                                        <div class="card card-body" style="width:645px;padding:0px; margin:0px">
-                                                            <div class="row" style="padding:0px; margin:0px">
-                                                                <div class="col-md-8" style="padding-top:12px">@Html.EditorFor(m => m.RenameString, new { htmlAttributes = new { @required = "required", @style = "height:28px; width:350px", @value = @items.Value } })</div>
-                                                                <div class="col-md-2" style="padding-top:1px"><button class="btn" type="submit"><img style="height:40px" src="~/Content/Tick.png" /></button></div>
-                                                                <div class="col-md-2 text-right" style="padding-top:1px"><button class="btn" data-dismiss="modal"><img style="height:40px" src="~/Content/Cross.png" /></button></div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    
                                                 </div>
                                             }
-                                            <hr />
                                         }
 
 
@@ -426,6 +845,12 @@
             $('#clickThis').on('click', function () {
                 $('#sidebar').toggleClass('active');
             });
+
+            $('._1_').css("display", "block")
+            $('._2_').css("display", "none")
+            $('._3_').css("display", "none")
+            $('._4_').css("display", "none")
+
         });
 
 
@@ -507,7 +932,7 @@
 
         });
 
-        $('.101 a').click(function (e) {
+        $('.AHO a').click(function (e) {
             e.preventDefault()
             $that = $(this);
             $that.parent().find('a');
@@ -606,11 +1031,11 @@
                 $(".011").css("display", "none");
             }
 
-            if (selected == "101") {
-                $(".101").css("display", "block");
+            if (selected == "AHO") {
+                $(".AHO").css("display", "block");
             }
             else {
-                $(".101").css("display", "none");
+                $(".AHO").css("display", "none");
             }
 
             if (selected == "347") {

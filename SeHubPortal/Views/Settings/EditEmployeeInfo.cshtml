@@ -1,0 +1,267 @@
+﻿
+@model SeHubPortal.ViewModel.MyStaffViewModel
+<style type="text/css">
+    #active_status {
+        height: 20px;
+        width: 20px;
+    }
+
+    .example::-webkit-scrollbar {
+        display: none;
+    }
+
+    .example {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+    }
+</style>
+
+
+    @using (Html.BeginForm("EditEmployeeInfo", "Settings", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+
+        <div class="modal-content">
+            <div class="modal-header" style="padding:5px 3px 3px 15px">
+
+                <div class="col-lg-12" style="padding-left:0px !important">
+                    <h5 class="modal-title" id="exampleModalLongTitle">
+                        @Model.full_name
+                    </h5>
+                </div>
+            </div>
+            <div class="modal-body " style="height:600px; overflow-y:auto">
+                <div class="row" style="margin-top:0px">
+                    <div class="col-lg-5 text-center">
+                        Emloyee ID
+                    </div>
+                    <div class="col-lg-7">
+                        @Html.EditorFor(m => m.empStatusInfo.employee_id, new { htmlAttributes = new { @readonly = true, @type = "text", @style = "text-align:centre" } })
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-lg-5 text-center">
+                        Positions
+                    </div>
+                    <div class="col-lg-7">
+                        @Html.EditorFor(m => m.position, new { htmlAttributes = new { @readonly = true, @type = "text" } })
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-lg-5 text-center">
+                        Joining Date
+                    </div>
+                    <div class="col-lg-7">
+                        @if (Model.empStatusInfo.date_of_joining.HasValue)
+                        {
+                            @Html.TextBoxFor(model => model.empStatusInfo.date_of_joining, new { @style = "width:183px", @type = "date", @Value = Model.empStatusInfo.date_of_joining.Value.ToString("yyyy-MM-dd"), @max = System.DateTime.Today.ToString("yyyy-MM-dd") })
+
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.empStatusInfo.date_of_joining, new { @style = "width:183px", @type = "date", @max = System.DateTime.Today.ToString("yyyy-MM-dd") })
+
+                        }
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-lg-5 text-center">
+                        Release Date
+                    </div>
+                    <div class="col-lg-7">
+
+                        @if (Model.empStatusInfo.date_of_leaving.HasValue)
+                        {
+                            @Html.TextBoxFor(model => model.empStatusInfo.date_of_leaving, new { @id = "ReleaseDate", @style = "width:183px", @type = "date", @Value = Model.empStatusInfo.date_of_leaving.Value.ToString("yyyy-MM-dd"), @max = System.DateTime.Today.ToString("yyyy-MM-dd") })
+                            <button id="removeReleaseDate" type="button" style="margin-top:0px; padding:0px 10px 0px 10px" class="btn btn-danger">-</button>
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.empStatusInfo.date_of_leaving, new { @style = "width:183px", @type = "date", @max = System.DateTime.Today.ToString("yyyy-MM-dd") })
+                        }
+                    </div>
+                </div>
+
+
+                <script>
+                    $('#removeReleaseDate').click(function () {
+                        $('#ReleaseDate').val("");
+                    });
+                </script>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-lg-5 text-center">
+                        Vacation
+                    </div>
+                    <div class="col-lg-7">
+                        @Html.EditorFor(m => m.empStatusInfo.vacation, new { htmlAttributes = new { @type = "text" } })
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-lg-5 text-center">
+                        Vacation buy-in
+                    </div>
+                    <div class="col-lg-7">
+                        @Html.EditorFor(m => m.empStatusInfo.vacation_buyin, new { htmlAttributes = new { @type = "text" } })
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-lg-5 text-center">
+                        Sick Days
+                    </div>
+                    <div class="col-lg-7">
+                        @Html.EditorFor(m => m.empStatusInfo.sick_days, new { htmlAttributes = new { @type = "text" } })
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-lg-5 text-center">
+                        Compensation
+                    </div>
+                    <div class="col-lg-7">
+                        @{
+                            List
+                            <SelectListItem>
+                            listItems2 = new List
+                            <SelectListItem>
+                            ();
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "Hourly",
+                                Value = "Hourly"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "Commission",
+                                Value = "Commission"
+                            });
+                        }
+                        @Html.DropDownListFor(model => model.empStatusInfo.compensation_type, listItems2, "select", new { @type = "text", @style = "width:183px; height:30px" })
+                    </div>
+                </div>
+                <hr />
+
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <h5>Annual Payroll Category Adjustment</h5>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top:10px">
+                    <div class="col-lg-5 text-center">
+                        Payroll_id
+                    </div>
+                    <div class="col-lg-7">
+                        @Html.DropDownListFor(m => m.SelectedPayrollId, Model.PayrollIdList, new { @style = "width:180px; height:30px;" })
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-lg-5 text-center">
+                        Regular Hours
+                    </div>
+                    <div class="col-lg-7">
+                        @Html.EditorFor(m => m.PayrollInfo.RegularPay_H, new { htmlAttributes = new { @type = "text" } })
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top:10px">
+                    <div class="col-lg-5 text-center">
+                        OvertimePay Hours
+                    </div>
+                    <div class="col-lg-7">
+                        @Html.EditorFor(m => m.PayrollInfo.OvertimePay_H, new { htmlAttributes = new { @type = "text" } })
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-lg-5 text-center">
+                        VacationPay Hours
+                    </div>
+                    <div class="col-lg-7">
+                        @Html.EditorFor(m => m.PayrollInfo.VacationPay_D, new { htmlAttributes = new { @type = "text" } })
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-lg-5 text-center">
+                        SickLeave Hours
+                    </div>
+                    <div class="col-lg-7">
+                        @Html.EditorFor(m => m.PayrollInfo.SickLeave_H, new { htmlAttributes = new { @type = "text" } })
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-lg-5 text-center">
+                        StatutoryHolidayPay 
+                    </div>
+                    <div class="col-lg-7">
+                        @Html.EditorFor(m => m.PayrollInfo.StatutoryHolidayPay_H, new { htmlAttributes = new { @type = "text" } })
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-lg-5 text-center">
+                        CommissionPay Hours
+                    </div>
+                    <div class="col-lg-7">
+                        @Html.EditorFor(m => m.PayrollInfo.CommissionPay_D, new { htmlAttributes = new { @type = "text" } })
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-lg-5 text-center">
+                        OnCallCommission
+                    </div>
+                    <div class="col-lg-7">
+                        @Html.EditorFor(m => m.PayrollInfo.OnCallCommission_D, new { htmlAttributes = new { @type = "text" } })
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-lg-5 text-center">
+                        OtherPay Hours
+                    </div>
+                    <div class="col-lg-7">
+                        @Html.EditorFor(m => m.PayrollInfo.OtherPay_D, new { htmlAttributes = new { @type = "text" } })
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-lg-5 text-center">
+                        VacationTime Hours
+                    </div>
+                    <div class="col-lg-7">
+                        @Html.EditorFor(m => m.PayrollInfo.VacationTime_H, new { htmlAttributes = new { @type = "text" } })
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-lg-5 text-center">
+                        OvertimePay2 Hours
+                    </div>
+                    <div class="col-lg-7">
+                        @Html.EditorFor(m => m.PayrollInfo.OvertimePay_2_H, new { htmlAttributes = new { @type = "text" } })
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-lg-5 text-center">
+                        OvertimePay3 Hours
+                    </div>
+                    <div class="col-lg-7">
+                        @Html.EditorFor(m => m.PayrollInfo.OvertimePay_3_H, new { htmlAttributes = new { @type = "text" } })
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-lg-5 text-center">
+                        SalaryPay Hours
+                    </div>
+                    <div class="col-lg-7">
+                        @Html.EditorFor(m => m.PayrollInfo.SalaryPay_D, new { htmlAttributes = new { @type = "text" } })
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer" style="padding:3px">
+                <input type="text" class="btn btn-danger" name="name" data-dismiss="modal" readonly style="width:100px; height:30px; padding-top:3px" value="Cancel" />
+                <input type="submit" name="name" class="btn btn-success" readonly style="width:100px; height:30px; padding-top:2px" value="Save" />
+            </div>
+        </div>
+    }
+
+<script>
+    $(document).ready(function () {
+        var date = $('#DateOFBirth').val();
+        date = date.substring(0, 10);
+        $('#DateOFBirth').val(date);
+    });
+</script>

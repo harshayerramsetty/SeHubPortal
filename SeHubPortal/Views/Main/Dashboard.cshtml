@@ -24,7 +24,14 @@
     <link href="~/Content/fullcalendar.css" rel="stylesheet" />
 
 
-
+    @if (Model.SehubAccess.plant > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
 
     @if (Model.SehubAccess.tools > 0)
     {
@@ -183,14 +190,14 @@
         </button>
     </div>
 
-    <div class="row">
-        <div class="col-md-12" style=" text-align: center; margin: 0px 0px 15px 15px">
-            <div class="card" style="height:366px; width:1640px">
+    <div class="row" style="padding:0px 15px 15px 15px">
+        <div class="col-md-12" style=" text-align: center">
+            <div class="card" style="height:366px;">
                 <div class="card-header">
                     <h6>Weekly Events</h6>
                 </div>
                 <div class="card-body">
-                    <div id="calender" style="width:1600px; margin:0px; padding:0px; background-color:white"></div>
+                    <div id="calender" style="width:100%; margin:0px; padding:0px; background-color:white"></div>
                 </div>
             </div>
         </div>

@@ -15,5 +15,9 @@ namespace SeHubPortal.ViewModel
         public string temp { get; set; }
         public tbl_Calendar_events AddCalendarEvents { get; set; }
         public tbl_sehub_access SehubAccess { get; set; }
+        public double wheelRetail { get; set; }
+        public double wheelNA { get; set; }
+        public double freightRetail { get; set; }
+        public double freightNA { get; set; }
     }
 }

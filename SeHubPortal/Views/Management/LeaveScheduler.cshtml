@@ -14,7 +14,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 
-
+    @if (Model.SehubAccess.plant > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
 
     @if (Model.SehubAccess.tools > 0)
     {
@@ -115,7 +122,14 @@
         </style>
     }
 
-
+    @if (Model.SehubAccess.employee_folder > 0)
+    {
+        <style>
+            #EmployeeFilesLink {
+                display: block !important;
+            }
+        </style>
+    }
 
 
     <style>
@@ -177,70 +191,9 @@
                     <li class="breadcrumb-item " aria-current="page">Vacation Scheduler</li>
                     <label style="margin: 0px 3px 0px 1127px ">Location</label>
                     <div>
-                        @{
-                            List
-                            <SelectListItem>
-                            listItems = new List
-                            <SelectListItem>
-                            ();
+                        
+                        @Html.DropDownListFor(m => m.Location_ID, Model.LocationsList, new { @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
 
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "001",
-                                Value = "001"
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "002",
-                                Value = "002"
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "003",
-                                Value = "003"
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "004",
-                                Value = "004"
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "005",
-                                Value = "005"
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "007",
-                                Value = "007"
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "009",
-                                Value = "009"
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "010",
-                                Value = "010"
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "011",
-                                Value = "011"
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "101",
-                                Value = "101"
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "347",
-                                Value = "347"
-                            });
-                        }
-                        @Html.DropDownListFor(m => m.Location_ID, listItems, new { @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
                     </div>
                 </ol>
             </nav>
@@ -251,79 +204,409 @@
         </button>
     </div>
 
-    <div class="col-md-5">
-        <div class="card shadow-sm">
-            <div class="card-header" style="padding:8px 8px 0px 15px">
-                <h5>Vacation Scheduler</h5>
-            </div>
-            <div class="card-body" style=" padding:20px 20px 0px 20px">
-                <div class="row">
-                    <div class="col-md-2">
-                        <img src="~/Content/mahesh.jpg" style="border-radius:70px; width:100px" alt="Alternate Text" />
-                    </div>
-                    <div class="col-md-6" style="padding-left:25px">
-                        <p style="font-size:15px; padding:0px; margin: 3px"><strong>Mahesh, Pochamreddy</strong></p>
-                        <p style="font-size:12px; padding:0px; margin: 3px"><strong>Software Developper</strong></p>
-                        <p style="font-size:10px; padding:0px; margin: 3px">115077</p>
-                        <p style="font-size:12px; padding:0px; margin: 3px"><strong>START DATE</strong></p>
-                        <p style="font-size:12px; padding:0px; margin: 3px"><strong>Jan 1, 2014</strong></p>
-                    </div>
-                    <div class="col-md-4">
-                        <table class="table table-bordered text-center" style="border-color:black">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th scope="col" style="padding:0px; margin:0px;">ALOTTED</th>
-                                    <th scope="col" style="padding:0px; margin:0px;">USED</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>10</td>
-                                    <td>6</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+    <div class="row" style="padding:0px 15px 0px 15px">
+        <div class="col-lg-4 text-left">
+            <div class="row">
+                <div class="col-lg-2">
+                    <b>Sort By</b>
                 </div>
-                <div class="row" style="margin-top:30px">
-                    <div class="col-md-12"><label style="font-size:20px"><strong>Scheduled Leave</strong></label></div>
-                </div>
-                <div class="row">
-                    <div class="col-md-11">
-                        <table class="table table-bordered text-center" style="border-color:black">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th scope="col" style="padding:0px; margin:0px;">Start Date</th>
-                                    <th scope="col" style="padding:0px; margin:0px;">End Date</th>
-                                    <th scope="col" style="padding:0px; margin:0px;">Current(Days)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>2020-04-13</td>
-                                    <td>2020-04-22</td>
-                                    <td>6</td>
-                                </tr>
-                                <tr>
-                                    <td>2020-08-03</td>
-                                    <td>2020-08-07</td>
-                                    <td>4</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col-md-1 text-left" style="margin:0px; padding:0px">
-                        <input style="font-size:30px; padding:0px; margin:0px 10px 20px 10px" type="button" value="+">
-                        <input style="margin:0px 10px 20px 15px" type="checkbox">
-                        <input style="margin:0px 10px 20px 15px" type="checkbox">
-                    </div>
+                <div class="col-lg-10">
+                    @using (Html.BeginForm("SortBy", "Management", FormMethod.Post))
+                    {
+                        List
+                        <SelectListItem>
+                        sortByItems = new List
+                        <SelectListItem>
+                        ();
+
+                        sortByItems.Add(new SelectListItem
+                        {
+                            Text = "Select",
+                            Value = "Select"
+                        });
+
+                        sortByItems.Add(new SelectListItem
+                        {
+                            Text = "Start Date",
+                            Value = "Start Date"
+                        });
+
+                        sortByItems.Add(new SelectListItem
+                        {
+                            Text = "End Date",
+                            Value = "End Date"
+                        });
+                        @Html.DropDownListFor(m => m.SortBy, sortByItems, new { @onChange = "this.form.submit()", @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
+                    }
                 </div>
             </div>
-            <div class="card-footer text-right" style="padding-top:15px">
-                <label style="margin-right:20px"><strong>TOTAL DAYS</strong></label><input class="text-center" type="text" name="name" value="10" />
+            
+
+        </div>
+        <div class="col-lg-4 text-center">
+            <div class="row">
+                <div class="col-lg-6 text-right">
+                    <b>Callender Year</b>
+                </div>
+                <div class="col-lg-6 text-left">
+                    @{
+                        List
+                        <SelectListItem>
+                        YearList = new List
+                        <SelectListItem>
+                        ();
+
+
+                        YearList.Add(new SelectListItem
+                        {
+                            Text = "2021",
+                            Value = "2021"
+                        });
+
+                    }
+                    @Html.DropDownListFor(m => m.Year, YearList, new { @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
+
+                </div>
             </div>
+
+        </div>
+        <div class="col-lg-4 text-right">
+            <button class="btn btn-primary" style="padding:2px 20px 2px 20px" data-target="#NewLeave" data-toggle="modal">New Entry</button>
         </div>
     </div>
+
+    <div class="row" style="margin:10px 15px 0px 15px;">
+        <table class="table ">
+            <thead style="text-align:center" class="thead-dark">
+                <tr>
+                    <th style="padding:0px; font-size:12px; margin:0px;" scope="col">Employee</th>
+                    <th style="padding:0px; font-size:12px; margin:0px;" scope="col">Employee ID</th>
+                    <th style="padding:0px; font-size:12px; margin:0px;" scope="col">Name</th>
+                    <th style="padding:0px; font-size:12px; margin:0px;" scope="col">Start Date</th>
+                    <th style="padding:0px; font-size:12px; margin:0px;" scope="col">End Date</th>
+                    <th style="padding:0px; font-size:12px; margin:0px;" scope="col"># of Days</th>
+                    <th style="padding:0px; font-size:12px; margin:0px;" scope="col">Edit</th>
+                    <th style="padding:0px; font-size:12px; margin:0px;" scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.vacations)
+                {
+                    string base64ProfilePic = "";
+                    if (Model.employeeVacList.Where(x => x.employee_id == item.empid).Select(x => x.profile_pic).FirstOrDefault() is null)
+                    {
+                        base64ProfilePic = "";
+                    }
+                    else
+                    {
+                        base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(Model.employeeVacList.Where(x => x.employee_id == item.empid).Select(x => x.profile_pic).FirstOrDefault());
+                    }
+                    <tr>
+                        <td style="width:130px;text-align:center">
+                            @if (base64ProfilePic == "")
+                            {
+                                <img src="~/Content/profilepic.jpg" style="width:30%; height:30px;" />
+                            }
+                            else
+                            {
+                                <img alt="profilePic" src="@base64ProfilePic" style="width:30%; height:30px;border-radius:50%" />
+                            }
+
+                        </td>
+                        <td style="text-align:center">@item.empid</td>
+                        <td style="text-align:center">@Model.employeeVacList.Where(x => x.employee_id == item.empid).Select(x => x.full_name).FirstOrDefault()</td>
+                        <td style="text-align:center">@item.start_date.ToString("dd, MMM yyyy (dddd)")</td>
+                        <td style="text-align:center">
+                            @if (@item.end_date.HasValue)
+                            {
+                                @item.end_date.Value.ToString("dd, MMM yyyy (dddd)")
+                            }
+                        </td>
+                        <td style="text-align:center">
+                            @{
+
+                                DateTime tempDate = item.start_date;
+                                int count = 0;
+
+
+
+
+                                while (tempDate != item.end_date)
+                                {
+
+                                    if (tempDate.ToString("dddd") == "Sunday" || tempDate.ToString("dddd") == "Saturday")
+                                    {
+
+                                    }
+                                    else
+                                    {
+                                        count = count + 1;
+                                    }
+
+                                    tempDate = tempDate.AddDays(1);
+
+                                }
+
+                                count = count + 1;
+
+                                <span>
+                                    @count
+                                </span>
+                            }
+                        </td>
+                        <td style="text-align: center">
+                            <button data-id="@item.empid" onclick="EditVacation(this.value)" value="@item.empid;@item.start_date.ToString("yyyy-MM-dd");@item.end_date.Value.ToString("yyyy-MM-dd");@item.leave_type;@item.comments " class="managePermissionsBtn" data-toggle="modal" data-target="#EditLeave" style="background-color: transparent;border: 1px solid transparent;text-align: center"><i class="fa fa-edit" style="font-size:20px;color:dodgerblue;float:right"></i></button>
+
+                        </td>
+                        <td style="text-align: center">
+                            <button data-id="@item.empid" onclick="DeletVacation(this.value)" value="@item.empid;@item.start_date.ToString("yyyy-MM-dd");@item.end_date.Value.ToString("yyyy-MM-dd");" class="managePermissionsBtn" data-toggle="modal" data-target="#DeleteLeave" style="background-color: transparent;border: 1px solid transparent;text-align: center"><img style="padding:0x; margin:0px; width:15px" src="~/Content/trash.png" alt="Alternate Text" /></button>
+
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal fade" id="NewLeave" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+
+            @using (Html.BeginForm("NewLeave", "Management", FormMethod.Post))
+            {
+                <div class="modal-content">
+                    <div class="modal-header" style="padding:5px 0px 5px 15px">
+                        <h5 class="modal-title"><b>New Leave Details</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6 text-center">
+                                <b>Start Date</b>
+                            </div>
+                            <div class="col-md-6 text-center">
+                                <b>End Date</b>
+                            </div>
+                        </div>
+
+                        @Html.HiddenFor(m => m.employee.employee_id)
+
+                        <div class="row">
+                            <div class="col-md-6 text-center">
+                                @Html.EditorFor(m => m.newLeave.start_date, new { htmlAttributes = new { @min = System.DateTime.Today.ToString("yyyy-MM-dd"), @required = "required", @type = "date", @style = "text-align: center; font-size:15px;" } })
+                            </div>
+                            <div class="col-md-6 text-center">
+                                @Html.EditorFor(m => m.newLeave.end_date, new { htmlAttributes = new { @min = System.DateTime.Today.ToString("yyyy-MM-dd"), @required = "required", @type = "date", @style = "text-align: center; font-size:15px;" } })
+                            </div>
+                        </div>
+
+                        <div class="row" style="padding:15px 40px 0px 40px">
+
+                            @{
+                                List
+                                <SelectListItem>
+                                listItems1 = new List
+                                <SelectListItem>
+                                ();
+                                listItems1.Add(new SelectListItem
+                                {
+                                    Text = "Select Leave Type",
+                                });
+                                listItems1.Add(new SelectListItem
+                                {
+                                    Text = "Vacation",
+                                    Value = "Vacation"
+                                });
+                                listItems1.Add(new SelectListItem
+                                {
+                                    Text = "Sick",
+                                    Value = "Sick"
+                                });
+                                listItems1.Add(new SelectListItem
+                                {
+                                    Text = "Breavement",
+                                    Value = "Breavement"
+                                });
+
+                            }
+
+                            @Html.DropDownListFor(m => m.newLeave.leave_type, listItems1, new { @style = "width:100%" })
+
+                        </div>
+                        <div class="row" style="margin-top:15px">
+                            <div class="col-md-12 text-center">
+                                @Html.TextAreaFor(m => m.newLeave.comments, 4, 56, new { @placeholder = " Comments (Optional)" })
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer" style="padding:3px">
+                        <button type="button" style="padding:2px 20px 2px 20px" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                        <button type="submit" style="padding:2px 30px 2px 30px" class="btn btn-success">Save</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="EditLeave" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+
+            @using (Html.BeginForm("EditLeave", "Management", FormMethod.Post))
+            {
+                <div class="modal-content">
+                    <div class="modal-header" style="padding:5px 0px 5px 15px">
+                        <h5 class="modal-title"><b>Edit Leave Details</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6 text-center">
+                                <b>Start Date</b>
+                            </div>
+                            <div class="col-md-6 text-center">
+                                <b>End Date</b>
+                            </div>
+                        </div>
+
+                        @Html.EditorFor(m => m.editVacationEmployee, new { htmlAttributes = new { @id = "EditEmployee", @style = "display:none" } })
+
+                        <div class="row">
+                            <div class="col-md-6 text-center">
+                                @Html.EditorFor(m => m.EditLeave.start_date, new { htmlAttributes = new { @id = "EditEmployeeStart", @required = "required", @type = "date", @style = "text-align: center; font-size:15px;" } })
+                            </div>
+                            <div class="col-md-6 text-center">
+                                @Html.EditorFor(m => m.EditLeave.end_date, new { htmlAttributes = new { @id = "EditEmployeeEnd", @required = "required", @type = "date", @style = "text-align: center; font-size:15px;" } })
+                            </div>
+                        </div>
+
+                        <div class="row" style="padding:15px 40px 0px 40px">
+
+                            @{
+                                List
+                                <SelectListItem>
+                                listItems1 = new List
+                                <SelectListItem>
+                                ();
+                                listItems1.Add(new SelectListItem
+                                {
+                                    Text = "Select Leave Type",
+                                });
+                                listItems1.Add(new SelectListItem
+                                {
+                                    Text = "Vacation",
+                                    Value = "Vacation"
+                                });
+                                listItems1.Add(new SelectListItem
+                                {
+                                    Text = "Sick",
+                                    Value = "Sick"
+                                });
+                                listItems1.Add(new SelectListItem
+                                {
+                                    Text = "Breavement",
+                                    Value = "Breavement"
+                                });
+
+                            }
+
+                            @Html.DropDownListFor(m => m.EditLeave.leave_type, listItems1, new { @id = "EditEmployeeLeaveType", @style = "width:100%" })
+
+                        </div>
+                        <div class="row" style="margin-top:15px">
+                            <div class="col-md-12 text-center">
+                                @Html.TextAreaFor(m => m.EditLeave.comments, 4, 56, new { @id = "EditEmployeeComments", @placeholder = " Comments (Optional)" })
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer" style="padding:3px">
+                        <button type="button" style="padding:2px 20px 2px 20px" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                        <button type="submit" style="padding:2px 30px 2px 30px" class="btn btn-success">Save</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="DeleteLeave" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+
+            @using (Html.BeginForm("DeleteLeave", "Management", FormMethod.Post))
+            {
+                <div class="modal-content">
+                    <div class="modal-header" style="padding:5px 0px 5px 15px">
+                        <h5 class="modal-title"><b>Delete Leave</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6 text-center">
+                                <b>Start Date</b>
+                            </div>
+                            <div class="col-md-6 text-center">
+                                <b>End Date</b>
+                            </div>
+                        </div>
+
+                        @Html.EditorFor(m => m.editVacationEmployee, new { htmlAttributes = new { @id = "DeleteEmployee", @style = "display:none" } })
+
+                        <div class="row">
+                            <div class="col-md-6 text-center">
+                                @Html.EditorFor(m => m.EditLeave.start_date, new { htmlAttributes = new {@readonly = true, @id = "DeleteEmployeeStart", @required = "required", @type = "date", @style = " text-align: center; font-size:15px;" } })
+                            </div>
+                            <div class="col-md-6 text-center">
+                                @Html.EditorFor(m => m.EditLeave.end_date, new { htmlAttributes = new { @readonly = true, @id = "DeleteEmployeeEnd", @required = "required", @type = "date", @style = "text-align: center; font-size:15px;" } })
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer" style="padding:3px">
+                        <button type="button" style="padding:2px 20px 2px 20px" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                        <button type="submit" style="padding:2px 30px 2px 30px" class="btn btn-success">Delete</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+
+    <table style="display:none" id="results" width="360" border="1">
+        <thead>
+            <tr>
+                <th scope="col" width="120">Date Created</th>
+                <th scope="col" width="120">Name</th>
+                <th scope="col" width="120">Tests</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>04/04/2015</td>
+                <td>Test Name 2</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>09/08/2017</td>
+                <td>Test Name 5</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td>07/08/2015</td>
+                <td>Test Name 4</td>
+                <td>3</td>
+            </tr>
+            <tr>
+                <td>05/04/2015</td>
+                <td>Test Name 3</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td>12/08/2017</td>
+                <td>Test Name 6</td>
+                <td>5</td>
+            </tr>
+        </tbody>
+    </table>
+    <button style="display:none" onclick="sortByDate()">Sort by date</button>
 
     <script>
         $(document).ready(function () {
@@ -332,8 +615,59 @@
             });
         });
 
+        function EditVacation(val) {
+            //alert(val)
+
+            let myArr = val.split(";");
+
+            //alert(myArr[0] + myArr[1] + myArr[2] + myArr[3] + myArr[4])
+
+            $('#EditEmployee').val(myArr[0])
+            $('#EditEmployeeStart').val(myArr[1])
+            $('#EditEmployeeEnd').val(myArr[2])
+            $('#EditEmployeeLeaveType').val(myArr[3])
+            $('#EditEmployeeComments').val(myArr[4])
+
+
+
+        }
+
+        function DeletVacation(val) {
+            //alert(val)
+
+            let myArr = val.split(";");
+
+            //alert(myArr[0] + myArr[1] + myArr[2] + myArr[3] + myArr[4])
+
+            $('#DeleteEmployee').val(myArr[0])
+            $('#DeleteEmployeeStart').val(myArr[1])
+            $('#DeleteEmployeeEnd').val(myArr[2])
+        }
+
+        function convertDate(d) {
+            var p = d.split("/");
+            return +(p[2] + p[1] + p[0]);
+        }
+
+        function sortByDate() {
+            var tbody = document.querySelector("#results tbody");
+            // get trs as array for ease of use
+            var rows = [].slice.call(tbody.querySelectorAll("tr"));
+
+            rows.sort(function (a, b) {
+                return convertDate(a.cells[0].innerHTML) - convertDate(b.cells[0].innerHTML);
+            });
+
+            rows.forEach(function (v) {
+                tbody.appendChild(v); // note that .appendChild() *moves* elements
+            });
+        }
+
+
     </script>
 </body>
 
 </html>
+
+
 

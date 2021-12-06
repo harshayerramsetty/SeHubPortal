@@ -4,205 +4,212 @@
     Layout = "~/Views/Shared/_LibraryLayout.cshtml";
 }
 
-    <!DOCTYPE html>
-    <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta name="viewport" content="width=device-width" />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-        <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 
-
-
-
-        @if (Model.SehubAccess.tools > 0)
-        {
-            <style>
-                #toolsClicked {
-                    display: block !important;
-                }
-            </style>
-        }
-
-        @if (Model.SehubAccess.management > 0)
-        {
-            <style>
-                #ManagementClicked {
-                    display: block !important;
-                }
-            </style>
-        }
-
-        @if (Model.SehubAccess.settings > 0)
-        {
-            <style>
-                #SettingsClicked {
-                    display: block !important;
-                }
-            </style>
-        }
-
-        @if (Model.SehubAccess.payroll > 0)
-        {
-            <style>
-                #PayrollClicked {
-                    display: block !important;
-                }
-            </style>
-        }
-
-        @if (Model.SehubAccess.fleetTVT > 0)
-        {
-            <style>
-                #FleetTVTClicked {
-                    display: block !important;
-                }
-            </style>
-        }
-
-        @if (Model.SehubAccess.treadTracker > 0)
-        {
-            <style>
-                #treadTrackereClicked {
-                    display: block !important;
-                }
-            </style>
-        }
-
-        @if (Model.SehubAccess.main > 0)
-        {
-            <style>
-                #mainClicked {
-                    display: block !important;
-                }
-            </style>
-        }
-
-        @if (Model.SehubAccess.library_dashboard > 0)
-        {
-            <style>
-                #DashboardLink {
-                    display: block !important;
-                }
-            </style>
-        }
-        @if (Model.SehubAccess.library_branch_shared_drive > 0)
-        {
-            <style>
-                #BranchSharedDriveLink {
-                    display: block !important;
-                }
-            </style>
-        }
-        @if (Model.SehubAccess.library_supplier_documents > 0)
-        {
-            <style>
-                #SupplierDocumentsLink {
-                    display: block !important;
-                }
-            </style>
-        }
-        @if (Model.SehubAccess.library_Management > 0)
-        {
-            <style>
-                #ManagementLink {
-                    display: block !important;
-                }
-            </style>
-        }
-
+    @if (Model.SehubAccess.plant > 0)
+    {
         <style>
-
-            #CompanyDocumentsLink {
+            #PlantClicked {
                 display: block !important;
-            }
-
-            #libraryClicked {
-                display: block !important;
-            }
-
-            #libraryClicked {
-                background-color: #f0f2f5;
-                color: black;
-                font-weight: 100
-            }
-
-            .libraryBtn {
-                background-color: #f0f2f5;
-                color: black;
-                font-weight: 100
-            }
-
-            #CompanyDocumentsClicked {
-                color: black;
-                font-weight: 700;
-                font-size: 15px;
-            }
-
-
-            .libraryBtn {
-                font-weight: bold;
-                font-size: 17px;
-            }
-
-            body {
-                background-color: #f0f2f5;
-                padding-right: 0 !important;
-                padding: 0px;
-            }
-
-
-            #mainButton {
-                font-size: 5px;
-            }
-
-            #CompanyDocumentsLink {
-                color: black;
-                font-weight: 700;
-                background-color: #f0f2f5;
-            }
-
-            .modal {
-                padding-right: 7%;
-            }
-
-            .renameModal {
-                padding-left: 55% !important;
-                padding-top: 18%;
-            }
-
-            .deleteModal {
-                padding-left: 55% !important;
-                padding-top: 18%;
-            }
-
-
-            .manageDialog {
-                overflow-y: initial !important
-            }
-
-            .manageBody {
-                max-height: calc(109vh - 200px);
-                overflow-y: auto;
-                overflow-x: hidden;
-            }
-
-            #myInput {
-                background-image: url("/Content/SearchIcon.png");
-                background-size: 25px 25px;
-                background-position: 1px 1px;
-                background-repeat: no-repeat;
-                padding: 2px 20px 1px 30px;
             }
         </style>
+    }
 
-    </head>
+
+    @if (Model.SehubAccess.tools > 0)
+    {
+        <style>
+            #toolsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.management > 0)
+    {
+        <style>
+            #ManagementClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings > 0)
+    {
+        <style>
+            #SettingsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.payroll > 0)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.fleetTVT > 0)
+    {
+        <style>
+            #FleetTVTClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTracker > 0)
+    {
+        <style>
+            #treadTrackereClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.main > 0)
+    {
+        <style>
+            #mainClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_dashboard > 0)
+    {
+        <style>
+            #DashboardLink {
+                display: block !important;
+            }
+        </style>
+    }
+    @if (Model.SehubAccess.library_branch_shared_drive > 0)
+    {
+        <style>
+            #BranchSharedDriveLink {
+                display: block !important;
+            }
+        </style>
+    }
+    @if (Model.SehubAccess.library_supplier_documents > 0)
+    {
+        <style>
+            #SupplierDocumentsLink {
+                display: block !important;
+            }
+        </style>
+    }
+    @if (Model.SehubAccess.library_Management > 0)
+    {
+        <style>
+            #ManagementLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    <style>
+
+        #CompanyDocumentsLink {
+            display: block !important;
+        }
+
+        #libraryClicked {
+            display: block !important;
+        }
+
+        #libraryClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 100
+        }
+
+        .libraryBtn {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 100
+        }
+
+        #CompanyDocumentsClicked {
+            color: black;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+
+        .libraryBtn {
+            font-weight: bold;
+            font-size: 17px;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            padding-right: 0 !important;
+            padding: 0px;
+        }
+
+
+        #mainButton {
+            font-size: 5px;
+        }
+
+        #CompanyDocumentsLink {
+            color: black;
+            font-weight: 700;
+            background-color: #f0f2f5;
+        }
+
+        .modal {
+            padding-right: 7%;
+        }
+
+        .renameModal {
+            padding-left: 55% !important;
+            padding-top: 18%;
+        }
+
+        .deleteModal {
+            padding-left: 55% !important;
+            padding-top: 18%;
+        }
+
+
+        .manageDialog {
+            overflow-y: initial !important
+        }
+
+        .manageBody {
+            max-height: calc(109vh - 200px);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        #myInput {
+            background-image: url("/Content/SearchIcon.png");
+            background-size: 25px 25px;
+            background-position: 1px 1px;
+            background-repeat: no-repeat;
+            padding: 2px 20px 1px 30px;
+        }
+    </style>
+
+</head>
     <body style="overflow-y: hidden;">
 
 
@@ -267,152 +274,27 @@
         </div>
         *@
 
-        @if (Model.Permission != 4)
+        @if (true)
         {
 
             <div class="row" style="height:740px; overflow-y: auto; overflow-x: hidden;">
 
 
-                @foreach (var items in Model.URLName)
-                {
-                    if (items.Value[0] == 'A')
-                    {
-                        <input style="display:none" type="text" id="A" value="A" />
-                    }
+                <div class="col-lg-12">
+                    <div class="row">
+                        @foreach (var items in Model.URLName)
+                        {
 
-                    if (items.Value[0] == 'B')
-                    {
-                        <input style="display:none" type="text" id="B" value="B" />
-                    }
+                            <div id="div" class="col-lg-2 text-center" style="margin:0px !important; padding: 20px !important;">
+                                <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                                <div style="word-wrap: break-word; white-space: normal; padding-top: 0px; color: cornflowerblue; font-size: 15px; margin-left: 30px; margin-right: 30px">
+                                    <strong>@items.Value</strong>
+                                </div>
+                            </div>
 
-                    if (items.Value[0] == 'C')
-                    {
-                        <input style="display:none" type="text" id="C" value="C" />
-                    }
-
-                    if (items.Value[0] == 'D')
-                    {
-                        <input style="display:none" type="text" id="D" value="D" />
-                    }
-
-                    if (items.Value[0] == 'E')
-                    {
-                        <input style="display:none" type="text" id="E" value="E" />
-                    }
-
-                    if (items.Value[0] == 'F')
-                    {
-                        <input style="display:none" type="text" id="F" value="F" />
-                    }
-
-                    if (items.Value[0] == 'G')
-                    {
-                        <input style="display:none" type="text" id="G" value="G" />
-                    }
-
-                    if (items.Value[0] == 'H')
-                    {
-                        <input style="display:none" type="text" id="H" value="H" />
-                    }
-
-                    if (items.Value[0] == 'I')
-                    {
-                        <input style="display:none" type="text" id="I" value="I" />
-                    }
-
-                    if (items.Value[0] == 'J')
-                    {
-                        <input style="display:none" type="text" id="J" value="J" />
-                    }
-
-                    if (items.Value[0] == 'K')
-                    {
-                        <input style="display:none" type="text" id="K" value="K" />
-                    }
-
-                    if (items.Value[0] == 'L')
-                    {
-                        <input style="display:none" type="text" id="L" value="L" />
-                    }
-
-                    if (items.Value[0] == 'M')
-                    {
-                        <input style="display:none" type="text" id="M" value="M" />
-                    }
-
-                    if (items.Value[0] == 'N')
-                    {
-                        <input style="display:none" type="text" id="N" value="N" />
-                    }
-
-                    if (items.Value[0] == 'O')
-                    {
-                        <input style="display:none" type="text" id="O" value="O" />
-                    }
-
-                    if (items.Value[0] == 'P')
-                    {
-                        <input style="display:none" type="text" id="P" value="P" />
-                    }
-
-                    if (items.Value[0] == 'Q')
-                    {
-                        <input style="display:none" type="text" id="Q" value="Q" />
-                    }
-
-                    if (items.Value[0] == 'R')
-                    {
-                        <input style="display:none" type="text" id="R" value="R" />
-                    }
-
-                    if (items.Value[0] == 'S')
-                    {
-                        <input style="display:none" type="text" id="S" value="S" />
-                    }
-
-                    if (items.Value[0] == 'T')
-                    {
-                        <input style="display:none" type="text" id="T" value="T" />
-                    }
-
-                    if (items.Value[0] == 'U')
-                    {
-                        <input style="display:none" type="text" id="U" value="U" />
-                    }
-
-                    if (items.Value[0] == 'V')
-                    {
-                        <input style="display:none" type="text" id="V" value="V" />
-                    }
-
-                    if (items.Value[0] == 'W')
-                    {
-                        <input style="display:none" type="text" id="W" value="W" />
-                    }
-
-                    if (items.Value[0] == 'X')
-                    {
-                        <input style="display:none" type="text" id="X" value="X" />
-                    }
-                    if (items.Value[0] == 'Y')
-                    {
-                        <input style="display:none" type="text" id="Y" value="Y" />
-                    }
-
-                    if (items.Value[0] == 'Z')
-                    {
-                        <input style="display:none" type="text" id="Z" value="Z" />
-                    }
-
-
-                    <div id="div" class="col-md-2 text-center" style="padding: 20px">
-                        <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
-                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px; color: cornflowerblue; font-size: 15px; margin-left: 30px; margin-right: 30px">
-                            <strong>@items.Value</strong>
-                        </div>
+                        }
                     </div>
-
-                }
+                </div>
             </div>
 
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -617,26 +499,8 @@
             }
         </script>
 
-
         <script>
             $(document).ready(function () {
-                //$("#libraryClicked").css({ "background-color": "#f0f2f5", "color": "black", "font-weight": "600" })
-                //$("#libraryBtn").css({ "background-color": "#f0f2f5", "color": "black", "font-weight": "600" })
-                //$("#CompanyDocumentsClicked").css({ "color": "black", "font-weight": "700", "font-size": "14px" })
-                //$("#BranchSharedDriveClicked").css({ "color": "black", "font-size": "14px" })
-                //$("#SupplierDocumentsClicked").css({ "color": "black", "font-size": "14px" })
-                //$("#DashboardClicked").css({ "color": "black", "font-size": "14px" })
-
-
-                //$("#libraryBtn").css({"font-size": "16px" })
-                //$("#mainButton").css({ "font-weight": "17", "font-size": "16px" })
-                //$("#toolsBtn").css({ "font-weight": "17", "font-size": "16px" })
-                //$("#treadTrackerButton").css({ "font-weight": "17", "font-size": "16px" })
-                //$(".FleetTVT").css({ "font-weight": "17", "font-size": "16px" })
-                //$("#managementBtn").css({ "font-weight": "17", "font-size": "16px" })
-                //$("#payrollBtn").css({ "font-weight": "17", "font-size": "16px" })
-                //$(".settingsBtn").css({ "font-weight": "17", "font-size": "16px" })
-
 
                 function getUrlVars() {
                     var vars = [], hash;
@@ -865,8 +729,6 @@
             };
 
         </script>
-
-
 
 
     </body>

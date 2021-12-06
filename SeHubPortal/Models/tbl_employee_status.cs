@@ -15,7 +15,6 @@ namespace SeHubPortal.Models
     public partial class tbl_employee_status
     {
         public int employee_id { get; set; }
-        public string status { get; set; }
         public Nullable<System.DateTime> date_of_joining { get; set; }
         public Nullable<System.DateTime> date_of_leaving { get; set; }
         public Nullable<double> vacation { get; set; }

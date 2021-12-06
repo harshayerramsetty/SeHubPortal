@@ -1,0 +1,611 @@
+﻿@model SeHubPortal.ViewModel.ProductionReportViewModel
+@{
+    ViewBag.Title = "ProductionReport";
+    Layout = "~/Views/Shared/_TreadTrackerLayout.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/NewOrder.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" rel="stylesheet" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.css" rel="stylesheet" media="print" />
+
+    @if (Model.SehubAccess.plant > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.tools > 0)
+    {
+        <style>
+            #toolsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.management > 0)
+    {
+        <style>
+            #ManagementClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings > 0)
+    {
+        <style>
+            #SettingsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.payroll > 0)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.fleetTVT > 0)
+    {
+        <style>
+            #FleetTVTClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.main > 0)
+    {
+        <style>
+            #mainClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_access > 0)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTrackerDashboard > 0)
+    {
+        <style>
+            #DashboardLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTracker_failure_analysis > 0)
+    {
+        <style>
+            #FailureAnalysisLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTracker_customers > 0)
+    {
+        <style>
+            #CustomersLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    <style type="text/css">
+
+        #treadTrackereClicked {
+            display: block !important;
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #treadTrackerButton {
+            color: black;
+            font-weight: 600;
+        }
+
+
+        #ProductionReportLink {
+            display: block !important;
+            color: black;
+            font-weight: 700;
+            background-color: #f0f2f5;
+        }
+
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .heading {
+            margin: 10px 0px 0px 0px;
+        }
+
+            .heading h2 {
+                margin-top: 8px;
+            }
+
+        .card-header {
+            background-color: #cde8ca;
+        }
+
+            .card-header h6 {
+                color: black;
+            }
+
+
+
+
+        .orderMainBody {
+            margin: 15px 15px 0px 15px;
+            /*background-color:antiquewhite;*/
+        }
+
+        .subHeading {
+            text-align: center;
+            background-color: #e9ecef;
+            margin: 15px 0px 0px 0px;
+        }
+
+        .subTables {
+            margin: 0px 0px 0px 0px;
+        }
+
+        .tableBorders {
+            border-style: solid;
+            border-width: thin;
+            margin: 0px 0px 0px 0px;
+            border-color: #e9ecef;
+        }
+
+        .mainTable {
+            margin: 25px 0px 0px 0px;
+        }
+
+        .textFields {
+            text-align: center;
+        }
+
+        input {
+            text-align: center;
+        }
+
+        .lineStyle {
+            width: 60px;
+            visibility: visible;
+            height: 32px;
+        }
+
+        select {
+            color: black;
+            height: 32px;
+        }
+
+        input, select {
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+
+        .commentsHeader {
+            background-color: #343a40;
+            margin: 0px 3px 0px 3px;
+        }
+
+        .commentsSection {
+            margin: 10px 0px 0px 0px;
+        }
+
+        #comments {
+            width: 100%;
+            height: 100px;
+            box-sizing: border-box;
+        }
+
+        #NewOrderSubmit {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            background-color: #343a40;
+            border-color: #343a40;
+        }
+
+        .SearchInputs {
+            width: 100%;
+            visibility: visible;
+            border-color: black;
+            border-width: 2px;
+        }
+
+        .generateBtn {
+            width: 100%;
+            text-align: center;
+            height: 35px;
+            visibility: visible;
+        }
+
+
+        .fieldStyle {
+            width: 100%;
+            visibility: visible;
+            border-color: gray;
+            border-width: 1px;
+            height: 35px;
+        }
+
+        .TextStyle {
+            vertical-align: middle;
+            color: black;
+        }
+
+        .SearchWith {
+            width: 100%;
+            visibility: visible;
+            border-color: gray;
+            border-width: 1px;
+            height: 32px;
+        }
+
+        .SearchWithBtn {
+            text-align: center;
+            height: 35px;
+        }
+
+        .fc-title {
+            font-size: .9em;
+        }
+
+        .example::-webkit-scrollbar {
+            display: none;
+        }
+
+        .example {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+
+        @@media screen {
+            #printSection {
+                display: none;
+            }
+
+            #dontshow {
+                display: none;
+            }
+        }
+
+        @@media print {
+
+
+            .dontShowInPrint {
+                display: none;
+            }
+
+            #printSection, #printSection * {
+                visibility: visible;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="row dontShowInPrint">
+        <div class="col-lg-12">
+            <div class="row heading">
+                <div class="col">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
+                            <li class="breadcrumb-item"><a href="@Url.Action("ProductionReport", "TreadTracker")">Tread Tracker</a></li>
+                            <li class="breadcrumb-item " aria-current="page">Production Report</li>
+                        </ol>
+                    </nav>
+                </div>
+                <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+                    <i class="fa fa-bars" style="font-size:25px"></i>
+                    <span class="sr-only">Toggle Menu</span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="row" style="margin-left:15px">
+        <div class="col-lg-3">
+            <div class="row" style="background-color:white; padding:15px 0px 15px 0px">
+                <div class="col-lg-12">
+                    <div class="dontShowInPrint btn" id="calender" style="width:100%; background-color:white"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9" id="rightWindow" style="display:none; padding-right:30px">
+            <div class="card">
+                <div class="card-header dontShowInPrint" style="padding-bottom: 5px; background-color: white">
+                    <div class="row">
+                        <div class="col-lg-6">
+                        </div>
+                        <div class="col-lg-6">
+                            <input class="btn btn-primary dontShowInPrint" id="btnPrint" style="margin-top:0px; width:100px; height:30px; float:right" type="text" readonly name="name" value="print" />
+                            <input class="btn btn-primary dontShowInPrint" id="closeWindow" style="margin-right:10px; width:100px; height:30px; float:right" type="text" readonly name="name" value="close" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-body" style="padding:0px 15px 15px 15px">                    
+
+                    <table class="text-center" id="dontshow" style="margin-top:10px; width:100%;">
+                        <tr>
+                            <td style="padding:10px; width:25%">
+                                
+                            </td>
+                            <td style="padding:10px; width:50%">
+                                <img src="~/Content/LoginLogo.png" style="width:350px;">
+                            </td>
+                            <td style="width:25%">
+
+                                <div class="row">
+                                    <div class="col-lg-12 text-right">
+                                        <p style="margin: 0px; padding: 0px; line-height : 10px">
+                                            <font size="2">
+                                                @Model.addressSTREET1,
+                                                @if (Model.addressSTREET2 != null)
+                                                {
+                                                    @Model.addressSTREET2
+                                                }
+                                            </font>
+                                        </p>
+                                        <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">@Model.addressCITY, @Model.addressPROVINCE, @Model.addressPOSTAL</font></p>
+                                        <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Phone : @Model.locPHONE</font></p>
+                                        <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Fax : @Model.locFAX</font></p>
+                                        <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">www.citytire.com</font></p>
+
+                                    </div>
+
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table style="margin-top:10px; width:100%; border:1px solid #dee0e3">
+                        <tr>
+                            <td style="padding:10px; width:5%">
+                                <img style="width:80px" src="~/Content/trdIcon.png" alt="Alternate Text" />
+                            </td>
+                            <td style="padding:10px; width:23%">
+
+                                <div class="row">
+                                    <div class="col-lg-12 text-left">
+                                        <h4>TREAD</h4>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 text-left">
+                                        <h4>TRACKER</h4>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="padding:10px; width:33%">
+                                <div class="row">
+                                    <div class="col-lg-12 text-center">
+                                        <h3>PRODUCTION REPORT</h3>
+                                    </div>
+
+                                </div>
+                            </td>
+                            <td style="padding:10px; width:33%">
+                                <div class="row">
+                                    <div class="col-lg-12 text-right">
+                                        <h5 style="text-transform: uppercase;" id="dateText"></h5>
+                                        
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-12 text-right">
+                                        <h5 style="text-transform: uppercase;" id="TotalProduction"></h5>                                        
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="row example printdiv" style="height:550px; overflow-x:hidden; overflow-y:auto">
+                        <div class="col-lg-12" style="padding:0px; " id="printThis">
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+
+    <script>
+
+
+        document.getElementById("btnPrint").onclick = function () {
+
+            $('.printdiv').css("height", "auto")
+            print();
+            $('.printdiv').css("height", "550px")
+        }
+
+        $('#closeWindow').click(function () {
+            $('#rightWindow').fadeOut();
+        });
+
+        $(document).ready(function () {
+            var events = [];
+                $.ajax({
+                    type: "GET",
+                    url: "/TreadTracker/GetInspectionDates",
+                    success: function (data) {
+                        $.each(data, function (i, v) {
+
+                            var d = new Date();
+                            var year = moment(v).format("YYYY");
+                            var date1 = moment(v).add(1, 'days').calendar();
+
+                            events.push({
+                                start: moment(v).add(1, 'days').format("YYYY-MM-DD"),
+                                color: 'white',
+                                imageurl: '/Content/tire1.png',
+                            });
+                        })
+
+                        GenerateCalender(events);
+                    },
+                    error: function (error) {
+                        alert('failed');
+                    }
+                })
+
+                function GenerateCalender(events) {
+                    $('#calender').fullCalendar('destroy');
+
+                    $('#calender').fullCalendar({
+                        contentHeight: 450,
+                        defaultDate: new Date(),
+                        timeFormat: 'h(:mm)a',
+                        displayEventTime: false,
+                        header: {
+                            left: 'prev',
+                            center: 'title',
+                            right: 'next'
+                        },
+
+                        eventLimit: true,
+                        eventColor: '#378006',
+                        events: events,
+
+
+                        eventRender: function(event, eventElement) {
+                        if (event.imageurl) {
+                            eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl +"' width='32' height='30'>");
+                            }
+                        },
+
+                        viewRender: function(view, element) {
+
+                            curdate = new Date();
+                            viewdate = new Date(view.start);
+
+                            // PREV - force minimum display month to current month
+                            if (new Date(viewdate.getFullYear(), viewdate.getMonth() + 1, 1).getTime() <=
+                                new Date(2018, 0, 1).getTime()){
+                                $('.fc-prev-button').prop('disabled', true);
+                                $('.fc-prev-button').css('opacity', 0.5);
+                            } else {
+                                $('.fc-prev-button').prop('disabled', false);
+                                $('.fc-prev-button').css('opacity', 1);
+                            }
+
+                            // NEXT - force max display month to a year from current month
+                            if (new Date(viewdate.getFullYear(), viewdate.getMonth() + 1).getTime() >=
+                                new Date(curdate.getFullYear(), curdate.getMonth()).getTime()){
+                                $('.fc-next-button').prop('disabled', true);
+                                $('.fc-next-button').css('opacity', 0.5);
+                            } else {
+                                $('.fc-next-button').prop('disabled', false);
+                                $('.fc-next-button').css('opacity', 1);
+                            }
+                        },
+
+
+                        eventClick: function (calEvent, jsEvent, view) {
+                            //alert(moment(calEvent.start).add(-1, 'days').format("YYYY-MM-DD"));
+
+                            var d = new Date(moment(calEvent.start).add(1, 'days').format("YYYY-MM-DD"));
+
+                            var date = d.toString();
+
+                            var shortDay = date.substring(0, 3);
+                            var longDay = "";
+
+                            if (shortDay == "Mon") {
+                                longDay = "Monday"
+                            }
+                            else if (shortDay == "Tue")
+                            {
+                                longDay = "Tuesday"
+                            }
+                            else if (shortDay == "Wed")
+                            {
+                                longDay = "Wednesday"
+                            }
+                            else if (shortDay == "Thu")
+                            {
+                                longDay = "Thursday"
+                            }
+                            else if (shortDay == "Fri")
+                            {
+                                longDay = "Friday"
+                            }
+                            else if (shortDay == "Sat")
+                            {
+                                longDay = "Saturday"
+                            }
+                            else if (shortDay == "Sun")
+                            {
+                                longDay = "Sunday"
+                            }
+
+                            var month = date.substring(4, 7);
+
+                            var dateNum = date.substring(8, 10);
+
+                            var yearNum = date.substring(11, 15);
+
+                            $('#dateText').html(longDay + " - " + month + " " + dateNum + ", " + yearNum);
+
+                            $.ajax({
+                                url: '@Url.Action("PopulateProductionReport", "TreadTracker")',
+                                data: { inspDate: moment(calEvent.start).add(0, 'days').format("YYYY-MM-DD") }, // before publishing make change -1 to 0
+                                type: 'GET',
+                                success: function (data) {
+                                    $('#rightWindow').fadeIn();
+                                    $("#printThis").html(data);
+                                    //alert("Reached")
+                                }
+                            });
+                        },
+                    })
+                }
+        });
+
+
+    </script>
+
+</body>
+</html>
+

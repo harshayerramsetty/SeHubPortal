@@ -18,7 +18,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
-
+    @if (Model.SehubAccess.plant > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
 
     @if (Model.SehubAccess.tools > 0)
     {
@@ -51,6 +58,15 @@
     {
         <style>
             #CustomersLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings_administration > 0)
+    {
+        <style>
+            #AdministrationLink {
                 display: block !important;
             }
         </style>
@@ -111,6 +127,7 @@
     }
 
 
+
     <style>
 
         #SettingsLink {
@@ -144,6 +161,11 @@
         table tr:hover {
             background: lightgray;
         }
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -166,7 +188,7 @@
     </div>
     <div class="row" style=" padding-left: 15px">
         <div class="col-lg-2">
-            <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#AddDocuments" style="width:260px; height:350px">
+            <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#CalculatorSettings" style="width:260px; height:350px">
 
                 <div class="card-body text-center" style="height:320px; margin-left:auto; margin-right:auto; margin-top:20px; padding-top:30px">
                     <img src="~/Content/Calculator.png" style="margin-bottom:30px; width:150px;">
@@ -196,61 +218,63 @@
 
 
 
-                            <div class="row">
-                                <div class="col-lg-8">
-                                    <label>Lock Payroll Dates After</label>
-                                </div>
+                            <div style="display:block">
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <label>Load Current Payroll After (Days)</label>
+                                    </div>
 
-                                <div class="col-md-4">
-                                    @{
-                                        List
-                                        <SelectListItem>
-                                        listItems1 = new List
-                                        <SelectListItem>
-                                        ();
-                                        listItems1.Add(new SelectListItem
-                                        {
-                                            Text = "Saturday",
-                                            Value = "0"
-                                        });
-                                        listItems1.Add(new SelectListItem
-                                        {
-                                            Text = "Friday",
-                                            Value = "1"
-                                        });
-                                        listItems1.Add(new SelectListItem
-                                        {
-                                            Text = "Thursday",
-                                            Value = "2"
-                                        });
-                                        listItems1.Add(new SelectListItem
-                                        {
-                                            Text = "Wednesday",
-                                            Value = "3"
-                                        });
-                                        listItems1.Add(new SelectListItem
-                                        {
-                                            Text = "Tuesday",
-                                            Value = "4"
-                                        });
-                                        listItems1.Add(new SelectListItem
-                                        {
-                                            Text = "Monday",
-                                            Value = "5"
-                                        });
-                                        listItems1.Add(new SelectListItem
-                                        {
-                                            Text = "Sunday",
-                                            Value = "6"
-                                        });
-                                    }
-                                    @Html.DropDownListFor(m => m.payroll_Settings.payroll_date, listItems1, new { @class = "text", @style = "text-align-last: center; width:100px; height:28px", @required = "required", @id = "quantity" })
+                                    <div class="col-md-4">
+                                        @{
+                                            List
+                                            <SelectListItem>
+                                            listItems1 = new List
+                                            <SelectListItem>
+                                            ();
+                                            listItems1.Add(new SelectListItem
+                                            {
+                                                Text = "6",
+                                                Value = "6"
+                                            });
+                                            listItems1.Add(new SelectListItem
+                                            {
+                                                Text = "5",
+                                                Value = "5"
+                                            });
+                                            listItems1.Add(new SelectListItem
+                                            {
+                                                Text = "4",
+                                                Value = "4"
+                                            });
+                                            listItems1.Add(new SelectListItem
+                                            {
+                                                Text = "3",
+                                                Value = "3"
+                                            });
+                                            listItems1.Add(new SelectListItem
+                                            {
+                                                Text = "2",
+                                                Value = "2"
+                                            });
+                                            listItems1.Add(new SelectListItem
+                                            {
+                                                Text = "1",
+                                                Value = "1"
+                                            });
+                                            listItems1.Add(new SelectListItem
+                                            {
+                                                Text = "0",
+                                                Value = "0"
+                                            });
+                                        }
+                                        @Html.DropDownListFor(m => m.payroll_Settings.payroll_submission, listItems1, new { @class = "text", @style = "text-align-last: center; width:100px; height:28px", @required = "required", @id = "quantity" })
+                                    </div>
                                 </div>
+                                <hr />
                             </div>
-                            <hr />
                             <div class="row">
                                 <div class="col-lg-8">
-                                    <label>Lock Payroll Submission After</label>
+                                    <label>Lock Payroll On (After)</label>
                                 </div>
 
                                 <div class="col-md-4">
@@ -262,42 +286,48 @@
                                         ();
                                         listItems2.Add(new SelectListItem
                                         {
-                                            Text = "Saturday",
-                                            Value = "0"
+                                            Text = "Sunday",
+                                            Value = "6"
                                         });
-                                        listItems2.Add(new SelectListItem
-                                        {
-                                            Text = "Friday",
-                                            Value = "1"
-                                        });
-                                        listItems2.Add(new SelectListItem
-                                        {
-                                            Text = "Thursday",
-                                            Value = "2"
-                                        });
-                                        listItems2.Add(new SelectListItem
-                                        {
-                                            Text = "Wednesday",
-                                            Value = "3"
-                                        });
-                                        listItems2.Add(new SelectListItem
-                                        {
-                                            Text = "Tuesday",
-                                            Value = "4"
-                                        });
+
                                         listItems2.Add(new SelectListItem
                                         {
                                             Text = "Monday",
                                             Value = "5"
                                         });
+
                                         listItems2.Add(new SelectListItem
                                         {
-                                            Text = "Sunday",
-                                            Value = "6"
+                                            Text = "Tuesday",
+                                            Value = "4"
+                                        });
+
+                                        listItems2.Add(new SelectListItem
+                                        {
+                                            Text = "Wednesday",
+                                            Value = "3"
+                                        });
+
+                                        listItems2.Add(new SelectListItem
+                                        {
+                                            Text = "Thursday",
+                                            Value = "2"
+                                        });
+
+                                        listItems2.Add(new SelectListItem
+                                        {
+                                            Text = "Friday",
+                                            Value = "1"
+                                        });
+
+                                        listItems2.Add(new SelectListItem
+                                        {
+                                            Text = "Saturday",
+                                            Value = "0"
                                         });
 
                                     }
-                                    @Html.DropDownListFor(m => m.payroll_Settings.payroll_submission, listItems2, new { @class = "text", @style = "text-align-last: center; width:100px; height:28px", @required = "required", @id = "quantity" })
+                                    @Html.DropDownListFor(m => m.payroll_Settings.payroll_date, listItems2, new { @class = "text", @style = "text-align-last: center; width:100px; height:28px", @required = "required", @id = "quantity" })
                                 </div>
                             </div>
 
@@ -406,6 +436,72 @@
                 </div>
             </div>
         </div>
+
+
+        <div class="modal fade" id="CalculatorSettings" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog " role="document">
+                <div class="modal-content">
+
+                    @using (Html.BeginForm("ChangeCalculatorSettings", "Settings", FormMethod.Post))
+                    {
+                        <div class="modal-header" style="padding:5px 3px 3px 15px">
+                            <h5>Calculator Settings</h5>
+                        </div>
+                        <div class="modal-body" style="padding:0px">
+                            <div class="row" style="margin-top:10px; margin-bottom:0px; padding-bottom:0px">
+                                <h4 style="margin-left:auto; margin-right:auto">Fixed Gross Margin</h4>
+                            </div>
+                            <hr style="margin-top:0px; width:400px" />
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="row" style="padding-left:10px; padding-right:30px">
+                                        <div class="col-lg-4">
+
+                                        </div>
+                                        <div class="col-lg-4 text-center">
+                                            <b>Retail</b>
+                                        </div>
+                                        <div class="col-lg-4 text-center">
+                                            <b>National Account</b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-left:10px; padding-right:30px; padding-bottom:0px">
+                                <div class="col-lg-4 text-center">
+                                    <img src="~/Content/Wheel.png" style="width:100px;">
+                                    <p><b>Wheels, Rims & Lugs</b></p>
+                                </div>
+                                <div class="col-lg-4 text-center" style="padding-top:30px; font-size:20px">
+                                    @Html.EditorFor(m => m.wheelRetail, new { htmlAttributes = new { @class = "text-center", @type = "number", @style = "width:80px; font-weight:bold; font-size:25px", @step = "0.1" } })
+                                </div>
+                                <div class="col-lg-4 text-center" style="padding-top:30px; font-size:20px">
+                                    @Html.EditorFor(m => m.wheelNA, new { htmlAttributes = new { @class = "text-center", @type = "number", @style = "width:80px; font-weight:bold; font-size:25px", @step = "0.1" } })
+                                </div>
+                            </div>
+                            <div class="row" style="padding-left:20px; padding-right:30px">
+                                <div class="col-lg-4 text-center">
+                                    <img src="~/Content/Freight.png" style="width:100px;">
+                                    <p><b>Freight</b></p>
+                                </div>
+                                <div class="col-lg-4 text-center" style="padding-top:30px; font-size:20px">
+                                    @Html.EditorFor(m => m.freightRetail, new { htmlAttributes = new { @class = "text-center", @type = "number", @style = "width:80px; font-weight:bold; font-size:25px", @step = "0.1" } })
+                                </div>
+                                <div class="col-lg-4 text-center" style="padding-top:30px; font-size:20px">
+                                    @Html.EditorFor(m => m.freightNA, new { htmlAttributes = new { @class = "text-center", @type = "number", @style = "width:80px; font-weight:bold; font-size:25px", @step = "0.1" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="padding:3px">
+                            <input type="text" class="btn btn-danger" readonly data-dismiss="modal" style="padding-top:3px; width:100px; height:30px" name="name" value="Cancel" />
+                            <input type="submit" class="btn btn-success" readonly style="padding-top:3px; width:100px; height:30px" name="name" value="Save" />
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+
 
         <div class="modal fade" id="AddCalendarEvent" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -543,7 +639,7 @@
                                 </div>
                             </div>
 
-                            <div class="row" style="margin:15px; padding:0px; overflow: auto; height:150px">
+                            <div class="row" style="margin:15px; padding:0px; overflow: auto; height:600px">
                                 <table id="example" class="table table-bordered text-center" style="border:2px solid black">
                                     <thead class="thead-dark">
                                         <tr>
@@ -560,36 +656,58 @@
                                                 <td style="padding:7px">@items.event_ID</td>
                                                 <td style="padding:7px">@items.subject</td>
                                                 <td style="padding:7px">@items.Description</td>
-                                                <td style="padding:7px">@items.start_date</td>
+                                                <td style="padding:7px">@items.start_date.ToString().Substring(0, 10)</td>
                                             </tr>
                                         }
                                     </tbody>
                                 </table>
-
-
 
                             </div>
 
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" data-toggle="modal" id="edit" data-target="#EditCalendarEvent" data-dismiss="modal" style="display:none; padding: 1px 30px 1px 30px" class="btn btn-primary">Edit Event</button> 
+                        <button type="button" data-toggle="modal" id="edit" data-target="#EditCalendarEvent" data-dismiss="modal" style="display:none; padding: 1px 30px 1px 30px" class="btn btn-primary">Edit Event</button>
                         <button type="submit" data-toggle="modal" data-target="#AddCalendarEvent" data-dismiss="modal" style="padding: 1px 30px 1px 30px" class="btn btn-primary">Add Event</button>
                     </div>
                 </div>
             </div>
         </div>
 
+        <div class="modal fade" id="BluetoothTest" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">Bluetooth</div>
+                    <div class="modal-body text-center" style="padding:20px">
+                        <input id="dataReceive" type="text" name="name" value="" />
+                    </div>
+                    <div class="modal-footer">
+                        <button onclick="location.href='@Url.Action("sp_DataReceived", "Settings")';" style="padding: 1px 30px 1px 30px" class="btn btn-danger">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="col-lg-2">
             <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#Calendar_Events" style="width:260px; height:350px">
 
                 <div class="card-body text-center" style="height:320px; margin-left:auto; margin-right:auto; margin-top:20px; padding-top:30px">
                     <img src="~/Content/calendar-icon.jpg" style="margin-bottom: 35px; width:170px;">
-                    <h5 style="font-weight:bold; color:black">Callendar Events</h5>
+                    <h5 style="font-weight:bold; color:black">Calendar Events</h5>
                 </div>
             </div>
         </div>
+
+        <div class="col-lg-2">
+            <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#BluetoothTest" style="width:260px; height:350px">
+
+                <div class="card-body text-center" style="height:320px; margin-left:auto; margin-right:auto; margin-top:20px; padding-top:30px">
+                    <img src="~/Content/calendar-icon.jpg" style="margin-bottom: 35px; width:170px;">
+                    <h5 style="font-weight:bold; color:black">Bluetooth Test</h5>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 
@@ -607,6 +725,18 @@
         }
     </script>
     <script>
+
+        $( "#dataReceive" ).focus(function() {
+            $.ajax({
+                url: '@Url.Action("sp_DataReceived", "Settings")',
+                type: 'POST',
+                success: function (data) {
+                    alert(data)
+                }
+
+            });
+        });
+
         $(document).ready(function () {
             $("#SettingsClicked").css({ "background-color": "#f0f2f5", "color": "black", "font-weight": "600" })
             //$("#mainButton").css({ "color": "black", "font-weight": "600" })

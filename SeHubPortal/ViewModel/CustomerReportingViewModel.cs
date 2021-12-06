@@ -19,5 +19,7 @@ namespace SeHubPortal.ViewModel
         public tbl_target_accounts AddTA { get; set; }
         public tbl_dispute_resolution AddDR { get; set; }
         public tbl_sehub_access SehubAccess { get; set; }
+        public string username { get; set; }
+        public List<tbl_employee> emp_tbl { get; set; }
     }
 }

@@ -22,8 +22,14 @@
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 
-
-
+    @if (Model.SehubAccess.plant > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
 
     @if (Model.SehubAccess.payroll > 0)
     {
@@ -111,14 +117,22 @@
         </style>
     }
 
+    @if (Model.SehubAccess.employee_id == 10577 || Model.SehubAccess.employee_id == 10901)
+    {
+        <style>
+            #ExpnseClaimLink {
+                display: block !important;
+            }
+        </style>
+    }
 
     <style>
 
         div.a {
-          white-space: nowrap; 
-          width: 100px; 
-          overflow: hidden;
-          text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
 
@@ -279,15 +293,19 @@
         }
 
         .example::-webkit-scrollbar {
-          display: none;
+            display: none;
         }
 
         /* Hide scrollbar for IE, Edge and Firefox */
         .example {
-          -ms-overflow-style: none;  /* IE and Edge */
-          scrollbar-width: none;  /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
         }
 
+        div.scrollmenu {
+            overflow: auto;
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -297,27 +315,33 @@
                 <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
                     <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Tools")">Tools</a></li>
                     <li class="breadcrumb-item " aria-current="page">Fuel Log</li>
-                    
+                    @if (Model.selectedVIN is null || Model.selectedVIN == "")
+                    {
+
+                    }
+                    else
+                    {
+                        <li class="breadcrumb-item " aria-current="page">Fleet</li>
+                    }
+
+
                     @if (Model.SehubAccess.fuel_log >= 2)
-                    { 
-                        <label style="margin: 0px 3px 0px 1260px ">Location:</label>
+                    {
+                        if (Model.selectedVIN is null || Model.selectedVIN == "")
+                        {
+                            <label style="margin: 0px 3px 0px 1260px ">Location:</label>
+                        }
+                        else
+                        {
+                            <label style="margin: 0px 3px 0px 1204px ">Location:</label>
+                        }
+
                     }
 
                     @using (Html.BeginForm("FuelLogChangeLocation", "Tools", FormMethod.Post))
                     {
                         <div>
-                            @if (Model.SehubAccess.fuel_log == 3)
-                            { 
-                                @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "Select", new {@onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:6px;" })
-                            }
-                            else if (Model.SehubAccess.fuel_log == 2)
-                            { 
-                                @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "Select", new {@disabled = "true", @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:6px;" })
-                            }
-                            else if (Model.SehubAccess.fuel_log < 2)
-                            { 
-                                @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "Select", new {@disabled = "true", @onChange = "this.form.submit()", @type = "text", @style = "display:none; text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:6px;" })
-                            }
+                            @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "Select", new { @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:6px;" })
                             <noscript> <input style="display:none" class="btn btn-success" type="submit" value="Search" /></noscript>
                         </div>
                     }
@@ -350,20 +374,26 @@
                         @if (Model.SehubAccess.fuel_log == 3)
                         {
                             <div class="col-lg-2">
-                                <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#InspectionChecklist" style="width:260px; height:360px">
-                                    <div class="card-body text-center" style="height:270px; padding-top:55px">
-                                        <img src="~/Content/InvoiceCustomer.png" style="margin-top:0px; margin-bottom:35px; width:165px;">
-                                        <h5 style="margin-left:0px"><b>Fuel Invoiced to Customer</b></h5>
+                                <a href="@Url.Action("FuelInvoice", "Tools")">
+                                    <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#InspectionChecklist" style="width:260px; height:360px">
+                                        <div class="card-body text-center" style="height:270px; padding-top:55px">
+                                            <img src="~/Content/InvoiceCustomer.png" style="margin-top:0px; margin-bottom:35px; width:165px;">
+                                            <h5 style="margin-left:0px"><b>Fuel Invoiced to Customer</b></h5>
+                                        </div>
                                     </div>
-                                </div>
+                                </a>
+                                
                             </div>
                             <div class="col-lg-2">
-                                <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#InspectionChecklist" style="width:260px; height:360px">
-                                    <div class="card-body text-center" style="height:270px; padding-top:55px">
-                                        <img src="~/Content/ShopSupplier.png" style="margin-top:0px; margin-bottom:35px; width:170px;">
-                                        <h5 style="margin-left:0px"><b>Shop Suppliers FuelLog</b></h5>
+                                <a href="@Url.Action("ShopSupplies", "Tools")">
+                                    <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#InspectionChecklist" style="width:260px; height:360px">
+                                        <div class="card-body text-center" style="height:270px; padding-top:55px">
+                                            <img src="~/Content/ShopSupplier.png" style="margin-top:0px; margin-bottom:35px; width:170px;">
+                                            <h5 style="margin-left:0px"><b>Shop Supplies Fuel Log</b></h5>
+                                        </div>
                                     </div>
-                                </div>
+                                </a>
+                                
                             </div>
                         }
 
@@ -374,155 +404,167 @@
             else
             {
                 <div class="col-md-6">
+                    <div class="row" style="margin-bottom:0px">
+                        <div class="scrollmenu example">
+
+                            @foreach (var item in Model.MatchedVehicals)
+                            {
+                                if (Model.MatchedVehicle == item.Text)
+                                {
+                                    <button onclick="location.href='@Url.Action("ChangeVehicalFuelLog", "Tools", new { vin = item.Value, loc = Model.MatchedLocID})';" style="background-color:white; color:black;font-weight:bold; padding:7px 35px 7px 35px" class="btn">@item.Text</button>
+                                }
+                                else
+                                {
+                                    <button onclick="location.href='@Url.Action("ChangeVehicalFuelLog", "Tools", new { vin = item.Value, loc = Model.MatchedLocID})';" style="background-color:transparent; color:#24a0ed; padding:7px 35px 7px 35px" class="btn">@item.Text</button>
+                                }
+
+                            }
+                        </div>
+                    </div>
                     <div class="row">
-                        <div class="col-lg-12" style="padding:0px">
-                            <div class="card shadow-sm" style="height:300px;">
-                                <h5 class="card-header" style="padding:5px 5px 5px 15px">Vehicle Details</h5>
-                                <div class="card-body" style="padding-top:0px; height:200px;">
-                                    <div class="row" style="padding-top:0px; ">
-                                        <div class="col-md-12 text-center" style="padding-top:5px; ">
-                                            <div class="row" style="padding-right:10px">
-                                                <div class="col-md-5 text-center" style="padding-top:45px">
-                                                    <a class="booking-doc-img">
-                                                        @*<img src="~/Content/profilepic.jpg" alt="User Image">*@
+                        <div class="card shadow-sm" style="border:none; width:100%; height:268px">
+                            <div class="card-body" style="padding-top:0px;">
+                                <div class="row" style="padding-top:0px; ">
+                                    <div class="col-md-12 text-center" style="padding-top:10px; ">
+                                        <div class="row" style="padding-right:10px">
+                                            <div class="col-md-5 text-center" style="padding-top:45px">
+                                                <a class="booking-doc-img">
+                                                    @*<img src="~/Content/profilepic.jpg" alt="User Image">*@
 
-                                                        @if (Model.SelectedVehicleInfo.vehicle_status == 1)
-                                                        {
-                                                            string base64ProfilePic = "";
-                                                            if (@Model.SelectedVehicleInfo.vehicle_image is null)
-                                                            {
-                                                                base64ProfilePic = "";
-                                                            }
-                                                            else
-                                                            {
-                                                                base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(Model.SelectedVehicleInfo.vehicle_image);
-                                                            }
-
-                                                            if (base64ProfilePic == "")
-                                                            {
-                                                                <img class="imageClass" style="width:250px; height:160px" src="~/Content/jordancar.png" alt="ProfilePic" />
-                                                            }
-                                                            else
-                                                            {
-                                                                <img class="imageClass" style="width:250px; height:160px" alt="profilePic" src="@base64ProfilePic" />
-                                                            }
-                                                        }
-                                                    </a>
-
-                                                </div>
-                                                <div class="col-md-4 text-left" style="padding-top:15px">
-
-                                                    @using (Html.BeginForm("ChangeVehicalFuelLog", "Tools", FormMethod.Post))
+                                                    @if (Model.SelectedVehicleInfo.vehicle_status == 1)
                                                     {
-                                                        @Html.DropDownListFor(m => m.MatchedVehicle, Model.MatchedVehicals, Model.MatchedVehicle, new { @onChange = "this.form.submit()", @style = "margin-top: 0px; width:120px;height:40px;font-size:20px;margin-left:0px; font-weight:bold" })
-                                                        @Html.HiddenFor(m => m.MatchedLocID)
+                                                        string base64ProfilePic = "";
+                                                        if (@Model.SelectedVehicleInfo.vehicle_image is null)
+                                                        {
+                                                            base64ProfilePic = "";
+                                                        }
+                                                        else
+                                                        {
+                                                            base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(Model.SelectedVehicleInfo.vehicle_image);
+                                                        }
+
+                                                        if (base64ProfilePic == "")
+                                                        {
+                                                            <img class="imageClass" style="width:250px; height:160px" src="~/Content/jordancar.png" alt="ProfilePic" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <img class="imageClass" style="width:250px; height:160px" alt="profilePic" src="@base64ProfilePic" />
+                                                        }
                                                     }
+                                                </a>
 
-                                                    <div class="row" style="margin-top:10px; margin-bottom:5px;margin-left:0px;">
-                                                        <p class="mb-0" style="font-size:14px;font-style:italic">@Model.SelectedVehicleInfo.vehicle_long_id</p>
-                                                    </div>
-                                                    <div class="row" style="margin-bottom:0px;margin-left:0px;">
-                                                        <p class="mb-0" style="font-size:18px;"><b>VIN:</b> @Model.SelectedVehicleInfo.VIN</p>
-                                                    </div>
-                                                    <div class="row" style="margin-bottom:0px;margin-left:0px;">
-                                                        <p class="mb-0" style="font-size:18px;"><b>Plate:</b> @Model.SelectedVehicleInfo.vehicle_plate</p>
-                                                    </div>
-                                                    <div class="row" style="margin-bottom:0px;margin-left:0px;">
-                                                        <p class="mb-0" style="font-size:18px;"><b> Year:</b>   @Model.SelectedVehicleInfo.vehicle_year</p>
-                                                    </div>
-                                                    <div class="row" style="margin-bottom:0px;margin-left:0px;">
-                                                        <p class="mb-0" style="font-size:18px;"><b>Manufacturer:</b>   @Model.SelectedVehicleInfo.vehicle_manufacturer</p>
-                                                    </div>
-                                                    <div class="row" style="margin-bottom:0px;margin-left:0px;">
-                                                        <p class="mb-0" style="font-size:18px;"><b>Model:</b>   @Model.SelectedVehicleInfo.vehicle_model</p>
-                                                    </div>
+                                            </div>
+                                            <div class="col-md-4 text-left" style="padding-top:10px">
 
-
+                                                <div class="row" style="margin-top:0px; margin-bottom:5px;margin-left:0px;">
+                                                    <p class="mb-0" style="font-size:30px;"><b>@Model.SelectedVehicleInfo.vehicle_short_id</b></p>
                                                 </div>
-                                                <div class="col-md-3 text-center" style="padding-top:20px">
-                                                    <div class="row" style="padding:7px; margin-bottom:10px; border-radius:10px; background-color:#357efc">
-                                                        <div class="col-md-8 text-center">
-                                                            @if (@Model.SelectedVehicleInfo.current_milage.HasValue)
-                                                            {
-                                                                <span class="btn" style="font-size:20px; color:white;">
-                                                                    @Math.Round(@Model.SelectedVehicleInfo.current_milage.Value, 1).ToString("N0")
-                                                                </span>
-                                                            }
-                                                            else
-                                                            {
-                                                                <span class="btn" style="font-size:20px; color:white;">
-                                                                    0
-                                                                </span>
-                                                            }
-                                                        </div>
-                                                        <div class="col-md-4 text-center" style="padding-top:5px; font-size:12px; color:white; border-left:2px solid white">
-                                                            <label>KM</label>
-                                                        </div>
-                                                    </div>
 
-                                                    <div class="row" style="padding:7px; margin-bottom:10px; border-radius:10px; background-color:#357efc">
-                                                        <div class="col-md-8 text-center">
-                                                            @if (@Model.SelectedVehicleInfo.efficiency_price.HasValue)
-                                                            {
-                                                                <span class="btn" style="font-size:20px; color:white;">
-                                                                    @Math.Round(@Model.SelectedVehicleInfo.efficiency_price.Value, 2).ToString("N2")
-                                                                </span>
-                                                            }
-                                                            else
-                                                            {
-                                                                <span class="btn" style="font-size:20px; color:white;">
-                                                                    0
-                                                                </span>
-                                                            }
-                                                        </div>
-                                                        <div class="col-md-4" style="padding-left:3px; border-left:2px solid white">
-                                                            <img style="width:50px" src="~/Content/Untitled.png" alt="Alternate Text" />
-                                                        </div>
-                                                    </div>
+                                                <div class="row" style="margin-bottom:0px;margin-left:0px;">
+                                                    <p class="mb-0" style="font-size:16px;"><i>@Model.SelectedVehicleInfo.vehicle_long_id</i></p>
+                                                </div>
 
-                                                    <div class="row" style="padding:7px; border-radius:10px; background-color:#357efc">
-                                                        <div class="col-md-8 text-center">
-                                                            @if (@Model.SelectedVehicleInfo.efficiency_liter.HasValue)
-                                                            {
-                                                                <span class="btn" style="font-size:20px; color:white;">
-                                                                    @Math.Round(@Model.SelectedVehicleInfo.efficiency_liter.Value, 3).ToString("N3")
-                                                                </span>
-                                                            }
-                                                            else
-                                                            {
-                                                                <span class="btn" style="font-size:20px; color:white;">
-                                                                    0
-                                                                </span>
-                                                            }
-
-                                                        </div>
-                                                        <div class="col-md-4 text-center" style="padding-left:3px; border-left:2px solid white">
-                                                            <img style="width:50px" src="~/Content/Untitled2.png" alt="Alternate Text" />
-                                                        </div>
-                                                    </div>
-
+                                                <div class="row" style="margin-bottom:0px;margin-left:0px;">
+                                                    <p class="mb-0" style="font-size:18px;"><b>VIN:</b> @Model.SelectedVehicleInfo.VIN</p>
+                                                </div>
+                                                <div class="row" style="margin-bottom:0px;margin-left:0px;">
+                                                    <p class="mb-0" style="font-size:18px;"><b>Plate:</b> @Model.SelectedVehicleInfo.vehicle_plate</p>
+                                                </div>
+                                                <div class="row" style="margin-bottom:0px;margin-left:0px;">
+                                                    <p class="mb-0" style="font-size:18px;"><b> Year:</b>   @Model.SelectedVehicleInfo.vehicle_year</p>
+                                                </div>
+                                                <div class="row" style="margin-bottom:0px;margin-left:0px;">
+                                                    <p class="mb-0" style="font-size:18px;"><b>Manufacturer:</b> @Model.SelectedVehicleInfo.vehicle_manufacturer</p>
+                                                </div>
+                                                <div class="row" style="margin-bottom:0px;margin-left:0px;">
+                                                    <p class="mb-0" style="font-size:18px;"><b>Model:</b>   @Model.SelectedVehicleInfo.vehicle_model</p>
                                                 </div>
 
 
                                             </div>
+                                            <div class="col-md-3 text-center" style="padding-top:20px">
+                                                <div class="row" style="padding:7px; margin-bottom:10px; border-radius:10px; background-color:#357efc">
+                                                    <div class="col-md-8 text-center">
+                                                        @if (@Model.SelectedVehicleInfo.current_milage.HasValue)
+                                                        {
+                                                            <span class="btn" style="font-size:20px; color:white;">
+                                                                @Math.Round(@Model.SelectedVehicleInfo.current_milage.Value, 1).ToString("N0")
+                                                            </span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="btn" style="font-size:20px; color:white;">
+                                                                0
+                                                            </span>
+                                                        }
+                                                    </div>
+                                                    <div class="col-md-4 text-center" style="padding-top:5px; font-size:12px; color:white; border-left:2px solid white">
+                                                        <label>KM</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row" style="padding:7px; margin-bottom:10px; border-radius:10px; background-color:#357efc">
+                                                    <div class="col-md-8 text-center">
+                                                        @if (@Model.SelectedVehicleInfo.efficiency_price.HasValue)
+                                                        {
+                                                            <span class="btn" style="font-size:20px; color:white;">
+                                                                @Math.Round(@Model.SelectedVehicleInfo.efficiency_price.Value, 2).ToString("N2")
+                                                            </span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="btn" style="font-size:20px; color:white;">
+                                                                0
+                                                            </span>
+                                                        }
+                                                    </div>
+                                                    <div class="col-md-4" style="padding-left:3px; border-left:2px solid white">
+                                                        <img style="width:50px" src="~/Content/Untitled.png" alt="Alternate Text" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="row" style="padding:7px; border-radius:10px; background-color:#357efc">
+                                                    <div class="col-md-8 text-center">
+                                                        @if (@Model.SelectedVehicleInfo.efficiency_liter.HasValue)
+                                                        {
+                                                            <span class="btn" style="font-size:20px; color:white;">
+                                                                @Math.Round(@Model.SelectedVehicleInfo.efficiency_liter.Value, 3).ToString("N3")
+                                                            </span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="btn" style="font-size:20px; color:white;">
+                                                                0
+                                                            </span>
+                                                        }
+
+                                                    </div>
+                                                    <div class="col-md-4 text-center" style="padding-left:3px; border-left:2px solid white">
+                                                        <img style="width:50px" src="~/Content/Untitled2.png" alt="Alternate Text" />
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
 
                                         </div>
 
-
                                     </div>
+
+
                                 </div>
                             </div>
                         </div>
-
                     </div>
                     @using (Html.BeginForm("SaveFuelReceipt", "Tools", FormMethod.Post))
-                    {
-                        @Html.HiddenFor(m => m.SelectedVehicleInfo.VIN)
-                        @Html.HiddenFor(m => m.SelectedVehicleInfo.assigned_to)
+                    {                        
                         <div class="row" style="margin-top:0px">
+                            @Html.HiddenFor(m => m.SelectedVehicleInfo.VIN)
+                            @Html.HiddenFor(m => m.SelectedVehicleInfo.assigned_to)
                             <div class="col-lg-12" style="padding:0px">
-                                <div class="card shadow-sm" style="height:390px ;">
-                                    <h5 class="card-header" style="padding:5px 5px 5px 15px">Submit Fuel Receipt</h5>
+                                <div class="card shadow-sm" style="height:383px; border:2px solid #aeafb0">
+                                    <h5 class="card-header" style="font-weight:bold; padding:5px 5px 5px 15px;background-color: #aeafb0; color:white">Submit Fuel Receipt</h5>
                                     <div class="card-body">
 
                                         <div class="row">
@@ -535,7 +577,7 @@
                                                         @Html.EditorFor(m => m.SelectedVehicleInfo.vehicle_long_id, new { htmlAttributes = new { @style = "width:250px", @disabled = "disabled" } })
                                                     </div>
                                                 </div>
-                                                <div class="row" style="margin-top:10px">
+                                                <div class="row" style="margin-top:11px">
                                                     <div class="col-lg-4">
                                                         <label style="font-size:14px;">Date</label>
                                                     </div>
@@ -543,7 +585,7 @@
                                                         @Html.EditorFor(m => m.fuelLogTableValues.date_of_purchase, new { htmlAttributes = new { @style = "width:250px", type = "date", @required = "required" } })
                                                     </div>
                                                 </div>
-                                                <div class="row" style="margin-top:10px">
+                                                <div class="row" style="margin-top:12px">
                                                     <div class="col-lg-4">
                                                         <label style="font-size:14px;">Mileage</label>
                                                     </div>
@@ -551,27 +593,25 @@
                                                         @Html.EditorFor(m => m.fuelLogTableValues.odometer, new { htmlAttributes = new { @style = "width:250px", @required = "required" } })
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="row" style="margin-top:0px">
+                                                <div class="row" style="margin-top:12px">
                                                     <div class="col-lg-4">
                                                         <label style="font-size:14px;">No of Liters</label>
                                                     </div>
                                                     <div class="col-lg-8">
-                                                        @Html.EditorFor(m => m.fuelLogTableValues.no_of_liters, new { htmlAttributes = new { @style = "width:240px", @required = "required" } })
+                                                        @Html.EditorFor(m => m.fuelLogTableValues.no_of_liters, new { htmlAttributes = new { @style = "width:250px", @required = "required" } })
                                                     </div>
                                                 </div>
-                                                <div class="row" style="margin-top:10px">
+                                                <div class="row" style="margin-top:11px">
                                                     <div class="col-lg-4">
                                                         <label style="font-size:14px;">Price/Liter</label>
                                                     </div>
                                                     <div class="col-lg-8">
-                                                        @Html.EditorFor(m => m.fuelLogTableValues.price_per_liter, new { htmlAttributes = new { @style = "width:240px", @required = "required" } })
+                                                        @Html.EditorFor(m => m.fuelLogTableValues.price_per_liter, new { htmlAttributes = new { @style = "width:250px", @required = "required" } })
                                                     </div>
                                                 </div>
-                                                <div class="row" style="margin-top:10px">
+                                                <div class="row" style="margin-top:11px">
                                                     <div class="col-lg-4">
-                                                        <label style="font-size:14px;">Change Type</label>
+                                                        <label style="font-size:14px;">Charge Account</label>
                                                     </div>
                                                     <div class="col-lg-8">
                                                         @{
@@ -583,16 +623,17 @@
                                                             listItems.Add(new SelectListItem
                                                             {
                                                                 Text = "Select Type",
+                                                                Value = ""
                                                             });
                                                             listItems.Add(new SelectListItem
                                                             {
-                                                                Text = "Irving",
-                                                                Value = "Irving"
+                                                                Text = "Irving Account",
+                                                                Value = "Irving Account"
                                                             });
                                                             listItems.Add(new SelectListItem
                                                             {
-                                                                Text = "Ultramar",
-                                                                Value = "Ultramar"
+                                                                Text = "Ultramar Account",
+                                                                Value = "Ultramar Account"
                                                             });
                                                             listItems.Add(new SelectListItem
                                                             {
@@ -600,25 +641,22 @@
                                                                 Value = "VISA Expense"
                                                             });
                                                         }
-                                                        @Html.DropDownListFor(m => m.fuelLogTableValues.change_type, listItems, new { @class = "text-center", @style = "text-align-last: center; width:240px; height:28px", @required = "required", @id = "Brand" })
+                                                        @Html.DropDownListFor(m => m.fuelLogTableValues.change_type, listItems, new { @class = "text-center", @style = "text-align-last: center; width:250px; height:28px", @required = "required", @id = "Brand" })
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-lg-6">
+                                                <div class="row" style="padding-left:10px; margin-top:0px">
+                                                    @Html.TextAreaFor(m => m.fuelLogTableValues.comments, 11, 51, new {@placeholder= " Comments (Optional)" })
+                                                </div>
+                                            </div>
                                         </div>
+                                        
 
-                                        <div class="row" style="padding-left:13px; ">
-                                            <label style="font-size:14px;">Comments</label>
-                                        </div>
-                                        <div class="row" style="padding-left:10px; margin-top:0px">
-                                            @Html.TextAreaFor(m => m.fuelLogTableValues.comments, 4, 108, new { htmlAttributes = new { } })
-                                        </div>
-
-                                        <div class="row" style="float:right;margin-top:20px;margin-right:0px;margin-bottom:20px;">
-                                            <a href="">
-                                                <input type="button" id="clearBtn" style="padding-top:0px; width:100px; height:25px" class="btn btn-danger transcationButtons" value="Clear" />
-                                            </a>
-                                            &nbsp;&nbsp;
-                                            <input type="submit" style="padding-top:0px; width:100px; height:25px" class="btn btn-success transcationButtons" value="Save" />
+                                        <div class="row" style="float:right;margin-top:3px;margin-right:0px;margin-bottom:10px;">
+                                            <button style="padding:3px 35px 3px 35px" class="btn btn-danger">Clear</button>
+                                            &nbsp;&nbsp;&nbsp;
+                                            <button type="submit" style="padding:3px 35px 3px 35px" class="btn btn-success">Save</button>
                                         </div>
 
 
@@ -654,14 +692,14 @@
                                     @if (!Model.fuelLogList.Any())
                                     {
                                         <table id="example" class="table table-striped table-bordered" style="width:100%">
-                                            <thead class="thead-dark" style="text-align:center">
+                                            <thead class="thead-dark" style="text-align: center">
                                                 <tr>
 
                                                     <th style="font-size:10px; padding:0px">Purchase Date</th>
                                                     <th style="font-size:10px; padding:0px">Mileage</th>
                                                     <th style="font-size:10px; padding:0px">No of Liters</th>
                                                     <th style="font-size:10px; padding:0px">Price/Liter</th>
-                                                    <th style="font-size:10px; padding:0px">Change Type</th>
+                                                    <th style="font-size:10px; padding:0px">Charge Account</th>
                                                     <th style="width:120px; font-size:10px; padding:0px">Comments</th>
                                                     <th style="font-size:10px; padding:0px">Action</th>
                                                 </tr>
@@ -680,7 +718,7 @@
                                                     <th style="font-size: 10px; padding: 0px">Mileage</th>
                                                     <th style="font-size:10px; padding:0px">No of Liters</th>
                                                     <th style="font-size:10px; padding:0px">Price/Liter</th>
-                                                    <th style="font-size:10px; padding:0px">Change Type</th>
+                                                    <th style="font-size:10px; padding:0px">Charge Account</th>
                                                     <th style="width:120px; font-size:10px; padding:0px">Comments</th>
                                                     <th style="font-size:10px; padding:0px">Action</th>
                                                 </tr>
@@ -748,12 +786,14 @@
                                             @if (!Model.fuelLogList.Any())
                                             {
                                                 <table id="example" class="table table-striped table-bordered" style="width:750px">
-                                                    <thead class="thead-dark" style="text-align:center">
+                                                    <thead class="thead-dark text-center" style="text-align:center">
                                                         <tr>
                                                             <th style="font-size:10px; padding:0px">Purchase Date</th>
                                                             <th style="font-size:10px; padding:0px">Mileage</th>
+                                                            <th style="font-size:10px; padding:0px">Trip</th>
                                                             <th style="font-size:10px; padding:0px">No of Liters</th>
                                                             <th style="font-size:10px; padding:0px">Price/Liter</th>
+                                                            <th style="font-size:10px; padding:0px">Total Price</th>
                                                             <th style="font-size:10px; padding:0px">Action</th>
                                                         </tr>
                                                     </thead>
@@ -764,13 +804,15 @@
                                             else
                                             {
                                                 <table id="auditTable" class="table table-striped table-bordered display compact" cellspacing="0" style="width:740px;">
-                                                    <thead class="thead-dark">
+                                                    <thead class="thead-dark text-center">
                                                         <tr>
 
                                                             <th style="font-size:10px; padding:0px">Purchase Date</th>
                                                             <th style="font-size:10px; padding:0px">Mileage</th>
+                                                            <th style="font-size:10px; padding:0px">Trip</th>
                                                             <th style="font-size:10px; padding:0px">No of Liters</th>
                                                             <th style="font-size:10px; padding:0px">Price/Liter</th>
+                                                            <th style="font-size:10px; padding:0px">Total Price</th>
                                                             <th style="font-size:10px; padding:0px">Audit Status</th>
 
                                                         </tr>
@@ -788,8 +830,24 @@
 
                                                                 <td style="padding:3px">@Convert.ToDateTime(Model.fuelLogList[i].date_of_purchase).ToString("yyyy-MM-dd")</td>
                                                                 <td style="padding:3px">@Model.fuelLogList[i].odometer</td>
+                                                                @if (i < Model.fuelLogList.Count-1)
+                                                                {
+                                                                    int trip = Model.fuelLogList[i].odometer.Value - Model.fuelLogList[i + 1].odometer.Value;
+                                                                    <td style="padding:3px"><b>@trip</b></td>                                                            
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td style="padding:3px"><b>N/A</b></td>
+                                                                }
+
                                                                 <td style="padding:3px">@Model.fuelLogList[i].no_of_liters</td>
                                                                 <td style="padding:3px">@Model.fuelLogList[i].price_per_liter</td>
+                                                                <td style="padding:3px">
+                                                                    @{ 
+                                                                        double tp = @Model.fuelLogList[i].no_of_liters.Value * @Model.fuelLogList[i].price_per_liter.Value;
+                                                                        <b>@tp.ToString("n2")</b>
+                                                                    }
+                                                                </td>
                                                                 <td style="padding:3px">@Html.CheckBoxFor(m => m.fuelLogList[i].audit_status, new { htmlAttributes = new { @class = "form-check-input", @type = "checkbox" } })</td>
                                                                 @*<td>
                                                                         <button data-id="@Model.fuelLogList[i].transaction_number" class="deleteFuelTransactionBtn" data-toggle="modal" data-target="#deleteFuelTransaction" style="background-color:transparent;border:1px solid transparent;align-items:center"><i class="fa fa-trash" style="font-size:20px;color:red;float:right"></i></button>

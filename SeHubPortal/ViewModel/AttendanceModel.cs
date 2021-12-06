@@ -10,6 +10,7 @@ namespace SeHubPortal.ViewModel
     public class AttendanceModel
     {
         public List<EmployeeAttendanceListModel> employeeList { get; set; }
+        public List<EmployeeAttendanceListModel> employeeListChangeLocation { get; set; }
         public List<SelectListItem> MatchedLocs { get; set; }
         public string MatchedLocID { get; set; }
         public string SelectedEmployeeId { get; set; }

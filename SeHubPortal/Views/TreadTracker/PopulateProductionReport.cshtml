@@ -1,0 +1,85 @@
+﻿@model SeHubPortal.ViewModel.PopulateProductionReport
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body style="background-color:aqua">
+
+    @{ 
+        var workorders = Model.barcodeInfo.OrderBy(x => x.retread_workorder).Select(x => x.retread_workorder).Distinct().ToList();
+        var barcodes = Model.barcodeInfo.Select(x => x.barcode).Distinct().ToList();
+    }
+
+    <div class="row" style="padding:0px 15px 0px 15px; ">
+        <div class="col-lg-12">
+                       
+
+            @foreach (var item in workorders)
+            {
+
+                string custNum = Model.workOrderInfo.Where(x => x.retread_workorder == item).Select(x => x.customer_number).FirstOrDefault();
+                string custName = Model.customerInfo.Where(x => x.cust_us1 == custNum).Select(x => x.cust_name).FirstOrDefault();
+
+                <div class="row" style="padding:20px 15px 0px 15px">
+                    <table class="table table-bordered" style="border-radius: 5px; margin-bottom:0px">
+                        <tbody>
+                            <tr>
+                                <td style="width:50%; font-size:17px; font-weight:bold; text-align:left; padding:10px"> Work Order Number : @item </td>
+                                <td style="width:50%; font-size:13px; text-align:right; padding:10px">
+                                    <div class="row">
+                                        <div class="col-lg-12 text-right">
+                                            <span><b>@custName</b></span>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 text-right">
+                                            <span><b>@custNum</b></span>
+                                        </div>                                                                                
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <table class="table table-bordered" style="border-radius: 5px;">
+                    <thead style="background-color:#84888c; color:white">
+                        <tr>
+                            <th scope="col" style="width:50px; font-size:10px; padding:0px; margin:0px;" class="text-center">Line #</th>
+                            <th scope="col" style="width:50px; font-size:10px; padding:0px; margin:0px;" class="text-center">Line Code</th>
+                            <th scope="col" style="width:170px; font-size:10px; padding:0px; margin:0px;" class="text-center">Barcode</th>
+                            <th scope="col" style="width:170px; font-size:10px; padding:0px; margin:0px;" class="text-center">Serial/Dot</th>
+                            <th scope="col" style="width:170px; font-size:10px; padding:0px; margin:0px;" class="text-center">Size</th>
+                            <th scope="col" style="width:170px; font-size:10px; padding:0px; margin:0px;" class="text-center">Brand</th>
+                            <th scope="col" style="width:150px; font-size:10px; padding:0px; margin:0px;" class="text-center">Tread</th>
+                            <th scope="col" style="width:100px; font-size:10px; padding:0px; margin:0px;" class="text-center">Ship To</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var barcode in Model.barcodeInfo.Where(x => x.retread_workorder == item))
+                        {
+                            <tr>
+                                <td style="font-size:13px; text-align:center; padding:10px">@barcode.line_number</td>
+                                <td style="font-size:13px; text-align:center; padding:10px">@barcode.line_code</td>
+                                <td style="font-size:13px; text-align:center; padding:10px">@barcode.barcode</td>
+                                <td style="font-size:13px; text-align:center; padding:10px">@barcode.serial_dot</td>
+                                <td style="font-size:13px; text-align:center; padding:10px">@barcode.casing_size</td>
+                                <td style="font-size:13px; text-align:center; padding:10px">@barcode.casing_brand</td>
+                                <td style="font-size:13px; text-align:center; padding:10px">@barcode.retread_design</td>
+                                <td style="font-size:13px; text-align:center; padding:10px">@barcode.ship_to_location</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+        </div>
+        
+    </div>
+    <script>
+        $('#TotalProduction').html('Total Production : ' + @barcodes.Count)
+    </script>
+</body>
+
+</html>

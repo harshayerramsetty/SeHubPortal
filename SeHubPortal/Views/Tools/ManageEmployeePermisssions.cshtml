@@ -77,26 +77,80 @@
 @using (Html.BeginForm("ManageEmployeePermisssions", "Tools", FormMethod.Post))
 {
     <div class="modal-content">
-        <div class="modal-header" style="padding:5px 5px 5px 15px">
-            <h5 class="modal-title" id="exampleModalLongTitle"><b>@Model.empDetails.full_name</b> - <b>@Model.empDetails.employee_id</b></h5>
+        <div class="modal-header" style="padding:5px 5px 5px 0px">
+            <div class="col-md-7 text-left">
+                <h5 class="modal-title" id="exampleModalLongTitle"><b>@Model.empDetails.full_name</b> - <b>@Model.empDetails.employee_id</b></h5>
+            </div>
+            <div class="col-md-5 text-right">
+
+                <div class="custom-control custom-switch">
+                    @Html.EditorFor(model => model.appAccess, new { htmlAttributes = new { @id="ToggleFromBranchToCorporate", @class="custom-control-input", @type = "checkbox", @checked = Model.appAccess } })
+                    <label class="custom-control-label" for="ToggleFromBranchToCorporate">
+                        <h5 style="" id="CorporateText">Sehub Access</h5>
+                    </label>
+                </div>
+
+            </div>
         </div>
         <div class="modal-body">
             <div class="row">
-                <label style="margin-right:50px; margin-left:15px">SEHUB</label>
-                @Html.TextBoxFor(m => m.EmployeeCredentials.password, new { htmlAttributes = new { @style = "width:100px" } })
-                <label style="margin-right:20px; margin-left:15px">RFID</label>
-                @Html.TextBoxFor(m => m.empDetails.rfid_number, new { htmlAttributes = new { @class = "form-control" } })
-                <h6 class="modal-title" style="margin-left:60px;margin-top:0px; margin-right:10px;">Sehub Access</h6>
-                @Html.EditorFor(model => model.appAccess, new { htmlAttributes = new { @style = "margin-top:6px;", @type = "checkbox", @checked = Model.appAccess, } })
+                <div class="col-lg-4 text-left">
+                    <label style="margin-right:10px">SEHUB</label>
+                    @Html.EditorFor(m => m.EmployeeCredentials.password, new { htmlAttributes = new { @style = "width:150px" } })
+                </div>
+                <div class="col-lg-4 text-center">
+                    <label style="margin-right:10px;">Outlook-365</label>
+                    @Html.EditorFor(m => m.EmployeeCredentials.password365, new { htmlAttributes = new { @style = "width:130px" } })
+
+                </div>
+                <div class="col-lg-4 text-center">
+                    <label style="margin-right:10px;">RFID</label>
+                    @Html.EditorFor(m => m.empDetails.rfid_number, new { htmlAttributes = new { @style = "width:150px" } })
+
+                </div>
+
+
+
             </div>
-            <br />
+
+            <div class="row" style="margin-top:20px">
+                <div class="col-md-2 text-center">
+                    001 @Html.EditorFor(m => m.loc_001, new { htmlAttributes = new { type = "checkbox", @checked = @Model.loc_001 } })
+                </div>
+                <div class="col-md-2 text-center">
+                    002 @Html.EditorFor(m => m.loc_002, new { htmlAttributes = new { type = "checkbox", @checked = @Model.loc_002 } })
+                </div>
+                <div class="col-md-2 text-center">
+                    003 @Html.EditorFor(m => m.loc_003, new { htmlAttributes = new { type = "checkbox", @checked = @Model.loc_003 } })
+                </div>
+                <div class="col-md-2 text-center">
+                    004 @Html.EditorFor(m => m.loc_004, new { htmlAttributes = new { type = "checkbox", @checked = @Model.loc_004 } })
+                </div>
+                <div class="col-md-2 text-center">
+                    005 @Html.EditorFor(m => m.loc_005, new { htmlAttributes = new { type = "checkbox", @checked = @Model.loc_005 } })
+                </div>
+                <div class="col-md-2 text-center">
+                    007 @Html.EditorFor(m => m.loc_007, new { htmlAttributes = new { type = "checkbox", @checked = @Model.loc_007 } })
+                </div>
+            </div>
+
             <div class="row">
-                <label style="margin-right:10px; margin-left:15px">Outlook-365</label>
-                @Html.TextBoxFor(m => m.EmployeeCredentials.password365, new { htmlAttributes = new { @class = "form-control" } })
-                <label style="margin-right:10px; margin-left:15px">Loc ID</label>
-                @Html.TextBoxFor(m => m.empDetails.loc_ID, new { htmlAttributes = new { @class = "form-control" } })
-                <h6 class="modal-title" style="margin-left:55px;margin-top:0px; margin-right:22px;">Minotor Me</h6>
-                @Html.EditorFor(model => model.monitorEmployee, new { htmlAttributes = new { @style = "margin-top:6px;", @type = "checkbox", @checked = Model.monitorEmployee, } })
+                
+                <div class="col-md-2 text-center">
+                    009 @Html.EditorFor(m => m.loc_009, new { htmlAttributes = new { type = "checkbox", @checked = @Model.loc_009 } })
+                </div>
+                <div class="col-md-2 text-center">
+                    010 @Html.EditorFor(m => m.loc_010, new { htmlAttributes = new { type = "checkbox", @checked = @Model.loc_010 } })
+                </div>
+                <div class="col-md-2 text-center">
+                    011 @Html.EditorFor(m => m.loc_011, new { htmlAttributes = new { type = "checkbox", @checked = @Model.loc_011 } })
+                </div>
+                <div class="col-md-2 text-center">
+                    347 @Html.EditorFor(m => m.loc_347, new { htmlAttributes = new { type = "checkbox", @checked = @Model.loc_347 } })
+                </div>
+                <div class="col-md-2 text-center">
+                    AHO @Html.EditorFor(m => m.loc_AHO, new { htmlAttributes = new { type = "checkbox", @checked = @Model.loc_AHO } })
+                </div>
             </div>
 
             @*<div class="row" style="margin-left:0px;height:30px;background-color:#cde8ca;color:black;margin-bottom:5px;">
@@ -139,8 +193,6 @@
                     <div class="col-md-4">
 
                     </div>
-
-
                 </div>
 
                 <div class="row">
@@ -373,24 +425,35 @@
 
                         <div class="row">
                             <div class="col-md-3">
-                                <text>New Order</text>
+                                <text>Failure Analysis</text>
                             </div>
                             <div class="col-md-7">
-                                @Html.EditorFor(m => m.SehubAccess.neworder, new { htmlAttributes = new { @class = "custom-range TrwadTracker", type = "range", @min = "0", @max = "3", @step = "1", @id = "neworder", @value = @Model.SehubAccess.neworder } })
+                                @Html.EditorFor(m => m.SehubAccess.treadTracker_failure_analysis, new { htmlAttributes = new { @class = "custom-range TrwadTracker", type = "range", @min = "0", @max = "3", @step = "1", @id = "failureAnalysis", @value = @Model.SehubAccess.treadTracker_failure_analysis } })
                             </div>
                             <div class="col-md-2">
-                                <span id="neworderValue" style=" font-weight:bold; color:#2573fa"></span>
+                                <span id="failureAnalysisValue" style=" font-weight:bold; color:#2573fa"></span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-3">
-                                <text>Open Order</text>
+                                <text>Production Report</text>
                             </div>
                             <div class="col-md-7">
-                                @Html.EditorFor(m => m.SehubAccess.openorder, new { htmlAttributes = new { @class = "custom-range TrwadTracker", type = "range", @min = "0", @max = "3", @step = "1", @id = "openorder", @value = @Model.SehubAccess.openorder } })
+                                @Html.EditorFor(m => m.SehubAccess.treadTracker_production_report, new { htmlAttributes = new { @class = "custom-range TrwadTracker", type = "range", @min = "0", @max = "3", @step = "1", @id = "productionReport", @value = @Model.SehubAccess.treadTracker_production_report } })
                             </div>
                             <div class="col-md-2">
-                                <span id="openorderValue" style=" font-weight:bold; color:#2573fa"></span>
+                                <span id="productionReportValue" style=" font-weight:bold; color:#2573fa"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <text>Customers</text>
+                            </div>
+                            <div class="col-md-7">
+                                @Html.EditorFor(m => m.SehubAccess.treadTracker_customers, new { htmlAttributes = new { @class = "custom-range TrwadTracker", type = "range", @min = "0", @max = "3", @step = "1", @id = "treadTracker_customers", @value = @Model.SehubAccess.treadTracker_customers } })
+                            </div>
+                            <div class="col-md-2">
+                                <span id="treadTracker_customersValue" style=" font-weight:bold; color:#2573fa"></span>
                             </div>
                         </div>
 
@@ -462,6 +525,18 @@
                             </div>
                             <div class="col-md-2">
                                 <span id="fleetTVT_vier_or_edit_surveyValue" style=" font-weight:bold; color:#2573fa"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <text>Fleet Snapshot</text>
+                            </div>
+                            <div class="col-md-7">
+                                @Html.EditorFor(m => m.SehubAccess.fleetTvt_snapshot, new { htmlAttributes = new { @class = "custom-range FleetTVT", type = "range", @min = "0", @max = "3", @step = "1", @id = "fleetTvt_snapshot", @value = @Model.SehubAccess.fleetTvt_snapshot } })
+                            </div>
+                            <div class="col-md-2">
+                                <span id="fleetTvt_snapshotValue" style=" font-weight:bold; color:#2573fa"></span>
                             </div>
                         </div>
 
@@ -543,6 +618,17 @@
                                 <span id="slider12Val" style=" font-weight:bold; color:#2573fa"></span>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <text>Employee Folder</text>
+                            </div>
+                            <div class="col-md-7">
+                                @Html.EditorFor(m => m.SehubAccess.employee_folder, new { htmlAttributes = new { @class = "custom-range Management", type = "range", @min = "0", @max = "3", @step = "1", @id = "employee_folder", @value = @Model.SehubAccess.employee_folder } })
+                            </div>
+                            <div class="col-md-2">
+                                <span id="employee_folderVal" style=" font-weight:bold; color:#2573fa"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -582,8 +668,6 @@
 
                 <hr style="border:1px thin gray" />
                 <div class="row">
-
-
                     <div class="col-md-2" style="position:relative">
                         <div class="row" style="margin-top:10px">
                             <div class="col-lg-12 text-center">
@@ -631,6 +715,17 @@
                                 <span id="settings_customersValue" style=" font-weight:bold; color:#2573fa"></span>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <text>Administration</text>
+                            </div>
+                            <div class="col-md-7">
+                                @Html.EditorFor(m => m.SehubAccess.settings_administration, new { htmlAttributes = new { @name = "form_range", @class = "custom-range Settings", type = "range", @min = "0", @max = "3", @step = "1", @id = "settings_administration", @value = @Model.SehubAccess.settings_administration } })
+                            </div>
+                            <div class="col-md-2">
+                                <span id="settings_administrationValue" style=" font-weight:bold; color:#2573fa"></span>
+                            </div>
+                        </div>
 
                     </div>
 
@@ -659,7 +754,7 @@
 <script>
 
     $(document).on('input', '.Settings', function () {
-        if (document.getElementById("settings_dashboard").value == "0" && document.getElementById("settings_managePermissions").value == "0" && document.getElementById("settings_customers").value == "0") {
+        if (document.getElementById("settings_dashboard").value == "0" && document.getElementById("settings_managePermissions").value == "0" && document.getElementById("settings_customers").value == "0" && document.getElementById("settings_administration").value == "0" ) {
             document.getElementById("settings").value = "0";
         }
         else {
@@ -668,7 +763,7 @@
     });
 
     $(document).on('input', '.FleetTVT', function () {
-        if (document.getElementById("fleetTvt_dashboard").value == "0" && document.getElementById("fleetTvt_fieldSurvey").value == "0" && document.getElementById("fleetTvt_EditAccount").value == "0" && document.getElementById("fleetTVT_vier_or_edit_survey").value == "0") {
+        if (document.getElementById("fleetTvt_dashboard").value == "0" && document.getElementById("fleetTvt_fieldSurvey").value == "0" && document.getElementById("fleetTvt_EditAccount").value == "0" && document.getElementById("fleetTVT_vier_or_edit_survey").value == "0" && document.getElementById("fleetTvt_snapshot").value == "0") {
             document.getElementById("fleetTVT").value = "0";
         }
         else {
@@ -677,7 +772,7 @@
     });
 
     $(document).on('input', '.TrwadTracker', function () {
-        if (document.getElementById("treadTrackerDashboard").value == "0" && document.getElementById("neworder").value == "0" && document.getElementById("openorder").value == "0") {
+        if (document.getElementById("treadTrackerDashboard").value == "0" && document.getElementById("failureAnalysis").value == "0" && document.getElementById("productionReport").value == "0" && document.getElementById("treadTracker_customers").value == "0") {
             document.getElementById("treadTracker").value = "0";
         }
         else {
@@ -723,7 +818,7 @@
 
 
     $(document).on('input', '.Management', function () {
-        if (document.getElementById("management_dashboard").value == "0" && document.getElementById("slider7").value == "0" && document.getElementById("slider9").value == "0" && document.getElementById("slider11").value == "0" && document.getElementById("slider12").value == "0") {
+        if (document.getElementById("management_dashboard").value == "0" && document.getElementById("slider7").value == "0" && document.getElementById("slider9").value == "0" && document.getElementById("slider11").value == "0" && document.getElementById("slider12").value == "0" && document.getElementById("employee_folder").value == "0" ) {
             document.getElementById("management").value = "0";
         }
         else {
@@ -758,18 +853,23 @@
         });
         $('#slider4').change();
 
-        $('#neworder').on('change', function (e) {
+        $('#failureAnalysis').on('change', function (e) {
             var id = e.target.value;
-            document.getElementById("neworderValue").innerHTML = id;
+            document.getElementById("failureAnalysisValue").innerHTML = id;
         });
-        $('#neworder').change();
+        $('#failureAnalysis').change();
 
-        $('#openorder').on('change', function (e) {
+        $('#productionReport').on('change', function (e) {
             var id = e.target.value;
-            document.getElementById("openorderValue").innerHTML = id;
+            document.getElementById("productionReportValue").innerHTML = id;
         });
-        $('#openorder').change();
+        $('#productionReport').change();
 
+        $('#treadTracker_customers').on('change', function (e) {
+            var id = e.target.value;
+            document.getElementById("treadTracker_customersValue").innerHTML = id;
+        });
+        $('#treadTracker_customers').change();
 
         $('#treadTrackerDashboard').on('change', function (e) {
             var id = e.target.value;
@@ -802,6 +902,12 @@
             document.getElementById("fleetTVT_vier_or_edit_surveyValue").innerHTML = id;
         });
         $('#fleetTVT_vier_or_edit_survey').change();
+
+        $('#fleetTvt_snapshot').on('change', function (e) {
+            var id = e.target.value;
+            document.getElementById("fleetTvt_snapshotValue").innerHTML = id;
+        });
+        $('#fleetTvt_snapshot').change();
 
 
 
@@ -842,17 +948,25 @@
         });
         $('#slider12').change();
 
-        $('#slider12').on('change', function (e) {
+        $('#employee_folder').on('change', function (e) {
             var id = e.target.value;
-            document.getElementById("slider12Val").innerHTML = id;
+            document.getElementById("employee_folderVal").innerHTML = id;
         });
-        $('#slider12').change();
+        $('#employee_folder').change();
 
         $('#settings_dashboard').on('change', function (e) {
             var id = e.target.value;
             document.getElementById("settings_dashboardValue").innerHTML = id;
         });
         $('#settings_dashboard').change();
+
+        $('#settings_administration').on('change', function (e) {
+                    var id = e.target.value;
+                    document.getElementById("settings_administrationValue").innerHTML = id;
+                });
+        $('#settings_administration').change();
+
+
 
 
         $('#settings_managePermissions').on('change', function (e) {
@@ -1051,11 +1165,13 @@
                 document.getElementById("fleetTvt_fieldSurvey").value = "0";
                 document.getElementById("fleetTvt_EditAccount").value = "0";
                 document.getElementById("fleetTVT_vier_or_edit_survey").value = "0";
+                document.getElementById("fleetTvt_snapshot").value = "0";
 
                 document.getElementById("fleetTvt_dashboardValue").innerHTML = "0";
                 document.getElementById("fleetTvt_fieldSurveyValue").innerHTML = "0";
                 document.getElementById("fleetTvt_EditAccountValue").innerHTML = "0";
                 document.getElementById("fleetTVT_vier_or_edit_surveyValue").innerHTML = "0";
+                document.getElementById("fleetTvt_snapshotValue").innerHTML = "0";
             }
             else if (document.getElementById("fleetTVT").value == "3") {
 
@@ -1063,11 +1179,13 @@
                 document.getElementById("fleetTvt_fieldSurvey").value = "1";
                 document.getElementById("fleetTvt_EditAccount").value = "1";
                 document.getElementById("fleetTVT_vier_or_edit_survey").value = "1";
+                document.getElementById("fleetTvt_snapshot").value = "1";
 
                 document.getElementById("fleetTvt_dashboardValue").innerHTML = "1";
                 document.getElementById("fleetTvt_fieldSurveyValue").innerHTML = "1";
                 document.getElementById("fleetTvt_EditAccountValue").innerHTML = "1";
                 document.getElementById("fleetTVT_vier_or_edit_surveyValue").innerHTML = "1";
+                document.getElementById("fleetTvt_snapshotValue").innerHTML = "1";
             }
         });
 
@@ -1078,10 +1196,12 @@
                 document.getElementById("settings_dashboard").value = "0";
                 document.getElementById("settings_managePermissions").value = "0";
                 document.getElementById("settings_customers").value = "0";
+                document.getElementById("settings_administration").value = "0";
 
                 document.getElementById("settings_dashboardValue").innerHTML = "0";
                 document.getElementById("settings_managePermissionsValue").innerHTML = "0";
                 document.getElementById("settings_customersValue").innerHTML = "0";
+                document.getElementById("settings_administrationValue").innerHTML = "0";
             }
 
             else if (document.getElementById("settings").value == "3") {
@@ -1089,10 +1209,12 @@
                 document.getElementById("settings_dashboard").value = "1";
                 document.getElementById("settings_managePermissions").value = "1";
                 document.getElementById("settings_customers").value = "1";
+                document.getElementById("settings_administration").value = "1";
 
                 document.getElementById("settings_dashboardValue").innerHTML = "1";
                 document.getElementById("settings_managePermissionsValue").innerHTML = "1";
                 document.getElementById("settings_customersValue").innerHTML = "1";
+                document.getElementById("settings_administrationValue").innerHTML = "1";
             }
 
         });
@@ -1107,6 +1229,7 @@
                 document.getElementById("slider9").value = "0";
                 document.getElementById("slider11").value = "0";
                 document.getElementById("slider12").value = "0";
+                document.getElementById("employee_folder").value = "0";
 
                 document.getElementById("management_dashboardValue").innerHTML = "0";
                 document.getElementById("slider7Val").innerHTML = "0";
@@ -1114,6 +1237,7 @@
                 document.getElementById("slider9Val").innerHTML = "0";
                 document.getElementById("slider11Val").innerHTML = "0";
                 document.getElementById("slider12Val").innerHTML = "0";
+                document.getElementById("employee_folderVal").innerHTML = "0";
             }
 
             if (document.getElementById("management").value == "3") {
@@ -1124,6 +1248,7 @@
                 document.getElementById("slider9").value = "1";
                 document.getElementById("slider11").value = "1";
                 document.getElementById("slider12").value = "1";
+                document.getElementById("employee_folder").value = "1";
 
                 document.getElementById("management_dashboardValue").innerHTML = "1";
                 document.getElementById("slider7Val").innerHTML = "1";
@@ -1131,6 +1256,7 @@
                 document.getElementById("slider9Val").innerHTML = "1";
                 document.getElementById("slider11Val").innerHTML = "1";
                 document.getElementById("slider12Val").innerHTML = "1";
+                document.getElementById("employee_folderVal").innerHTML = "1";
             }
 
         });

@@ -10,6 +10,9 @@ namespace SeHubPortal.ViewModel
     public class EmployeePayrollModel
     {
         public List<EmployeePayrollListModel> employeepayrollList { get; set; }
+        public List<EmployeePayrollListModel> employeepayrollListChangeLocation { get; set; }
+        public List<EmployeePayrollListModel> employeeListValidation { get; set; }
+
         public List<PayrollCorporateDashboard> corpDashboard { get; set; }
         public List<SelectListItem> MatchedLocs { get; set; }
         public string MatchedLocID { get; set; }
@@ -32,5 +35,22 @@ namespace SeHubPortal.ViewModel
 
         public List<SelectListItem> NewMatchedEmployees { get; set; }
         public tbl_sehub_access SehubAccess { get; set; }
+
+        public int LockStatusLocation { get; set; }
+
+        public List<tbl_employee_payroll_biweekly> validate { get; set; }
+        public List<tbl_employee_payroll_submission> validateCorp { get; set; }
+        public List<tbl_employee_payroll_summary> summary { get; set; }
+
+        public List<ValidationAdjustment> ValidationAdjustmentList { get; set; }
+
+        public double YearlyRegular { get; set; }
+        public double YearlyOT { get; set; }
+        public double YearlyVac { get; set; }
+        public double YearlySic { get; set; }
+
+        public List<DateTime> vacDatesYearly { get; set; }
+        public List<DateTime> sicDatesYearly { get; set; }
+
     }
 }

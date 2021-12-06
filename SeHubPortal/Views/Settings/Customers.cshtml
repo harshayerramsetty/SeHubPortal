@@ -17,7 +17,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
-
+    @if (Model.SehubAccess.plant > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
 
     @if (Model.SehubAccess.tools > 0)
     {
@@ -109,9 +116,16 @@
         </style>
     }
 
+    @if (Model.SehubAccess.settings_administration > 0)
+    {
+        <style>
+            #AdministrationLink {
+                display: block !important;
+            }
+        </style>
+    }
+
     <style>
-
-
 
         #CustomersLink {
             display: block !important;
@@ -144,6 +158,18 @@
         body {
             overflow-y: hidden !important;
         }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .example::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .example {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+
     </style>
 </head>
 <body>
@@ -151,30 +177,405 @@
         <div class="col">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb" style="background-color: white; height: 100%; margin-top: 0px;">
-                    <li class="breadcrumb-item"><a href="@Url.Action("Customers", "Settings")">Customers</a></li>
-                    <li class="breadcrumb-item " aria-current="page">Dashboard</li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("Customers", "Settings")">Settings</a></li>
+                    <li class="breadcrumb-item " aria-current="page">Customers</li>
                 </ol>
             </nav>
         </div>
         <button type="button" id="clickThis" class="btn" style=" margin-bottom: 14px;">
-            <i class="fa fa-bars" style="        font-size: 25px
-"></i>
+            <i class="fa fa-bars" style="font-size: 25px"></i>
             <span class="sr-only">Toggle Menu</span>
         </button>
     </div>
-    <div class="row">
+    <div class="row" style="padding:0px 30px 10px 30px">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="card shadow-sm" data-toggle="modal" data-target="#InspectionChecklist" style=" width:100%;">
+                    <div class="card-header text-center" style="padding: 6px 6px 0px 6px">
+                        <div class="row">
+                            <div class="col-lg-5"></div>
+                            <div class="col-lg-2" style="font-size:20px; padding-top:7px">
+                                <h4 style="font-weight:bold; color:black">Customer List</h4>
+                            </div>
+                            <div class="col-lg-5 text-right" style="padding-top:6px">
+                                <button data-toggle="modal" data-target="#AddCustomer" class="btn btn-primary" style="margin-right:10px; float:right; padding:3px 20px 3px 20px">Add</button>
+                                <button id="clearCR" class="btn btn-primary" style="margin-right:10px; float:right; padding:3px 20px 3px 20px">Clear</button>
+                                <button id="searchCR" class="btn btn-primary" style="margin-right:10px; float:right; padding:3px 20px 3px 20px">Search</button>
+                                <input style="margin-right:10px;height:32px; width:350px;border-radius:4px; float:right " type="text" id="myInput" placeholder=" Search By Text" title="Type in a name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body text-center" style="padding:10px;  ">
+                        <table style="width:100%">
+                            <thead style="background-color:gray; color:white">
+                                <tr>
+                                    <th style="width:100px; font-size:10px; padding:0px" scope="col"> Customer # </th>
+                                    <th style="width:300px; font-size:10px; padding:0px" scope="col"> Name</th>
+                                    <th style="width:250px; font-size:10px; padding:0px" scope="col"> Address 1</th>
+                                    <th style="width:250px; font-size:10px; padding:0px" scope="col"> Address 2</th>
+                                    <th style="width:200px; font-size:10px; padding:0px" scope="col"> City</th>
+                                    <th style="width:100px; font-size:10px; padding:0px" scope="col"> Province</th>
+                                    <th style="width:100px; font-size:10px; padding:0px" scope="col"> Zip</th>
+                                    <th style="width:150px; font-size:10px; padding:0px" scope="col"> CRM Enrolled</th>
+                                    <th style="width:150px; font-size:10px; padding:0px" scope="col"> FleetTVT Enrolled</th>
+                                    <th style="width:150px; font-size:10px; padding:0px" scope="col"> Tread Tracker Enrolled</th>
+                                    <th style="width:50px; font-size:10px; padding:0px; width:50px" scope="col"> info</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <div class="row example" style="padding: 0px 15px 0px 15px; height:650px; overflow-y:auto; overflow-x:hidden">
+                            <table id="callReport" class="table table-striped table-bordered">
+
+                                <tbody>
+
+                                    @foreach (var item in Model.CustomerList)
+                                    {
+
+                                        int tc = 0;
+                                        int ftvt = 0;
+                                        int crm = 0;
+
+                                        <tr>
+                                            <th style="width:100px;text-align:left; font-size:13px; padding:5px; width:100px; text-align:center" scope="row">@item.cust_us1</th>
+                                            <td style="width:300px;font-size:13px; padding:5px; text-align:left">
+                                                @if (item.cust_name != null && @item.cust_name.Length > 40)
+                                                {
+                                                    @item.cust_name.Substring(0, 40)
+                                                }
+                                                else
+                                                {
+                                                    @item.cust_name
+                                                }
+                                            </td>
+                                            <td style="width:250px;font-size:13px; padding:5px; width:250px">@item.cust_add1</td>
+                                            <td style="width:250px;font-size:13px; padding:5px; width:250px">@item.cust_add2</td>
+                                            <td style="width:200px;font-size:13px; padding:5px">@item.cust_city</td>
+                                            <td style="width:100px;font-size:13px; padding:5px">@item.cust_state</td>
+                                            <td style="width:100px;font-size:13px; padding:5px">@item.cust_zip</td>
+                                            <td style="width:150px;font-size:13px; padding:5px">
+                                                @if (Model.CustomerListCRM.Where(x => x.customer_number == item.cust_us1).Count() > 0)
+                                                {
+                                                    crm = 1;
+                                                    <input id="crmct" onclick="return false;" type="checkbox" name="name" checked />
+                                                }
+                                                else
+                                                {
+                                                    crm = 0;
+                                                    <input id="crmct" onclick="return false;" type="checkbox" name="name" />
+                                                }
+                                            </td>
+                                            <td style="width:150px;font-size:13px; padding:5px">
+                                                @if (Model.CustomerListFleetTVT.Where(x => x.customer_number == item.cust_us1).Count() > 0)
+                                                {
+                                                    ftvt = 1;
+                                                    <input id="ftvtct" onclick="return false;" type="checkbox" name="name" checked />
+                                                }
+                                                else
+                                                {
+                                                    ftvt = 0;
+                                                    <input id="ftvtct" onclick="return false;" type="checkbox" name="name" />
+                                                }
+                                            </td>
+                                            <td style="width:150px;font-size:13px; padding:5px">
+                                                @if (item.cscttc == "True")
+                                                {
+                                                    tc = 1;
+                                                    <input id="ttcct" type="checkbox" onclick="return false;" checked />
+                                                }
+                                                else
+                                                {
+                                                    tc = 0;
+                                                    <input id="ttcct" type="checkbox" onclick="return false;" />
+                                                }
+                                            </td>
+                                            <td style="width:50px;font-size:13px; padding:5px; text-align:center">
+                                                <a href="#"><span style="display:none">@item.cust_us1;@tc;@ftvt;@crm</span> <i class="fa fa-info" style="font-size:20px;opacity:0.8; color:dodgerblue"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="row" style="        display: none;
-        width: 1645px;
-        height: 800px;
-        margin-left: 15px;
-        background-color: aqua
+    <!-- Modal -->
+    <div class="modal fade" id="AddCustomer" tabindex="-1" role="dialog" aria-labelledby="AddCustomerLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+
+            @using (Html.BeginForm("AddCustomer", "Settings", FormMethod.Post, new { htmlAttributes = new { @autocomplete = "off" } }))
+            {
+                <div class="modal-content">
+                    <div class="modal-header" style="        padding: 5px 0px 0px 15px">
+                        <h5>Customer Profile</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" style="margin-bottom:10px">
+                            <div class="col-lg-6 text-right">
+                                Account #
+                            </div>
+                            <div col-lg-6>
+                                @Html.EditorFor(m => m.NewCustomer.cust_us1, new { htmlAttributes = new { @autocomplete = "off", @required = "required" } })
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom:10px">
+                            <div class="col-lg-6 text-right">
+                                Customer Name
+                            </div>
+                            <div col-lg-6>
+                                @Html.EditorFor(m => m.NewCustomer.cust_name, new { htmlAttributes = new { @autocomplete = "off" } })
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom: 10px">
+                            <div class="col-lg-6 text-right">
+                                Address 1
+                            </div>
+                            <div col-lg-6>
+                                @Html.EditorFor(m => m.NewCustomer.cust_add1, new { htmlAttributes = new { @autocomplete = "off" } })
+                            </div>
+                        </div>
+                        <div class="row" style="        margin-bottom: 10px
 ">
+                            <div class="col-lg-6 text-right">
+                                Address 2
+                            </div>
+                            <div col-lg-6>
+                                @Html.EditorFor(m => m.NewCustomer.cust_add2, new { htmlAttributes = new { @autocomplete = "off" } })
+                            </div>
+                        </div>
+                        <div class="row" style="        margin-bottom: 10px
+">
+                            <div class="col-lg-6 text-right">
+                                Address 3
+                            </div>
+                            <div col-lg-6>
+                                @Html.EditorFor(m => m.NewCustomer.cust_add3, new { htmlAttributes = new { @autocomplete = "off" } })
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom:10px">
+                            <div class="col-lg-6 text-right">
+                                Address 4
+                            </div>
+                            <div col-lg-6>
+                                @Html.EditorFor(m => m.NewCustomer.cust_add4, new { htmlAttributes = new { @autocomplete = "off" } })
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row" style="margin-bottom:10px">
+                            <div class="col-lg-6 text-right">
+                                CRM Enrolled
+                            </div>
+                            <div col-lg-6>
+                                @Html.EditorFor(m => m.CRM, new { htmlAttributes = new { @autocomplete = "off", @type = "checkbox", @style = "width:25px; height:25px" } })
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="row" style="        margin-bottom: 10px
+">
+                            <div class="col-lg-6 text-right">
+                                FleetTVT Enrolled
+                            </div>
+                            <div col-lg-6>
+                                @Html.EditorFor(m => m.fleetTVT, new { htmlAttributes = new { @autocomplete = "off", @type = "checkbox", @style = "width:25px; height:25px" } })
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom:10px">
+                            <div class="col-lg-6 text-right">
+                                Reporting Contact
+                            </div>
+                            <div col-lg-6>
+                                <input type="text" name="name" value="" />
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom:10px">
+                            <div class="col-lg-6 text-right">
+                                Reporting Email
+                            </div>
+                            <div col-lg-6>
+                                <input type="text" name="name" value="" />
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom:10px">
+                            <div class="col-lg-6 text-right">
+                                Mileage Required
+                            </div>
+                            <div col-lg-6>
+                                <input type="checkbox" style="width:25px; height:25px" name="name" value="" />
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="row" style="margin-bottom:10px">
+                            <div class="col-lg-6 text-right">
+                                Tread Tracker Enrolled
+                            </div>
+                            <div col-lg-6>
+                                @Html.EditorFor(m => m.treadTracker, new { htmlAttributes = new { @autocomplete = "off", @type = "checkbox", @style = "width:25px; height:25px" } })
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom:10px">
+                            <div class="col-lg-6 text-right">
+                                Reporting Contact
+                            </div>
+                            <div col-lg-6>
+                                <input type="text" name="name" value="" />
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom:10px">
+                            <div class="col-lg-6 text-right">
+                                Reporting Email
+                            </div>
+                            <div col-lg-6>
+                                <input type="text" name="name" value="" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer" style="padding:3px">
+                        <button type="button" style="        padding: 3px 30px 3px 30px
+" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button type="submit" style="        padding: 3px 20px 3px 20px
+" class="btn btn-success">Submit</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="EditCustomer" tabindex="-1" role="dialog" aria-labelledby="AddCustomerLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+
+            @using (Html.BeginForm("EditCustomer", "Settings", FormMethod.Post, new { htmlAttributes = new { @autocomplete = "off" } }))
+            {
+                <div class="modal-content">
+                    <div class="modal-header" style="        padding: 5px 0px 0px 15px">
+                        <h5>Edit Customer</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" style="margin-bottom: 10px
+">
+                            <div class="col-lg-6 text-right">
+                                Customer #
+                            </div>
+                            <div col-lg-6>
+                                @Html.EditorFor(m => m.Customeredit, new { htmlAttributes = new { @readonly = true, @id = "CustomerEdit", @autocomplete = "off", @required = "required" } })
+                            </div>
+                        </div>
+                        <div class="row" style="        margin-bottom: 10px
+">
+                            <div class="col-lg-6 text-right">
+                                Tread Tracker
+                            </div>
+                            <div col-lg-6>
+                                @Html.EditorFor(m => m.treadTrackerEdit, new { htmlAttributes = new { @id = "ttcctedit", @autocomplete = "off", @type = "checkbox", @style = "width:25px; height:25px" } })
+                            </div>
+                        </div>
+                        <div class="row" style="        margin-bottom: 10px">
+                            <div class="col-lg-6 text-right">
+                                FleetTVT
+                            </div>
+                            <div col-lg-6>
+                                @Html.EditorFor(m => m.fleetTVTEdit, new { htmlAttributes = new { @id = "ftvtctedit", @autocomplete = "off", @type = "checkbox", @style = "width:25px; height:25px" } })
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom:10px">
+                            <div class="col-lg-6 text-right">
+                                CRM
+                            </div>
+                            <div col-lg-6>
+                                @Html.EditorFor(m => m.CRMedit, new { htmlAttributes = new { @id = "crmctedit", @autocomplete = "off", @type = "checkbox", @style = "width:25px; height:25px" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="padding:3px">
+                        <button type="button" style="padding:3px 30px 3px 30px" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button type="submit" style="padding:3px 20px 3px 20px" class="btn btn-success">Submit</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+
+    <div class="row" style="display: none;width: 1645px;height: 800px;margin-left: 15px;background-color: aqua">
         <iframe src="https://outlook.office365.com/mail/inbox" style="width:1645px;height:805px;"></iframe>
     </div>
 
+    <script>
 
+        var input = document.getElementById("myInput");
+        input.addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                var value = $("#myInput").val().toLowerCase();
+                $("#callReport tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            }
+        });
+
+        $('#searchCR').click(function () {
+            var value = $("#myInput").val().toLowerCase();
+            $("#callReport tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
+        $('#clearCR').click(function () {
+            $("#myInput").val("");
+        });
+
+        $('#callReport a').click(function (e) {
+
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+
+            var seleccionado = $(this).children("span").html();
+
+            var myArr = seleccionado.split(";");
+
+            if (myArr[1] == "1") {
+                $('#ttcctedit').prop('checked', true);
+            }
+            else {
+                $('#ttcctedit').prop('checked', false);
+            }
+
+            if (myArr[2] == "1") {
+                $('#ftvtctedit').prop('checked', true);
+            }
+            else {
+                $('#ftvtctedit').prop('checked', false);
+            }
+
+            if (myArr[3] == "1") {
+                $('#crmctedit').prop('checked', true);
+            }
+            else {
+                $('#crmctedit').prop('checked', false);
+            }
+
+
+            $('#CustomerEdit').val(myArr[0]);
+            $('#EditCustomer').modal();
+
+        });
+    </script>
 
     <script>
 
@@ -197,7 +598,6 @@
             $('#clickThis').on('click', function () {
                 $('#sidebar').toggleClass('active');
             });
-
         });
 
         function getUrlVars() {

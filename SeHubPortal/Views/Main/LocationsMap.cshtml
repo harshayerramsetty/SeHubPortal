@@ -1,0 +1,292 @@
+﻿@model SeHubPortal.ViewModel.LocationsMap
+@{
+    ViewBag.Title = "LocationsMap";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/NewOrder.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/NewOrder.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" rel="stylesheet" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.css" rel="stylesheet" media="print" />
+    <link href="~/Content/fullcalendar.css" rel="stylesheet" />
+
+
+
+
+    @if (Model.SehubAccess.tools > 0)
+    {
+        <style>
+            #toolsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.management > 0)
+    {
+        <style>
+            #ManagementClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings > 0)
+    {
+        <style>
+            #SettingsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.payroll > 0)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.fleetTVT > 0)
+    {
+        <style>
+            #FleetTVTClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTracker > 0)
+    {
+        <style>
+            #treadTrackereClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+
+    @if (Model.SehubAccess.library_access > 0)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.mainCalendar > 0)
+    {
+        <style>
+            #MainCalendarLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+
+    @if (Model.SehubAccess.mainDashboard > 0)
+    {
+        <style>
+            #MainDashboardLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+
+    <style>
+
+        #LocationsMapLink {
+            display: block !important;
+            color: black;
+            font-weight: bold;
+            background-color: #f0f2f5;
+        }
+
+        #mainClicked {
+            display: block !important;
+        }
+
+        .fc-agendaWeek-button {
+            display: none;
+        }
+
+        .fc-toolbar h2 {
+            color: #008ce3;
+        }
+
+        #mainClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #mainButton {
+            color: black;
+            font-weight: bold;
+        }
+
+
+
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .heading {
+            margin: 10px 0px 0px 0px;
+        }
+
+            .heading h2 {
+                margin-top: 8px;
+            }
+
+        .card-header {
+            background-color: #cde8ca;
+            padding: 5px
+        }
+
+            .card-header h6 {
+                color: black;
+            }
+
+        .fc-row.fc-week.ui-widget-content {
+            height: 100px !important;
+        }
+
+        body {
+            overflow-y: hidden !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="row heading" style="margin-right:15px">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Locationsmap", "Main")">Main</a></li>
+                    <li class="breadcrumb-item " aria-current="page">Locations Map</li>
+
+                    @using (Html.BeginForm("DashboardChangeLocation", "Main", FormMethod.Post))
+                    {
+                        <label style="margin: 0px 3px 0px 1200px ">Location</label>
+                        @Html.DropDownListFor(m => m.SelectedLocationId, Model.LocationsList, new { @onChange = "this.form.submit()", @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
+
+                    }
+
+                </ol>
+            </nav>
+        </div>
+        <button type="button" id="clickThis" class="btn" style="margin-bottom: 14px;">
+            <i class="fa fa-bars" style="font-size: 25px"></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+
+
+    <div class="row" >
+        <div class="col-lg-2 text-center" style="padding-right:0px; padding-left:45px">
+            <div class="row" style="margin-bottom:10px">
+                <img src="https://s3-media0.fl.yelpcdn.com/bphoto/wsDhCW6-I8I43JRECAAXlA/l.jpg" style="width:100%" alt="Alternate Text" />
+            </div>
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-12 text-center">
+                    <h2><b><u>@Model.SelectedLocationId</u></b></h2>
+                </div>
+            </div>
+            <div class="row" style="font-size:15px; margin-bottom:10px">
+                <b><u>Address</u></b>
+            </div>
+            <div class="row" style="margin-bottom:10px">
+                @Model.locdesc.cta_street1
+            </div>
+            <div class="row" style="margin-bottom:10px">
+                @Model.locdesc.cta_street2
+            </div>
+            <div class="row" style="margin-bottom:10px">
+                @Model.locdesc.cta_city
+            </div>
+            <div class="row" style="margin-bottom:10px">
+                @Model.locdesc.cta_province @Model.locdesc.cta_postal_code
+            </div>
+            <div class="row" style="margin-bottom:20px">
+                @Model.locdesc.cta_country
+            </div>
+            <div class="row" style="margin-bottom:10px">
+                <b><u>Phone</u></b>
+            </div>
+            <div class="row" style="margin-bottom:20px">
+                @Model.locdesc.cta_phone
+            </div>
+            <div class="row" style="margin-bottom:10px">
+                <b><u>Fax</u></b>
+            </div>
+            <div class="row" style="margin-bottom:10px">
+                @Model.locdesc.cta_fax
+            </div>
+            <div class="row" style="margin-bottom:10px">
+                <b><u>Service Email</u></b>
+            </div>
+            <div class="row" style="margin-bottom:10px">
+                @Model.locdesc.service_email
+            </div>
+        </div>
+        <div class="col-lg-10">
+            @if (Model.SelectedLocationId == "001" || Model.SelectedLocationId == "AHO")
+            {
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2694.1246087774407!2d-52.82106968437227!3d47.52643697917947!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4b0cbca0a546f663%3A0xb67bfce65ca39fce!2sCity%20Tire%20%26%20Auto%20Centre%20Ltd!5e0!3m2!1sen!2sca!4v1629286129607!5m2!1sen!2sca" width="1370" height="740" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+            }
+            else if (Model.SelectedLocationId == "002")
+            {
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2692.44323365289!2d-52.75284868437117!3d47.559163979181484!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4b0ca379fa79103f%3A0x9d31442b729c7382!2sCity%20Tire%20%26%20Auto%20Centre%20Ltd!5e0!3m2!1sen!2sca!4v1629285684850!5m2!1sen!2sca" width="1370" height="740" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+            }
+            else if (Model.SelectedLocationId == "003")
+            {
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2689.9823856565636!2d-52.72313318436949!3d47.6070321791847!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4b0ca6a575bab7ed%3A0x9648f04b5a5bcc7!2sCity%20Tire%20%26%20Auto%20Centre%20Ltd!5e0!3m2!1sen!2sca!4v1629286344677!5m2!1sen!2sca" width="1370" height="740" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+            }
+            else if (Model.SelectedLocationId == "004")
+            {
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2619.788053195263!2d-57.91717898432217!3d48.95752147929735!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4b7bb21916f02331%3A0x3f45bbbea9610231!2sCity%20Tire%20%26%20Auto%20Centre%20Ltd!5e0!3m2!1sen!2sca!4v1629287102826!5m2!1sen!2sca" width="1370" height="740" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+            }
+            else if (Model.SelectedLocationId == "005")
+            {
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2619.9062436872837!2d-55.63095558432216!3d48.95527107929714!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4b773a53df656f59%3A0x9f30449025615614!2sCity%20Tire%20%26%20Auto%20Centre%20Ltd!5e0!3m2!1sen!2sca!4v1629286841532!5m2!1sen!2sca" width="1370" height="740" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+            }
+            else if (Model.SelectedLocationId == "007")
+            {
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2619.9062436872837!2d-55.63095558432216!3d48.95527107929714!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4b773a53df656f59%3A0x9f30449025615614!2sCity%20Tire%20%26%20Auto%20Centre%20Ltd!5e0!3m2!1sen!2sca!4v1629286841532!5m2!1sen!2sca" width="1370" height="740" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+            }
+            else if (Model.SelectedLocationId == "009")
+            {
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2661.189703312309!2d-53.99039068435014!3d48.16442497922557!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4b747873e6def649%3A0x159d322ac1244b49!2sCity%20Tire%20%26%20Auto%20Centre%20Ltd!5e0!3m2!1sen!2sca!4v1629287212796!5m2!1sen!2sca" width="1370" height="740" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+            }
+            else if (Model.SelectedLocationId == "010" || Model.SelectedLocationId == "011" || Model.SelectedLocationId == "347")
+            {
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2694.1579735886667!2d-52.82108078437229!3d47.525787379179384!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4b0cbdda65c001e3%3A0x6c147fa98274ea66!2sCity%20Tire%20%26%20Auto%20Centre%20Ltd!5e0!3m2!1sen!2sca!4v1629287482584!5m2!1sen!2sca" width="1370" height="740" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+            }
+
+        </div>
+    </div>
+
+</body>
+
+</html>
+
+
+
+

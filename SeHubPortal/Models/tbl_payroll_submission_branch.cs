@@ -17,8 +17,10 @@ namespace SeHubPortal.Models
         public string submission_id { get; set; }
         public string submitter_name { get; set; }
         public Nullable<int> submitter_empId { get; set; }
-        public Nullable<System.DateTime> submission_date { get; set; }
+        public System.DateTime submission_date { get; set; }
         public string location_id { get; set; }
         public Nullable<int> payroll_id { get; set; }
+        public Nullable<int> loc_status { get; set; }
+        public Nullable<int> resubmit { get; set; }
     }
 }

@@ -17,8 +17,14 @@
     <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.css" rel="stylesheet" media="print" />
     <link href="~/Content/fullcalendar.css" rel="stylesheet" />
 
-
-
+    @if (Model.SehubAccess.plant > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
 
     @if (Model.SehubAccess.tools > 0)
     {
@@ -164,6 +170,7 @@
             background-color: #f0f2f5;
         }
 
+
         .heading {
             margin: 10px 0px 0px 0px;
         }
@@ -190,74 +197,8 @@
                     <li class="breadcrumb-item " aria-current="page">Callendar</li>
                     <label style="margin: 0px 3px 0px 1264px ">Location</label>
                     <div>
-                        @{
-                            List
-                            <SelectListItem>
-                            listItems = new List
-                            <SelectListItem>
-                            ();
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "All",
-                                Value = "All"
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "001",
-                                Value = "001"
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "002",
-                                Value = "002"
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "003",
-                                Value = "003"
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "004",
-                                Value = "004"
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "005",
-                                Value = "005"
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "007",
-                                Value = "007"
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "009",
-                                Value = "009"
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "010",
-                                Value = "010"
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "011",
-                                Value = "011"
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "101",
-                                Value = "101"
-                            });
-                            listItems.Add(new SelectListItem
-                            {
-                                Text = "347",
-                                Value = "347"
-                            });
-                        }
-                        @Html.DropDownListFor(m => m.Location_ID, listItems, new { @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
+                        
+                        @Html.DropDownListFor(m => m.Location_ID, Model.LocationsList, new { @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
                     </div>
                 </ol>
             </nav>
@@ -288,9 +229,17 @@
             
         </div>
         <div class="col-lg-4">
-            <input id="prev" type="text" class="btn btn-primary" readonly value="<" style="height:30px; width:40px" />
-
-            <input id="next" type="text" class="btn btn-primary" readonly value=">" style="height:30px; width:40px; margin-left:426px" />
+            <div class="row">
+                <div class="col-lg-2 text-left">
+                    <input id="prev" type="text" class="btn btn-primary" readonly value="<" style="height:30px; width:40px" />
+                </div>
+                <div class="col-lg-8 text-center">
+                    <h2 id="titleText" style="color:#2f88fc"></h2>
+                </div>
+                <div class="col-lg-2 text-right">
+                    <input id="next" type="text" class="btn btn-primary" readonly value=">" style="float:right; height:30px; width:40px;" />
+                </div>
+            </div>
         </div>
         <div class="col-lg-4 text-right">
             <input id="month" type="text" class="btn" readonly value="Month" style="color:white; background-color:#24a0ed; height:30px; width:100px" />
@@ -298,11 +247,9 @@
             <input id="basicDay" type="text" class="btn" readonly value="Day" style="color:white; background-color:#24a0ed; height:30px; width:100px" />
         </div>
     </div>
-
-
     <div class="row" style="padding:0px 15px 15px 15px;">
         <div class="row" style="padding:0px 15px 15px 15px; ">
-            <div id="calender" style="height:700px; width:1640px; margin:0px 15px 15px 15px; padding:15px 15px 15px 15px; background-color:white"></div> @*padding:15px 15px 15px 15px; background-color:white*@
+            <div id="calender" style="background-color:white; height:680px; width:100%; margin:0px 15px 15px 15px; padding:0px 15px 15px 15px;"></div> @*padding:15px 15px 15px 15px; background-color:white*@
         </div>
 
     </div>
@@ -335,25 +282,26 @@
                 $('.fc-month-button').style.display = 'none';
                 $('.fc-agendaWeek-button').hide();
                 $('.fc-agendaDay-button').hide();   
-                
             });
 
             $("#month").css('background-color', 'white');
             $("#month").css('color', '#008ce3');
             $("#month").css('border', '2px solid #008ce3');
-            
         });
 
         $("#next").click(function () {
-            $("#calender").fullCalendar("next").click();
+            $('.fc-next-button').click();
+            $('#titleText').html($('.fc-center h2').html())
         });
 
         $("#prev").click(function () {
-            $("#calender").fullCalendar("prev").click();
+            $('.fc-prev-button').click();
+            $('#titleText').html($('.fc-center h2').html())
         });
 
         $("#today").click(function () {
-            $("#calender").fullCalendar("today").click();
+            $('.fc-today-button').click();
+            $('#titleText').html($('.fc-center h2').html())
         });
 
         $("#month").click(function () {
@@ -365,7 +313,8 @@
             $("#basicWeek").css('background-color', '#008ce3');
             $("#basicWeek").css('color', 'white');
             $("#basicDay").css('background-color', '#008ce3');
-            $("#basicDay").css('color','white');
+            $("#basicDay").css('color', 'white');
+            $('#titleText').html($('.fc-center h2').html())
         });
 
         $("#basicWeek").click(function () {
@@ -376,7 +325,8 @@
             $("#month").css('background-color', '#008ce3');
             $("#month").css('color', 'white');
             $("#basicDay").css('background-color', '#008ce3');
-            $("#basicDay").css('color','white');
+            $("#basicDay").css('color', 'white');
+            $('#titleText').html($('.fc-center h2').html())
         });
 
         $("#basicDay").click(function () {
@@ -388,6 +338,7 @@
             $("#month").css('color', 'white');
             $("#basicWeek").css('background-color', '#008ce3');
             $("#basicWeek").css('color', 'white');
+            $('#titleText').html($('.fc-center h2').html())
         });
 
 
@@ -488,12 +439,12 @@
                     $('#calender').fullCalendar('destroy');
 
                     $('#calender').fullCalendar({
-                        contentHeight: 610,
+                        contentHeight: 640,
                         defaultDate: new Date(),
                         timeFormat: 'h(:mm)a',
                         displayEventTime: false,
                         header: {
-                            left: '',
+                            left: 'prev,next today',
                             center: 'title',
                             right: 'month,agendaWeek,agendaDay'
                         },
@@ -522,9 +473,20 @@
                             $('#myModal #EventImage').empty().attr("src",calEvent.imageurl);
                             $('#myModal').modal();
                         }
-                    })
-                }
 
+
+
+                    })
+
+                    $('#titleText').html($('.fc-center h2').html())
+
+                    $('.fc-center').css("display", "none");
+                    $('.fc-prev-button').css("display", "none");
+                    $('.fc-today-button').css("display", "none");
+                    $('.fc-next-button').css("display", "none");
+
+                }
+                //$('h2').css("background-color", "red")
             })
 
 
@@ -564,12 +526,12 @@
                     function GenerateCalender(events) {
                         $('#calender').fullCalendar('destroy');
                         $('#calender').fullCalendar({
-                            contentHeight: 610,
+                            contentHeight: 640,
                             defaultDate: new Date(),
                             timeFormat: 'h(:mm)a',
                             displayEventTime : false,
                             header: {
-                                left: '',
+                                left: 'prev,next today',
                                 center: 'title',
                                 right: 'month,agendaWeek,agendaDay' //,list
                             },
@@ -603,7 +565,12 @@
                                 $('#myModal').modal();
                             }
                         })
+                        $('.fc-center').css("display", "none");
+                        $('.fc-prev-button').css("display", "none");
+                        $('.fc-today-button').css("display", "none");
+                        $('.fc-next-button').css("display", "none");
                     }
+                    
                 }
                 else {        
                     var events = [];
@@ -695,12 +662,12 @@
                     function GenerateCalender(events) {
                         $('#calender').fullCalendar('destroy');
                         $('#calender').fullCalendar({
-                            contentHeight: 610,
+                            contentHeight: 640,
                             defaultDate: new Date(),
                             timeFormat: 'h(:mm)a',
                             displayEventTime : false,
                             header: {
-                                left: '',
+                                left: 'prev,next today',
                                 center: 'title',
                                 right: 'month,agendaWeek,agendaDay'
                             },
@@ -730,11 +697,19 @@
                                 $('#myModal').modal();
                             }
                         })
+                        $('.fc-center').css("display", "none");
+                        $('.fc-prev-button').css("display", "none");
+                        $('.fc-today-button').css("display", "none");
+                        $('.fc-next-button').css("display", "none");
                     }
+                    
                 }
             });
 
+            
+
         </script>
+
     }
 </body>
 

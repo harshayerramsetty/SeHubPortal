@@ -101,6 +101,28 @@
         </style>
     }
 
+    @if (Model.barcodeInformation.Count == 11)
+    {
+        <style>
+            #printSection {
+                position: absolute;
+                top: 1.7in;
+                left: 0.8in;
+                -webkit-transform: rotate(270deg) scaleX(1.75) scaleY(0.8);
+            }
+        </style>
+    }
+    else
+    {
+        <style>
+            #printSection {
+                position: absolute;
+                top: 1.7in;
+                left: 0.5in;
+                -webkit-transform: rotate(270deg) scaleX(1.6) scaleY(0.8);
+            }
+        </style>
+    }
 
     <style type="text/css">
 
@@ -288,6 +310,60 @@
             -ms-overflow-style: none; /* IE and Edge */
             scrollbar-width: none; /* Firefox */
         }
+        
+        
+        @@media screen {
+            #printSection {
+                display: none;
+            }
+
+            #dontshow {
+                display: none;
+            }
+
+        }
+
+        @@media print {
+            #btnPrint {
+                display: none;
+            }
+
+            #editButton {
+                display: none;
+            }
+
+            #emailButton {
+                display: none;
+            }
+
+            #dontShowInPrint {
+                display: none;
+            }
+
+            body * {
+                visibility: hidden;
+            }
+
+            #printSection, #printSection * {
+                visibility: visible;
+            }
+
+
+
+            /*
+                #printSection {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    -ms-transform: rotate(270deg) scaleX(1.40) scaleY(1.2);
+                    -webkit-transform: rotate(270deg) scaleX(1.40) scaleY(1.2);
+                    transform: rotate(270deg) scaleX(1.40) scaleY(1.2);
+                    top: 4.3in;
+                    left: 0.07in;
+                }
+
+            */
+        }
     </style>
 </head>
 <body>
@@ -301,8 +377,13 @@
                         <div class="col">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
-                                    <li class="breadcrumb-item"><a href="@Url.Action("OpenOrder", "TreadTracker")">Tread Tracker</a></li>
-                                    <li class="breadcrumb-item " aria-current="page">Open Order</li>
+                                    <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "TreadTracker")">Tread Tracker</a></li>
+                                    <li class="breadcrumb-item"><a href="@Url.Action("OpenOrder", "TreadTracker")">Open Order</a></li>
+                                    
+                                    @if (Model.WorkOrderNumber != null)
+                                    {
+                                        <li class="breadcrumb-item " aria-current="page">@Model.WorkOrderNumber</li>
+                                    }
                                 </ol>
                             </nav>
                         </div>
@@ -311,51 +392,54 @@
                             <span class="sr-only">Toggle Menu</span>
                         </button>
                     </div>
-                    <div class="orderMainBody">
-                        @using (Html.BeginForm("ViewOrder", "TreadTracker", FormMethod.Post))
-                        {<div class="card shadow-sm flex-fill grow" >
-                                <div class="card-header" style="padding:3px 3px 3px 15px">
-                                    <h6 class="card-title mb-0 d-inline-block">Open Tread Order</h6>
-                                    <a href="#" class="d-inline-block float-right text-primary"></a>
-                                </div>
-                                <div class="card-body ">
-                                    <div class="row justify-content-between">
-                                        <div class="col-md-5">
-                                            <div class="container">
-                                                <div class="row subTables">
-                                                    <div class="col-5 ">
-                                                        <text class="TextStyle">Retread Work Order</text>
-                                                    </div>
-                                                    <div class="col-7 ">
-                                                        @* <input type="text" class="SearchInputs" id="workOrderNumberSearch" name="workOrderNumberSearch" maxlength="7">*@
-                                                        @Html.TextBoxFor(m => m.WorkOrderNumber, new { @class = "fieldStyle", @type = "text", @maxlength = "6", @onkeypress = "return onlyNumberKey(event)" })
+                    @if((@Model.WorkOrderNumber == "" || @Model.workOrderInfo == null) && (@Model.Barcode == null)){
+                        <div class="orderMainBody" id="dontShowInPrint">
+                            @using (Html.BeginForm("ViewOrder", "TreadTracker", FormMethod.Post))
+                            {<div class="card shadow-sm flex-fill grow">
+                                    <div class="card-header" style="padding: 3px 3px 3px 15px">
+                                        <h6 class="card-title mb-0 d-inline-block">Open Tread Order</h6>
+                                        <a href="#" class="d-inline-block float-right text-primary"></a>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row justify-content-between">
+                                            <div class="col-md-5">
+                                                <div class="container">
+                                                    <div class="row subTables">
+                                                        <div class="col-5 ">
+                                                            <text class="TextStyle">Retread Work Order</text>
+                                                        </div>
+                                                        <div class="col-7 ">
+                                                            @* <input type="text" class="SearchInputs" id="workOrderNumberSearch" name="workOrderNumberSearch" maxlength="7">*@
+                                                            @Html.TextBoxFor(m => m.WorkOrderNumber, new { @class = "fieldStyle", @type = "text", @maxlength = "6", @onkeypress = "return onlyNumberKey(event)" })
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div class="col-md-5">
-                                            <div class="container">
-                                                <div class="row subTables">
-                                                    <div class="col-5 ">
-                                                        <text class="TextStyle">Retread Barcode</text>
-                                                    </div>
-                                                    <div class="col-7">
-                                                        @*<input type="text" class="SearchInputs" id="customerSearch" name="customerSearch" maxlength="7">*@
-                                                        @Html.TextBoxFor(m => m.Barcode, new { @class = "fieldStyle", @type = "text", @maxlength = "8", @onkeypress = "return onlyNumberKey(event)" })
+                                            <div class="col-md-5">
+                                                <div class="container">
+                                                    <div class="row subTables">
+                                                        <div class="col-5 ">
+                                                            <text class="TextStyle">Retread Barcode</text>
+                                                        </div>
+                                                        <div class="col-7">
+                                                            @*<input type="text" class="SearchInputs" id="customerSearch" name="customerSearch" maxlength="7">*@
+                                                            @Html.TextBoxFor(m => m.Barcode, new { @class = "fieldStyle", @type = "text", @maxlength = "8", @onkeypress = "return onlyNumberKey(event)" })
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input id="GenerateClicked" class="generateBtn btn btn-success" type="submit" value="Generate" />
+                                            <div class="col-md-2">
+                                                <input id="GenerateClicked" class="generateBtn btn btn-success" type="submit" value="Generate" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                        }
-                    </div>
+                            }
+                        </div>
+                    }
+                    
                 </div>
             </div>
         </div>
@@ -365,8 +449,64 @@
                 <div class="col-md-12">
                     <div>
                         @*class="shadow-lg p-1 mb-1 bg-white rounded"*@
-                        <div class="orderMainBody" style="padding-top:0px; margin-top:0px">
+                        <div class="orderMainBody" id="printThis" style="padding-top:0px; margin-top:0px;">
                             @*here i remove class - container*@
+                            <div class="row text-center" id="dontshow">
+                                <div class="col-md-3"></div>
+                                <div class="col-md-5 text-center"><img src="~/Content/LoginLogo.png" style="margin-left: auto;margin-right: auto; width:350px;"></div>
+                                <div class="col-md-4 text-right" style="padding-right:33px; padding-top:40px">
+                                    <p style="margin: 0px; padding: 0px; line-height : 10px">
+                                        <font size="2">
+                                            @ViewBag.addressSTREET1, @if (ViewBag.addressSTREET2 != null)
+                                            {
+                                                @ViewBag.addressSTREET2
+                                            }
+                                        </font>
+                                    </p>
+                                    <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">@ViewBag.addressCITY, @ViewBag.addressPROVINCE, @ViewBag.addressPOSTAL</font></p>
+                                    <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Phone : @ViewBag.locPHONE</font></p>
+                                    <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Fax : @ViewBag.locFAX</font></p>
+                                    <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">www.citytire.com</font></p>
+                                </div>
+                            </div>
+                            <div class="row text-center" id="dontshowemail" style="display:none">
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-lg-4"></div>
+                                        <div class="col-lg-4 text-center"><img src="~/Content/LoginLogo.png" style="margin-left: auto;margin-right: auto; width:350px;"></div>
+
+                                        <div class="col-md-4 text-right" style="padding-right:33px; padding-top:40px">
+                                            <p style="margin: 0px; padding: 0px; line-height : 10px">
+                                                <font size="2">
+                                                    @ViewBag.addressSTREET1, @if (ViewBag.addressSTREET2 != null)
+                                                    {
+                                                        @ViewBag.addressSTREET2
+                                                    }
+                                                </font>
+                                            </p>
+                                            <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">@ViewBag.addressCITY, @ViewBag.addressPROVINCE, @ViewBag.addressPOSTAL</font></p>
+                                            <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Phone : @ViewBag.locPHONE</font></p>
+                                            <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Fax : @ViewBag.locFAX</font></p>
+                                            <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">www.citytire.com</font></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-end TableTransactions">
+                                <a href="#">
+                                    <input type="button" class="btn btn-primary transcationButtons" style="visibility:visible" id="btnPrint" value="Print" />
+                                </a>
+                                &nbsp;
+                                <a href="#">
+                                    <input type="button" class="btn btn-primary transcationButtons" style="visibility:visible" id="emailButton" value="Email" />
+                                </a>
+                                &nbsp;
+                                <a href="@Url.Action("EditOrder", "TreadTracker", new { orderNumber =@Model.WorkOrderNumber})">
+                                    <input type="button" class="btn btn-primary transcationButtons" style="visibility:visible" id="editButton" value="Edit" />
+                                </a>
+                            </div>
+
                             <div class="row justify-content-between">
                                 <div class="col-md-6">
 
@@ -375,31 +515,29 @@
                                             <h6 class="card-title mb-0 d-inline-block">Order Information</h6>
                                             <a href="#" class="d-inline-block float-right text-primary"></a>
                                         </div>
-                                        <div class="card-body ">
-                                            <div class="container">
-                                                <div class="row subTables">
-                                                    <div class="col-5 ">
-                                                        Retread Work Order
-                                                    </div>
-                                                    <div class="col-7 ">
-                                                        @Model.workOrderInfo.retread_workorder
-                                                    </div>
+                                        <div class="card-body" style="background-color:white">
+                                            <div class="row subTables">
+                                                <div class="col-4 ">
+                                                    Retread Work Order
                                                 </div>
-                                                <div class="row subTables">
-                                                    <div class="col-5 ">
-                                                        Work Order Date
-                                                    </div>
-                                                    <div class="col-7 ">
-                                                        @Model.workOrderInfo.creation_date
-                                                    </div>
+                                                <div class="col-8 ">
+                                                    @Model.workOrderInfo.retread_workorder
                                                 </div>
-                                                <div class="row subTables">
-                                                    <div class="col-5">
-                                                        Employee
-                                                    </div>
-                                                    <div class="col-7">
-                                                        @Model.workOrderInfo.employee_Id
-                                                    </div>
+                                            </div>
+                                            <div class="row subTables">
+                                                <div class="col-4 ">
+                                                    Work Order Date
+                                                </div>
+                                                <div class="col-8 ">
+                                                    @Model.workOrderInfo.creation_date
+                                                </div>
+                                            </div>
+                                            <div class="row subTables">
+                                                <div class="col-4">
+                                                    Employee
+                                                </div>
+                                                <div class="col-8">
+                                                    @Model.workOrderInfo.employee_Id
                                                 </div>
                                             </div>
                                         </div>
@@ -411,31 +549,29 @@
                                             <h6 class="card-title mb-0 d-inline-block">Customer Information</h6>
                                             <a href="#" class="d-inline-block float-right text-primary"></a>
                                         </div>
-                                        <div class="card-body ">
-                                            <div class="container ">
-                                                <div class="row subTables">
-                                                    <div class="col-5 ">
-                                                        Customer Name
-                                                    </div>
-                                                    <div class="col-7 ">
-                                                        @Model.custInfo.cust_name
-                                                    </div>
+                                        <div class="card-body" style="background-color:white">
+                                            <div class="row subTables">
+                                                <div class="col-4 ">
+                                                    Customer Name
                                                 </div>
-                                                <div class="row subTables">
-                                                    <div class="col-5 ">
-                                                        Account Number
-                                                    </div>
-                                                    <div class="col-7 ">
-                                                        @Model.custInfo.cust_us1
-                                                    </div>
+                                                <div class="col-8 ">
+                                                    @Model.custInfo.cust_name
                                                 </div>
-                                                <div class="row subTables">
-                                                    <div class="col-5">
-                                                        Customer Address
-                                                    </div>
-                                                    <div class="col-7">
-                                                        @Model.custInfo.cust_city,@Model.custInfo.cust_state,@Model.custInfo.cust_zip
-                                                    </div>
+                                            </div>
+                                            <div class="row subTables">
+                                                <div class="col-4 ">
+                                                    Account Number
+                                                </div>
+                                                <div class="col-8 ">
+                                                    @Model.custInfo.cust_us1
+                                                </div>
+                                            </div>
+                                            <div class="row subTables">
+                                                <div class="col-4">
+                                                    Customer Address
+                                                </div>
+                                                <div class="col-8">
+                                                    @Model.custInfo.cust_city,@Model.custInfo.cust_state,@Model.custInfo.cust_zip
                                                 </div>
                                             </div>
                                         </div>
@@ -444,190 +580,208 @@
 
                                 </div>
                             </div>
-                            <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
-                                <div class="card-header" style="padding: 3px 3px 3px 15px">
-                                    <h6 class="card-title mb-0 d-inline-block">Order Status</h6>
-                                    <a href="#" class="d-inline-block float-right text-primary"></a>
-                                </div>
-                                <div class="card-body ">
-                                    <div class="row justify-content-end TableTransactions">
-                                        <a href="#">
-                                            <input type="button" class="btn btn-primary transcationButtons" style="visibility:visible" value="Print" />
-                                        </a>
-                                        &nbsp;
-                                        <a href="#">
-                                            <input type="button" class="btn btn-primary transcationButtons" style="visibility:visible" id="emailButton" value="Email" />
-                                        </a>
-                                        &nbsp;
-                                        <a href="@Url.Action("EditOrder", "TreadTracker", new { orderNumber =@Model.WorkOrderNumber})">
-                                            <input type="button" class="btn btn-primary transcationButtons" style="visibility:visible" value="Edit" />
-                                        </a>
-                                    </div>
-                                    <div class="row mainTable">
-                                        <table class="table table-striped">
-                                            <thead class="thead-dark">
-                                                <tr class="textFields">
-                                                    <th scope="col">#</th>
-                                                    <th scope="col">Code</th>
-                                                    <th scope="col">BarCode</th>
-                                                    <th scope="col">Serial/DOT</th>
-                                                    <th scope="col">Size</th>
-                                                    <th scope="col">Brand</th>
-                                                    <th scope="col">Tread</th>
-                                                    <th scope="col">Unit ID</th>
-                                                    <th scope="col">Status</th>
-                                                    <th scope="col">Production Progress</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="textFields">
-                                                @{
-                                                    var incVal = 0;
-                                                }
-                                                @foreach (var barcodes in Model.barcodeInformation)
-                                                {
-                                                    <tr>
-                                                        <th scope="row">@(++incVal)</th>
-                                                        <td>
-                                                            @barcodes.line_code
-                                                        </td>
-                                                        <td>
-                                                            @barcodes.barcode
-                                                        </td>
-                                                        <td>
-                                                            @barcodes.serial_dot.ToUpper()
-                                                        </td>
-                                                        <td>
-                                                            @barcodes.casing_size
-                                                        </td>
-                                                        <td>
-                                                            @barcodes.casing_brand
-                                                        </td>
-                                                        <td>
-                                                            @barcodes.retread_design.ToUpper()
-                                                        </td>
-                                                        <td>
-                                                            @barcodes.unit_ID
-                                                        </td>
-                                                        <td>
-                                                            @if (@barcodes.final_inspection_result == null)
-                                                            {
-                                                                if (@barcodes.buffer_builder_result == null)
-                                                                {
-                                                                    if (@barcodes.ndt_machine_result == null)
+                            <div class="row justify-content-between">
+                                <div class="col-lg-12">
+                                    <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
+                                        <div class="card-header" style="padding: 3px 3px 3px 15px">
+                                            <h6 class="card-title mb-0 d-inline-block">Order Status</h6>
+                                            <a href="#" class="d-inline-block float-right text-primary"></a>
+                                        </div>
+                                        <div class="card-body" style="background-color:white">
+
+                                            <div class="row mainTable">
+                                                <table class="table table-striped">
+                                                    <thead class="thead-dark">
+                                                        <tr class="textFields">
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Code</th>
+                                                            <th scope="col">BarCode</th>
+                                                            <th scope="col">Serial/DOT</th>
+                                                            <th scope="col">Size</th>
+                                                            <th scope="col">Brand</th>
+                                                            <th scope="col">Tread</th>
+                                                            <th scope="col">Unit ID</th>
+                                                            <th scope="col">Status</th>
+                                                            <th scope="col">Production Progress</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="textFields">
+                                                        @{
+                                                            var incVal = 0;
+                                                        }
+                                                        @foreach (var barcodes in Model.barcodeInformation)
+                                                        {
+                                                            <tr>
+                                                                <th scope="row">@(++incVal)</th>
+                                                                <td>
+                                                                    @barcodes.line_code
+                                                                </td>
+                                                                <td>
+                                                                    @barcodes.barcode
+                                                                </td>
+                                                                <td>
+                                                                    @barcodes.serial_dot.ToUpper()
+                                                                </td>
+                                                                <td>
+                                                                    @barcodes.casing_size
+                                                                </td>
+                                                                <td>
+                                                                    @barcodes.casing_brand
+                                                                </td>
+                                                                <td>
+                                                                    @barcodes.retread_design.ToUpper()
+                                                                </td>
+                                                                <td>
+                                                                    @barcodes.unit_ID
+                                                                </td>
+                                                                <td>
+                                                                    @if (@barcodes.final_inspection_result == null)
                                                                     {
-                                                                        @barcodes.preliminary_inspection_result
+                                                                        if (@barcodes.buffer_builder_result == null)
+                                                                        {
+                                                                            if (@barcodes.ndt_machine_result == null)
+                                                                            {
+                                                                                @barcodes.preliminary_inspection_result
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @barcodes.ndt_machine_result
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            @barcodes.buffer_builder_result
+                                                                        }
+
                                                                     }
                                                                     else
                                                                     {
-                                                                        @barcodes.ndt_machine_result
+                                                                        @barcodes.final_inspection_result
                                                                     }
-                                                                }
-                                                                else
-                                                                {
-                                                                    @barcodes.buffer_builder_result
-                                                                }
 
-                                                            }
-                                                            else
-                                                            {
-                                                                @barcodes.final_inspection_result
-                                                            }
-
-                                                        </td>
-                                                        <td>
-                                                            @if (@barcodes.final_inspection_result == null)
-                                                            {
-                                                                if (@barcodes.buffer_builder_result == null)
-                                                                {
-                                                                    if (@barcodes.ndt_machine_result == null)
+                                                                </td>
+                                                                <td>
+                                                                    @if (@barcodes.final_inspection_result == null)
                                                                     {
-                                                                        if (@barcodes.preliminary_inspection_result.ToUpper() == "GOOD")
+                                                                        if (@barcodes.buffer_builder_result == null)
+                                                                        {
+                                                                            if (@barcodes.ndt_machine_result == null)
+                                                                            {
+                                                                                if (@barcodes.preliminary_inspection_result.ToUpper() == "GOOD")
+                                                                                {
+                                                                                    <div class="progress">
+                                                                                        <div class="progress-bar bg-success  progress-bar-animated" role="progressbar" style="width:25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                    </div>
+
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <div class="progress">
+                                                                                        <div class="progress-bar bg-danger  progress-bar-animated" role="progressbar" style="width:25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                    </div>
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                if (@barcodes.ndt_machine_result.ToUpper() == "GOOD")
+                                                                                {
+                                                                                    <div class="progress">
+                                                                                        <div class="progress-bar bg-success  progress-bar-animated" role="progressbar" style="width:50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                    </div>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <div class="progress">
+                                                                                        <div class="progress-bar bg-danger  progress-bar-animated" role="progressbar" style="width:50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                    </div>
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            if (@barcodes.buffer_builder_result.ToUpper() == "GOOD")
+                                                                            {
+                                                                                <div class="progress">
+                                                                                    <div class="progress-bar bg-success  progress-bar-animated" role="progressbar" style="width:75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                </div>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <div class="progress">
+                                                                                    <div class="progress-bar bg-danger  progress-bar-animated" role="progressbar" style="width:75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                </div>
+                                                                            }
+
+                                                                        }
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (@barcodes.final_inspection_result.ToUpper() == "GOOD")
                                                                         {
                                                                             <div class="progress">
-                                                                                <div class="progress-bar bg-success  progress-bar-animated" role="progressbar" style="width:25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                <div class="progress-bar bg-success progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                                                                             </div>
-
                                                                         }
                                                                         else
                                                                         {
                                                                             <div class="progress">
-                                                                                <div class="progress-bar bg-danger  progress-bar-animated" role="progressbar" style="width:25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                <div class="progress-bar bg-danger progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                                                                             </div>
                                                                         }
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (@barcodes.ndt_machine_result.ToUpper() == "GOOD")
-                                                                        {
-                                                                            <div class="progress">
-                                                                                <div class="progress-bar bg-success  progress-bar-animated" role="progressbar" style="width:50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                            </div>
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            <div class="progress">
-                                                                                <div class="progress-bar bg-danger  progress-bar-animated" role="progressbar" style="width:50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                            </div>
-                                                                        }
-                                                                    }
-                                                                }
-                                                                else
-                                                                {
-                                                                    if (@barcodes.buffer_builder_result.ToUpper() == "GOOD")
-                                                                    {
-                                                                        <div class="progress">
-                                                                            <div class="progress-bar bg-success  progress-bar-animated" role="progressbar" style="width:75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                        </div>
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <div class="progress">
-                                                                            <div class="progress-bar bg-danger  progress-bar-animated" role="progressbar" style="width:75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                        </div>
+
                                                                     }
 
-                                                                }
+                                                                </td>
+                                                            </tr>
 
-                                                            }
-                                                            else
-                                                            {
-                                                                if (@barcodes.final_inspection_result.ToUpper() == "GOOD")
-                                                                {
-                                                                    <div class="progress">
-                                                                        <div class="progress-bar bg-success progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                    </div>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <div class="progress">
-                                                                        <div class="progress-bar bg-danger progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                    </div>
-                                                                }
+                                                        }
+                                                        @{
+                                                            var remainingCount = 11 - Model.barcodeInformation.Count;
+                                                        }
+                                                        @for (int i = 0; i < remainingCount; i++)
+                                                        {
+                                                            int linNumrem = Model.barcodeInformation.Count + i + 1;
+                                                            <tr style="height:49px">
+                                                                <td><b>@linNumrem</b></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                            </tr>
+                                                        }
 
-                                                            }
-
-                                                        </td>
-                                                    </tr>
-
-                                                }
-
-                                            </tbody>
-                                        </table>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
-
-                            <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
-                                <div class="card-header" style="padding: 3px 3px 3px 15px">
-                                    <h6 class="card-title mb-0 d-inline-block">Comments</h6>
-                                </div>
-                                <div class="card-body" style="padding: 10px">
-                                    <div style="width:100%">
-                                        <textarea id="comments"></textarea>
+                            <div class="row justify-content-between">
+                                <div class="col-lg-12">
+                                    <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
+                                        <div class="card-header" style="padding: 3px 3px 3px 15px">
+                                            <h6 class="card-title mb-0 d-inline-block">Comments</h6>
+                                        </div>
+                                        <div class="card-body" style="padding: 10px">
+                                            <div style="width:100%">
+                                                <textarea id="comments"></textarea>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            @*
+        <div class="row" id="output">
+          <img src="#" id="newimg" alt="Alternate Text" />
+        </div>
+                            *@
                         </div>
 
                     </div>
@@ -635,7 +789,7 @@
             </div>
         }
     </div>
-    
+
 
     <script>
         function onlyNumberKey(evt) {
@@ -647,14 +801,98 @@
             return true;
         }
 
-        $(document).ready(function () {           
-            
+        $(document).ready(function () {
+
 
             $('#clickThis').on('click', function () {
                 $('#sidebar').toggleClass('active');
             });
         });
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.5/dist/html2canvas.min.js">
+    </script>
+
+    <script type="text/javascript">
+        document.getElementById("btnPrint").onclick = function () {
+            printElement(document.getElementById("printThis"));
+        }
+
+        function printElement(elem) {
+            var domClone = elem.cloneNode(true);
+
+            var $printSection = document.getElementById("printSection");
+
+            if (!$printSection) {
+                var $printSection = document.createElement("div");
+                $printSection.id = "printSection";
+                document.body.appendChild($printSection);
+            }
+
+            $printSection.innerHTML = "";
+            $printSection.appendChild(domClone);
+            window.print();
+        }
+
+
+        $("#emailButton").click(function () {
+
+            document.getElementById("printThis").style.padding = "60px";
+            document.getElementById("printThis").style.border = "thin solid black";
+
+            email();
+
+            changepadding();
+        });
+
+        function changepadding() {
+            document.getElementById("printThis").style.padding = "0px";
+            document.getElementById("printThis").style.borderRight = "none";
+            document.getElementById("printThis").style.borderLeft = "none";
+            document.getElementById("printThis").style.borderTop = "none";
+        }
+
+
+        function email() {
+            let div = document.getElementById('printThis'); 
+
+            
+
+            $('#dontshowemail').show();
+
+            $('#btnPrint').hide();
+            $('#emailButton').hide();
+            $('#editButton').hide();
+
+            html2canvas(div).then(
+                function (canvas) { 
+                    $('#dontshowemail').hide();
+
+                    $('#btnPrint').show();
+                    $('#emailButton').show();
+                    $('#editButton').show();
+                    //document.getElementById('output').appendChild(canvas); 
+                    //var imgsrc = canvas.toDataURL("image/png"); 
+                    //$("#newimg").attr('src', imgsrc);                         
+                        var dataURL = canvas.toDataURL(); 
+                        $.ajax({ 
+                            type: "POST", 
+                            url: '@Url.Action("MailImageOpenOrder", "TreadTracker")',
+                            data: { 
+                                imgBase64: dataURL 
+                            }, 
+                            success: function (data) {
+                                alert("Mailed Successfully")
+                            }
+                        })
+                }
+            )
+        }
+
+
+    </script>
+
+
 </body>
 </html>
 

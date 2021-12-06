@@ -33,5 +33,11 @@ namespace SeHubPortal.Models
         public Nullable<double> spec_psi_1 { get; set; }
         public Nullable<double> spec_psi_2 { get; set; }
         public Nullable<double> spec_psi_3 { get; set; }
+        public string VIN { get; set; }
+        public Nullable<System.DateTime> last_survey { get; set; }
+        public byte[] unit_image { get; set; }
+        public string tire_size_1 { get; set; }
+        public string tire_size_2 { get; set; }
+        public string tire_size_3 { get; set; }
     }
 }

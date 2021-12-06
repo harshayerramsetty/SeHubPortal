@@ -50,6 +50,9 @@
     <Reference Include="Aspose.PDF, Version=20.8.0.0, Culture=neutral, PublicKeyToken=f0262d67fe233d63, processorArchitecture=MSIL">
       <HintPath>..\packages\Aspose.PDF.20.8.0\lib\net4.0\Aspose.PDF.dll</HintPath>
     </Reference>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.6.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.6.1\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
     <Reference Include="CsvHelper, Version=15.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>..\packages\CsvHelper.15.0.5\lib\net45\CsvHelper.dll</HintPath>
     </Reference>
@@ -64,6 +67,9 @@
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.2, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13.2\lib\itextsharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=3.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.3.0.5\lib\net461\Microsoft.Azure.KeyVault.Core.dll</HintPath>
@@ -90,6 +96,7 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -172,8 +179,9 @@
     <Compile Include="Controllers\ManagementController.cs" />
     <Compile Include="Controllers\PayrollController.cs" />
     <Compile Include="Controllers\SettingsController.cs" />
+    <Compile Include="Controllers\SettingsHarpoonController.cs" />
     <Compile Include="Controllers\ToolsController.cs" />
-    <Compile Include="Controllers\ToolsSampleController.cs" />
+    <Compile Include="Controllers\Retread.cs" />
     <Compile Include="Controllers\TreadTrackerController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -205,6 +213,9 @@
     <Compile Include="Models\tbl_calculator_GM_tire.cs">
       <DependentUpon>CityTireModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tbl_calculator_GP_fixed.cs">
+      <DependentUpon>CityTireModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tbl_Calendar_events.cs">
       <DependentUpon>CityTireModel.tt</DependentUpon>
     </Compile>
@@ -214,7 +225,13 @@
     <Compile Include="Models\tbl_commercial_tire_sizes.cs">
       <DependentUpon>CityTireModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tbl_cta_location_info.cs">
+      <DependentUpon>CityTireModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tbl_customer_list.cs">
+      <DependentUpon>CityTireModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_customer_reporting_customers.cs">
       <DependentUpon>CityTireModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_dispute_resolution.cs">
@@ -235,6 +252,9 @@
     <Compile Include="Models\tbl_employee_payroll_dates.cs">
       <DependentUpon>CityTireModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tbl_employee_payroll_final.cs">
+      <DependentUpon>CityTireModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tbl_employee_payroll_submission.cs">
       <DependentUpon>CityTireModel.tt</DependentUpon>
     </Compile>
@@ -245,6 +265,12 @@
       <DependentUpon>CityTireModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_employee_status.cs">
+      <DependentUpon>CityTireModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_expense_claim.cs">
+      <DependentUpon>CityTireModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_expense_claim_account.cs">
       <DependentUpon>CityTireModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_fleettvt_configurations.cs">
@@ -262,7 +288,16 @@
     <Compile Include="Models\tbl_fleetTVT_unit.cs">
       <DependentUpon>CityTireModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\tbl_fuel_log.cs">
+    <Compile Include="Models\tbl_fuel_log_fleet.cs">
+      <DependentUpon>CityTireModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_fuel_log_invoiced.cs">
+      <DependentUpon>CityTireModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_fuel_log_shopSupplies.cs">
+      <DependentUpon>CityTireModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_login_log.cs">
       <DependentUpon>CityTireModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_payroll_category_selection.cs">
@@ -283,7 +318,25 @@
     <Compile Include="Models\tbl_position_info.cs">
       <DependentUpon>CityTireModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tbl_retread_tread.cs">
+      <DependentUpon>CityTireModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tbl_sehub_access.cs">
+      <DependentUpon>CityTireModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_source_DOT_plantcodes.cs">
+      <DependentUpon>CityTireModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_source_DOT_sizecodes.cs">
+      <DependentUpon>CityTireModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_source_RARcodes.cs">
+      <DependentUpon>CityTireModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_source_retread_tread.cs">
+      <DependentUpon>CityTireModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_source_tire.cs">
       <DependentUpon>CityTireModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_source_tire_condition.cs">
@@ -292,10 +345,16 @@
     <Compile Include="Models\tbl_source_tire_wear.cs">
       <DependentUpon>CityTireModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tbl_source_truckTire_sizes.cs">
+      <DependentUpon>CityTireModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tbl_source_valve.cs">
       <DependentUpon>CityTireModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_source_wheel_condition.cs">
+      <DependentUpon>CityTireModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_timeclock_devices.cs">
       <DependentUpon>CityTireModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_tire_adjustment.cs">
@@ -313,10 +372,16 @@
     <Compile Include="Models\tbl_treadtracker_inventory_casing.cs">
       <DependentUpon>CityTireModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\tbl_treadtracker_treads.cs">
+    <Compile Include="Models\tbl_treadtracker_workorder.cs">
       <DependentUpon>CityTireModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\tbl_treadtracker_workorder.cs">
+    <Compile Include="Models\tbl_treadTracker_workStations.cs">
+      <DependentUpon>CityTireModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_tread_tracker_customers.cs">
+      <DependentUpon>CityTireModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_vacation_schedule.cs">
       <DependentUpon>CityTireModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_vehicle_info.cs">
@@ -328,11 +393,18 @@
     <Compile Include="ViewModel\AssetControlViewModel.cs" />
     <Compile Include="ViewModel\AttendanceModel.cs" />
     <Compile Include="ViewModel\CallenderPostViewModel.cs" />
+    <Compile Include="ViewModel\CustomProdReportViewModel.cs" />
+    <Compile Include="ViewModel\EditUnitViewModel.cs" />
+    <Compile Include="ViewModel\ExpenseClaimViewModel.cs" />
+    <Compile Include="ViewModel\FailurAnalysisViewmodel.cs" />
     <Compile Include="ViewModel\Field_Survey_Edit_Account.cs" />
     <Compile Include="ViewModel\FleetTVT.cs" />
+    <Compile Include="ViewModel\fleetTVTCustomerViewModel.cs" />
     <Compile Include="ViewModel\FleetTVTDashboardCustomers.cs" />
     <Compile Include="ViewModel\FleetTvtEditAccount.cs" />
+    <Compile Include="ViewModel\FuelInvoiceViewModel.cs" />
     <Compile Include="ViewModel\LibraryAddDocumentRequest.cs" />
+    <Compile Include="ViewModel\LocationsMap.cs" />
     <Compile Include="ViewModel\MainDashboard.cs" />
     <Compile Include="ViewModel\PayrollCorporateDashboard.cs" />
     <Compile Include="ViewModel\CustomerListViewModel.cs" />
@@ -353,21 +425,31 @@
     <Compile Include="ViewModel\NewOrderSearchCriteria.cs" />
     <Compile Include="ViewModel\NewWorkOrder.cs" />
     <Compile Include="ViewModel\PayRollViewModel.cs" />
+    <Compile Include="ViewModel\PlantViewModel.cs" />
+    <Compile Include="ViewModel\PopulateProductionReport.cs" />
+    <Compile Include="ViewModel\ProductionListViewModel.cs" />
+    <Compile Include="ViewModel\ProductionReportViewModel.cs" />
     <Compile Include="ViewModel\SettingsCustomers.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
+    <Compile Include="ViewModel\ShopSuppliesViewModel.cs" />
     <Compile Include="ViewModel\SignUpViewModel.cs" />
     <Compile Include="ViewModel\StaffEditInformationViewModel.cs" />
     <Compile Include="ViewModel\tbl_customer_reporting_viewmodel.cs" />
     <Compile Include="ViewModel\tbl_target_accounts.cs" />
+    <Compile Include="ViewModel\TimeClockViewModel.cs" />
     <Compile Include="ViewModel\ToolsViewModel.cs" />
+    <Compile Include="ViewModel\TreadTrackerCustomersViewModel.cs" />
     <Compile Include="ViewModel\TreadTrackerDashboard.cs" />
+    <Compile Include="ViewModel\ValidationAdjustmentList.cs" />
     <Compile Include="ViewModel\ViewWorkOrderModel.cs" />
+    <Compile Include="ViewModel\WorkOrderInfoViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\90417.png" />
     <Content Include="Content\AddDocument.png" />
     <Content Include="Content\Adjust.png" />
     <Content Include="Content\ajax-loader.gif" />
+    <Content Include="Content\americanexpress.png" />
     <Content Include="Content\Birthday.gif" />
     <Content Include="Content\Birthday.png" />
     <Content Include="Content\blueloader.gif" />
@@ -381,7 +463,10 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\brand.png" />
     <Content Include="Content\brv.png" />
+    <Content Include="Content\Buffer.png" />
+    <Content Include="Content\Builder.png" />
     <Content Include="Content\Calculator.png" />
     <Content Include="Content\calendar-icon.jpg" />
     <Content Include="Content\car.png" />
@@ -391,17 +476,30 @@
     <Content Include="Content\cars\2017_ram_1500_crew-cab-pickup_laramie.jpg" />
     <Content Include="Content\check.png" />
     <Content Include="Content\checklist icon.png" />
+    <Content Include="Content\CityTireLogo.gif" />
+    <Content Include="Content\credit.png" />
+    <Content Include="Content\CreditBack.png" />
+    <Content Include="Content\CreditCard.png" />
     <Content Include="Content\Cross.png" />
+    <Content Include="Content\csize.png" />
+    <Content Include="Content\CTAQRCode.png" />
+    <Content Include="Content\Ctread.png" />
+    <Content Include="Content\CuringChamber.png" />
     <Content Include="Content\dashboard.png" />
     <Content Include="Content\DashBoardLogo.png" />
     <Content Include="Content\dislike.png" />
     <Content Include="Content\doc-icon.png" />
     <Content Include="Content\driveTire.png" />
+    <Content Include="Content\edit_document.png" />
     <Content Include="Content\empins.png" />
+    <Content Include="Content\expense.png" />
+    <Content Include="Content\Extensions.png" />
     <Content Include="Content\field.png" />
     <Content Include="Content\field_survey.png" />
     <Content Include="Content\FileNotSupported.png" />
+    <Content Include="Content\Final.png" />
     <Content Include="Content\fleet snapshot.png" />
+    <Content Include="Content\FleetSnapshot.png" />
     <Content Include="Content\FleetTVT_icon %281%29.png" />
     <Content Include="Content\fleet_report.png" />
     <Content Include="Content\FREIGHT.png" />
@@ -410,37 +508,56 @@
     <Content Include="Content\fullcalendar.min.css" />
     <Content Include="Content\fullcalendar.print.css" />
     <Content Include="Content\fullcalendar.print.min.css" />
+    <Content Include="Content\giphy.gif" />
     <Content Include="Content\grpins.png" />
     <Content Include="Content\Handshake Transparent.png" />
+    <Content Include="Content\Harpoon.png" />
     <Content Include="Content\home-run.png" />
     <Content Include="Content\home.png" />
     <Content Include="Content\home64.png" />
     <Content Include="Content\Hourglass.jpg" />
+    <Content Include="Content\info.png" />
     <Content Include="Content\InvoiceCustomer.png" />
     <Content Include="Content\jordancar.png" />
+    <Content Include="Content\keyboard2.gif" />
     <Content Include="Content\like3.png" />
-    <Content Include="Content\Lock.PNG" />
+    <Content Include="Content\Lock_Icon.png" />
     <Content Include="Content\LoginLogo.png" />
     <Content Include="Content\LoginPage.css" />
     <Content Include="Content\man.png" />
     <Content Include="Content\Management64.png" />
+    <Content Include="Content\mastercard.png" />
     <Content Include="Content\Meeting.png" />
+    <Content Include="Content\NDT.png" />
     <Content Include="Content\NewHirePackage.png" />
+    <Content Include="Content\new_document.png" />
     <Content Include="Content\notebook.png" />
     <Content Include="Content\OIL.jpg" />
     <Content Include="Content\OIL.PNG" />
     <Content Include="Content\OIL1.png" />
+    <Content Include="Content\Open.png" />
+    <Content Include="Content\OpenCasing.png" />
+    <Content Include="Content\OpenOrder.png" />
     <Content Include="Content\Parts.png" />
     <Content Include="Content\payroll.png" />
     <Content Include="Content\Payrollicon.png" />
     <Content Include="Content\payrollNew.png" />
     <Content Include="Content\pgUnCon2.png" />
+    <Content Include="Content\Plant icon.png" />
     <Content Include="Content\pngguru.com.png" />
     <Content Include="Content\power.png" />
+    <Content Include="Content\refresh.png" />
     <Content Include="Content\Report.png" />
+    <Content Include="Content\reprint.png" />
+    <Content Include="Content\RightArrow.png" />
+    <Content Include="Content\Savee.png" />
+    <Content Include="Content\ScanBarcode.png" />
+    <Content Include="Content\SCS.png" />
+    <Content Include="Content\SearchCasing.png" />
     <Content Include="Content\SearchIcon.PNG" />
     <Content Include="Content\SEHUB-Icon.png" />
     <Content Include="Content\settings.png" />
+    <Content Include="Content\shipto.png" />
     <Content Include="Content\ShopSupplier.png" />
     <Content Include="Content\smallLogo.png" />
     <Content Include="Content\mahesh.jpg" />
@@ -455,14 +572,17 @@
     <Content Include="Content\Sidebar\sidebar.js" />
     <Content Include="Content\split.png" />
     <Content Include="Content\stat.png" />
+    <Content Include="Content\status.png" />
     <Content Include="Content\statutory.jpg" />
     <Content Include="Content\statutory.png" />
     <Content Include="Content\steerTire.png" />
     <Content Include="Content\Tick.png" />
     <Content Include="Content\time card icon.png" />
+    <Content Include="Content\timeClock.jpg" />
     <Content Include="Content\tire.jpg" />
     <Content Include="Content\tire.png" />
     <Content Include="Content\tire1.png" />
+    <Content Include="Content\tire12.png" />
     <Content Include="Content\Tire64.png" />
     <Content Include="Content\Tire65.png" />
     <Content Include="Content\title-logo.png" />
@@ -485,11 +605,13 @@
     <Content Include="Content\Trailer_5A-10T.png" />
     <Content Include="Content\Trailer_5A-20T.png" />
     <Content Include="Content\trash.png" />
+    <Content Include="Content\trdIcon.png" />
     <Content Include="Content\Tread_tracker.png" />
     <Content Include="Content\uncheck.png" />
     <Content Include="Content\underConstruction.png" />
+    <Content Include="Content\Unit.png" />
     <Content Include="Content\Unlock.jpg" />
-    <Content Include="Content\Unlock.PNG" />
+    <Content Include="Content\Unlock_Icon.png" />
     <Content Include="Content\Untitled.png" />
     <Content Include="Content\Untitled1.png" />
     <Content Include="Content\Untitled2.png" />
@@ -497,6 +619,8 @@
     <Content Include="Content\vac.png" />
     <Content Include="Content\vacation.png" />
     <Content Include="Content\Vacation1.png" />
+    <Content Include="Content\Visa.png" />
+    <Content Include="Content\wheelspin.gif" />
     <Content Include="Content\workcomp.png" />
     <Content Include="Content\wrench.png" />
     <Content Include="Content\Wrench64.png" />
@@ -554,6 +678,9 @@
     <Content Include="Content\A1.pdf" />
     <Content Include="Content\merge.pdf" />
     <Content Include="Content\Test.csv" />
+    <Content Include="ExpenseClaimXL.XLSM" />
+    <Content Include="Content\ExpenseClaimXL.XLSM" />
+    <Content Include="Content\Corporate_Submission.csv" />
     <None Include="Properties\PublishProfiles\SeHubPortal - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.5.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.5.1.js" />
@@ -816,11 +943,40 @@
     <Content Include="Views\Shared\FleetTVT.cshtml" />
     <Content Include="Views\FleetTVT\Dashboard.cshtml" />
     <Content Include="Views\FleetTVT\FieldSurveyEditAccount.cshtml" />
-    <Content Include="Views\ToolsSample\Dashboard.cshtml" />
     <Content Include="Views\Library\Management.cshtml" />
     <Content Include="Views\FleetTVT\EditAccount.cshtml" />
     <Content Include="Views\Library\Customer_Documents.cshtml" />
     <Content Include="Views\FleetTVT\ViewOrEditSurvey.cshtml" />
+    <Content Include="Views\Tools\FuelInvoice.cshtml" />
+    <Content Include="Views\Tools\ShopSupplies.cshtml" />
+    <Content Include="Views\TreadTracker\FailureAnalysis.cshtml" />
+    <Content Include="Views\TreadTracker\ProductionReport.cshtml" />
+    <Content Include="Views\TreadTracker\PopulateProductionReport.cshtml" />
+    <Content Include="Views\TreadTracker\ViewOrder.cshtml" />
+    <Content Include="Views\Tools\FuelLogMainPage.cshtml" />
+    <Content Include="Views\Main\ProfileBlock.cshtml" />
+    <Content Include="Views\Management\EmployeeFiles.cshtml" />
+    <Content Include="Views\FleetTVT\FleetSnapShot.cshtml" />
+    <Content Include="Views\Retread\Plant.cshtml" />
+    <Content Include="Views\Retread\NdtStation.cshtml" />
+    <Content Include="Views\Retread\BufferBuilder.cshtml" />
+    <Content Include="Views\Retread\FinalStation.cshtml" />
+    <Content Include="Views\Settings\Administration.cshtml" />
+    <Content Include="Views\Settings\EditEmployeeInfo.cshtml" />
+    <Content Include="Views\Tools\ExpnseClaim.cshtml" />
+    <Content Include="Views\FleetTVT\UnitEditForm.cshtml" />
+    <Content Include="Views\Main\LocationsMap.cshtml" />
+    <Content Include="Views\Settings\TimeClock.cshtml" />
+    <Content Include="Views\TreadTracker\Customers.cshtml" />
+    <Content Include="Views\Retread\Chamber.cshtml" />
+    <Content Include="Views\Login\HarpoonLogin.cshtml" />
+    <Content Include="Views\Shared\_LayoutHarpoon.cshtml" />
+    <Content Include="Views\Shared\_Settings_Harpoon.cshtml" />
+    <Content Include="Views\SettingsHarpoon\Employees.cshtml" />
+    <Content Include="Views\SettingsHarpoon\Locations.cshtml" />
+    <Content Include="Views\SettingsHarpoon\Devices.cshtml" />
+    <Content Include="Views\SettingsHarpoon\System.cshtml" />
+    <Content Include="Views\SettingsHarpoon\Users.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

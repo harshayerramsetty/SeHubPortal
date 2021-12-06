@@ -52,6 +52,11 @@
         #payrollBtn:focus {
             box-shadow: none;
         }
+
+        #upload{
+            padding-left:10%
+        }
+
     </style>
 </head>
 <body>
@@ -66,7 +71,7 @@
             <div class="navbar-nav" id="TabLinks">
 
                 <a id="mainClicked" href="@Url.Action("Dashboard", "Main")" style="display:none; margin-right:20px; padding:10px; border-radius:5px" class="text-center">
-                    <img src="~/Content/home.png" /><br/>
+                    <img src="~/Content/home.png" /><br />
                     <input type="button" id="mainButton" class="btn btn-outline my-2 my-sm-0" style="visibility:visible;border-color:transparent;color:black;font-size:18px;" value="Main">
                 </a>
 
@@ -80,11 +85,11 @@
                     <input type="button" id="toolsBtn" class="btn btn-outline my-2 my-sm-0" style="visibility:visible;border-color:transparent;font-size:18px;color:black;" value="Tools" />
                 </a>
 
-                <a id="treadTrackereClicked" href="@Url.Action("Dashboard", "TreadTracker")" style="display:none; margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center"> @*class="btn tabLinksSpace"        is replaced by        style="margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center"*@ 
-                    <img src="~/Content/Tread_tracker.png" /><br />
+                <a id="treadTrackereClicked" href="@Url.Action("Dashboard", "TreadTracker")" style="display:none; margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center">
+                    @*class="btn tabLinksSpace"        is replaced by        style="margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center"*@
+                    <img style="height:25px;" src="~/Content/trdIcon.png" /><br />
                     <input type="button" id="treadTrackerButton" class="btn btn-outline my-2 my-sm-0" style="font-size:18px;visibility:visible;border-color:transparent;color:black;" value="Tread Tracker" />
                 </a>
-
 
                 <a id="FleetTVTClicked" href="@Url.Action("Dashboard", "FleetTVT")" style="display:none; margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center">
                     <img style="height:25px;" src="~/Content/FleetTVT_icon (1).png" /><br />
@@ -96,34 +101,99 @@
                     <input type="button" id="managementBtn" class="btn btn-outline my-2 my-sm-0" style="visibility:visible;border-color:transparent;font-size:18px;color:black;" value="Management" />
                 </a>
 
-
-                <a id="PayrollClicked" href="@Url.Action("Payroll", "Management", new { locId = "101" })" style="display:none; margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center">
+                <a id="PayrollClicked" href="@Url.Action("Payroll", "Management", new { locId = "", ac = "Dashboard"})" style="display:none; margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center">
 
                     <img src="~/Content/payroll.png" /><br />
                     <input type="button" id="payrollBtn" class="btn btn-outline my-2 my-sm-0" style="visibility:visible;border-color:transparent;font-size:18px;color:black;" value="Payroll" />
                 </a>
 
-                <a id="SettingsClicked"  href="@Url.Action("Dashboard", "Settings")" style="display:none; margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center">
+                <a id="PlantClicked" href="@Url.Action("Plant", "Retread")" style="display:none; margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center">
+
+                    <img style="height:22px;" src="~/Content/Plant icon.png" /><br />
+                    <input type="button" id="libraryBtn" class="btn btn-outline my-2 my-sm-0 " style="visibility:visible;border-color:transparent;font-size:18px;color:black; outline:none" value="Plant" />
+                </a>
+
+                <a id="SettingsClicked" href="@Url.Action("Dashboard", "Settings")" style="display:none; margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center">
 
                     <img style="height:20px;" src="~/Content/settings.png" /><br />
                     <input type="button" id="libraryBtn" class="btn btn-outline my-2 my-sm-0 settingsBtn" style="visibility:visible;border-color:transparent;font-size:18px;color:black;" value="Settings" />
                 </a>
 
 
-            </div>
-            <div class="navbar-nav ml-auto">
 
-                <a href="@Url.Action("LogOut", "Main")" class="btn">
-                    <img src="~/Content/power.png" />
-                </a>
             </div>
+        </div>
+        <div class="flex-grow-0" id="profileBlock" style="padding:0px !important">
+
+        </div>
+
+        <div class="modal fade" id="upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="width:300px">
+
+                    @using (Html.BeginForm("UploadProfileImage", "Main", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <div class="modal-header text-center" style="padding:3px 3px 0px 3px">
+                            <h5 style="margin-left:auto; margin-right:auto">Upload Profile Picture</h5>
+                        </div>
+                        <div class="modal-body text-center">
+                            <input style="display:none" name="EmployeeImage" type='file' id="imgInp" />
+                            <input for="imgInp" type="text" readonly style="margin-bottom:15px; height:23px; width:100px;" value="Upload" class="btn btn-primary" onclick="document.getElementById('imgInp').click()" />
+                            <img id="UploatImage" style="border-radius:100%; width:200px" src="~/Content/profilepic.jpg" alt="ProfilePic" />
+
+                        </div>
+                        <div class="modal-footer" style="padding:3px">
+                            <button type="button" class="btn btn-danger" style="padding:2px 22px 2px 22px" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-success" style="padding:2px 30px 2px 30px">Save</button>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+        <script>
+
+
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#UploatImage').attr('src', e.target.result);
+                    }
+
+                    reader.readAsDataURL(input.files[0]); // convert to base64 string
+                }
+            }
+
+            $("#imgInp").change(function () {
+                readURL(this);
+            });
+
+            
+        </script>
+
+
+
+        <div>
+            <a style="float:right" href="@Url.Action("LogOut", "Main")" class="btn">
+                <img src="~/Content/power.png" />
+            </a>
         </div>
     </nav>
     <div id="MainDiv">
         @RenderBody()
     </div>
     <script>
-
+        $.ajax({
+            url: '@Url.Action("ProfileBlock", "Main")',
+            success: function (data) {
+                $('#profileBlock').html(data)
+            }
+        });
     </script>
     @Scripts.Render("~/bundles/jquery")   @*I commented this line because datatables in the fuel log page is not working properly. please uncomment if you face any issue with other pages*@
     @Scripts.Render("~/bundles/fullcalendarjs")

@@ -17,5 +17,6 @@ namespace SeHubPortal.Models
         public string manufacturers { get; set; }
         public Nullable<int> tread_tracker { get; set; }
         public Nullable<int> fleetTVT { get; set; }
+        public byte[] brand_image { get; set; }
     }
 }

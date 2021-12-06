@@ -1,0 +1,1451 @@
+﻿@model SeHubPortal.ViewModel.ExpenseClaimViewModel
+@{
+    ViewBag.Title = "ExpnseClaim";
+    Layout = "~/Views/Shared/_ToolsLayout.cshtml";
+}
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+
+    @if (Model.SehubAccess.plant > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.payroll > 0)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.fleetTVT > 0)
+    {
+        <style>
+            #FleetTVTClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTracker > 0)
+    {
+        <style>
+            #treadTrackereClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_access > 0)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.main > 0)
+    {
+        <style>
+            #mainClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings == 3)
+    {
+        <style>
+            #SettingsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.management == 3)
+    {
+        <style>
+            #ManagementClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+
+    @if (Model.SehubAccess.tools_dashboard > 0)
+    {
+        <style>
+            #DashboardLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.fuel_log > 0)
+    {
+        <style>
+            #FuelLogLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.customer_reporting > 0)
+    {
+        <style>
+            #CRMLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.employee_id == 10577 || Model.SehubAccess.employee_id == 10901)
+    {
+        <style>
+            #ExpnseClaimLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    <style>
+
+        #ExpnseClaimLink {
+            display: block !important;
+        }
+
+        #toolsClicked {
+            display: block !important;
+        }
+
+        #toolsClicked {
+            background-color: #f0f2f5;
+        }
+
+        #toolsBtn {
+            font-weight: bold;
+        }
+
+        #dropArea {
+            background: #b5b5b5;
+            border: black dashed 1px;
+            height: 50px;
+            text-align: center;
+            color: #fff;
+            padding-top: 12px;
+        }
+
+        .active-drop {
+            background: #77bafa !important;
+            border: solid 2px blue !important;
+            opacity: .5;
+            color: black !important;
+        }
+
+
+
+        ul#navigation .active {
+            font-weight: bold;
+        }
+
+        #dropZone {
+            border: 1px dotted red;
+            text-align: center;
+        }
+
+
+
+        #ExpnseClaimLink {
+            color: black;
+            font-weight: 700;
+            background-color: #f0f2f5;
+        }
+
+
+        body {
+            background-color: #f0f2f5;
+            padding-right: 0 !important;
+        }
+
+        .heading {
+            margin: 10px 0px 0px 0px;
+        }
+
+            .heading h2 {
+                margin-top: 8px;
+            }
+
+        .card-header {
+            background-color: #c0c2c4;
+        }
+
+            .card-header h6 {
+                color: black;
+            }
+
+        #historyTable_info {
+            display: none;
+        }
+
+        #historyTable2_info {
+            display: none;
+        }
+
+        #historyTable3_info {
+            display: none;
+        }
+
+        .dataTables_filter {
+            float: right;
+            height: 30px;
+        }
+
+        #historyTable_filter {
+            display: none;
+        }
+
+        #historyTable2_filter {
+            float: right;
+            margin: 0px 0px 25px 0px;
+        }
+
+        #historyTable3_filter {
+            float: right;
+            margin: 0px 0px 25px 0px;
+        }
+
+            #historyTable3_filter input {
+                float: right;
+                margin: 0px 2px 0px 10px;
+            }
+
+        #historyTable2_filter input {
+            float: right;
+            margin: 0px 2px 0px 10px;
+        }
+
+        .dataTables_filter input {
+            width: 285px;
+        }
+
+        #historyTable_paginate {
+            float: right;
+        }
+
+        #historyTable2_paginate {
+            float: right;
+        }
+
+        #historyTable3_paginate {
+            float: right;
+        }
+
+        label {
+            display: inline-flex;
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .example::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .example {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+
+        #ExpenseModel {
+            padding-right: 25%;
+        }
+
+        #editOrOpen {
+            padding-top: 13%;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="row heading">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="background-color: white;
+                  height: 100%;
+                  margin-top: 0px;">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Tools")">Tools</a></li>
+                    <li class="breadcrumb-item " aria-current="page">Enpense Claim</li>
+                </ol>
+            </nav>
+        </div>
+        <button type="button" id="clickThis" class="btn" style=" margin-bottom: 14px;">
+            <i class="fa fa-bars" style="font-size: 25px "></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+
+    <div class="row" style="margin-left: 0px">
+        <div class="col-lg-2">
+            <div class="card shadow-lg" style="width:260px;" id="calcButton" type="button" data-toggle="modal" data-target="#editOrOpen">
+                <div class="card-body text-center" style="height:338px; margin-left:auto; margin-right:auto; margin-top:20px; padding-top:40px">
+                    <img src="~/Content/expense.png" style="margin-bottom:30px; width:190px;">
+                    <h5 style="font-weight:bold; color:black">Expense Claim</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="card shadow-lg" style="width:260px;" id="calcButton" type="button" data-toggle="modal" data-target="#myModal1">
+                <div class="card-body text-center" style="height:338px; margin-left:auto; margin-right:auto; margin-top:20px; padding-top:40px">
+                    <img src="~/Content/Calculator.png" style="margin-bottom:30px; width:150px;">
+                    <h5 style="font-weight:bold; color:black">Calculator 2.0</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ExpenseModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            @using (Html.BeginForm("SaveExpenseClaim", "Tools", FormMethod.Post))
+            {
+
+                <div class="modal-content" style="width:1300px">
+
+                    <div class="card-header" style="padding:5px 15px 3px 15px; background-color:white">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <h3 style="margin:0px;"><b>Expense Claim</b></h3>
+                            </div>
+                            <div class="col-lg-6 text-right">
+                                <button class="btn btn-primary" style="padding:2px 30px 2px 30px">Print</button>
+                                <button class="btn btn-success" style="padding:2px 10px 2px 10px">Save & Exit</button>
+                                <button style="padding:2px 25px 2px 25px" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-body">
+
+
+                        @Html.HiddenFor(m => m.empid)
+
+
+
+                        <div class="row" style="padding:10px 20px 10px 0px">
+
+                            <div class="col-lg-12" style="padding-right:0px">
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Details</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Summary</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="myTabContent" style="padding:15px">
+                                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+                                        <div class="row" style="padding:0px 15px 0px 15px">
+                                            <table class="table table-bordered" style="width:100%">
+                                                <thead class="thead-dark">
+                                                    <tr style="font-size:10px">
+                                                        <th style="padding:0px; text-align:center" scope="col">Claim ID</th>
+                                                        <th style="padding:0px; text-align:center" scope="col">Date</th>
+                                                        <th style="padding:0px; text-align:center" scope="col">Emloyee Name</th>
+                                                        <th style="width:20%; padding:0px; text-align:center" scope="col">Emloyee ID</th>
+                                                        <th style="width:8%; padding:0px; text-align:center" scope="col">Location ID</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="Past">
+                                                    <tr>
+                                                        <td style="padding:0px; text-align:center">@Html.DisplayFor(m => m.employy.employee_id, new { htmlAttributes = new { @style = "width:100%" } })-@System.DateTime.Today.ToString("yyyy-MM-dd")-@Model.seq</td>
+                                                        <td style="padding:0px; text-align:center">@System.DateTime.Today.ToString("dddd dd, MMM yyyy")</td>
+                                                        <td style="padding:0px; text-align:center">@Html.DisplayFor(m => m.employy.full_name, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                        <td style="padding:0px; text-align:center">@Html.DisplayFor(m => m.employy.employee_id, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                        <td style="padding:0px; text-align:center">@Html.DisplayFor(m => m.employy.loc_ID, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <table class="table" style="width:100%">
+                                            <thead class="thead-dark">
+                                                <tr style="font-size:10px">
+                                                    <th style="padding:0px; text-align:center" scope="col">Date</th>
+                                                    <th style="width:20%; padding:0px; text-align:center" scope="col">Supplier's Name</th>
+                                                    <th style="padding:0px; text-align:center" scope="col">Expense Account</th>
+                                                    <th style="width:30%; padding:0px; text-align:center" scope="col">Description of Expense</th>
+                                                    <th style="width:8%; padding:0px; text-align:center" scope="col">Location ID</th>
+                                                    <th style="padding:0px; text-align:center" scope="col">Total</th>
+                                                    <th style="padding:0px; text-align:center" scope="col">HST</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="Past">
+                                                <tr>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim1.exp_date, new { htmlAttributes = new { @style = "width:100px", @type = "date" } })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim1.supplier_name, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.DropDownListFor(m => m.Claim1.exp_account, Model.Acounts, "Select Account", new { @style = "width:100%; height:30px;" })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim1.exp_description, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.DropDownListFor(m => m.Claim1.loc_id, Model.Locations, "Select Loc", new { @style = "width:100%; height:30px;" })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim1.total, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim1.hst, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim2.exp_date, new { htmlAttributes = new { @style = "width:100px", @type = "date" } })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim2.supplier_name, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding: 0px">@Html.DropDownListFor(m => m.Claim2.exp_account, Model.Acounts, "Select Account", new { @style = "width:100%; height:30px;" })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim2.exp_description, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.DropDownListFor(m => m.Claim2.loc_id, Model.Locations, "Select Loc", new { @style = "width:100%; height:30px;" })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim2.total, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim2.hst, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim3.exp_date, new { htmlAttributes = new { @style = "width:100px", @type = "date" } })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim3.supplier_name, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.DropDownListFor(m => m.Claim3.exp_account, Model.Acounts, "Select Account", new { @style = "width:100%; height:30px;" })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim3.exp_description, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.DropDownListFor(m => m.Claim3.loc_id, Model.Locations, "Select Loc", new { @style = "width:100%; height:30px;" })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim3.total, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim3.hst, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim4.exp_date, new { htmlAttributes = new { @style = "width:100px", @type = "date" } })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim4.supplier_name, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.DropDownListFor(m => m.Claim4.exp_account, Model.Acounts, "Select Account", new { @style = "width:100%; height:30px;" })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim4.exp_description, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.DropDownListFor(m => m.Claim4.loc_id, Model.Locations, "Select Loc", new { @style = "width:100%; height:30px;" })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim4.total, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim4.hst, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim5.exp_date, new { htmlAttributes = new { @style = "width:100px", @type = "date" } })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim5.supplier_name, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.DropDownListFor(m => m.Claim5.exp_account, Model.Acounts, "Select Account", new { @style = "width:100%; height:30px;" })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim5.exp_description, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.DropDownListFor(m => m.Claim5.loc_id, Model.Locations, "Select Loc", new { @style = "width:100%; height:30px;" })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim5.total, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim5.hst, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim6.exp_date, new { htmlAttributes = new { @style = "width:100px", @type = "date" } })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim6.supplier_name, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.DropDownListFor(m => m.Claim6.exp_account, Model.Acounts, "Select Account", new { @style = "width:100%; height:30px;" })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim6.exp_description, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.DropDownListFor(m => m.Claim6.loc_id, Model.Locations, "Select Loc", new { @style = "width:100%; height:30px;" })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim6.total, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim6.hst, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim7.exp_date, new { htmlAttributes = new { @style = "width:100px", @type = "date" } })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim7.supplier_name, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.DropDownListFor(m => m.Claim7.exp_account, Model.Acounts, "Select Account", new { @style = "width:100%; height:30px;" })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim7.exp_description, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.DropDownListFor(m => m.Claim7.loc_id, Model.Locations, "Select Loc", new { @style = "width:100%; height:30px;" })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim7.total, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim7.hst, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim8.exp_date, new { htmlAttributes = new { @style = "width:100px", @type = "date" } })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim8.supplier_name, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.DropDownListFor(m => m.Claim8.exp_account, Model.Acounts, "Select Account", new { @style = "width:100%; height:30px;" })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim8.exp_description, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.DropDownListFor(m => m.Claim8.loc_id, Model.Locations, "Select Loc", new { @style = "width:100%; height:30px;" })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim8.total, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim8.hst, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim9.exp_date, new { htmlAttributes = new { @style = "width:100px", @type = "date" } })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim9.supplier_name, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.DropDownListFor(m => m.Claim9.exp_account, Model.Acounts, "Select Account", new { @style = "width:100%; height:30px;" })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim9.exp_description, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.DropDownListFor(m => m.Claim9.loc_id, Model.Locations, "Select Loc", new { @style = "width:100%; height:30px;" })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim9.total, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim9.hst, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim10.exp_date, new { htmlAttributes = new { @style = "width:100px", @type = "date" } })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim10.supplier_name, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.DropDownListFor(m => m.Claim10.exp_account, Model.Acounts, "Select Account", new { @style = "width:100%; height:30px;" })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim10.exp_description, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.DropDownListFor(m => m.Claim10.loc_id, Model.Locations, "Select Loc", new { @style = "width:100%; height:30px;" })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim10.total, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                    <td style="padding:0px">@Html.EditorFor(m => m.Claim10.hst, new { htmlAttributes = new { @style = "width:100%" } })</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <div class="row" style="display:none">
+                                            <table>
+                                                <tr id="Copy">
+                                                    <td style="padding:0px"><input style="width:100px" type="date" name="name" value="" /></td>
+                                                    <td style="padding:0px"><input style="width:100%" type="text" name="name" value="" /></td>
+                                                    <td style="padding:0px">@Html.DropDownListFor(m => m.Acount, Model.Acounts, "Select Account", new { @style = "width:100%; height:30px;" })</td>
+                                                    <td style="padding:0px"><input style="width:100%" type="text" name="name" value="" /></td>
+                                                    <td style="padding:0px">@Html.DropDownListFor(m => m.Location, Model.Locations, "Select Loc", new { @style = "width:100%; height:30px;" })</td>
+                                                    <td style="padding:0px"><input style="width:100%" type="text" name="name" value="" /></td>
+                                                    <td style="padding:0px"><input style="width:100%" type="text" name="name" value="" /></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-12 text-right">
+                                                <label>Add Row</label>
+                                                <button id="Add" class="btn btn-secondary" style="padding:0px 10px 0px 10px">+</button>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                        <div class="row" style="margin-top:15px; margin-bottom:10px">
+                                            <div class="col-lg-6 text-right">
+                                                Employee Name
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input type="text" name="name" value="" />
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-bottom:10px">
+                                            <div class="col-lg-6 text-right">
+                                                Employee Signature
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input type="text" name="name" value="" />
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-bottom:10px">
+                                            <div class="col-lg-6 text-right">
+                                                date
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input style="width:182px" type="date" name="name" value="" />
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-bottom:10px">
+                                            <div class="col-lg-6 text-right">
+                                                Approval
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input style="width:25px;height:25px" type="checkbox" name="name" value="" />
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-bottom:10px">
+                                            <div class="col-lg-6 text-right">
+                                                Paid By Cheque Number
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input type="text" name="name" value="" />
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-bottom:20px">
+                                            <div class="col-lg-6 text-right">
+                                                Cheque Date
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input style="width:182px" type="date" name="name" value="" />
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-bottom:0px">
+                                            <table style="width:60%; margin-left:auto; margin-right:auto" class="table-bordered">
+                                                <thead class="thead-dark" style="background-color:black; color:white">
+                                                    <tr>
+                                                        <th style="width:50%; padding:0px; font-size:10px; text-align:center">
+                                                            Grand Total
+                                                        </th>
+                                                        <th style="width:50%; padding:0px; font-size:10px; text-align:center">
+                                                            Sum of Amounts
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" style="width:100%; height:40px" name="name" value="" />
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" style="width:100%; height:40px" name="name" value="" />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+
+    <div class="modal fade noselect" id="myModal1" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width:610px; height:750px">
+                <div class="modal-header" style="padding:5px; padding-left:15px;">
+                    <h5 class="modal-title" style="font-weight:bold" id="exampleModalLabel">Calculator 2.0</h5>
+                    <button type="button" class="btn " style="margin-right:10px; padding:0px; font-size: 20px" data-dismiss="modal" data-target="#myModal" data-backdrop="static" data-keyboard="false">
+                        x
+                    </button>
+                </div>
+                <div class="modal-body" style="padding-top:0px; padding-bottom:0px">
+                    <div class="row ">
+
+                        <div class="col-lg-12 text-center" id="calculatorTabName" style="padding:5px; font-weight:bolder; font-size:35px">
+                            PARTS PRICING
+                        </div>
+                    </div>
+
+                    <div class="row" style="background-color:#dcdee0; margin:1px">
+                        <!-- Navigation Buttons -->
+                        <div class="col-md-3" style="background-color:gray; padding-top:0px; padding-left:0px; padding-right:0px ">
+                            <ul class="nav nav-pills nav-stacked" id="myTabs">
+                                <li class="active text-center" id="PartsLink" style="border: 1px solid #dcdee0; width:320px; height:125px"><a href="#PARTS" data-toggle="pill"><img style=" padding:20px 30px 20px 30px; margin:0px; width:150px;" src="~/Content/Parts.png" alt="Alternate Text" /></a></li>
+                                @*<img style="height:120px" src="~/Content/Parts.png" alt="Alternate Text" />*@
+                                <li class="text-center" style="border: 1px solid #dcdee0; width:320px; height:125px" id="TireLink"><a href="#TIRES" data-toggle="pill" style="padding-left:0px"><img style="padding:25px 35px 25px 35px; margin:0px; width:150px;" src="~/Content/Tire.png" alt="Alternate Text" /></a></li>
+                                @*<img style="margin-top:20px; height:120px" src="~/Content/tire.jpg" alt="Alternate Text" />*@
+                                <li class="text-center" style="border: 1px solid #dcdee0; width:320px; height:125px; background-color:white" id="WheelLink"><a href="#WHEEL" data-toggle="pill" style="padding-left:0px"><img style="padding:10px 25px 25px 25px; margin:0px; width:150px;" src="~/Content/Wheel.png" alt="Alternate Text" /></a></li>
+                                <li class="text-center" style="border: 1px solid #dcdee0; width:320px; height:125px; background-color:white" id="ScsLink"><a href="#SCS" data-toggle="pill" style="padding-left:0px"><img style="padding:20px 30px 30px 30px; margin:0px; width:150px;" src="~/Content/SCS.png" alt="Alternate Text" /></a></li>
+                                @*<img style="margin-top:20px; height:110px" src="~/Content/OIL.png" alt="Alternate Text" />*@
+                                <li class="text-center" style="border: 1px solid #dcdee0; width:320px; height:125px" id="FreightLink"><a href="#FREIGHT" data-toggle="pill" style="padding-left:0px;"><img style="padding:20px 30px 20px 30px; margin:0px; width:150px;" src="~/Content/Freight.png" alt="Alternate Text" /></a></li>
+                                @*<img style="margin-top:30px; height:120px" src="~/Content/FREIGHT.png" alt="Alternate Text" />*@
+                                @*<img style="margin-top:10px; height:140px" src="~/Content/Handshake Transparent.png" alt="Alternate Text" />*@
+                            </ul>
+                        </div>
+                        <!-- Content -->
+                        <div class="col-md-9" style="padding-top:10px">
+                            <div class="tab-content" style="padding-left:10px">
+                                <div class="tab-pane active" style="width:415px;" id="PARTS">
+                                    <div class="row" style="margin:15px 25px 0px 0px">
+                                        <div class="col-lg-7">
+                                            <label style="font-weight:bold; margin-left:0px;color:black; font-size:25px">Part Cost</label>
+                                            <p style="color:black;">(Cost From Supplier)</p>
+                                        </div>
+                                        <div class="col-lg-5" style="padding-left:0px">
+                                            <input autocomplete="off" onkeypress="return isNumberKey(event)" maxlength="6" style="text-align:center; font-size: 20pt; margin-left:0px; width:170px; height:60px" id="PartsCost" type="text" name="name" value="" />
+                                        </div>
+                                    </div>
+                                    <hr style="margin:0px; height:2px;border-width:0;color:gray;background-color:black; width:390px" />
+                                    <div class="row" style="margin:15px 25px 0px 0px">
+                                        <div class="col-lg-7">
+                                            <label style="font-weight:bold; margin-left:0px;color:black; font-size:25px">Retail Price</label>
+                                            <p style="color:black;">(Retail Customer)</p>
+                                        </div>
+                                        <div class="col-lg-5" style="padding-left:0px">
+                                            <input id="PartsRetailPrice" readonly style="text-align:center; font-size: 20pt; margin-left:0px; width:170px; height:60px" type="text" name="name" value="" />
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:0px;">
+                                        <input class="btn" id="PartsReset" readonly style="color:white; background-color:#808080; margin-left:242px; width:170px; height:60px; font-weight:bold; font-size:25px" type="text" name="name" value="Reset" />
+                                    </div>
+
+
+
+                                    <div class="row text-center" style="margin-top:50px; margin-bottom:10px;">
+                                        <div class="col-lg-12 text-center">
+                                            <JavaBlink><p style="font-weight:bold ; font-size:20px ; color:#acadad">-- Attention Special Price --</p></JavaBlink>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row" style="margin:0px 25px 0px 0px">
+                                        <div class="col-lg-7">
+                                            <label style="font-weight:bold; margin-left:0px;color:black; font-size:25px">N.A. Price</label>
+                                            <p style="font-size:15px; color:black;">(National Account Customer)</p>
+                                        </div>
+                                        <div class="col-lg-5" style="padding-left:0px">
+                                            <input readonly id="NA_Price_Parts" style="text-align:center; font-size: 20pt; margin-left:0px; width:170px; height:60px" type="text" name="name" value="" />
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="tab-pane" style="width:415px;" id="TIRES">
+
+                                    <div class="row" style="margin:15px 25px 0px 0px">
+                                        <div class="col-lg-7">
+                                            <label style="font-weight:bold; margin-left:0px;color:black; font-size:25px">Tire Cost</label>
+                                            <p style="color:black;">(Cost From Supplier)</p>
+                                        </div>
+                                        <div class="col-lg-5" style="padding-left:0px">
+                                            <input autocomplete="off" onkeypress="return isNumberKey(event)" maxlength="6" style="text-align:center; font-size: 20pt; margin-left:0px; width:170px; height:60px" id="TireCost" type="text" name="name" value="" />
+                                        </div>
+                                    </div>
+                                    <hr style="margin:0px; height:2px;border-width:0;color:gray;background-color:black; width:390px" />
+                                    <div class="row" style="margin:15px 25px 0px 0px">
+                                        <div class="col-lg-7">
+                                            <label style="font-weight:bold; margin-left:0px;color:black; font-size:25px">Retail Price</label>
+                                            <p style="color:black;">(Retail Customer)</p>
+                                        </div>
+                                        <div class="col-lg-5" style="padding-left:0px">
+                                            <input readonly id="TireRetailPrice" style="text-align:center; font-size: 20pt; margin-left:0px; width:170px; height:60px" type="text" name="name" value="" />
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:0px;">
+                                        <input class="btn" id="TireReset" readonly style="color:white; background-color:#808080; margin-left:242px; width:170px; height:60px; font-weight:bold; font-size:25px" type="text" name="name" value="Reset" />
+                                    </div>
+
+
+
+
+                                    <div class="row text-center" style="margin-top:50px; margin-bottom:10px;">
+                                        <div class="col-lg-12 text-center">
+                                            <JavaBlink><p style="font-weight:bold ; font-size:20px ; color:#acadad">-- Attention Special Price --</p></JavaBlink>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row" style="margin:0px 25px 0px 0px">
+                                        <div class="col-lg-7">
+                                            <label style="font-weight:bold; margin-left:0px;color:black; font-size:25px">N.A. Price</label>
+                                            <p style="font-size:15px; color:black;">(National Account Customer)</p>
+                                        </div>
+                                        <div class="col-lg-5" style="padding-left:0px">
+                                            <input readonly id="NA_Price_Tire" style="text-align:center; font-size: 20pt; margin-left:0px; width:170px; height:60px" type="text" name="name" value="" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane" style="width:415px;" id="WHEEL">
+
+                                    <div class="row" style="margin:15px 25px 0px 0px">
+                                        <div class="col-lg-7">
+                                            <label style="font-weight:bold; margin-left:0px;color:black; font-size:25px">Wheel Cost</label>
+                                            <p style="color:black;">(Cost From Supplier)</p>
+                                        </div>
+                                        <div class="col-lg-5" style="padding-left:0px">
+                                            <input autocomplete="off" onkeypress="return isNumberKey(event)" maxlength="6" style="text-align:center; font-size: 20pt; margin-left:0px; width:170px; height:60px" id="WheelCost" type="text" name="name" value="" />
+                                        </div>
+                                    </div>
+                                    <hr style="margin:0px; height:2px;border-width:0;color:gray;background-color:black; width:390px" />
+                                    <div class="row" style="margin:15px 25px 0px 0px">
+                                        <div class="col-lg-7">
+                                            <label style="font-weight:bold; margin-left:0px;color:black; font-size:25px">Retail Price</label>
+                                            <p style="color:black;">(Retail Customer)</p>
+                                        </div>
+                                        <div class="col-lg-5" style="padding-left:0px">
+                                            <input readonly id="WheelRetailPrice" style="text-align:center; font-size: 20pt; margin-left:0px; width:170px; height:60px" type="text" name="name" value="" />
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:0px;">
+                                        <input class="btn" id="WheelReset" readonly style="color:white; background-color:#808080; margin-left:242px; width:170px; height:60px; font-weight:bold; font-size:25px" type="text" name="name" value="Reset" />
+                                    </div>
+
+                                    <div class="row text-center" style="margin-top:50px; margin-bottom:10px;">
+                                        <div class="col-lg-12 text-center">
+                                            <JavaBlink><p style="font-weight:bold ; font-size:20px ; color:#acadad">-- Attention Special Price --</p></JavaBlink>
+                                        </div>
+                                    </div>
+
+                                    <div class="row" style="margin:0px 25px 0px 0px">
+                                        <div class="col-lg-7">
+                                            <label style="font-weight:bold; margin-left:0px;color:black; font-size:25px">N.A. Price</label>
+                                            <p style="font-size:15px; color:black;">(National Account Customer)</p>
+                                        </div>
+                                        <div class="col-lg-5" style="padding-left:0px">
+                                            <input readonly id="NA_Price_Wheel" style="text-align:center; font-size: 20pt; margin-left:0px; width:170px; height:60px" type="text" name="name" value="" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane" style="width:415px;" id="SCS">
+
+                                    <div class="row" style="margin:15px 25px 0px 0px">
+                                        <div class="col-lg-7">
+                                            <label style="font-weight:bold; margin-left:0px;color:black; font-size:25px">Service Cost</label>
+                                            <p style="color:black;">(Cost From Supplier)</p>
+                                        </div>
+                                        <div class="col-lg-5" style="padding-left:0px">
+                                            <input autocomplete="off" onkeypress="return isNumberKey(event)" maxlength="6" style="text-align:center; font-size: 20pt; margin-left:0px; width:170px; height:60px" id="SCSCost" type="text" name="name" value="" />
+                                        </div>
+                                    </div>
+                                    <hr style="margin:0px; height:2px;border-width:0;color:gray;background-color:black; width:390px" />
+                                    <div class="row" style="margin:15px 25px 0px 0px">
+                                        <div class="col-lg-7">
+                                            <label style="font-weight:bold; margin-left:0px;color:black; font-size:25px">Retail Price</label>
+                                            <p style="color:black;">(Retail Customer)</p>
+                                        </div>
+                                        <div class="col-lg-5" style="padding-left:0px">
+                                            <input readonly id="SCSRetailPrice" style="text-align:center; font-size: 20pt; margin-left:0px; width:170px; height:60px" type="text" name="name" value="" />
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:0px;">
+                                        <input class="btn" id="SCSReset" readonly style="color:white; background-color:#808080; margin-left:242px; width:170px; height:60px; font-weight:bold; font-size:25px" type="text" name="name" value="Reset" />
+                                    </div>
+
+                                    <div class="row text-center" style="margin-top:50px; margin-bottom:10px;">
+                                        <div class="col-lg-12 text-center">
+                                            <JavaBlink><p style="font-weight:bold ; font-size:20px ; color:#acadad">-- Attention Special Price --</p></JavaBlink>
+                                        </div>
+                                    </div>
+
+                                    <div class="row" style="margin:0px 25px 0px 0px">
+                                        <div class="col-lg-7">
+                                            <label style="font-weight:bold; margin-left:0px;color:black; font-size:25px">N.A. Price</label>
+                                            <p style="font-size:15px; color:black;">(National Account Customer)</p>
+                                        </div>
+                                        <div class="col-lg-5" style="padding-left:0px">
+                                            <input readonly id="NA_Price_SCS" style="text-align:center; font-size: 20pt; margin-left:0px; width:170px; height:60px" type="text" name="name" value="" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row" style="margin-top:80px">
+                                        <div class="col-lg-12 text-center" style="padding:0px 40px 0px 20px">
+                                            <b>
+                                                Examples of Sub-Contracted Services are: Auto Glass, Auto Body, towing services, Hydraulic, detailing, Undercoating, etc.
+                                            </b>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane" style="width:415px;" id="FREIGHT">
+
+                                    <div class="row" style="margin:15px 25px 0px 0px">
+                                        <div class="col-lg-7">
+                                            <label style="font-weight:bold; margin-left:0px;color:black; font-size:25px">Freight Cost</label>
+                                            <p style="color:black;">(Cost From Supplier)</p>
+                                        </div>
+                                        <div class="col-lg-5" style="padding-left:0px">
+                                            <input autocomplete="off" onkeypress="return isNumberKey(event)" maxlength="6" style="text-align:center; font-size: 20pt; margin-left:0px; width:170px; height:60px" id="FreightCost" type="text" name="name" value="" />
+                                        </div>
+                                    </div>
+                                    <hr style="margin:0px; height:2px;border-width:0;color:gray;background-color:black; width:390px" />
+                                    <div class="row" style="margin:15px 25px 0px 0px">
+                                        <div class="col-lg-7">
+                                            <label style="font-weight:bold; margin-left:0px;color:black; font-size:25px">Retail Price</label>
+                                            <p style="color:black;">(Retail Customer)</p>
+                                        </div>
+                                        <div class="col-lg-5" style="padding-left:0px">
+                                            <input readonly id="FreightRetailPrice" style="text-align:center; font-size: 20pt; margin-left:0px; width:170px; height:60px" type="text" name="name" value="" />
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:0px;">
+                                        <input class="btn" id="FreightReset" readonly style="color:white; background-color:#808080; margin-left:242px; width:170px; height:60px; font-weight:bold; font-size:25px" type="text" name="name" value="Reset" />
+                                    </div>
+
+
+                                    <div class="row text-center" style="margin-top:50px; margin-bottom:10px;">
+                                        <div class="col-lg-12 text-center">
+                                            <JavaBlink><p style="font-weight:bold ; font-size:20px ; color:#acadad">-- Attention Special Price --</p></JavaBlink>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row" style="margin:0px 25px 0px 0px">
+                                        <div class="col-lg-7">
+                                            <label style="font-weight:bold; margin-left:0px;color:black; font-size:25px">N.A. Price</label>
+                                            <p style="font-size:15px; color:black;">(National Account Customer)</p>
+                                        </div>
+                                        <div class="col-lg-5" style="padding-left:0px">
+                                            <input readonly id="NA_Price_Freight" style="text-align:center; font-size: 20pt; margin-left:0px; width:170px; height:60px" type="text" name="name" value="" />
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="summary" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer" style="padding:3px">
+                    <button style="padding:2px 25px 2px 25px" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button style="padding:2px 30px 2px 30px" type="button" class="btn btn-success" data-dismiss="modal">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade editOrOpen" id="editOrOpen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width:300px" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:3px 3px 3px 15px">
+                    <h5 style="margin-left:auto; margin-right:auto" class="modal-title" id="exampleModalLabel">Expense Claim</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12 text-center">
+                            <button id="newTA" data-toggle="modal" data-dismiss="modal" class="btn btn-primary" style="padding:6px 43px 6px 43px" data-target="#ExpenseModel">New Entry</button>
+
+                        </div>
+
+                    </div>
+                    <hr />
+                    <div class="row" style="margin-bottom:10px">
+                        <div class="col-lg-12 text-center">
+                            @Html.DropDownListFor(m => m.Expense, Model.ExpClaims, "Select Expense", new { @id = "expclaimdrop", @style = "width:60%; height:30px;" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 text-center">
+                            <button aria-expanded="false" type="button" id="GO" data-dismiss="modal" class="btn btn-primary" style="padding:5px 30px 5px 30px">Open Existing</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="InvalidTA">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#eb4646; padding:5px 2px 0px 2px">
+                    <h5 style="margin-left:auto; margin-right:auto">Acknowledgment</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12 text-center"> <h6 style="margin-left:auto; margin-right:auto">Entered Expense Claim Number Does Not Exist</h6> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:5px 2px 0px 2px">
+                    <h5 style="margin-left:auto; margin-right:auto">View Expense Claim</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="margin-bottom:10px">
+                        <div class="col-lg-5 text-right">Employee Id</div>
+                        <div class="col-lg-7"><input readonly type="text" id="oempid" name="name" value="" /></div>
+                    </div>
+                    <div class="row" style="margin-bottom:10px">
+                        <div class="col-lg-5 text-right">Claim Date</div>
+                        <div class="col-lg-7"><input readonly style="width:182px" type="text" id="odate" name="name" value="" /></div>
+                    </div>
+                    <div class="row" style="margin-bottom:10px">
+                        <div class="col-lg-5 text-right">Supplier Name</div>
+                        <div class="col-lg-7"><input readonly type="text" id="osupnam" name="name" value="" /></div>
+                    </div>
+                    <div class="row" style="margin-bottom:10px">
+                        <div class="col-lg-5 text-right">Expense Account</div>
+                        <div class="col-lg-7"><input readonly type="text" id="oexpac" name="name" value="" /></div>
+                    </div>
+                    <div class="row" style="margin-bottom:10px">
+                        <div class="col-lg-5 text-right">Description</div>
+                        <div class="col-lg-7"><input readonly type="text" id="odesc" name="name" value="" /></div>
+                    </div>
+                    <div class="row" style="margin-bottom:10px">
+                        <div class="col-lg-5 text-right">Location Id</div>
+                        <div class="col-lg-7"><input readonly type="text" id="olocid" name="name" value="" /></div>
+                    </div>
+                    <div class="row" style="margin-bottom:10px">
+                        <div class="col-lg-5 text-right">Total</div>
+                        <div class="col-lg-7"><input readonly type="text" id="ototal" name="name" value="" /></div>
+                    </div>
+                    <div class="row" style="margin-bottom:10px">
+                        <div class="col-lg-5 text-right">HST</div>
+                        <div class="col-lg-7"><input readonly type="text" id="ohst" name="name" value="" /></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <SCRIPT type="text/javascript">
+        function JavaBlink() {
+            var blinks = document.getElementsByTagName('JavaBlink');
+            for (var i = blinks.length - 1; i >= 0; i--) {
+                var s = blinks[i];
+                s.style.visibility = (s.style.visibility === 'visible') ? 'hidden' : 'visible';
+            }
+            window.setTimeout(JavaBlink, 1000);
+        }
+        if (document.addEventListener) document.addEventListener("DOMContentLoaded", JavaBlink, false);
+        else if (window.addEventListener) window.addEventListener("load", JavaBlink, false);
+        else if (window.attachEvent) window.attachEvent("onload", JavaBlink);
+        else window.onload = JavaBlink;
+    </SCRIPT>
+
+    <script>
+
+        $('#Add').click(function () {
+            $('#Past').append("<tr>" + $('#Copy').html() + "</tr>");
+        })
+
+
+        $("#GO").click(function () {
+            $("#btnPrint").css("display", "block");
+
+                var FullEXnum = $("#expclaimdrop").val();
+
+
+                if (FullEXnum != '') {
+                    $.ajax({
+                            url: '@Url.Action("LoadEXform", "Tools")',
+                            data: { value: FullEXnum },
+                            type: 'POST',
+                            success: function (EXdata) {
+
+                                var EXdetails = JSON.parse(EXdata);
+
+                                if (EXdetails == null) {
+                                    $('#InvalidTA').modal();
+                                    //$('#myModal').modal();
+                                }
+                                else {
+                                    $('#myModal').modal();
+                                    $("#oempid").val(EXdetails.empid);
+                                    var num = EXdetails.exp_date.match(/\d+/g);
+                                    var date = new Date(parseFloat(num)); //converting to date
+                                    $("#odate").val(date.getMonth() + 1 + "-" + date.getDate() + '-' + date.getFullYear());
+                                    $("#osupnam").val(EXdetails.supplier_name);
+                                    $("#oexpac").val(EXdetails.exp_account);
+                                    $("#odesc").val(EXdetails.exp_description);
+                                    $("#olocid").val(EXdetails.loc_id);
+                                    $("#ototal").val(EXdetails.total);
+                                    $("#ohst").val(EXdetails.hst);
+                                }
+                            }
+                });
+                }
+
+
+
+            $("#entreTAnumber").val("")
+        });
+
+        const form = document.getElementById('PartsCost');
+
+        $('#PartsCost').keydown(function(event){
+            var keyCode = (event.keyCode ? event.keyCode : event.which);
+            if (keyCode == 13) {
+                $('#PartsReset').focus();
+            }
+        });
+
+        $('#PartsReset').keydown(function(event){
+            var keyCode = (event.keyCode ? event.keyCode : event.which);
+            if (keyCode == 13) {
+                $('#PartsCost').focus();
+                $('#PartsCost').val('');
+                $('#PartsRetailPrice').val('');
+                $('#NA_Price_Parts').val('');
+            }
+        });
+
+        form.addEventListener('focusout', (e) => {
+                if($("#PartsCost").val() != null && $("#PartsCost").val() != "")
+                {
+                    if($('#PartsCost').val().includes(".") != true)
+                    {
+                        var numFor = $('#PartsCost').val();
+                        $('#PartsCost').val(numFor + ".00");
+                    }
+                }
+
+
+                $('#PartsReset').focus();
+
+                var PartCost = $("#PartsCost").val();
+                $.ajax({
+                            url: '@Url.Action("PartsPricing", "Tools")',
+                            data: { value: PartCost },
+                            type: 'POST',
+                            success: function (data) {
+                                var res = data.substring(1, data.length-1);
+                                var arr = res.split(",")
+                                document.getElementById("PartsRetailPrice").value = (Math.round(arr[0] * 100) / 100).toFixed(2);
+                                document.getElementById("NA_Price_Parts").value = (Math.round(arr[1] * 100) / 100).toFixed(2);
+                            }
+                });
+        });
+
+        const ResetParts = document.getElementById('PartsReset');
+
+        ResetParts.addEventListener('focusout', (e) => {
+            $('#PartsCost').focus();
+            $('#PartsCost').val('');
+            $('#PartsRetailPrice').val('');
+            $('#NA_Price_Parts').val('');
+        });
+
+
+
+        const form1 = document.getElementById('TireCost');
+
+        $('#TireCost').keydown(function(event){
+            var keyCode = (event.keyCode ? event.keyCode : event.which);
+            if (keyCode == 13) {
+                $('#TireReset').focus();
+            }
+        });
+
+        $('#TireReset').keydown(function(event){
+            var keyCode = (event.keyCode ? event.keyCode : event.which);
+            if (keyCode == 13) {
+                $('#TireCost').focus();
+                $('#TireCost').val('');
+                $('#TireRetailPrice').val('');
+                $('#NA_Price_Tire').val('');
+            }
+        });
+
+        form1.addEventListener('focusout', (e) => {
+
+                if($("#TireCost").val() != null && $("#TireCost").val() != "")
+                {
+                    if($('#TireCost').val().includes(".") != true)
+                    {
+                        var numFor = $('#TireCost').val();
+                        $('#TireCost').val(numFor + ".00");
+                    }
+                }
+                $('#TireReset').focus();
+
+                var TireCost = $("#TireCost").val();
+                $.ajax({
+                            url: '@Url.Action("TirePricing", "Tools")',
+                            data: { value: TireCost },
+                            type: 'POST',
+                            success: function (data1) {
+
+                                var res = data1.substring(1, data1.length-1);
+                                var arr = res.split(",")
+
+                                document.getElementById("TireRetailPrice").value = (Math.round(arr[0] * 100) / 100).toFixed(2);
+                                document.getElementById("NA_Price_Tire").value = (Math.round(arr[1] * 100) / 100).toFixed(2);
+                            }
+                });
+        });
+
+        const ResetTire = document.getElementById('TireReset');
+
+        ResetTire.addEventListener('focusout', (e) => {
+            $('#TireCost').focus();
+            $('#TireCost').val('');
+            $('#TireRetailPrice').val('');
+            $('#NA_Price_Tire').val('');
+        });
+
+        const form3 = document.getElementById('WheelCost');
+
+        $('#WheelCost').keydown(function(event){
+            var keyCode = (event.keyCode ? event.keyCode : event.which);
+            if (keyCode == 13) {
+                $('#WheelReset').focus();
+            }
+        });
+
+        $('#WheelReset').keydown(function(event){
+            var keyCode = (event.keyCode ? event.keyCode : event.which);
+            if (keyCode == 13) {
+                $('#WheelCost').focus();
+                $('#WheelCost').val('');
+                $('#WheelRetailPrice').val('');
+                $('#NA_Price_Wheel').val('');
+            }
+        });
+
+        form3.addEventListener('focusout', (e) => {
+
+                if($("#WheelCost").val() != null && $("#WheelCost").val() != "")
+                {
+                    if($('#WheelCost').val().includes(".") != true)
+                    {
+                        var numFor = $('#WheelCost').val();
+                        $('#WheelCost').val(numFor + ".00");
+                    }
+                }
+                $('#WheelReset').focus();
+
+                var WheelCost = $("#WheelCost").val();
+                $.ajax({
+                            url: '@Url.Action("WheelPricing", "Tools")',
+                            data: { value: WheelCost },
+                            type: 'POST',
+                            success: function (data1) {
+
+                                var res = data1.substring(1, data1.length-1);
+                                var arr = res.split(",")
+
+                                document.getElementById("WheelRetailPrice").value = (Math.round(arr[0] * 100) / 100).toFixed(2);
+                                document.getElementById("NA_Price_Wheel").value = (Math.round(arr[1] * 100) / 100).toFixed(2);
+                            }
+                });
+        });
+
+        const ResetWheel = document.getElementById('WheelReset');
+
+        ResetWheel.addEventListener('focusout', (e) => {
+            $('#WheelCost').focus();
+            $('#WheelCost').val('');
+            $('#WheelRetailPrice').val('');
+            $('#NA_Price_Wheel').val('');
+        });
+
+
+        const form2 = document.getElementById('FreightCost');
+
+        $('#FreightCost').keydown(function(event){
+            var keyCode = (event.keyCode ? event.keyCode : event.which);
+            if (keyCode == 13) {
+                $('#FreightReset').focus();
+            }
+        });
+
+        $('#FreightReset').keydown(function(event){
+            var keyCode = (event.keyCode ? event.keyCode : event.which);
+            if (keyCode == 13) {
+                $('#FreightCost').focus();
+                $('#FreightCost').val('');
+                $('#FreightRetailPrice').val('');
+                $('#NA_Price_Freight').val('');
+            }
+        });
+
+        form2.addEventListener('focusout', (e) => {
+
+            if ($("#FreightCost").val() != null && $("#FreightCost").val() != "")
+            {
+                if ($('#FreightCost').val().includes(".") != true)
+                {
+                    var numFor = $('#FreightCost').val();
+                    $('#FreightCost').val(numFor + ".00");
+                }
+            }
+            $('#FreightCost').focus();
+
+            var FreightCost = $("#FreightCost").val();
+            $.ajax({
+                url: '@Url.Action("FreightPricing", "Tools")',
+                data: { value: FreightCost },
+                type: 'POST',
+                success: function (data1) {
+
+                    var res = data1.substring(1, data1.length - 1);
+                    var arr = res.split(",")
+                    document.getElementById("FreightRetailPrice").value = (Math.round(arr[0] * 100) / 100).toFixed(2);
+                    document.getElementById("NA_Price_Freight").value = (Math.round(arr[1] * 100) / 100).toFixed(2);
+                }
+            });
+        });
+
+
+        const ResetFreight = document.getElementById('FreightReset');
+
+        ResetFreight.addEventListener('focusout', (e) => {
+            $('#FreightCost').focus();
+            $('#FreightCost').val('');
+            $('#FreightRetailPrice').val('');
+            $('#NA_Price_Freight').val('');
+        });
+
+
+
+
+        const form5 = document.getElementById('SCSCost');
+
+        $('#SCSCost').keydown(function (event) {
+            var keyCode1 = (event.keyCode ? event.keyCode : event.which);
+            if (keyCode1 == 9) {
+                $('#SCSReset').focus();
+
+            }
+        });
+
+        $('#SCSReset').keydown(function (event) {
+            var keyCode = (event.keyCode ? event.keyCode : event.which);
+            if (keyCode == 13) {
+                $('#SCSCost').focus();
+                $('#SCSCost').val('');
+                $('#SCSRetailPrice').val('');
+                $('#NA_Price_SCS').val('');
+            }
+        });
+
+        form5.addEventListener('focusout', (e) => {
+
+
+
+            if ($("#SCSCost").val() != null && $("#SCSCost").val() != "")
+            {
+                if ($('#SCSCost').val().includes(".") != true)
+                {
+                    var numFor = $('#SCSCost').val();
+                    $('#SCSCost').val(numFor + ".00");
+                }
+            }
+            $('#SCSCost').focus();
+
+            var SCSCost = $("#SCSCost").val();
+            $.ajax({
+                url: '@Url.Action("SCSPricing", "Tools")',
+                data: { value: SCSCost },
+                type: 'POST',
+                success: function (data1) {
+
+                    var res = data1.substring(1, data1.length - 1);
+                    var arr = res.split(",")
+                    document.getElementById("SCSRetailPrice").value = (Math.round(arr[0] * 100) / 100).toFixed(2);
+                    document.getElementById("NA_Price_SCS").value = (Math.round(arr[1] * 100) / 100).toFixed(2);
+                }
+            });
+        });
+
+
+        const ResetSCS = document.getElementById('SCSReset');
+
+        ResetSCS.addEventListener('focusout', (e) => {
+            $('#SCSCost').focus();
+            $('#SCSCost').val('');
+            $('#SCSRetailPrice').val('');
+            $('#NA_Price_SCS').val('');
+        });
+
+
+
+        $('#PartsCost').focus();
+        $('#PartsLink').css("background-color", "#dcdee0");
+        $('#TireLink').css("background-color", "white");
+        $('#OilLink').css("background-color", "white");
+        $('#ScsLink').css("background-color", "white");
+        $('#FreightLink').css("background-color", "white");
+        $('#ContractLink').css("background-color", "white");
+
+
+        $("#PartsLink").click(function () {
+            $("#PartsCost").focus();
+            $('#PartsLink').css("background-color", "#dcdee0");
+            $('#TireLink').css("background-color", "white");
+            $('#WheelLink').css("background-color", "white");
+            $('#ScsLink').css("background-color", "white");
+            $('#FreightLink').css("background-color", "white");
+            $('#calculatorTabName').html("PARTS PRICING");
+            $('#PartsCost').val('');
+            $('#PartsRetailPrice').val('');
+            $('#NA_Price_Parts').val('');
+        });
+
+        $("#TireLink").click(function () {
+            $("#TireCost").focus();
+            $('#PartsLink').css("background-color", "white");
+            $('#TireLink').css("background-color", "#dcdee0");
+            $('#WheelLink').css("background-color", "white");
+            $('#ScsLink').css("background-color", "white");
+            $('#FreightLink').css("background-color", "white");
+            $('#calculatorTabName').html("TIRE PRICING");
+            $('#TireCost').val('');
+            $('#TireRetailPrice').val('');
+            $('#NA_Price_Tire').val('');
+        });
+
+        $("#WheelLink").click(function () {
+            //$("#WheelCost").focus();
+            $('#PartsLink').css("background-color", "white");
+            $('#TireLink').css("background-color", "white");
+            $('#WheelLink').css("background-color", "#dcdee0");
+            $('#ScsLink').css("background-color", "white");
+            $('#FreightLink').css("background-color", "white");
+            $('#calculatorTabName').html("WHEEL, RIMS & LUGS PRICING");
+            //$('#TireCost').val('');
+            //$('#TireRetailPrice').val('');
+            //$('#NA_Price_Tire').val('');
+
+        });
+
+        $("#ScsLink").click(function () {
+            //$("#WheelCost").focus();
+            $('#PartsLink').css("background-color", "white");
+            $('#TireLink').css("background-color", "white");
+            $('#WheelLink').css("background-color", "white");
+            $('#ScsLink').css("background-color", "#dcdee0");
+            $('#FreightLink').css("background-color", "white");
+            $('#calculatorTabName').html("Sub-Contracted Services");
+            $('#ServiceCost').val('');
+            $('#ServiceRetailPrice').val('');
+            $('#NA_Price_Service').val('');
+
+        });
+
+
+        $("#FreightLink").click(function () {
+            $("#FreightCost").focus();
+            $('#PartsLink').css("background-color", "white");
+            $('#TireLink').css("background-color", "white");
+            $('#WheelLink').css("background-color", "white");
+            $('#ScsLink').css("background-color", "white");
+            $('#FreightLink').css("background-color", "#dcdee0");
+            $('#calculatorTabName').html("FREIGHT PRICING");
+            $('#FreightCost').val('');
+            $('#FreightRetailPrice').val('');
+            $('#NA_Price_Freight').val('');
+
+        });
+
+
+        $('#PartsReset').click(function (event) {
+            $('#PartsCost').val('');
+            $('#PartsRetailPrice').val('');
+            $('#NA_Price_Parts').val('');
+            $("#PartsCost").focus();
+        })
+
+        $('#TireReset').click(function (event) {
+            $('#TireCost').val('');
+            $('#TireRetailPrice').val('');
+            $('#NA_Price_Tire').val('');
+            $("#TireCost").focus();
+        })
+
+        $('#WheelReset').click(function (event) {
+            $('#WheelCost').val('');
+            $('#WheelRetailPrice').val('');
+            $('#NA_Price_Wheel').val('');
+            $("#WheelCost").focus();
+        })
+
+        $('#SCSReset').click(function (event) {
+            $('#SCSCost').val('');
+            $('#SCSRetailPrice').val('');
+            $('#NA_Price_SCS').val('');
+            $("#SCSCost").focus();
+        })
+
+        $('#FreightReset').click(function (event) {
+            $('#FreightCost').val('');
+            $('#FreightRetailPrice').val('');
+            $('#NA_Price_Freight').val('');
+            $("#FreightCost").focus();
+        })
+
+    </script>
+
+</body>
+</html>

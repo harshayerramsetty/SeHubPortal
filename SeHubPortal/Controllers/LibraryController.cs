@@ -25,7 +25,6 @@ namespace SeHubPortal.Controllers
             return View();
         }
 
-
         [HttpGet]
         public ActionResult Dashboard(LibraryAddDocumentRequest model)
         {
@@ -51,15 +50,12 @@ namespace SeHubPortal.Controllers
             return View(model);
         }
 
-
         public PartialViewResult DeleteItem() 
         {
 
             return PartialView();
 
         }
-
-
 
         [HttpPost]
         public ActionResult MergePDFStreamArray(HttpPostedFileBase file1, HttpPostedFileBase file2, HttpPostedFileBase file3, HttpPostedFileBase file4, HttpPostedFileBase file5)
@@ -97,7 +93,6 @@ namespace SeHubPortal.Controllers
             pdfEditor.Concatenate(streamArray, outputStream);
             return RedirectToAction("Dashboard", "Settings", new { ac = "MergeSuccessful" });
         }
-
 
         [HttpPost]
         public ActionResult Upload(IEnumerable<HttpPostedFileBase> files)
@@ -227,6 +222,8 @@ namespace SeHubPortal.Controllers
             
         }
 
+        
+
         [HttpPost]
         public ActionResult UploadManagement(HttpPostedFileBase CompanyDocument)
         {
@@ -295,10 +292,12 @@ namespace SeHubPortal.Controllers
 
         }
 
+        
         [HttpPost]
         public ActionResult UploadBranchShareDrive(HttpPostedFileBase BranchShareDrive, FileURL model)
         {
-            var imageName = model.Location_ID + "_" + Path.GetFileName(BranchShareDrive.FileName);
+
+            string imageName = model.Location_ID + "_" + model.Pane + "_" + Path.GetFileName(BranchShareDrive.FileName);
 
             if (BranchShareDrive != null && BranchShareDrive.ContentLength > 0)
             {
@@ -448,12 +447,122 @@ namespace SeHubPortal.Controllers
             return View(FileUrl);
         }
 
+        private static List<SelectListItem> populateLocationsPermissions(int empId)
+        {
+
+            List<SelectListItem> items = new List<SelectListItem>();
+
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            var locaList = db.tbl_cta_location_info.ToList();
+
+            var sehubloc = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
+
+            if (sehubloc.loc_001 == 1)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "001",
+                    Value = "001"
+                });
+            }
+            if (sehubloc.loc_002 == 1)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "002",
+                    Value = "002"
+                });
+            }
+            if (sehubloc.loc_003 == 1)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "003",
+                    Value = "003"
+                });
+            }
+            if (sehubloc.loc_004 == 1)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "004",
+                    Value = "004"
+                });
+            }
+            if (sehubloc.loc_005 == 1)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "005",
+                    Value = "005"
+                });
+            }
+            if (sehubloc.loc_007 == 1)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "007",
+                    Value = "007"
+                });
+            }
+            if (sehubloc.loc_009 == 1)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "009",
+                    Value = "009"
+                });
+            }
+            if (sehubloc.loc_010 == 1)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "010",
+                    Value = "010"
+                });
+            }
+            if (sehubloc.loc_011 == 1)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "011",
+                    Value = "011"
+                });
+            }
+            if (sehubloc.loc_347 == 1)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "347",
+                    Value = "347"
+                });
+            }
+            if (sehubloc.loc_AHO == 1)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "AHO",
+                    Value = "AHO"
+                });
+            }
+
+
+            return items;
+        }
+
+        [HttpPost]
+        public ActionResult Branch_Shared_drive_ChangeLocation(FileURL model)
+        {
+            return RedirectToAction("Branch_Shared_drive", new { loc = model.Location_ID });
+        }
 
         public String ContainerNameBranchSharedDrive = "cta-library-branch-shared-drive";
         [HttpGet]
-        public ActionResult Branch_Shared_drive()
+        public ActionResult Branch_Shared_drive(string loc)
         {
             int empId = Convert.ToInt32(Session["userID"].ToString());
+
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             FileURL FileUrl = new FileURL();
             var empDetails1 = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
@@ -471,7 +580,16 @@ namespace SeHubPortal.Controllers
             
             var empDetails = db.tbl_employee.Where(x => x.employee_id == empId).FirstOrDefault();
 
-            string locatId = empDetails.loc_ID;
+            string locatId = "";
+
+            if (loc != null)
+            {
+                locatId = loc;
+            }
+            else
+            {
+                locatId = empDetails.loc_ID;
+            }
 
             var readPolicy = new SharedAccessBlobPolicy()
             {
@@ -509,45 +627,10 @@ namespace SeHubPortal.Controllers
 
             FileUrl.URLName = URLNames;
             FileUrl.Location_ID = locatId;            
-            FileUrl.LocationsList = populateLocations();            
+            FileUrl.LocationsList = populateLocationsPermissions(empId);            
 
             return View(FileUrl);
         }
-
-
-        private static List<SelectListItem> populateLocations()
-        {
-            List<SelectListItem> items = new List<SelectListItem>();
-            string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            using (SqlConnection con = new SqlConnection(constr))
-            {
-                string query = "select loc_id From tbl_cta_location_info where loc_status=1";
-                //Debug.WriteLine("Query:" + query);
-                using (SqlCommand cmd = new SqlCommand(query))
-                {
-                    cmd.Connection = con;
-                    con.Open();
-                    using (SqlDataReader sdr = cmd.ExecuteReader())
-                    {
-
-                        while (sdr.Read())
-                        {
-                            items.Add(new SelectListItem
-                            {
-                                Text = sdr["loc_id"].ToString(),
-                                Value = sdr["loc_id"].ToString()
-                            });
-                        }
-
-
-                    }
-                    con.Close();
-                }
-            }
-
-            return items;
-        }
-
 
         public String ContainerNameSupplierDocuments = "cta-library-supplier-documents";
         [HttpGet]
@@ -661,8 +744,6 @@ namespace SeHubPortal.Controllers
             return View(FileUrl);
         }
 
-
-
         public String ContainerNameManagement = "cta-library-management";
         [HttpGet]
         public ActionResult Management()
@@ -772,10 +853,7 @@ namespace SeHubPortal.Controllers
 
             return RedirectToAction("Branch_Shared_drive");
         }
-
-
-
-
+        
         public ActionResult DeleteSupplireBlob(string fileName)
         {            
             fileName = fileName.Remove(fileName.Length - 1) + ".pdf";
@@ -829,7 +907,6 @@ namespace SeHubPortal.Controllers
 
             return RedirectToAction("Supplier_Documents");
         }
-
 
         public ActionResult DeleteCustomerBlob(string fileName)
         {
@@ -885,7 +962,6 @@ namespace SeHubPortal.Controllers
             return RedirectToAction("Customer_Documents");
         }
 
-
         public ActionResult DeleteCompanyDocumentsBlob(string fileName)
         {
             fileName = fileName.Remove(fileName.Length - 1) + ".pdf";
@@ -940,7 +1016,6 @@ namespace SeHubPortal.Controllers
             return RedirectToAction("Company_Documents");
         }
 
-
         public ActionResult DeleteManagement(string fileName)
         {
             fileName = fileName.Remove(fileName.Length - 1) + ".pdf";
@@ -994,8 +1069,6 @@ namespace SeHubPortal.Controllers
 
             return RedirectToAction("Management");
         }
-
-
 
     }
 }

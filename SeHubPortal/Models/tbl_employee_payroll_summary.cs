@@ -31,5 +31,6 @@ namespace SeHubPortal.Models
         public Nullable<double> workers_comp { get; set; }
         public Nullable<double> PL { get; set; }
         public Nullable<double> NL { get; set; }
+        public string loc_id { get; set; }
     }
 }

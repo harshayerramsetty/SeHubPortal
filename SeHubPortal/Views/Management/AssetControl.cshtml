@@ -17,7 +17,16 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
 
+    
 
+    @if (Convert.ToInt32(ViewData["plant"]) > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
 
 
     @if (Convert.ToInt32(ViewData["tools"]) > 0)
@@ -126,6 +135,16 @@
             }
         </style>
     }
+
+    @if (Convert.ToInt32(ViewData["employee_folder"]) > 0)
+    {
+        <style>
+            #EmployeeFilesLink {
+                display: block !important;
+            }
+        </style>
+    }
+
 
 
     <style>
@@ -262,75 +281,13 @@
                         </label>
                     </div>
 
-                    <label style="margin: 0px 3px 0px 175px ">Location</label>
+                    <label style="margin: 0px 3px 0px 162px ">Location</label>
 
                     @using (Html.BeginForm("AssetControlChangeLocation", "Management", FormMethod.Post))
                     {
                         <div>
-                            @{
-                                List
-                                <SelectListItem>
-                                listItems = new List
-                                <SelectListItem>
-                                ();
-                                listItems.Add(new SelectListItem
-                                {
-                                    Text = "001",
-                                    Value = "001"
-                                });
-                                listItems.Add(new SelectListItem
-                                {
-                                    Text = "002",
-                                    Value = "002"
-                                });
-                                listItems.Add(new SelectListItem
-                                {
-                                    Text = "003",
-                                    Value = "003"
-                                });
-                                listItems.Add(new SelectListItem
-                                {
-                                    Text = "004",
-                                    Value = "004"
-                                });
-                                listItems.Add(new SelectListItem
-                                {
-                                    Text = "005",
-                                    Value = "005"
-                                });
-                                listItems.Add(new SelectListItem
-                                {
-                                    Text = "007",
-                                    Value = "007"
-                                });
-                                listItems.Add(new SelectListItem
-                                {
-                                    Text = "009",
-                                    Value = "009"
-                                });
-                                listItems.Add(new SelectListItem
-                                {
-                                    Text = "010",
-                                    Value = "010"
-                                });
-                                listItems.Add(new SelectListItem
-                                {
-                                    Text = "011",
-                                    Value = "011"
-                                });
-                                listItems.Add(new SelectListItem
-                                {
-                                    Text = "101",
-                                    Value = "101"
-                                });
-                                listItems.Add(new SelectListItem
-                                {
-                                    Text = "347",
-                                    Value = "347"
-                                });
-
-                            }
-                            @Html.DropDownListFor(m => m.MatchedLoc, listItems, new { @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:6px;" })
+                            
+                            @Html.DropDownListFor(m => m.MatchedLoc, Model.LocationList, new { @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:6px;" })
                             <noscript> <input style="display:none" class="btn btn-success" type="submit" value="Search" /></noscript>
                         </div>
                     }
@@ -387,7 +344,14 @@
 
                                                     <div class="col-md-5 text-center">
                                                         <div class="row">
-                                                            <button data-id="@vehicle.VIN" class="EditVehicleBtn" data-toggle="modal" data-target="#editVehicleModal" style="background-color:transparent;border:1px solid transparent;float:right"><i class="fa fa-edit" style="font-size:20px;color:black;float:right"></i></button>
+                                                            @if (Convert.ToInt32(ViewData["management_assetControl"]) >= 3)
+                                                            {
+                                                                <button data-id="@vehicle.VIN" class="EditVehicleBtn" data-toggle="modal" data-target="#editVehicleModal" style="background-color:transparent;border:1px solid transparent;float:right"><i class="fa fa-edit" style="font-size:20px;color:black;float:right"></i></button>
+                                                            }
+                                                            else
+                                                            {
+                                                                <button disabled data-id="@vehicle.VIN" style="display:none; background-color:transparent;border:1px solid transparent;float:right"><i class="fa fa-edit" style="font-size:20px;color:black;float:right"></i></button>
+                                                            }
                                                         </div>
                                                         <div class="row">
                                                             <a class="booking-doc-img">
@@ -456,11 +420,10 @@
 
                                                         <div class="row" style="padding:7px; margin-bottom:10px; border-radius:10px; background-color:#357efc">
                                                             <div class="col-md-8 text-center">
-
                                                                 @if (vehicle.efficiency_price.HasValue)
                                                                 {
                                                                     <span class="btn" style="font-size:20px; color:white;">
-                                                                        @Math.Round(@vehicle.efficiency_price.Value, 1).ToString("N2")
+                                                                        @Math.Round(@vehicle.efficiency_price.Value, 2).ToString("N2")
                                                                     </span>
                                                                 }
                                                                 else
@@ -482,7 +445,7 @@
                                                                 @if (vehicle.efficiency_liter.HasValue)
                                                                 {
                                                                     <span class="btn" style="font-size:20px; color:white;">
-                                                                        @Math.Round(@vehicle.efficiency_liter.Value, 1).ToString("N3")
+                                                                        @Math.Round(@vehicle.efficiency_liter.Value, 3).ToString("N3")
                                                                     </span>
                                                                 }
                                                                 else
@@ -543,7 +506,14 @@
 
                                                     <div class="col-md-5 text-center">
                                                         <div class="row">
-                                                            <button data-id="@vehicle.VIN" class="EditVehicleBtn" data-toggle="modal" data-target="#editVehicleModal" style="background-color:transparent;border:1px solid transparent;float:right"><i class="fa fa-edit" style="font-size:20px;color:black;float:right"></i></button>
+                                                            @if (Convert.ToInt32(ViewData["management_assetControl"]) >= 3)
+                                                            {
+                                                                <button data-id="@vehicle.VIN" class="EditVehicleBtn" data-toggle="modal" data-target="#editVehicleModal" style="background-color:transparent;border:1px solid transparent;float:right"><i class="fa fa-edit" style="font-size:20px;color:black;float:right"></i></button>
+                                                            }
+                                                            else
+                                                            {
+                                                                <button disabled data-id="@vehicle.VIN" style="display:none; background-color:transparent;border:1px solid transparent;float:right"><i class="fa fa-edit" style="font-size:20px;color:black;float:right"></i></button>
+                                                            }
                                                         </div>
                                                         <div class="row">
                                                             <a class="booking-doc-img">
@@ -617,7 +587,7 @@
                                                                 @if (vehicle.efficiency_price.HasValue)
                                                                 {
                                                                     <span class="btn" style="font-size:20px; color:white;">
-                                                                        @Math.Round(@vehicle.efficiency_price.Value, 1).ToString("N2")
+                                                                        @Math.Round(@vehicle.efficiency_price.Value, 2).ToString("N2")
                                                                     </span>
                                                                 }
                                                                 else
@@ -639,7 +609,7 @@
                                                                 @if (vehicle.efficiency_liter.HasValue)
                                                                 {
                                                                     <span class="btn" style="font-size:20px; color:white;">
-                                                                        @Math.Round(@vehicle.efficiency_liter.Value, 1).ToString("N3")
+                                                                        @Math.Round(@vehicle.efficiency_liter.Value, 3).ToString("N3")
                                                                     </span>
                                                                 }
                                                                 else
@@ -654,13 +624,9 @@
                                                                 <img style="width:50px" src="~/Content/Untitled2.png" alt="Alternate Text" />
                                                             </div>
                                                         </div>
-
                                                     </div>
-
                                                 </div>
-
                                             </div>
-
                                         </div>
                                     </div>
                                 }

@@ -11,10 +11,10 @@ namespace SeHubPortal.ViewModel
     public class FuelLogViewModel
     {
         public List<tbl_vehicle_info> vehicleInfoList { get; set; }
-        public List<tbl_fuel_log> fuelLogList { get; set; }
+        public List<tbl_fuel_log_fleet> fuelLogList { get; set; }
         public string selectedVIN { get; set; }
         public tbl_vehicle_info SelectedVehicleInfo { get; set; }
-        public tbl_fuel_log fuelLogTableValues { get; set; }
+        public tbl_fuel_log_fleet fuelLogTableValues { get; set; }
         public int fuel_log_access { get; set; }
         public tbl_sehub_access SehubAccess { get; set; }
         public List<SelectListItem> MatchedLocs { get; set; }

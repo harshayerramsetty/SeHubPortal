@@ -1,0 +1,318 @@
+﻿@model SeHubPortal.ViewModel.EditUnitViewModel
+
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title></title>
+    </head>
+    <body>
+
+        @using (Html.BeginForm("EditUnitInfo", "FleetTVT", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="modal-header" style="padding:3px">
+                <div class="col-lg-8" style="padding-top:5px">
+                    <h5 id="exampleModalLongTitle">Unit Information</h5>
+                </div>
+                <div class="col-lg-4 text-right" style="padding-top:5px">
+                    <span style="margin-right:15px; font-size:17px;"><b>Active</b></span>
+
+
+                    @if (Model.Unit.Active == 1)
+                    {
+                        <input onclick="calc();" id="ActiveCheckBox" type="checkbox" style="float:right; width:20px; height:20px" checked name="name" value="" />
+                    }
+                    else
+                    {
+                        <input onclick="calc();" id="ActiveCheckBox" type="checkbox" style="float:right; width:20px; height:20px" name="name" value="" />
+                    }
+
+                    @Html.EditorFor(m => m.Unit.Active, new { htmlAttributes = new { @id = "FinalCheck", @style = "display: none", @readonly = "true", @value = "1" } })
+
+                </div>
+
+                <script>
+                    function calc()
+                    {
+                      if (document.getElementById('ActiveCheckBox').checked) 
+                      {
+                          $('#FinalCheck').val(1)
+                      } else {
+                          $('#FinalCheck').val(0)
+                      }
+                    }
+                </script>
+
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="row">
+                            @{
+                                string base64ProfilePic = "";
+                                if (Model.Unit.unit_image is null)
+                                {
+                                    base64ProfilePic = "";
+                                }
+                                else
+                                {
+                                    base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(Model.Unit.unit_image);
+                                }
+                            }
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-5 text-right">
+                                Unit Number
+                            </div>
+                            <div class="col-lg-7">
+                                @Html.EditorFor(m => m.Unit.unit_number, new { htmlAttributes = new { @style = "width: 100%", @readonly = "true" } })
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px">
+                            <div class="col-lg-5 text-right">
+                                Unit Name
+                            </div>
+                            <div class="col-lg-7">
+                                @Html.EditorFor(m => m.Unit.unit_name, new { htmlAttributes = new { @style = "width: 100%" } })
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px">
+                            <div class="col-lg-5 text-right">
+                                Configuration
+                            </div>
+                            <div class="col-lg-7">
+                                <div class="row">
+                                    <div class="col-lg-6" style="padding-right:5px">
+                                        @{
+                                            List
+                                            <SelectListItem>
+                                            listItems = new List
+                                            <SelectListItem>
+                                            ();
+
+                                            listItems.Add(new SelectListItem
+                                            {
+                                                Text = "Tractor",
+                                                Value = "Tractor"
+                                            });
+
+                                            listItems.Add(new SelectListItem
+                                            {
+                                                Text = "Trailer",
+                                                Value = "Trailer"
+                                            });
+                                        }
+                                        @Html.DropDownListFor(m => m.Unit.survey_type, listItems, new { @id = "Type", @class = "text-center", @style = "text-align-last: center; width:100%; height:30px;", @required = "required", @onchange = "jsFunction(this.value);" })
+
+                                    </div>
+                                    <div class="col-lg-6" style="padding-left:5px">
+                                        @Html.DropDownListFor(m => m.Unit.survey_configuration, Model.ConfigurationsListTractor, new { @class = "text Tractor configuration", @style = "text-align-last: center; width:100%; height:30px", @required = "required", @onchange = "jsFunction(this.value);" })
+                                        @Html.DropDownListFor(m => m.Unit.survey_configuration, Model.ConfigurationsListTrailer, new { @class = "text Trailer configuration", @style = "text-align-last: center; width:100%; height:30px", @required = "required", @onchange = "jsFunction(this.value);" })
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px">
+                            <div class="col-lg-5 text-right">
+                                Year
+                            </div>
+                            <div class="col-lg-7">
+                                @Html.EditorFor(m => m.Unit.year, new { htmlAttributes = new { @style = "width: 100%" } })
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px">
+                            <div class="col-lg-5 text-right">
+                                Make
+                            </div>
+                            <div class="col-lg-7">
+                                @Html.EditorFor(m => m.Unit.make, new { htmlAttributes = new { @style = "width: 100%" } })
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px">
+                            <div class="col-lg-5 text-right">
+                                Model
+                            </div>
+                            <div class="col-lg-7">
+                                @Html.EditorFor(m => m.Unit.model, new { htmlAttributes = new { @style = "width: 100%" } })
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px">
+                            <div class="col-lg-5 text-right">
+                                Plate Number
+                            </div>
+                            <div class="col-lg-7">
+                                @Html.EditorFor(m => m.Unit.plate_number, new { htmlAttributes = new { @style = "width: 100%" } })
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px">
+                            <div class="col-lg-5 text-right">
+                                VIN
+                            </div>
+                            <div class="col-lg-7">
+                                @Html.EditorFor(m => m.Unit.VIN, new { htmlAttributes = new { @style = "width: 100%" } })
+                            </div>
+                        </div>
+
+                        @if (Model.Unit.survey_type == "Tractor")
+                        {
+                            <div class="row mileage" style="margin-top:5px">
+                                <div class="col-lg-5 text-right">
+                                    Mileage
+                                </div>
+                                <div class="col-lg-7">
+                                    @Html.EditorFor(m => m.Unit.mileage, new { htmlAttributes = new { @style = "width: 100%" } })
+                                </div>
+                            </div>
+                            <div class="row hours" style="margin-top:5px">
+                                <div class="col-lg-5 text-right">
+                                    Engin Hours
+                                </div>
+                                <div class="col-lg-7">
+                                    @Html.EditorFor(m => m.Unit.hours, new { htmlAttributes = new { @style = "width: 100%" } })
+                                </div>
+                            </div>
+                        }
+
+
+                        @if (Model.Unit.survey_type == "Trailer")
+                        {
+                            <div class="row length" style="margin-top:5px">
+                                <div class="col-lg-5 text-right">
+                                    Length
+                                </div>
+                                <div class="col-lg-7">
+                                    @Html.EditorFor(m => m.Unit.length, new { htmlAttributes = new { @style = "width: 100%" } })
+                                </div>
+                            </div>
+                        }
+
+
+                        <div class="row" style="margin-top:5px">
+                            <div class="col-lg-5 text-right">
+                                Date Expired
+                            </div>
+                            <div class="col-lg-7">
+                                @Html.EditorFor(m => m.Unit.date_expired, new { htmlAttributes = new { @style = "width: 100%" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        @if (Model.Unit.survey_type == "Tractor")
+                        {
+                            <div class="row tractor" style="margin-top:5px">
+                                <div class="col-lg-5 text-right">
+                                    Steer Type Spec PSI
+                                </div>
+                                <div class="col-lg-7">
+                                    @Html.EditorFor(m => m.Unit.spec_psi_1, new { htmlAttributes = new { @style = "width: 100%" } })
+                                </div>
+                            </div>
+                            <div class="row tractor" style="margin-top:5px">
+                                <div class="col-lg-5 text-right">
+                                    Drive Type Spec PSI
+                                </div>
+                                <div class="col-lg-7">
+                                    @Html.EditorFor(m => m.Unit.spec_psi_2, new { htmlAttributes = new { @style = "width: 100%" } })
+                                </div>
+                            </div>
+                        }
+
+                        @if (Model.Unit.survey_type == "Trailer")
+                        {
+                            <div class="row trailer" style="margin-top:5px">
+                                <div class="col-lg-5 text-right">
+                                    Trailer Type Spec PSI
+                                </div>
+                                <div class="col-lg-7">
+                                    @Html.EditorFor(m => m.Unit.spec_psi_3, new { htmlAttributes = new { @style = "width: 100%" } })
+                                </div>
+                            </div>
+                        }
+
+                        @if (Model.Unit.survey_type == "Tractor")
+                        {
+                            <div class="row ts1" style="margin-top:5px">
+                                <div class="col-lg-5 text-right">
+                                    Steer Tire Size 
+                                </div>
+                                <div class="col-lg-7">
+                                    @Html.DropDownListFor(m => m.Unit.tire_size_1, Model.SizesList, new { @class = "text", @style = "text-align-last: center; width:100%; height:30px", @required = "required" })
+                                </div>
+                            </div>
+                            <div class="row ts2" style="margin-top:5px">
+                                <div class="col-lg-5 text-right">
+                                    Drive Tire Size 
+                                </div>
+                                <div class="col-lg-7">
+                                    @Html.DropDownListFor(m => m.Unit.tire_size_2, Model.SizesList, new { @class = "text", @style = "text-align-last: center; width:100%; height:30px", @required = "required" })
+                                </div>
+                            </div>
+                        }
+
+                        @if (Model.Unit.survey_type == "Trailer")
+                        {
+                            <div class="row ts3" style="margin-top:5px">
+                                <div class="col-lg-5 text-right">
+                                    Tire Size 3
+                                </div>
+                                <div class="col-lg-7">
+                                    @Html.DropDownListFor(m => m.Unit.tire_size_3, Model.SizesList, new { @class = "text", @style = "text-align-last: center; width:100%; height:30px", @required = "required" })
+                                </div>
+                            </div>
+                        }
+
+                        <div class="row " style="margin-top:5px">
+                            <div class="col-lg-5 text-right">
+                                Short Description
+                            </div>
+                            <div class="col-lg-7">
+
+                                @Html.TextAreaFor(m => m.Unit.short_description, 4, 30, new { htmlAttributes = new { @style = "width: 100%" } })
+                            </div>
+                        </div>
+                        <div class="row " style="margin-top:0px">
+                            <div class="col-lg-5 text-right">
+                                Last Survey
+                            </div>
+                            <div class="col-lg-7">
+                                @Html.EditorFor(m => m.Unit.last_survey, new { htmlAttributes = new { @style = "width: 100%" } })
+                            </div>
+                        </div>
+                        <div class="row " style="margin-top:5px">
+                            <div class="col-lg-5 text-right">
+                                Upload Image
+                            </div>
+                            <div class="col-lg-7">
+                                <input style="width:100%" type="file" name="UnitImage" value="" />
+                            </div>
+                        </div>
+
+                        @if (base64ProfilePic == "")
+                        {
+                        }
+                        else
+                        {
+                            <div class="row " style="margin-top:5px">
+                                <div class="col-lg-5 text-right">
+                                    Image
+                                </div>
+                                <div class="col-lg-7">
+                                    <img class="imageClass" style="width:150px" alt="profilePic" src="@base64ProfilePic" />
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                
+            </div>
+            <div class="modal-footer" style="padding:3px">
+                <button class="btn btn-danger" data-dismiss="modal" style="padding: 3px 20px 3px 20px">Cancel</button>
+                <button class="btn btn-success" type="submit" style="padding: 3px 30px 3px 30px">Save</button>
+            </div>
+        }
+
+    </body>
+
+    </html>

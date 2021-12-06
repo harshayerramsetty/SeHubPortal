@@ -18,6 +18,32 @@
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 
+    @if (Model.SehubAccess.plant > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.Active == true)
+    {
+        <script>
+            $(document).ready(function () {
+                $("#TG").prop("checked", true);
+            });
+        </script>
+    }
+    else
+    {
+        <script>
+            $(document).ready(function () {
+                $("#TG").prop("checked", false);
+            });
+        </script>
+    }
+
 
 
     @if (Model.SehubAccess.tools > 0)
@@ -111,8 +137,22 @@
         </style>
     }
 
+    @if (Model.SehubAccess.fleetTvt_snapshot > 0)
+    {
+        <style>
+            #FleetSnapShotLink {
+                display: block !important;
+            }
+        </style>
+    }
 
     <style>
+
+        #FleetTVTClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: bold;
+        }
 
         #FleetTVTClicked {
             display: block !important;
@@ -124,12 +164,6 @@
 
         .Trailer {
             display: none;
-        }
-
-        #FleetTVTClicked {
-            background-color: #f0f2f5;
-            color: black;
-            font-weight: bold;
         }
 
         .fleetTVTBtn {
@@ -156,23 +190,860 @@
             .card-header h6 {
                 color: black;
             }
+
+
+        #AddUnit {
+            padding-right: 400px;
+        }
+
+        #exampleModalLong {
+            padding-right: 400px;
+        }
     </style>
 </head>
 <body style="overflow-y: hidden; ">
+
     <div class="row heading" style="padding:10px 20px 0px 15px">
         <div class="col">
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb" style="background-color: white; height: 100%; margin-top: 0px; ">
-                    <li class="breadcrumb-item"><a href="@Url.Action("EditAccount", "FleetTVT")">Fleet TVT</a></li>
-                    <li class="breadcrumb-item " aria-current="page">EditAccount</li>
+                <ol class="breadcrumb" style="background-color: white;height: 100%;margin-top: 0px;">
+                    <li class="breadcrumb-item"><a href="@Url.Action("FieldSurveyEditAccount", "FleetTVT")">Fleet TVT</a></li>
+                    <li class="breadcrumb-item " aria-current="page">Customers</li>
+
+                    <lable style="margin-left:1215px; margin-right:6px">
+                        Location
+                    </lable>
+                    @Html.DropDownListFor(m => m.Location, Model.LocationList, new { @style = "width:100px; height:25px", @onchange = "changeLocation(this.value)" })
                 </ol>
             </nav>
         </div>
-        <button type="button" id="clickThis" class="btn" style=" margin-bottom: 14px;">
+        <button type="button" id="clickThis" class="btn" style="        margin-bottom: 14px;
+">
             <i class="fa fa-bars" style="font-size: 25px "></i>
             <span class="sr-only">Toggle Menu</span>
         </button>
     </div>
+
+    <div class="row" style="margin:15px">
+        <div class="col-lg-4">
+            <div class="row" style="background-color:white; padding:15px; height:100%">
+                <div class="col-lg-12">
+
+                    <div id="Step2">
+                        <div class="row" style="margin-bottom:0px; background-color:#b6b8ba">
+                            <div class="col-lg-12" style="padding:0px">
+                                <div class="card" style="border:2px solid #aeafb0">
+                                    <div class="card-header" style="background-color: #c0c2c4 !important; padding:0px 2px 2px 15px">
+                                        <div class="row">
+                                            <div class="col-lg-2" style="padding-top:3px;"></div>
+                                            <div class="col-lg-8 text-center" style="padding-top:8px; padding-bottom:0px;">
+                                                <h4 style="font-weight:bold; color:white">Select Customer</h4>
+                                            </div>
+                                            <div class="col-lg-2" style="padding-top:8px;">
+                                                @if (Model.Customer != "Please Select Customer" && Model.Customer != null && Model.SehubAccess.fleetTvt_EditAccount >= 3)
+                                                {
+                                                    <button data-toggle="modal" data-target="#editCustomer" class="fa fa-edit" id="myButton" style="float: right;font-size: 30px;background-color: transparent;outline: none; border: none"></button>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body" style="padding:0px">
+
+                                        <div class="row" style="margin:10px;">
+                                            <div class="col-lg-12">
+                                                <div class="row" style="margin-bottom:5px;">
+                                                    <div class="col-lg-12">
+                                                        @using (Html.BeginForm("FTVTSelectedCustomer", "FleetTVT", FormMethod.Post))
+                                                        {
+                                                            @Html.DropDownListFor(m => m.Customer, Model.CustomerList, new { @class = "text", @style = "text-align-last: center; width:100%; height:30px", @required = "required", @id = "customer", @onchange = "this.form.submit()" })
+                                                        }
+                                                    </div>
+                                                </div>
+
+
+                                                @if (Model.Customer != null && Model.customerDetails != null)
+                                                {
+
+                                                    <div class="row" style="padding-left:100px; margin-top:20px">
+                                                        <label style="margin-right:7px; margin-left:0px">
+                                                            @if (Model.Active == false)
+                                                            {
+                                                                <h5 class="active" style="font-weight:bold">Active Units</h5>
+                                                            }
+                                                            else
+                                                            {
+                                                                <h5 class="active" style="color:dimgray">Active Units</h5>
+                                                            }
+                                                        </label>
+
+                                                        <div class="custom-control custom-switch">
+                                                            <input type="checkbox" style="width:60px; height:25px" class="custom-control-input" onclick="document.getElementById('ToggleFromActiveToInactive').click()" id="TG">
+                                                            <label class="custom-control-label" for="TG">
+                                                                @if (Model.Active == true)
+                                                                {
+                                                                    <h5 class="inactive" style="font-weight:bold">Inactive Units</h5>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <h5 class="inactive" style="color:dimgray">Inactive Units</h5>
+                                                                }
+                                                            </label>
+                                                        </div>
+
+                                                        <div style="display:none" class="custom-control custom-switch">
+                                                            @using (Html.BeginForm("ActiveInaciveUnits", "FleetTVT", FormMethod.Post))
+                                                            {
+                                                                @Html.HiddenFor(m => m.Customer)
+                                                                //<input type="checkbox" class="custom-control-input" id="ToggleFromActiveToInactive" checked name="name" value="" />
+                                                                @Html.CheckBoxFor(m => m.Active, new { @style = "width:50px; height:20px", @class = "custom-control-input", @id = "ToggleFromActiveToInactive", @onchange = "this.form.submit()" })
+                                                            }
+
+                                                            <label class="custom-control-label" for="ToggleFromActiveToInactive">
+                                                                @if (Model.Active == true)
+                                                                {
+                                                                    <h5><b>Inactive Units</b></h5>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <h5 style="color:dimgray">Inactive Units</h5>
+                                                                }
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="custDetailsRow" id="custDetailsDiv" style="font-size:13px; ">
+                                                        <div class="row" style="display:none; margin-bottom:5px">
+                                                            <div class="col-lg-5">
+                                                                Customer Number
+                                                            </div>
+                                                            <div class="col-lg-7" id="Customer_Number">
+                                                                @Model.customerDetails.customer_number
+                                                            </div>
+                                                        </div>
+                                                        <div class="row" style="display:none; margin-bottom:5px">
+                                                            <div class="col-lg-5">
+                                                                Customer Name
+                                                            </div>
+                                                            <div class="col-lg-7" id="Customer_Name">
+                                                                @Model.CustomerList.Where(x => x.Value == Model.Customer).Select(x => x.Text).FirstOrDefault();
+                                                            </div>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom:5px">
+                                                            <div class="col-lg-5 text-right">
+                                                                Reporting Contact
+                                                            </div>
+                                                            <div class="col-lg-7" style="padding-left:0px">
+                                                                @Model.customerDetails.reporting_contact
+                                                            </div>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom:5px">
+                                                            <div class="col-lg-5 text-right">
+                                                                Reporting Email
+                                                            </div>
+                                                            <div class="col-lg-7" style="padding-left:0px; font-size:12px">
+                                                                @Model.customerDetails.reporting_email
+                                                            </div>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom:5px">
+                                                            <div class="col-lg-5 text-right">
+                                                                Reporting Frequency
+                                                            </div>
+                                                            <div class="col-lg-7" style="padding-left:0px">
+                                                                @Model.customerDetails.reporting_frequency
+                                                            </div>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom:5px">
+                                                            <div class="col-lg-5 text-right">
+                                                                Mileage Required
+                                                            </div>
+                                                            <div class="col-lg-7" style="padding-left:0px">
+                                                                @if (@Model.customerDetails.mileage_required == 0)
+                                                                {
+                                                                    <input type="checkbox" onclick="return false" />
+                                                                }
+                                                                else
+                                                                {
+                                                                    <input type="checkbox" checked onclick="return false" />
+                                                                }
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row" style="margin-bottom:10px">
+                                                            <div class="col-lg-5 text-right">
+                                                                Inspection Date Required
+                                                            </div>
+                                                            <div class="col-lg-7" style="padding-left:0px">
+                                                                @if (Model.customerDetails.exp_date_required == 0)
+                                                                {
+                                                                    <input type="checkbox" onclick="return false" />
+                                                                }
+                                                                else
+                                                                {
+                                                                    <input type="checkbox" checked onclick="return false" />
+                                                                }
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <table class="table table-striped table-bordered text-center" style="width:100%">
+                                                                    <thead style="background-color:#c0c2c4; color:white">
+                                                                        <tr>
+                                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Unit Type (Active)</th>
+                                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Count</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+                                                                        <tr>
+                                                                            <td style="padding:0px">Tractor</td>
+                                                                            <td style="padding:0px">@Model.tractorCount</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td style="padding:0px">Trailer</td>
+                                                                            <td style="padding:0px">@Model.trailerCount</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td style="padding:0px">Total</td>
+                                                                            <td style="padding:0px">@Model.customerDetails.fleet_size</td>
+                                                                        </tr>
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <table class="table table-striped table-bordered text-center" style="width:100%">
+                                                                    <thead style="background-color:#c0c2c4; color:white">
+                                                                        <tr>
+                                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Tire Position</th>
+                                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Count</th>
+                                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Pull-Point</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+                                                                        <tr>
+                                                                            <td style="padding:0px">Steer</td>
+                                                                            <td style="padding:0px">@Model.SteerTiresCount</td>
+                                                                            <td style="padding:0px">@Model.pullPointSteer</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td style="padding:0px">Drive</td>
+                                                                            <td style="padding:0px">@Model.DriveTiresCount</td>
+                                                                            <td style="padding:0px">@Model.pullPointDrive</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td style="padding:0px">Trailer</td>
+                                                                            <td style="padding:0px">@Model.trailerTiresCount</td>
+                                                                            <td style="padding:0px">@Model.pullPointTrailer</td>
+                                                                        </tr>
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    if (Model.SehubAccess.fleetTvt_EditAccount >= 2)
+                                                    {
+                                                        <div class="row" style="margin-top:0px; margin-bottom:5px">
+                                                            <div class="col-lg-6" style="padding-left:40px">
+                                                                <div class="card shadow-sm " type="button" data-toggle="modal" data-target="#AddUnit" style="width:250px; height:310px">
+                                                                    <div class="card-body text-center" style="padding-top:40px">
+                                                                        <img src="~/Content/Unit.png" style="margin-top:20px; margin-bottom:25px; width:150px;">
+                                                                        <h5 style="margin-left:0px"><b>New Unit</b></h5>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6"></div>
+                                                        </div>
+                                                    }
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 example" style="overflow-y:auto; height:720px; background-color:white; padding:15px 15px 0px 15px; padding-bottom:0px !important">
+
+            <div class="row">
+                @if (Model.UnitsForCustomer != null)
+                {
+                    foreach (var unit in Model.UnitsForCustomer)
+                    {
+                        <div class="col-lg-3">
+                            <div class="card" style="margin-bottom:10px; padding-top:0px">
+                                <div class="card-header text-center" style="background-color: #c0c2c4 !important; padding:3px 0px 0px 0px">
+                                    <b>@unit.unit_number</b> <button id="@unit.unit_number" onclick="PullUnitDetails(this)" style="float:right; background-color:transparent; border:none; outline:none" class="fa fa-edit" data-toggle="modal" data-target="#exampleModalLong"></button>
+                                </div>
+                                <div class="card-body" style="font-size:10px;">
+                                    <div class="row">
+                                        <div class="col-lg-5 text-right" style="padding-right:0px">
+                                            Name
+                                        </div>
+                                        <div class="col-lg-7 text-left">
+
+                                            @if (@unit.unit_name != null)
+                                            {
+                                                if (@unit.unit_name.Length > 20)
+                                                {
+                                                    @unit.unit_name.Substring(0, 20)
+                                                }
+                                                else
+                                                {
+                                                    @unit.unit_name
+                                                }
+                                            }
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-5 text-right" style="padding-right:0px">
+                                            Configuration
+                                        </div>
+                                        <div class="col-lg-7">
+
+                                            @if (unit.survey_type != "" && unit.survey_configuration != "" && unit.survey_type != null && unit.survey_configuration != null)
+                                            {
+                                                <span>
+                                                    @unit.survey_type - @unit.survey_configuration
+                                                </span>
+                                            }
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-5 text-right" style="padding-right:0px">
+                                            Year
+                                        </div>
+                                        <div class="col-lg-7">
+                                            @unit.year
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-5 text-right" style="padding-right:0px">
+                                            Make
+                                        </div>
+                                        <div class="col-lg-7">
+                                            @unit.make
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-5 text-right" style="padding-right:0px">
+                                            Model
+                                        </div>
+                                        <div class="col-lg-7">
+                                            @unit.model
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-5 text-right" style="padding-right:0px">
+                                            Plate Number
+                                        </div>
+                                        <div class="col-lg-7">
+                                            @unit.plate_number
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-5 text-right" style="padding-right:0px">
+                                            VIN
+                                        </div>
+                                        <div class="col-lg-7" style="font-size:9px">
+                                            @unit.VIN
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-5 text-right" style="padding-right:0px">
+                                            Last Survey
+                                        </div>
+                                        <div class="col-lg-7" style="font-size:9px">
+                                            @unit.last_survey
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" id="fillEditForm" style="width:900px">
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="AddUnit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" id="fillEditForm" style="width:900px">
+
+                @using (Html.BeginForm("AddUnit", "FleetTVT", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="modal-header" style="padding:6px 3px 0px 15px">
+                        <h5>Add Unit</h5>
+                    </div>
+                    <div class="modal-body">
+                        @Html.HiddenFor(m => m.Customer)
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="row">
+                                    <div class="col-lg-5 text-right">
+                                        Unit Number
+                                    </div>
+                                    <div class="col-lg-7">
+                                        @Html.EditorFor(m => m.AddUnit.unit_number, new { htmlAttributes = new { @style = "width: 100%"} })
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:5px">
+                                    <div class="col-lg-5 text-right">
+                                        Unit Name
+                                    </div>
+                                    <div class="col-lg-7">
+                                        @Html.EditorFor(m => m.AddUnit.unit_name, new { htmlAttributes = new { @style = "width: 100%" } })
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:5px">
+                                    <div class="col-lg-5 text-right">
+                                        Configuration
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <div class="row">
+                                            <div class="col-lg-6" style="padding-right:5px">
+                                                @{
+                                                    List
+                                                    <SelectListItem>
+                                                    listItems = new List
+                                                    <SelectListItem>
+                                                    ();
+
+                                                    listItems.Add(new SelectListItem
+                                                    {
+                                                        Text = "Tractor",
+                                                        Value = "Tractor"
+                                                    });
+
+                                                    listItems.Add(new SelectListItem
+                                                    {
+                                                        Text = "Trailer",
+                                                        Value = "Trailer"
+                                                    });
+                                                }
+                                                @Html.DropDownListFor(m => m.AddUnit.survey_type, listItems, new { @id = "Type", @class = "text-center", @style = "text-align-last: center; width:100%; height:30px;", @onchange = "jsFunction(this.value);" })
+
+                                            </div>
+                                            <div class="col-lg-6" style="padding-left:5px">
+                                                @Html.DropDownListFor(m => m.AddUnit.survey_configuration, Model.ConfigurationsListTractor, new { @class = "text Tractor configuration", @style = "text-align-last: center; width:100%; height:30px", @onchange = "jsFunction(this.value);" })
+                                                @Html.DropDownListFor(m => m.AddUnit.survey_configuration, Model.ConfigurationsListTrailer, new { @class = "text Trailer configuration", @style = "text-align-last: center; width:100%; height:30px", @onchange = "jsFunction(this.value);" })
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:5px">
+                                    <div class="col-lg-5 text-right">
+                                        Year
+                                    </div>
+                                    <div class="col-lg-7">
+                                        @Html.EditorFor(m => m.AddUnit.year, new { htmlAttributes = new { @style = "width: 100%" } })
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:5px">
+                                    <div class="col-lg-5 text-right">
+                                        Make
+                                    </div>
+                                    <div class="col-lg-7">
+                                        @Html.EditorFor(m => m.AddUnit.make, new { htmlAttributes = new { @style = "width: 100%" } })
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:5px">
+                                    <div class="col-lg-5 text-right">
+                                        Model
+                                    </div>
+                                    <div class="col-lg-7">
+                                        @Html.EditorFor(m => m.AddUnit.model, new { htmlAttributes = new { @style = "width: 100%" } })
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:5px">
+                                    <div class="col-lg-5 text-right">
+                                        Plate Number
+                                    </div>
+                                    <div class="col-lg-7">
+                                        @Html.EditorFor(m => m.AddUnit.plate_number, new { htmlAttributes = new { @style = "width: 100%" } })
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:5px">
+                                    <div class="col-lg-5 text-right">
+                                        VIN
+                                    </div>
+                                    <div class="col-lg-7">
+                                        @Html.EditorFor(m => m.AddUnit.VIN, new { htmlAttributes = new { @style = "width: 100%" } })
+                                    </div>
+                                </div>
+
+                                <div class="row mileage" style="margin-top:5px">
+                                    <div class="col-lg-5 text-right">
+                                        Mileage
+                                    </div>
+                                    <div class="col-lg-7">
+                                        @Html.EditorFor(m => m.AddUnit.mileage, new { htmlAttributes = new { @style = "width: 100%" } })
+                                    </div>
+                                </div>
+                                <div class="row hours" style="margin-top:5px">
+                                    <div class="col-lg-5 text-right">
+                                        Engin Hours
+                                    </div>
+                                    <div class="col-lg-7">
+                                        @Html.EditorFor(m => m.AddUnit.hours, new { htmlAttributes = new { @style = "width: 100%" } })
+                                    </div>
+                                </div>
+
+
+                                <div class="row length" style="margin-top:5px">
+                                    <div class="col-lg-5 text-right">
+                                        Length
+                                    </div>
+                                    <div class="col-lg-7">
+                                        @Html.EditorFor(m => m.AddUnit.length, new { htmlAttributes = new { @style = "width: 100%" } })
+                                    </div>
+                                </div>
+
+
+                                <div class="row" style="margin-top:5px">
+                                    <div class="col-lg-5 text-right">
+                                        Date Expired
+                                    </div>
+                                    <div class="col-lg-7">
+                                        @Html.EditorFor(m => m.AddUnit.date_expired, new { htmlAttributes = new { @style = "width: 100%" } })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="row tractor" style="margin-top:5px">
+                                    <div class="col-lg-5 text-right">
+                                        Steer Type Spec PSI
+                                    </div>
+                                    <div class="col-lg-7">
+                                        @Html.EditorFor(m => m.AddUnit.spec_psi_1, new { htmlAttributes = new { @style = "width: 100%" } })
+                                    </div>
+                                </div>
+                                <div class="row tractor" style="margin-top:5px">
+                                    <div class="col-lg-5 text-right">
+                                        Drive Type Spec PSI
+                                    </div>
+                                    <div class="col-lg-7">
+                                        @Html.EditorFor(m => m.AddUnit.spec_psi_2, new { htmlAttributes = new { @style = "width: 100%" } })
+                                    </div>
+                                </div>
+
+                                <div class="row trailer" style="margin-top:5px">
+                                    <div class="col-lg-5 text-right">
+                                        Trailer Type Spec PSI
+                                    </div>
+                                    <div class="col-lg-7">
+                                        @Html.EditorFor(m => m.AddUnit.spec_psi_3, new { htmlAttributes = new { @style = "width: 100%" } })
+                                    </div>
+                                </div>
+
+                                <div class="row ts1" style="margin-top:5px">
+                                    <div class="col-lg-5 text-right">
+                                        Steer Tire Size
+                                    </div>
+                                    <div class="col-lg-7">
+                                        @Html.DropDownListFor(m => m.AddUnit.tire_size_1, Model.SizesList, new { @class = "text", @style = "text-align-last: center; width:100%; height:30px" })
+                                    </div>
+                                </div>
+                                <div class="row ts2" style="margin-top:5px">
+                                    <div class="col-lg-5 text-right">
+                                        Drive Tire Size
+                                    </div>
+                                    <div class="col-lg-7">
+                                        @Html.DropDownListFor(m => m.AddUnit.tire_size_2, Model.SizesList, new { @class = "text", @style = "text-align-last: center; width:100%; height:30px" })
+                                    </div>
+                                </div>
+
+
+                                <div class="row ts3" style="margin-top:5px">
+                                    <div class="col-lg-5 text-right">
+                                        Tire Size 3
+                                    </div>
+                                    <div class="col-lg-7">
+                                        @Html.DropDownListFor(m => m.AddUnit.tire_size_3, Model.SizesList, new { @class = "text", @style = "text-align-last: center; width:100%; height:30px" })
+                                    </div>
+                                </div>
+
+                                <div class="row " style="margin-top:5px">
+                                    <div class="col-lg-5 text-right">
+                                        Short Description
+                                    </div>
+                                    <div class="col-lg-7">
+
+                                        @Html.TextAreaFor(m => m.AddUnit.short_description, 4, 30, new { htmlAttributes = new { @style = "width: 100%" } })
+                                    </div>
+                                </div>
+                                <div class="row " style="margin-top:0px">
+                                    <div class="col-lg-5 text-right">
+                                        Last Survey
+                                    </div>
+                                    <div class="col-lg-7">
+                                        @Html.EditorFor(m => m.AddUnit.last_survey, new { htmlAttributes = new { @style = "width: 100%" } })
+                                    </div>
+                                </div>
+                                <div class="row " style="margin-top:5px">
+                                    <div class="col-lg-5 text-right">
+                                        Upload Image
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <input style="width:100%" type="file" name="UnitImage" value="" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer" style="padding:3px">
+                        <button class="btn btn-danger" style="padding:3px 20px 3px 20px" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-success" style="padding:3px 30px 3px 30px" type="submit">Save</button>
+                    </div>
+                }
+
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="editCustomer" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                @using (Html.BeginForm("EditCustomerData", "FleetTVT", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="modal-header" style="padding:3px 3px 3px 15px">
+                        <h5 class="modal-title">Edit Customer Information</h5>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row" style="margin-bottom:5px">
+                            <div class="col-lg-12 text-center">
+                                @{
+                                    string base64ProfilePic = "";
+                                    if (Model.image is null)
+                                    {
+                                        base64ProfilePic = "";
+                                    }
+                                    else
+                                    {
+                                        base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(Model.image);
+                                    }
+                                }
+
+                                @if (base64ProfilePic == "")
+                                {
+
+                                }
+                                else
+                                {
+                                    <img style="width:300px; margin-bottom:10px" alt="profilePic" src="@base64ProfilePic" />
+                                }
+
+                            </div>
+                        </div>
+
+
+                        @Html.HiddenFor(m => m.Customer)
+                        <div class="row" style="margin-bottom:5px">
+                            <div class="col-lg-6">
+                                Reporting Contact
+                            </div>
+                            <div class="col-lg-6">
+                                @Html.EditorFor(m => m.reportingContact)
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom:5px">
+                            <div class="col-lg-6">
+                                Reporting Email
+                            </div>
+                            <div class="col-lg-6">
+                                @Html.EditorFor(m => m.reportingEmail)
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom:5px">
+                            <div class="col-lg-6">
+                                Reporting Frequency
+                            </div>
+                            <div class="col-lg-6">
+                                @{
+                                    List
+                                    <SelectListItem>
+                                    listItems1 = new List
+                                    <SelectListItem>
+                                    ();
+                                    listItems1.Add(new SelectListItem
+                                    {
+                                        Text = "Select Frequency",
+                                    });
+                                    listItems1.Add(new SelectListItem
+                                    {
+                                        Text = "Bi-Monthly",
+                                        Value = "Bi-Monthly",
+                                    });
+                                    listItems1.Add(new SelectListItem
+                                    {
+                                        Text = "Quarterly",
+                                        Value = "Quarterly",
+                                    });
+                                    listItems1.Add(new SelectListItem
+                                    {
+                                        Text = "Semi-Anual",
+                                        Value = "Semi-Anual",
+                                    });
+                                    listItems1.Add(new SelectListItem
+                                    {
+                                        Text = "Anual",
+                                        Value = "Anual",
+                                    });
+                                }
+                                @Html.DropDownListFor(m => m.reportingFrequency, listItems1, new { @class = "text", @style = "text-align-last: center; width:190px; height:28px", @required = "required"})
+                            </div>
+                        </div>
+                        <div class="row" style="">
+                            <div class="col-lg-6">
+                                Mileage Required
+                            </div>
+                            <div class="col-lg-6">
+                                @Html.CheckBoxFor(m => m.mileageRequired, new { @style = "height:25px; width: 25px" })
+                            </div>
+                        </div>
+                        <div class="row" style="">
+                            <div class="col-lg-6">
+                                Inspection Date Required
+                            </div>
+                            <div class="col-lg-6">
+                                @Html.CheckBoxFor(m => m.inspectionDateRequired, new { @style = "height:25px; width: 25px" })
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom:5px">
+                            <div class="col-lg-6">
+                                Pull Point - Steer
+                            </div>
+                            <div class="col-lg-6">
+                                @Html.EditorFor(m => m.pullPointSteer, new { htmlAttributes = new { @id = "pullPointSteer", @onkeydown = "CheckRequiredFeilds()", @style = "width:60px", @required = "required" } })  / 32nds
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom:5px">
+                            <div class="col-lg-6">
+                                Pull Point - Drive
+                            </div>
+                            <div class="col-lg-6">
+                                @Html.EditorFor(m => m.pullPointDrive, new { htmlAttributes = new { @id = "pullPointDrive", @onkeydown = "CheckRequiredFeilds()", @style = "width:60px", @required = "required" } })  / 32nds
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom:5px">
+                            <div class="col-lg-6">
+                                Pull Point - Trailer
+                            </div>
+                            <div class="col-lg-6">
+                                @Html.EditorFor(m => m.pullPointTrailer, new { htmlAttributes = new { @id = "pullPointTrailer", @onkeydown = "CheckRequiredFeilds()", @style = "width:60px", @required = "required" } })  / 32nds
+                            </div>
+                        </div>
+                        <div class="row " style="margin-bottom:5px">
+                            <div class="col-lg-6">
+                                Upload Image
+                            </div>
+                            <div class="col-lg-6">
+                                <input style="width:100%" type="file" name="CustImage" value="" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="padding:3px">
+                        <button class="btn btn-danger" data-dismiss="modal" style="padding: 3px 20px 3px 20px">Cancel</button>
+                        <button class="btn btn-success" type="submit" style="padding: 3px 30px 3px 30px">Save</button>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+
+
+        $("#TG").on('change', function() {
+             if ($(this).is(':checked')) {
+                 $('.inactive').css("font-weight", "bold");
+                 $('.active').css("font-weight", "normal");
+                 $('.active').css("color", "dimgray");
+                 $('.inactive').css("color", "black");
+             }
+             else {
+                 $('.active').css("font-weight", "bold");
+                 $('.inactive').css("font-weight", "normal");
+                 $('.inactive').css("color", "dimgray");
+                 $('.active').css("color", "black");
+             }
+         });
+
+
+        $("#Type").change(function () {
+            var Type = document.getElementById("Type").value;
+
+            if (Type == "Tractor") {
+                $('.Trailer').css("display", "none");
+                $('.Tractor').css("display", "block");
+            }
+            if (Type == "Trailer") {
+                $('.Tractor').css("display", "none");
+                $('.Trailer').css("display", "block");
+            }
+        });
+
+
+        $(document).ready(function () {
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+
+
+
+    </script>
+
+    <script>
+
+        function PullUnitDetails(emel) {
+            $.ajax({
+                url: '@Url.Action("UnitEditForm", "FleetTVT")',
+                data: { UnitNum: emel.id },
+                success: function (data) {
+                    $('#fillEditForm').html(data)
+                }
+            });
+        }
+
+        
+    </script>
 
 
 </body>

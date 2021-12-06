@@ -15,7 +15,7 @@ namespace SeHubPortal.Models
     public partial class tbl_calculator_GM_tire
     {
         public double minimum_cost { get; set; }
-        public double maximum_cost { get; set; }
+        public Nullable<double> maximum_cost { get; set; }
         public Nullable<double> GrossMargin { get; set; }
         public Nullable<double> GrossMargin_NA { get; set; }
     }

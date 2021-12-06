@@ -1,0 +1,2541 @@
+﻿
+@model SeHubPortal.ViewModel.FleetTvtEditAccount
+@{
+    ViewBag.Title = "FleetSnapShot";
+    Layout = "~/Views/Shared/FleetTVT.cshtml";
+}
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+
+
+    <script src="https://unpkg.com/tlx/browser/tlx.js"></script>
+    <script src="https://unpkg.com/tlx-chart/browser/tlx-chart.js">
+
+
+    @if (Model.Active == true)
+    {
+        <script>
+            $(document).ready(function () {
+                $("#TG").prop("checked", true);
+            });
+    </script>
+    }
+    else
+    {
+    <script>
+        $(document).ready(function () {
+            $("#TG").prop("checked", false);
+        });
+    </script>
+    }
+
+@if (Model.SehubAccess.plant > 0)
+{
+    <style>
+        #PlantClicked {
+            display: block !important;
+        }
+    </style>
+}
+
+@if (Model.SehubAccess.tools > 0)
+{
+    <style>
+        #toolsClicked {
+            display: block !important;
+        }
+    </style>
+}
+
+@if (Model.SehubAccess.management > 0)
+{
+    <style>
+        #ManagementClicked {
+            display: block !important;
+        }
+    </style>
+}
+
+@if (Model.SehubAccess.settings > 0)
+{
+    <style>
+        #SettingsClicked {
+            display: block !important;
+        }
+    </style>
+}
+
+@if (Model.SehubAccess.payroll > 0)
+{
+    <style>
+        #PayrollClicked {
+            display: block !important;
+        }
+    </style>
+}
+
+@if (Model.SehubAccess.main > 0)
+{
+    <style>
+        #mainClicked {
+            display: block !important;
+        }
+    </style>
+}
+
+@if (Model.SehubAccess.treadTracker > 0)
+{
+    <style>
+        #treadTrackereClicked {
+            display: block !important;
+        }
+    </style>
+}
+
+@if (Model.SehubAccess.library_access > 0)
+{
+    <style>
+        #libraryClicked {
+            display: block !important;
+        }
+    </style>
+}
+
+
+
+@if (Model.SehubAccess.fleetTvt_dashboard > 0)
+{
+    <style>
+        #FleetTVTDashboardLink {
+            display: block !important;
+        }
+    </style>
+}
+@if (Model.SehubAccess.fleetTvt_fieldSurvey > 0)
+{
+    <style>
+        #FleetTVTFieldSurveyEditAccountLink {
+            display: block !important;
+        }
+    </style>
+}
+
+@if (Model.SehubAccess.fleetTVT_vier_or_edit_survey > 0)
+{
+    <style>
+        #ViewOrEditSurveyLink {
+            display: block !important;
+        }
+    </style>
+}
+
+@if (Model.SehubAccess.fleetTvt_EditAccount > 0)
+{
+    <style>
+        #FleetTVTEditAccountLink {
+            display: block !important;
+        }
+    </style>
+}
+
+
+<style>
+
+    #FleetTVTClicked {
+        background-color: #f0f2f5;
+        color: black;
+        font-weight: bold;
+    }
+
+    #FleetTVTClicked {
+        display: block !important;
+    }
+
+    #FleetSnapShotLink {
+        display: block !important;
+    }
+
+    .Trailer {
+        display: none;
+    }
+
+    .fleetTVTBtn {
+        color: black;
+        font-weight: bold;
+    }
+
+    #FleetSnapShotLink {
+        color: black;
+        font-weight: bold;
+        background-color: #f0f2f5;
+    }
+
+    body {
+        background-color: #f0f2f5;
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+
+    .card-header {
+        background-color: #cde8ca;
+    }
+
+        .card-header h6 {
+            color: black;
+        }
+
+    .na{
+        color: dimgray;
+    }
+
+    #AddUnit {
+        padding-right: 400px;
+    }
+
+    #exampleModalLong {
+        padding-right: 400px;
+    }
+
+
+    @@media screen {
+        #printSection {
+            display: none;
+        }
+
+        #dontshow {
+            display: none;
+        }
+
+        .dontshow {
+            display: none;
+        }
+    }
+
+    @@media print {
+
+        .pagebreak {
+            page-break-inside: avoid;
+        }
+
+
+        .dontShowInPrint {
+            display: none;
+        }
+
+
+
+        #printSection, #printSection * {
+            visibility: visible;
+        }
+
+        #printSection {
+            position: absolute;
+            left: 0;
+            top: 0;
+            -ms-transform: rotate(0deg) scaleX(1) scaleY(1);
+            -webkit-transform: rotate(0deg) scaleX(1) scaleY(1);
+            transform: rotate(0deg) scaleX(1) scaleY(1);
+        }
+    }
+
+    .example::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .example {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+    }
+</style>
+</head>
+<body style="overflow-y: hidden; ">
+
+    <div class="row heading dontShowInPrint" style="padding:10px 20px 0px 15px">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="background-color: white; height: 100%; margin-top: 0px;">
+                    <li class="breadcrumb-item"><a href="@Url.Action("FieldSurveyEditAccount", "FleetTVT")">Fleet TVT</a></li>
+                    <li class="breadcrumb-item " aria-current="page">Customers</li>
+
+                    <lable style="margin-left:1215px; margin-right:6px">
+                        Location
+                    </lable>
+                    @Html.DropDownListFor(m => m.Location, Model.LocationList, new { @style = "width:100px; height:25px", @onchange = "changeLocation(this.value)" })
+                </ol>
+            </nav>
+        </div>
+        <button type="button" id="clickThis" class="btn" style="margin-bottom: 14px;">
+            <i class="fa fa-bars" style="font-size: 25px "></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+
+    <div class="row" style="margin-left:15px">
+        <div class="col-lg-3 dontShowInPrint">
+            <div class="row" style="height:745px; background-color:white; padding:15px">
+                <div class="col-lg-12">
+
+                    <div class="row" style="margin-bottom:10px;">
+                        <div class="col-lg-12" style="padding:0px">
+                            <div class="card" style="border:2px solid #aeafb0">
+                                <div class="card-header" style="height:35px; background-color: #c0c2c4 !important; padding:1px 0px 1px 15px;">
+                                    <div class="row">
+                                        <div class="col-lg-3" style="padding-top:1px;">
+                                            <button style="width: 30px; height: 30px; border-radius: 25px; background-color: gray; color: white; border: 2px solid white; font-weight: bold; font-size: 12px ">1</button>
+                                        </div>
+                                        <div class="col-lg-6 text-center" style="padding-top:3px">
+                                            <h4 style="font-weight:bold; color:white">Customers</h4>
+                                        </div>
+                                        <div class="col-lg-3"></div>
+                                    </div>
+                                </div>
+                                <div class="card-body" style="padding:10px 35px 10px 35px">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            @using (Html.BeginForm("FTVTSelectedCustomerSnapShot", "FleetTVT", FormMethod.Post))
+                                            {
+                                                @Html.DropDownListFor(m => m.Customer, Model.CustomerList, new { @onchange = "this.form.submit()", @style = "width:100%; height:25px", @id = "customersDropDown" })
+                                            }
+                                        </div>
+                                    </div>
+
+                                    @if (Model.Customer != null && Model.customerDetails != null)
+                                    {
+                                        <div class="custDetailsRow row example" id="custDetailsDiv" style="font-size:13px;">
+
+                                            <div class="col-lg-12">
+
+                                                <div class="row" style="display:none; margin-bottom:5px">
+                                                    <div class="col-md-5 text-right">
+                                                        Customer Number
+                                                    </div>
+                                                    <div class="col-md-7" id="Customer_Number">
+                                                        @Model.customerDetails.customer_number
+                                                    </div>
+                                                </div>
+                                                <div class="row" style="display:none; margin-bottom:5px">
+                                                    <div class="col-md-5 text-right">
+                                                        Customer Name
+                                                    </div>
+                                                    <div class="col-md-7" id="Customer_Name">
+                                                        @Model.CustomerList.Where(x => x.Value == Model.Customer).Select(x => x.Text).FirstOrDefault();
+                                                    </div>
+                                                </div>
+                                                <div class="row" style="margin-bottom:5px">
+                                                    <div class="col-md-5 text-right">
+                                                        Reporting Contact
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        @Model.customerDetails.reporting_contact
+                                                    </div>
+                                                </div>
+                                                <div class="row" style="margin-bottom:5px">
+                                                    <div class="col-md-5 text-right">
+                                                        Reporting Email
+                                                    </div>
+                                                    <div class="col-md-7" style="font-size:12px">
+                                                        @Model.customerDetails.reporting_email
+                                                    </div>
+                                                </div>
+                                                <div class="row" style="margin-bottom:5px">
+                                                    <div class="col-md-5 text-right">
+                                                        Reporting Freq
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        @Model.customerDetails.reporting_frequency
+                                                    </div>
+                                                </div>
+                                                <div class="row" style="margin-bottom:5px">
+                                                    <div class="col-md-5 text-right">
+                                                        Mileage Required
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        @if (@Model.customerDetails.mileage_required == 0)
+                                                        {
+                                                            <input type="checkbox" onclick="return false" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" checked onclick="return false" />
+                                                        }
+                                                    </div>
+                                                </div>
+
+                                                <div class="row" style="margin-bottom:5px">
+                                                    <div class="col-md-7 text-right">
+                                                        Inspection Date Required
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        @if (@Model.customerDetails.exp_date_required == 0)
+                                                        {
+                                                            <input type="checkbox" onclick="return false" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" checked onclick="return false" />
+                                                        }
+                                                    </div>
+                                                </div>
+
+                                                <div class="row" style="padding:5px 0px 0px 0px">
+                                                    <table class="table table-striped table-bordered text-center" style="width:100%">
+                                                        <thead style="background-color:#c0c2c4; color:white">
+                                                            <tr>
+                                                                <th style="text-align:center; font-size:10px; padding:0px" scope="col">Unit Type (Active)</th>
+                                                                <th style="text-align:center; font-size:10px; padding:0px" scope="col">Count</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                            <tr>
+                                                                <td style="padding:0px">Tractor</td>
+                                                                <td style="padding:0px">@Model.tractorCount</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="padding:0px">Trailer</td>
+                                                                <td style="padding:0px">@Model.trailerCount</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="padding:0px">Total</td>
+                                                                <td style="padding:0px">@Model.customerDetails.fleet_size</td>
+                                                            </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                                <div class="row">
+                                                    <table class="table table-striped table-bordered text-center" style="width:100%; margin:0px; margin-bottom:10px">
+                                                        <thead style="background-color:#c0c2c4; color:white">
+                                                            <tr>
+                                                                <th style="text-align:center; font-size:10px; padding:0px" scope="col">Tire Position</th>
+                                                                <th style="text-align:center; font-size:10px; padding:0px" scope="col">Count</th>
+                                                                <th style="text-align:center; font-size:10px; padding:0px" scope="col">Pull-Point</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                            <tr>
+                                                                <td style="padding:0px">Steer</td>
+                                                                <td style="padding:0px">@Model.SteerTiresCount</td>
+                                                                <td style="padding:0px">@Model.pullPointSteer</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="padding:0px">Drive</td>
+                                                                <td style="padding:0px">@Model.DriveTiresCount</td>
+                                                                <td style="padding:0px">@Model.pullPointDrive</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="padding:0px">Trailer</td>
+                                                                <td style="padding:0px">@Model.trailerTiresCount</td>
+                                                                <td style="padding:0px">@Model.pullPointTrailer</td>
+                                                            </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+
+
+
+                                            </div>
+
+                                            
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (Model.UnitsForCustomer != null)
+                    {
+                        <div class="row" style="margin-bottom:10px;">
+                            <div class="col-lg-12" style="padding:0px">
+                                <div class="card" style="height: 275px; border:2px solid #aeafb0">
+                                    <div class="card-header" style="height:35px; background-color: #c0c2c4 !important; padding:1px 0px 1px 15px;">
+                                        <div class="row">
+                                            <div class="col-lg-2" style="padding-top:1px;">
+                                                <button style="width: 30px; height: 30px; border-radius: 25px; background-color: gray; color: white; border: 2px solid white; font-weight: bold; font-size: 12px ">2</button>
+                                            </div>
+                                            <div class="col-lg-7" style="padding-top:3px">
+                                                <h4 style="font-weight:bold; color:white">Units</h4>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="card-body" style="padding:10px">
+                                        <div class="row" style="padding-left:25px">
+                                            <div class="col-lg-12 text-center">
+                                                <div class="row">
+                                                    <label id="failureCodesCheckAllLable" style="margin-right:7px; margin-left:0px; font-weight:bold">
+                                                        Check All
+                                                    </label>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" style="width:40px; height:20px" class="custom-control-input" id="ToggleForFailureCodes">
+                                                        <label id="failureCodesUnCheckAllLable" class="custom-control-label" for="ToggleForFailureCodes">
+                                                            Un-Check All
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="example row" style="overflow-y:auto; height:170px">
+
+                                            <div class="col-lg-12 text-center">
+                                                <table class="table table-bordered" style="margin-left:auto; margin-right:auto">
+                                                    <thead style="background-color:dimgray; color:white">
+                                                        <tr>
+                                                            <th style="font-size:10px; width:20%; padding:0px; text-align:center">Select</th>
+                                                            <th style="font-size:10px; width:30%; padding:0px; text-align:center">Number</th>
+                                                            <th style="font-size:10px; width:70%; padding:0px; text-align:center">Name</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var item in Model.UnitsForCustomer)
+                                                        {
+                                                            <tr>
+
+                                                                <td style="padding:0px; text-align:center">
+                                                                    <input id="@item.unit_number" type="checkbox" checked name="name" value="" />
+                                                                </td>
+                                                                <td style="padding:0px; text-align:center">
+                                                                    @item.unit_number
+                                                                </td>
+                                                                <td style="padding:0px; text-align:center">
+                                                                    @item.unit_name
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+
+                    @if (Model.UnitsForCustomer != null)
+                    { 
+                        <div class="row">
+                            <div class="col-lg-12" style="padding-right:0px">
+                                <button id="clear" class="btn btn-danger" style="float:right;margin-left:10px; padding: 3px 20px 3px 20px">Clear</button>
+                                <button id="build" class="btn btn-primary" style="float:right; margin-left:10px; padding: 3px 20px 3px 20px">Build</button>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9 text-center" style="display:none; padding-top:17%" id="lodingWheel">
+            <img style="width:150px" src="~/Content/giphy.gif" alt="Alternate Text" />
+        </div>
+        <div class="col-lg-9" id="RightPane" style="display:none; padding-right:30px; padding-top:15px;">
+            <div class="row text-center dontShowInPrint" id="dontshow">
+                <div class="col-md-4"></div>
+                <div class="col-md-4 text-center"><img src="~/Content/LoginLogo.png" style="margin-left: auto;margin-right: auto; width:300px;"></div>
+                <div class="col-md-4 text-right" style="padding-right:15px; padding-top:40px">
+                    <p style="margin: 0px; padding: 0px; line-height : 10px"><u><b>HEAD OFFICE</b></u></p>
+                    <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">1123 Topsail Road, P.O. Box 549</font></p>
+                    <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Mount Pearl, NL A1N 2W4</font></p>
+                    <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Tel: (709) 364-6808 • Fax: (709) 364-0074</font></p>
+                    <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">24 Hour: (709) 368-5971</font></p>
+                    <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Email: cta@citytire.com • www.citytire.com</font></p>
+                </div>
+            </div>
+            
+            @if (Model.UnitsForCustomer != null)
+            {
+                <div class="card" id="UnitCardBorder" style="border:2px solid #aeafb0">
+                    <div class="card-header dontShowInPrint" style="background-color:#c0c2c4; color:white; padding:10px 15px 0px 15px">
+                        <div class="row">
+                            <div class="col-md-4 text-left">
+                                <h4 style="color:white"><b>Fleet Snapshot</b></h4>
+                            </div>
+                            <div class="col-md-4">
+
+                            </div>
+                            <div class="col-md-4 text-right">
+                                <button id="btnEmail" class="btn btn-primary" style="padding:2px 20px 2px 20px">Email</button>
+
+                                <button id="btnPrint" class="btn btn-primary" style="padding:2px 20px 2px 20px">Print</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body example" id="snapcard" style="overflow-x:hidden; overflow-y:auto; height:675px; padding-top:10px;">
+
+                        <div id="printThis">
+                            <table id="dontshow" style="margin:0px 0px 10px 0px; width:100%;">
+                                <tr id="title">
+                                    <td style="padding:20px; width:33%">
+                                    </td>
+                                    <td style="padding:10px; width:33%; text-align:center">
+                                        <div class="row">
+                                            <img src="~/Content/LoginLogo.png" style="margin-left: auto;margin-right: auto; width:300px;">
+                                        </div>
+                                    </td>
+                                    <td class="text-right" style="padding:10px; width:33%; text-align:right">
+                                        <div class="row">
+                                            <div class="col-md-12 text-right" style="padding:0px 5px 0px 0px">
+                                                <p style="margin: 0px; padding: 0px; line-height : 10px"><u><b>HEAD OFFICE</b></u></p>
+                                                <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">1123 Topsail Road, P.O. Box 549</font></p>
+                                                <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Mount Pearl, NL A1N 2W4</font></p>
+                                                <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Tel: (709) 364-6808 • Fax: (709) 364-0074</font></p>
+                                                <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">24 Hour: (709) 368-5971</font></p>
+                                                <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Email: cta@citytire.com • www.citytire.com</font></p>
+
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table id="showinemail" style="display:none; margin:0px 0px 10px 0px; width:100%;">
+                                <tr id="title">
+                                    <td style="padding:20px; width:33%">
+                                    </td>
+                                    <td style="padding:10px; width:33%; text-align:center">
+                                        <div class="row">
+                                            <img src="~/Content/LoginLogo.png" style="margin-left: auto;margin-right: auto; width:300px;">
+                                        </div>
+                                    </td>
+                                    <td class="text-right" style="padding:10px; width:33%; text-align:right">
+                                        <p style="float:right; margin: 2px 0px 2px 0px; padding: 0px; line-height : 10px"><u><b>HEAD OFFICE</b></u></p>
+                                        <p></p>
+                                        <p style="float:right; margin: 2px 0px 2px 0px; padding: 0px; line-height : 10px"><font size="2">1123 Topsail Road, P.O. Box 549</font></p>
+                                        <p style="float:right; margin: 2px 0px 2px 0px; padding: 0px; line-height : 10px"><font size="2">Mount Pearl, NL A1N 2W4</font></p>
+                                        <p style="float:right; margin: 2px 0px 2px 0px; padding: 0px; line-height : 10px"><font size="2">Tel: (709) 364-6808 • Fax: (709) 364-0074</font></p>
+                                        <p style="float:right; margin: 2px 0px 2px 0px; padding: 0px; line-height : 10px"><font size="2">24 Hour: (709) 368-5971</font></p>
+                                        <p style="float:right; margin: 2px 0px 2px 0px; padding: 0px; line-height : 10px"><font size="2">Email: cta@citytire.com • www.citytire.com</font></p>
+
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table style="margin:0px 0px 10px 0px; width:100%; border:1px solid #dee0e3">
+                                <tr id="title">
+                                    <td style="padding:10px; width:5%; text-align:center">
+                                        <img style="width:80px" src="~/Content/fleet snapshot.png" alt="Alternate Text" />
+                                    </td>
+                                    <td style="padding:20px; width:23%">
+                                        <div class="row">
+                                            <div class="col-lg-12 text-left">
+                                                <h4>Fleet </h4>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12 text-left">
+                                                <h4>TVT </h4>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                    <td style="padding:10px; width:33%">
+                                        <div class="row">
+                                            <div class="col-lg-12 text-center">
+                                                <h3>Fleet Snapshot</h3>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="padding:10px; width:33%">
+                                        <div class="row">
+                                            <div class="col-md-5 text-center"></div>
+                                            <div class="col-md-7 text-center">
+                                                <h4>Report Date</h4>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5 text-center"></div>
+                                            <div class="col-md-7 text-center">
+                                                <h4>@System.DateTime.Now.ToString("MMM dd, yyyy")</h4>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <div class="row" style="padding:0px 15px 0px 15px; margin-bottom:15px">
+                                <div class="col-md-12" style="border:2px solid #dee0e3; padding:0px 20px 0px 15px">
+
+                                    <div class="row">
+                                        <div class="col-md-4" style="padding:15px !important">
+                                            <div class="row" style="overflow-y:hidden; overflow-x:hidden; margin-left:0px; margin-right:0px; border-radius:5px; border:2px solid #dee0e3; height:215px">
+                                                @{
+                                                    string base64CustLogo = "";
+                                                    if (Model.customerDetails.logo is null)
+                                                    {
+                                                        base64CustLogo = "";
+                                                    }
+                                                    else
+                                                    {
+                                                        base64CustLogo = "data:image/png;base64," + Convert.ToBase64String(Model.customerDetails.logo);
+                                                    }
+                                                }
+
+                                                @if (base64CustLogo != "")
+                                                {
+                                                    <img style="vertical-align:middle; object-fit:contain; width:100%; height:auto" alt="profilePic" src="@base64CustLogo" />
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5" style="font-size:12px">
+                                            <div class="row" style="margin-top:15px">
+                                                <div class="col-md-3 text-right">
+                                                    Customer
+                                                </div>
+                                                <div class="col-md-9 text-left" style="font-weight:bold">
+                                                    @{ string custName = Model.CustomerList.Where(x => x.Value == Model.Customer).Select(x => x.Text).FirstOrDefault(); }
+                                                    @custName.Substring(0, custName.IndexOf("("))
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-top:5px">
+                                                <div class="col-md-3 text-right">
+                                                    Account #
+                                                </div>
+                                                <div class="col-md-9 text-left" style="font-weight:bold">
+                                                    @Model.Customer
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-top:5px">
+                                                <div class="col-md-3 text-right">
+                                                    Contact
+                                                </div>
+                                                <div class="col-md-9 text-left" style="font-weight:bold">
+                                                    @Model.customerDetails.reporting_contact
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-top:5px">
+                                                <div class="col-md-3 text-right">
+                                                    Email
+                                                </div>
+                                                <div class="col-md-9 text-left" style="font-weight:bold">
+                                                    @Model.customerDetails.reporting_email
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-top:5px;">
+                                                <div class="col-md-3 text-right">
+                                                    Frequency
+                                                </div>
+                                                <div class="col-md-9 text-left" style="font-weight:bold">
+                                                    @Model.customerDetails.reporting_frequency
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-top:55px; margin-bottom:5px">
+                                                <div class="col-md-5">
+                                                    Mileage Requ
+                                                </div>
+                                                <div class="col-md-7 text-left" style="font-weight:bold">
+                                                    @if (Model.customerDetails.mileage_required == 0)
+                                                    {
+                                                        <span>No</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>Yes</span>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-bottom:10px">
+                                                <div class="col-md-5">
+                                                    Inspenction Date Required
+                                                </div>
+                                                <div class="col-md-7 text-left" style="font-weight:bold">
+                                                    @if (Model.customerDetails.exp_date_required == 0)
+                                                    {
+                                                        <span>No</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>Yes</span>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3" style="padding:15px 25px 0px 0px">
+
+                                            <div class="row">
+                                                <table class="table table-striped table-bordered text-center" style="width:100%">
+                                                    <thead style="background-color:#c0c2c4; color:white">
+                                                        <tr>
+                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Unit Type (Active)</th>
+                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Count</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr>
+                                                            <td style="padding:0px">Tractor</td>
+                                                            <td style="padding:0px">@Model.tractorCount</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding:0px">Trailer</td>
+                                                            <td style="padding:0px">@Model.trailerCount</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding:0px">Total</td>
+                                                            <td style="padding:0px">@Model.customerDetails.fleet_size</td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <div class="row" >
+                                                <table class="table table-striped table-bordered text-center" style="width:100%">
+                                                    <thead style="background-color:#c0c2c4; color:white">
+                                                        <tr>
+                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Tire Position</th>
+                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Count</th>
+                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Pull-Point</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr>
+                                                            <td style="padding:0px">Steer</td>
+                                                            <td style="padding:0px">@Model.SteerTiresCount</td>
+                                                            <td style="padding:0px">
+                                                                @if (@Model.customerDetails.pull_point_1 == 0.12)
+                                                                {
+                                                                    <span>
+                                                                        4/32
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span>
+                                                                        @Model.customerDetails.pull_point_1
+                                                                    </span>
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding:0px">Drive</td>
+                                                            <td style="padding:0px">@Model.DriveTiresCount</td>
+                                                            <td style="padding:0px">
+                                                                @if (@Model.customerDetails.pull_point_2 == 0.12)
+                                                                {
+                                                                    <span>
+                                                                        4/32
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span>
+                                                                        @Model.customerDetails.pull_point_2
+                                                                    </span>
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding:0px">Trailer</td>
+                                                            <td style="padding:0px">@Model.trailerTiresCount</td>
+                                                            <td style="padding:0px">
+                                                                @if (@Model.customerDetails.pull_point_3 == 0.12)
+                                                                {
+                                                                    <span>
+                                                                        4/32
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span>
+                                                                        @Model.customerDetails.pull_point_3
+                                                                    </span>
+                                                                }
+                                                            </td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            
+
+                                        </div>
+
+                                    </div>
+
+                                    
+
+                                </div>
+                            </div>
+
+                            
+
+                            <table style="margin:0px 15px 0px 15px; width:100%">
+                                <tr>
+                                    <td style="width:33%">
+                                    </td>
+                                    <td style="width:33%">
+                                        <div class="row">
+                                            <div class="col-lg-12 text-center">
+                                                <h4><b>Distribution Charts</b></h4>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="width:33%">
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <div class="row" style="overflow-x:hidden; overflow-y:hidden">
+                                <div class="col-lg-12" style="">
+
+                                    <div class="row" style="overflow-x:hidden; overflow-y:hidden">
+                                        <div class="col-md-4" style="padding:0px">
+                                            @{
+                                                double steer;
+                                                double drive;
+                                                double trailer;
+
+                                                if (Model.SteerTiresCount == 0)
+                                                {
+                                                    steer = 0;
+                                                }
+                                                else
+                                                {
+                                                    steer = Model.SteerTiresCount;
+                                                }
+
+                                                if (Model.DriveTiresCount == 0)
+                                                {
+                                                    drive = 0;
+                                                }
+                                                else
+                                                {
+                                                    drive = Model.DriveTiresCount;
+                                                }
+
+                                                if (Model.trailerTiresCount == 0)
+                                                {
+                                                    trailer = 0;
+                                                }
+                                                else
+                                                {
+                                                    trailer = Model.trailerTiresCount;
+                                                }
+
+                                                <div class="row" style="margin-top:10px">
+                                                    <b style="margin-left:auto; margin-right:auto">Tire Position</b>
+                                                </div>
+                                                <tlx-chart style="width:100%; margin:0px; padding:0px" chart-type="PieChart" chart-columns="${['Element','Percentage']}" chart-data="${[['Steer Tires', @steer], ['Drive Tires', @drive], ['Trailer Tires', @trailer]]}">
+
+                                                </tlx-chart>
+
+
+                                            }
+                                        </div>
+                                        <div class="col-md-4" style="padding:0px">
+                                            @{
+
+                                                string brandTotal = "";
+
+                                                foreach (var item in Model.LatestSurvey.Where(x => x.customer_number == Model.Customer).Select(x => x.brand).Distinct())
+                                                {
+
+                                                    string count = Model.LatestSurvey.Where(x => x.customer_number == Model.Customer && x.brand == item).ToList().Count().ToString();
+
+                                                    string final = "['" + item + "'," + count + "]";
+
+                                                    brandTotal = brandTotal + final + ",";
+                                                }
+                                            }
+
+                                            <div class="row" style="margin-top:10px">
+                                                <b style="margin-left:auto; margin-right:auto">Tire Brand</b>
+                                            </div>
+
+                                            <tlx-chart style="margin:0px; padding:0px" chart-type="PieChart" chart-columns="${['Element','Percentage']}" chart-data="${[@brandTotal]}">
+
+                                            </tlx-chart>
+                                        </div>
+                                        <div class="col-md-4" style="padding:0px">
+                                            @{
+
+                                                string sizeTotal = "";
+
+                                                foreach (var item in Model.LatestSurvey.Where(x => x.customer_number == Model.Customer).Select(x => x.size).Distinct())
+                                                {
+
+                                                    string count = Model.LatestSurvey.Where(x => x.customer_number == Model.Customer && x.size == item).ToList().Count().ToString();
+
+                                                    string final = "['" + item + "'," + count + "]";
+
+                                                    sizeTotal = sizeTotal + final + ",";
+                                                }
+                                            }
+
+                                            <div class="row" style="margin-top:10px">
+                                                <b style="margin-left:auto; margin-right:auto">Tire Size</b>
+                                            </div>
+                                            <tlx-chart style="margin:0px; padding:0px" chart-type="PieChart" chart-columns="${['Element','Percentage']}" chart-data="${[@sizeTotal]}">
+
+                                            </tlx-chart>
+                                        </div>
+
+                                    </div>
+                                    <div class="row" style="overflow-x:hidden; overflow-y:hidden">
+                                        <div class="col-md-4">
+                                            @{
+
+                                                string wearTotal = "";
+
+                                                foreach (var item in Model.tireWear)
+                                                {
+
+                                                    string count = Model.LatestSurvey.Where(x => x.customer_number == Model.Customer && x.condition_wear == item.tire_wear).ToList().Count().ToString();
+
+
+                                                    string final = "['" + item.tire_wear + "'," + count + "]";
+
+                                                    wearTotal = wearTotal + final + ",";
+                                                }
+                                            }
+
+                                            <div class="row" style="margin-top:10px">
+                                                <b style="margin-left:auto; margin-right:auto">Tire Wear</b>
+                                            </div>
+
+
+                                            <tlx-chart style="margin:0px; padding:0px" chart-type="PieChart" chart-columns="${['Element','Percentage']}" chart-data="${[@wearTotal]}">
+
+                                            </tlx-chart>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="row" style="margin-top:10px">
+                                                <b style="margin-left:auto; margin-right:auto">Tire Inflation</b>
+                                            </div>
+
+                                            @{
+                                                double infletTotal;
+
+                                                if (Model.LatestSurvey.Where(x => x.customer_number == Model.Customer && x.inflation != null).Count() == 0)
+                                                {
+                                                    infletTotal = 1;
+                                                }
+                                                else
+                                                {
+                                                    infletTotal = Model.LatestSurvey.Where(x => x.customer_number == Model.Customer && x.inflation <= 79).Count();
+                                                }
+
+                                                <tlx-chart style="margin:0px; padding:0px" chart-options="${{colors: ['red','orange','green']}}" chart-type="PieChart" chart-columns="${['Element','Percentage']}" chart-data="${[['< 79%',@infletTotal],['80-89%',@Model.LatestSurvey.Where(x => x.customer_number == Model.Customer && x.inflation <= 89 && x.inflation >= 80).Count()],['> 90%',@Model.LatestSurvey.Where(x => x.customer_number == Model.Customer && x.inflation >= 90).Count()]]}">
+
+                                                </tlx-chart>
+
+                                            }
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="row" style="margin-top:10px">
+                                                <b style="margin-left:auto; margin-right:auto">% Worn</b>
+                                            </div>
+                                            @{
+                                                double greenTotal;
+
+                                                if (Model.LatestSurvey.Where(x => x.customer_number == Model.Customer && x.percent_worn != null).Count() == 0)
+                                                {
+                                                    greenTotal = 1;
+                                                }
+                                                else
+                                                {
+                                                    greenTotal = Model.LatestSurvey.Where(x => x.customer_number == Model.Customer && x.percent_worn <= 50).Count();
+                                                }
+
+                                                <tlx-chart style="margin:0px; padding:0px" chart-options="${{colors: ['green','orange','red']}}" chart-type="PieChart" chart-columns="${['Element','Percentage']}" chart-data="${[['0-50%',@greenTotal],['51-75%',@Model.LatestSurvey.Where(x => x.customer_number == Model.Customer && x.percent_worn <= 75 && x.percent_worn >= 51).Count()],['76-100%',@Model.LatestSurvey.Where(x => x.customer_number == Model.Customer && x.percent_worn <= 100 && x.percent_worn >= 76).Count()]]}">
+
+                                                </tlx-chart>
+
+                                            }
+                                        </div>
+                                    </div>
+                                    @{
+
+                                        string valdistr = "";
+
+                                        string wheelCondition = "";
+
+                                        string tireCondition = "";
+
+                                        foreach (var item in Model.LatestSurvey.Where(x => x.customer_number == Model.Customer).Select(x => x.valve).Distinct())
+                                        {
+
+                                            string count = Model.LatestSurvey.Where(x => x.customer_number == Model.Customer && x.valve == item).ToList().Count().ToString();
+
+                                            string itm;
+
+                                            if (item == "Not Applicable")
+                                            {
+                                                itm = "N/A";
+                                            }
+                                            else
+                                            {
+                                                itm = item;
+                                            }
+
+                                            string final = "['" + itm + "'," + count + "]";
+
+                                            valdistr = valdistr + final + ",";
+                                        }
+
+                                        foreach (var item in Model.wheelCondition)
+                                        {
+
+                                            string count = Model.LatestSurvey.Where(x => x.customer_number == Model.Customer && x.condition_wheel == item.wheel_condition).ToList().Count().ToString();
+
+
+                                            string final = "['" + item.wheel_condition + "'," + count + "]";
+
+                                            wheelCondition = wheelCondition + final + ",";
+                                        }
+
+                                        foreach (var item in Model.tireCondition)
+                                        {
+
+                                            string count = Model.LatestSurvey.Where(x => x.customer_number == Model.Customer && x.condition_tire == item.tire_condition).ToList().Count().ToString();
+
+                                            string final = "['" + item.tire_condition + "'," + count + "]";
+
+                                            tireCondition = tireCondition + final + ",";
+                                        }
+
+                                        <div class="row" style="overflow-x:hidden; overflow-y:hidden">
+                                            <div class="col-md-4">
+                                                <div class="row" style="margin-top:10px">
+                                                    <b style="margin-left:auto; margin-right:auto">Valve Cap Distribution</b>
+                                                </div>
+
+                                                <tlx-chart style="margin:0px; padding:0px" chart-type="PieChart" chart-columns="${['Element','Percentage']}" chart-data="${[@valdistr]}">
+
+                                                </tlx-chart>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row" style="margin-top:10px">
+                                                    <b style="margin-left:auto; margin-right:auto">Tire Condition</b>
+                                                </div>
+                                                <tlx-chart style="margin:0px; padding:0px" chart-options="${{colors: ['#ff7700','green','red']}}" chart-type="PieChart" chart-columns="${['Element','Percentage']}" chart-data="${[@tireCondition]}">
+
+                                                </tlx-chart>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row" style="margin-top:10px">
+                                                    <b style="margin-left:auto; margin-right:auto">Wheel Condition</b>
+                                                </div>
+                                                <tlx-chart style="margin:0px; padding:0px" chart-options="${{colors: ['#ff7700','green','red']}}" chart-type="PieChart" chart-columns="${['Element','Percentage']}" chart-data="${[@wheelCondition]}">
+
+                                                </tlx-chart>
+                                            </div>
+                                        </div>
+
+                                    }
+                                </div>
+                            </div>
+
+                            <span id="span" style="display:none">
+                                @foreach (var item in Model.UnitsForCustomer)
+                                {
+                                    <text>
+                                        @item.unit_number,
+                                    </text>
+                                }
+                            </span>
+
+                            @foreach (var unit in Model.UnitsForCustomer)
+                            {
+                                var config = Model.ConfigurationsTable.Where(x => x.Type == unit.survey_type && x.Configuration == unit.survey_configuration).FirstOrDefault();
+
+                                if (config != null && Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number).Count() > 0)
+                                {
+                                    <div class="row pagebreak @unit.unit_number commonClass" style="border: 2px solid #dee0e3;padding: 15px; margin-left: 0px; margin-right: 0px; margin-bottom: 20px">
+                                        <div class="col-md-12 pagebreak" style="padding-bottom: 0px">
+
+                                            @{
+                                                double totalDays = (DateTime.Today - Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number).OrderByDescending(x => x.survey_date).Select(x => x.survey_date).FirstOrDefault()).TotalDays;
+                                            }
+
+                                            <div class="row">
+                                                <div class="col-lg-12 text-center">
+                                                    <h5>Latest Survey : @Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number).OrderByDescending(x => x.survey_date).Select(x => x.survey_date).FirstOrDefault().ToString("dddd MMM dd, yyyy") ( @totalDays days ago)</h5>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+
+                                                <table style="margin: 0px 0px 10px 0px; width: 100%;">
+                                                    <tr id="title">
+                                                        <td style="padding-left:15px; width:27%">
+
+                                                            @{
+
+                                                                string base64ProfilePic = "";
+                                                                if (unit.unit_image is null)
+                                                                {
+                                                                    base64ProfilePic = "";
+                                                                }
+                                                                else
+                                                                {
+                                                                    base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(unit.unit_image);
+                                                                }
+                                                            }
+
+                                                            <div class="row" style=" padding:0px 30px 0px 30px; margin-right:0px; border-radius:5px; border:2px solid #dee0e3; height:160px">
+                                                                @if (base64ProfilePic != "")
+                                                                {
+                                                                    <img style="margin-left:auto; margin-right:auto; border-radius:30px; width:200px" alt="profilePic" src="@base64ProfilePic" />
+                                                                }
+                                                            </div>
+                                                        </td>
+                                                        <td style="padding:0px 15px 0px 30px; width:16%">
+                                                            <div class="row" style="margin-top:10px">
+                                                                Unit Number
+                                                            </div>
+                                                            <div class="row" style="margin-top:5px">
+                                                                Unit Name
+                                                            </div>
+                                                            <div class="row" style="margin-top: 5px">
+                                                                Year
+                                                            </div>
+                                                            <div class="row" style="margin-top:5px">
+                                                                Make
+                                                            </div>
+                                                            <div class="row" style="margin-top:5px">
+                                                                Model
+                                                            </div>
+                                                        </td>
+                                                        <td style="padding: 0px 15px 0px 15px; width: 20%">
+                                                            <div class="row" style="margin-top:10px">
+                                                                <input type="text" readonly name="name" value="@unit.unit_number" style="height:25px" />
+                                                            </div>
+                                                            <div class="row" style="margin-top:5px">
+                                                                <input type="text" readonly name="name" value="@unit.unit_name" style="height:25px" />
+                                                            </div>
+                                                            <div class="row" style="margin-top:5px">
+                                                                <input type="text" readonly name="name" value="@unit.year" style="height:25px" />
+                                                            </div>
+                                                            <div class="row" style="margin-top: 5px">
+                                                                <input type="text" readonly name="name" value="@unit.make" style="height:25px" />
+                                                            </div>
+                                                            <div class="row" style="margin-top:5px">
+                                                                <input type="text" readonly name="name" value="@unit.model" style="height:25px" />
+                                                            </div>
+                                                        </td>
+                                                        <td style="padding:0px 15px 0px 30px; width:16%">
+                                                            <div class="row" style="margin-top:5px">
+                                                                Plate Number
+                                                            </div>
+                                                            <div class="row" style="margin-top:5px">
+                                                                VIN
+                                                            </div>
+                                                            <div class="row" style="margin-top:5px">
+                                                                Mileage
+                                                            </div>
+                                                            <div class="row" style="margin-top:5px">
+                                                                Engine Hours
+                                                            </div>
+                                                            <div class="row" style="margin-top:5px">
+                                                                Date Expired
+                                                            </div>
+                                                        </td>
+                                                        <td style="padding:0px 15px 0px 15px; width:20%">
+                                                            <div class="row" style="margin-top:5px">
+                                                                <input type="text" readonly name="name" value="@unit.plate_number" style="height:25px" />
+                                                            </div>
+                                                            <div class="row" style="margin-top:5px">
+                                                                <input type="text" readonly name="name" value="@unit.VIN" style="height:25px" />
+                                                            </div>
+                                                            <div class="row" style="margin-top:5px">
+                                                                <input type="text" readonly name="name" value="@unit.mileage" style="height:25px" />
+                                                            </div>
+                                                            <div class="row" style="margin-top:5px">
+                                                                <input type="text" readonly name="name" value="" style="height:25px" />
+                                                            </div>
+                                                            <div class="row" style="margin-top:5px">
+                                                                @if (unit.date_expired.HasValue)
+                                                                {
+                                                                    <input type="text" readonly name="name" value="@unit.date_expired.Value.ToString("dd-MMM-yyyy")" style="height:25px" />
+                                                                }
+                                                                else
+                                                                {
+                                                                    <input type="date" readonly name="name" value="" style="width:182px; height:25px" />
+                                                                }
+
+                                                            </div>
+                                                        </td>
+
+                                                    </tr>
+                                                </table>
+
+
+                                            </div>
+
+                                            <div class="row" style="margin-top:10px">
+                                                <table class="table table-striped table-bordered text-center">
+                                                    <thead style="background-color:#c0c2c4; color:white">
+                                                        <tr>
+                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Position</th>
+                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">PSI</th>
+                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Spec PSI</th>
+                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">New 32nds</th>
+                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">32nds</th>
+                                                            <th style="text-align: center; font-size: 10px; padding: 0px" scope="col">Brand</th>
+                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Model</th>
+                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Size</th>
+                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Tire Wear</th>
+                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Tire Condition</th>
+                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Valve</th>
+                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Wheel Condition</th>
+                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">% Worn</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        @if (config.one_lo != 0)
+                                                        {
+                                                            var lo_1 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "1_lo").FirstOrDefault();
+
+                                                            if (lo_1 != null)
+                                                            {
+                                                                <tr>
+                                                                    <td style="padding:0px">
+                                                                        1Lo
+                                                                    </td>
+                                                                    <td style="padding:0px">@lo_1.actual_psi</td>
+                                                                    <td style="padding:0px">@lo_1.spec_psi</td>
+                                                                    <td style="padding: 0px">
+                                                                        @if (lo_1.new_32nds != null)
+                                                                        {
+                                                                            @lo_1.new_32nds
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                    <td style="padding:0px">@lo_1.actual_32nds</td>
+                                                                    <td style="padding:0px">@lo_1.brand</td>
+                                                                    <td style="padding:0px">@lo_1.model</td>
+                                                                    <td style="padding:0px">@lo_1.size</td>
+                                                                    <td style="padding:0px">@lo_1.condition_wear</td>
+                                                                    <td style="padding: 0px">@lo_1.condition_tire</td>
+                                                                    <td style="padding: 0px">@lo_1.valve</td>
+                                                                    <td style="padding:0px">@lo_1.condition_wheel</td>
+                                                                    <td style="padding: 0px">
+                                                                        @if (lo_1.percent_worn != null)
+                                                                        {
+                                                                            @lo_1.percent_worn
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+
+                                                        }
+
+                                                        @if (config.one_li != 0)
+                                                        {
+
+                                                            var li_1 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "1_li").FirstOrDefault();
+
+                                                            if (li_1 != null)
+                                                            {
+                                                                <tr>
+                                                                    <td style="padding:0px">
+                                                                        1Li
+                                                                    </td>
+                                                                    <td style="padding:0px">@li_1.actual_psi</td>
+                                                                    <td style="padding:0px">@li_1.spec_psi</td>
+                                                                    <td style="padding:0px">
+                                                                        @if (li_1.new_32nds != null)
+                                                                        {
+                                                                            @li_1.new_32nds
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                    <td style="padding:0px">@li_1.actual_32nds</td>
+                                                                    <td style="padding:0px">@li_1.brand</td>
+                                                                    <td style="padding:0px">@li_1.model</td>
+                                                                    <td style="padding:0px">@li_1.size</td>
+                                                                    <td style="padding:0px">@li_1.condition_wear</td>
+                                                                    <td style="padding:0px">@li_1.condition_tire</td>
+                                                                    <td style="padding:0px">@li_1.valve</td>
+                                                                    <td style="padding:0px">@li_1.condition_wheel</td>
+                                                                    <td style="padding: 0px">
+                                                                        @if (li_1.percent_worn != null)
+                                                                        {
+                                                                            @li_1.percent_worn
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+
+                                                        }
+
+                                                        @if (config.one_ri != 0)
+                                                        {
+
+                                                            var ri_1 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "1_ri").FirstOrDefault();
+
+                                                            if (ri_1 != null)
+                                                            {
+                                                                <tr>
+                                                                    <td style="padding:0px">
+                                                                        1Ri
+                                                                    </td>
+                                                                    <td style="padding:0px">@ri_1.actual_psi</td>
+                                                                    <td style="padding:0px">@ri_1.spec_psi</td>
+                                                                    <td style="padding:0px">
+                                                                        @if (ri_1.new_32nds != null)
+                                                                        {
+                                                                            @ri_1.new_32nds
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                    <td style="padding:0px">@ri_1.actual_32nds</td>
+                                                                    <td style="padding:0px">@ri_1.brand</td>
+                                                                    <td style="padding:0px">@ri_1.model</td>
+                                                                    <td style="padding:0px">@ri_1.size</td>
+                                                                    <td style="padding:0px">@ri_1.condition_wear</td>
+                                                                    <td style="padding:0px">@ri_1.condition_tire</td>
+                                                                    <td style="padding:0px">@ri_1.valve</td>
+                                                                    <td style="padding:0px">@ri_1.condition_wheel</td>
+                                                                    <td style="padding: 0px">
+                                                                        @if (ri_1.percent_worn != null)
+                                                                        {
+                                                                            @ri_1.percent_worn
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+
+                                                        }
+
+                                                        @if (config.one_ro != 0)
+                                                        {
+
+                                                            var ro_1 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "1_ro").FirstOrDefault();
+
+                                                            if (ro_1 != null)
+                                                            {
+                                                                <tr>
+                                                                    <td style="padding:0px">
+                                                                        1Ro
+                                                                    </td>
+                                                                    <td style="padding:0px">@ro_1.actual_psi</td>
+                                                                    <td style="padding:0px">@ro_1.spec_psi</td>
+                                                                    <td style="padding:0px">
+                                                                        @if (ro_1.new_32nds != null)
+                                                                        {
+                                                                            @ro_1.new_32nds
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                    <td style="padding:0px">@ro_1.actual_32nds</td>
+                                                                    <td style="padding:0px">@ro_1.brand</td>
+                                                                    <td style="padding:0px">@ro_1.model</td>
+                                                                    <td style="padding:0px">@ro_1.size</td>
+                                                                    <td style="padding:0px">@ro_1.condition_wear</td>
+                                                                    <td style="padding:0px">@ro_1.condition_tire</td>
+                                                                    <td style="padding:0px">@ro_1.valve</td>
+                                                                    <td style="padding:0px">@ro_1.condition_wheel</td>
+                                                                    <td style="padding: 0px">
+                                                                        @if (ro_1.percent_worn != null)
+                                                                        {
+                                                                            @ro_1.percent_worn
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+                                                        }
+
+
+                                                        @if (config.two_lo != 0)
+                                                        {
+
+                                                            var lo_2 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "2_lo").FirstOrDefault();
+
+                                                            if (lo_2 != null)
+                                                            {
+                                                                <tr>
+                                                                    <td style="padding:0px">
+                                                                        2Lo
+                                                                    </td>
+                                                                    <td style="padding:0px">@lo_2.actual_psi</td>
+                                                                    <td style="padding:0px">@lo_2.spec_psi</td>
+                                                                    <td style="padding:0px">
+                                                                        @if (lo_2.new_32nds != null)
+                                                                        {
+                                                                            @lo_2.new_32nds
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                    <td style="padding:0px">@lo_2.actual_32nds</td>
+                                                                    <td style="padding:0px">@lo_2.brand</td>
+                                                                    <td style="padding:0px">@lo_2.model</td>
+                                                                    <td style="padding:0px">@lo_2.size</td>
+                                                                    <td style="padding:0px">@lo_2.condition_wear</td>
+                                                                    <td style="padding:0px">@lo_2.condition_tire</td>
+                                                                    <td style="padding:0px">@lo_2.valve</td>
+                                                                    <td style="padding:0px">@lo_2.condition_wheel</td>
+                                                                    <td style="padding: 0px">
+                                                                        @if (lo_2.percent_worn != null)
+                                                                        {
+                                                                            @lo_2.percent_worn
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+
+                                                        }
+
+                                                        @if (config.two_li != 0)
+                                                        {
+                                                            var li_2 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "2_li").FirstOrDefault();
+
+                                                            if (li_2 != null)
+                                                            {
+                                                                <tr>
+                                                                    <td style="padding:0px">
+                                                                        2Li
+                                                                    </td>
+                                                                    <td style="padding:0px">@li_2.actual_psi</td>
+                                                                    <td style="padding:0px">@li_2.spec_psi</td>
+                                                                    <td style="padding:0px">
+                                                                        @if (li_2.new_32nds != null)
+                                                                        {
+                                                                            @li_2.new_32nds
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                    <td style="padding:0px">@li_2.actual_32nds</td>
+                                                                    <td style="padding:0px">@li_2.brand</td>
+                                                                    <td style="padding:0px">@li_2.model</td>
+                                                                    <td style="padding:0px">@li_2.size</td>
+                                                                    <td style="padding:0px">@li_2.condition_wear</td>
+                                                                    <td style="padding:0px">@li_2.condition_tire</td>
+                                                                    <td style="padding:0px">@li_2.valve</td>
+                                                                    <td style="padding:0px">@li_2.condition_wheel</td>
+                                                                    <td style="padding: 0px">
+                                                                        @if (li_2.percent_worn != null)
+                                                                        {
+                                                                            @li_2.percent_worn
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+
+                                                        }
+
+                                                        @if (config.two_ri != 0)
+                                                        {
+
+                                                            var ri_2 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "2_ri").FirstOrDefault();
+
+                                                            if (ri_2 != null)
+                                                            {
+                                                                <tr>
+                                                                    <td style="padding:0px">
+                                                                        2Ri
+                                                                    </td>
+                                                                    <td style="padding:0px">@ri_2.actual_psi</td>
+                                                                    <td style="padding:0px">@ri_2.spec_psi</td>
+                                                                    <td style="padding:0px">
+                                                                        @if (ri_2.new_32nds != null)
+                                                                        {
+                                                                            @ri_2.new_32nds
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                    <td style="padding:0px">@ri_2.actual_32nds</td>
+                                                                    <td style="padding:0px">@ri_2.brand</td>
+                                                                    <td style="padding:0px">@ri_2.model</td>
+                                                                    <td style="padding:0px">@ri_2.size</td>
+                                                                    <td style="padding:0px">@ri_2.condition_wear</td>
+                                                                    <td style="padding:0px">@ri_2.condition_tire</td>
+                                                                    <td style="padding:0px">@ri_2.valve</td>
+                                                                    <td style="padding:0px">@ri_2.condition_wheel</td>
+                                                                    <td style="padding: 0px">
+                                                                        @if (ri_2.percent_worn != null)
+                                                                        {
+                                                                            @ri_2.percent_worn
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+
+                                                        }
+
+                                                        @if (config.two_ro != 0)
+                                                        {
+
+                                                            var ro_2 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "2_ro").FirstOrDefault();
+
+                                                            if (ro_2 != null)
+                                                            {
+                                                                <tr>
+                                                                    <td style="padding:0px">
+                                                                        1Ro
+                                                                    </td>
+                                                                    <td style="padding:0px">@ro_2.actual_psi</td>
+                                                                    <td style="padding:0px">@ro_2.spec_psi</td>
+                                                                    <td style="padding:0px">
+                                                                        @if (ro_2.new_32nds != null)
+                                                                        {
+                                                                            @ro_2.new_32nds
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                    <td style="padding:0px">@ro_2.actual_32nds</td>
+                                                                    <td style="padding:0px">@ro_2.brand</td>
+                                                                    <td style="padding:0px">@ro_2.model</td>
+                                                                    <td style="padding:0px">@ro_2.size</td>
+                                                                    <td style="padding:0px">@ro_2.condition_wear</td>
+                                                                    <td style="padding:0px">@ro_2.condition_tire</td>
+                                                                    <td style="padding:0px">@ro_2.valve</td>
+                                                                    <td style="padding:0px">@ro_2.condition_wheel</td>
+                                                                    <td style="padding: 0px">
+                                                                        @if (ro_2.percent_worn != null)
+                                                                        {
+                                                                            @ro_2.percent_worn
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+
+                                                        }
+
+                                                        @if (config.three_lo != 0)
+                                                        {
+                                                            var lo_3 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "3_lo").FirstOrDefault();
+
+                                                            if (lo_3 != null)
+                                                            {
+                                                                <tr>
+                                                                    <td style="padding:0px">
+                                                                        3Lo
+                                                                    </td>
+                                                                    <td style="padding:0px">@lo_3.actual_psi</td>
+                                                                    <td style="padding:0px">@lo_3.spec_psi</td>
+                                                                    <td style="padding:0px">
+                                                                        @if (lo_3.new_32nds != null)
+                                                                        {
+                                                                            @lo_3.new_32nds
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                    <td style="padding:0px">@lo_3.actual_32nds</td>
+                                                                    <td style="padding:0px">@lo_3.brand</td>
+                                                                    <td style="padding:0px">@lo_3.model</td>
+                                                                    <td style="padding:0px">@lo_3.size</td>
+                                                                    <td style="padding:0px">@lo_3.condition_wear</td>
+                                                                    <td style="padding:0px">@lo_3.condition_tire</td>
+                                                                    <td style="padding:0px">@lo_3.valve</td>
+                                                                    <td style="padding:0px">@lo_3.condition_wheel</td>
+                                                                    <td style="padding: 0px">
+                                                                        @if (lo_3.percent_worn != null)
+                                                                        {
+                                                                            @lo_3.percent_worn
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+
+                                                        }
+
+                                                        @if (config.three_li != 0)
+                                                        {
+                                                            var li_3 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "3_li").FirstOrDefault();
+
+                                                            if (li_3 != null)
+                                                            {
+                                                                <tr>
+                                                                    <td style="padding:0px">
+                                                                        3Li
+                                                                    </td>
+                                                                    <td style="padding:0px">@li_3.actual_psi</td>
+                                                                    <td style="padding:0px">@li_3.spec_psi</td>
+                                                                    <td style="padding:0px">
+                                                                        @if (li_3.new_32nds != null)
+                                                                        {
+                                                                            @li_3.new_32nds
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                    <td style="padding:0px">@li_3.actual_32nds</td>
+                                                                    <td style="padding:0px">@li_3.brand</td>
+                                                                    <td style="padding:0px">@li_3.model</td>
+                                                                    <td style="padding:0px">@li_3.size</td>
+                                                                    <td style="padding: 0px">@li_3.condition_wear</td>
+                                                                    <td style="padding:0px">@li_3.condition_tire</td>
+                                                                    <td style="padding:0px">@li_3.valve</td>
+                                                                    <td style="padding:0px">@li_3.condition_wheel</td>
+                                                                    <td style="padding: 0px">
+                                                                        @if (li_3.percent_worn != null)
+                                                                        {
+                                                                            @li_3.percent_worn
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+                                                        }
+
+                                                        @if (config.three_ri != 0)
+                                                        {
+                                                            var ri_3 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "3_ri").FirstOrDefault();
+
+                                                            if (ri_3 != null)
+                                                            {
+                                                                <tr>
+                                                                    <td style="padding:0px">
+                                                                        3Ri
+                                                                    </td>
+                                                                    <td style="padding:0px">@ri_3.actual_psi</td>
+                                                                    <td style="padding:0px">@ri_3.spec_psi</td>
+                                                                    <td style="padding:0px">
+                                                                        @if (ri_3.new_32nds != null)
+                                                                        {
+                                                                            @ri_3.new_32nds
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                    <td style="padding:0px">@ri_3.actual_32nds</td>
+                                                                    <td style="padding:0px">@ri_3.brand</td>
+                                                                    <td style="padding:0px">@ri_3.model</td>
+                                                                    <td style="padding: 0px">@ri_3.size</td>
+                                                                    <td style="padding:0px">@ri_3.condition_wear</td>
+                                                                    <td style="padding:0px">@ri_3.condition_tire</td>
+                                                                    <td style="padding: 0px">@ri_3.valve</td>
+                                                                    <td style="padding:0px">@ri_3.condition_wheel</td>
+                                                                    <td style="padding: 0px">
+                                                                        @if (ri_3.percent_worn != null)
+                                                                        {
+                                                                            @ri_3.percent_worn
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+
+                                                        }
+
+                                                        @if (config.three_ro != 0)
+                                                        {
+                                                            var ro_3 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "3_ro").FirstOrDefault();
+
+                                                            if (ro_3 != null)
+                                                            {
+                                                                <tr>
+                                                                    <td style="padding:0px">
+                                                                        3Ro
+                                                                    </td>
+                                                                    <td style="padding:0px">@ro_3.actual_psi</td>
+                                                                    <td style="padding:0px">@ro_3.spec_psi</td>
+                                                                    <td style="padding:0px">
+                                                                        @if (ro_3.new_32nds != null)
+                                                                        {
+                                                                            @ro_3.new_32nds
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                    <td style="padding: 0px">@ro_3.actual_32nds</td>
+                                                                    <td style="padding:0px">@ro_3.brand</td>
+                                                                    <td style="padding:0px">@ro_3.model</td>
+                                                                    <td style="padding:0px">@ro_3.size</td>
+                                                                    <td style="padding:0px">@ro_3.condition_wear</td>
+                                                                    <td style="padding:0px">@ro_3.condition_tire</td>
+                                                                    <td style="padding:0px">@ro_3.valve</td>
+                                                                    <td style="padding:0px">@ro_3.condition_wheel</td>
+                                                                    <td style="padding: 0px">
+                                                                        @if (ro_3.percent_worn != null)
+                                                                        {
+                                                                            @ro_3.percent_worn
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+
+                                                        }
+
+                                                        @if (config.four_lo != 0)
+                                                        {
+                                                            var lo_4 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "4_lo").FirstOrDefault();
+
+                                                            if (lo_4 != null)
+                                                            {
+                                                                <tr>
+                                                                    <td style="padding:0px">
+                                                                        4Lo
+                                                                    </td>
+                                                                    <td style="padding:0px">@lo_4.actual_psi</td>
+                                                                    <td style="padding:0px">@lo_4.spec_psi</td>
+                                                                    <td style="padding:0px">
+                                                                        @if (lo_4.new_32nds != null)
+                                                                        {
+                                                                            @lo_4.new_32nds
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                    <td style="padding:0px">@lo_4.actual_32nds</td>
+                                                                    <td style="padding:0px">@lo_4.brand</td>
+                                                                    <td style="padding:0px">@lo_4.model</td>
+                                                                    <td style="padding:0px">@lo_4.size</td>
+                                                                    <td style="padding:0px">@lo_4.condition_wear</td>
+                                                                    <td style="padding:0px">@lo_4.condition_tire</td>
+                                                                    <td style="padding:0px">@lo_4.valve</td>
+                                                                    <td style="padding:0px">@lo_4.condition_wheel</td>
+                                                                    <td style="padding: 0px">
+                                                                        @if (lo_4.percent_worn != null)
+                                                                        {
+                                                                            @lo_4.percent_worn
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+
+                                                        }
+
+                                                        @if (config.four_li != 0)
+                                                        {
+                                                            var li_4 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "4_li").FirstOrDefault();
+
+                                                            if (li_4 != null)
+                                                            {
+                                                                <tr>
+                                                                    <td style="padding:0px">
+                                                                        4Li
+                                                                    </td>
+                                                                    <td style="padding:0px">@li_4.actual_psi</td>
+                                                                    <td style="padding:0px">@li_4.spec_psi</td>
+                                                                    <td style="padding:0px">
+                                                                        @if (li_4.new_32nds != null)
+                                                                        {
+                                                                            @li_4.new_32nds
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                    <td style="padding:0px">@li_4.actual_32nds</td>
+                                                                    <td style="padding:0px">@li_4.brand</td>
+                                                                    <td style="padding:0px">@li_4.model</td>
+                                                                    <td style="padding:0px">@li_4.size</td>
+                                                                    <td style="padding:0px">@li_4.condition_wear</td>
+                                                                    <td style="padding:0px">@li_4.condition_tire</td>
+                                                                    <td style="padding:0px">@li_4.valve</td>
+                                                                    <td style="padding:0px">@li_4.condition_wheel</td>
+                                                                    <td style="padding: 0px">
+                                                                        @if (li_4.percent_worn != null)
+                                                                        {
+                                                                            @li_4.percent_worn
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+
+                                                        }
+
+                                                        @if (config.four_ri != 0)
+                                                        {
+                                                            var ri_4 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "4_ri").FirstOrDefault();
+
+                                                            if (ri_4 != null)
+                                                            {
+                                                                <tr>
+                                                                    <td style="padding:0px">
+                                                                        4Ri
+                                                                    </td>
+                                                                    <td style="padding: 0px">@ri_4.actual_psi</td>
+                                                                    <td style="padding: 0px">@ri_4.spec_psi</td>
+                                                                    <td style="padding: 0px">
+                                                                        @if (ri_4.new_32nds != null)
+                                                                        {
+                                                                            @ri_4.new_32nds
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                    <td style="padding:0px">@ri_4.actual_32nds</td>
+                                                                    <td style="padding:0px">@ri_4.brand</td>
+                                                                    <td style="padding:0px">@ri_4.model</td>
+                                                                    <td style="padding:0px">@ri_4.size</td>
+                                                                    <td style="padding:0px">@ri_4.condition_wear</td>
+                                                                    <td style="padding:0px">@ri_4.condition_tire</td>
+                                                                    <td style="padding:0px">@ri_4.valve</td>
+                                                                    <td style="padding:0px">@ri_4.condition_wheel</td>
+                                                                    <td style="padding: 0px">
+                                                                        @if (ri_4.percent_worn != null)
+                                                                        {
+                                                                            @ri_4.percent_worn
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+
+                                                        }
+
+                                                        @if (config.four_ro != 0)
+                                                        {
+                                                            var ro_4 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "4_ro").FirstOrDefault();
+
+                                                            if (ro_4 != null)
+                                                            {
+                                                                <tr>
+                                                                    <td style="padding:0px">
+                                                                        4Ro
+                                                                    </td>
+                                                                    <td style="padding:0px">@ro_4.actual_psi</td>
+                                                                    <td style="padding:0px">@ro_4.spec_psi</td>
+                                                                    <td style="padding:0px">
+                                                                        @if (ro_4.new_32nds != null)
+                                                                        {
+                                                                            @ro_4.new_32nds
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                    <td style="padding:0px">@ro_4.actual_32nds</td>
+                                                                    <td style="padding:0px">@ro_4.brand</td>
+                                                                    <td style="padding:0px">@ro_4.model</td>
+                                                                    <td style="padding:0px">@ro_4.size</td>
+                                                                    <td style="padding:0px">@ro_4.condition_wear</td>
+                                                                    <td style="padding:0px">@ro_4.condition_tire</td>
+                                                                    <td style="padding:0px">@ro_4.valve</td>
+                                                                    <td style="padding:0px">@ro_4.condition_wheel</td>
+                                                                    <td style="padding: 0px">
+                                                                        @if (ro_4.percent_worn != null)
+                                                                        {
+                                                                            @ro_4.percent_worn
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+
+                                                        }
+
+                                                        @if (config.five_lo != 0)
+                                                        {
+                                                            var lo_5 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "5_lo").FirstOrDefault();
+
+                                                            if (lo_5 != null)
+                                                            {
+                                                                <tr>
+                                                                    <td style="padding:0px">
+                                                                        5Lo
+                                                                    </td>
+                                                                    <td style="padding:0px">@lo_5.actual_psi</td>
+                                                                    <td style="padding:0px">@lo_5.spec_psi</td>
+                                                                    <td style="padding:0px">
+                                                                        @if (lo_5.new_32nds != null)
+                                                                        {
+                                                                            @lo_5.new_32nds
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                    <td style="padding:0px">@lo_5.actual_32nds</td>
+                                                                    <td style="padding:0px">@lo_5.brand</td>
+                                                                    <td style="padding:0px">@lo_5.model</td>
+                                                                    <td style="padding:0px">@lo_5.size</td>
+                                                                    <td style="padding:0px">@lo_5.condition_wear</td>
+                                                                    <td style="padding:0px">@lo_5.condition_tire</td>
+                                                                    <td style="padding:0px">@lo_5.valve</td>
+                                                                    <td style="padding:0px">@lo_5.condition_wheel</td>
+                                                                    <td style="padding: 0px">
+                                                                        @if (lo_5.percent_worn != null)
+                                                                        {
+                                                                            @lo_5.percent_worn
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+
+                                                        }
+
+                                                        @if (config.five_li != 0)
+                                                        {
+                                                            var li_5 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "5_li").FirstOrDefault();
+
+                                                            if (li_5 != null)
+                                                            {
+                                                                <tr>
+                                                                    <td style="padding:0px">
+                                                                        5Li
+                                                                    </td>
+                                                                    <td style="padding:0px">@li_5.actual_psi</td>
+                                                                    <td style="padding:0px">@li_5.spec_psi</td>
+                                                                    <td style="padding:0px">
+                                                                        @if (li_5.new_32nds != null)
+                                                                        {
+                                                                            @li_5.new_32nds
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                    <td style="padding:0px">@li_5.actual_32nds</td>
+                                                                    <td style="padding:0px">@li_5.brand</td>
+                                                                    <td style="padding:0px">@li_5.model</td>
+                                                                    <td style="padding:0px">@li_5.size</td>
+                                                                    <td style="padding:0px">@li_5.condition_wear</td>
+                                                                    <td style="padding:0px">@li_5.condition_tire</td>
+                                                                    <td style="padding:0px">@li_5.valve</td>
+                                                                    <td style="padding:0px">@li_5.condition_wheel</td>
+                                                                    <td style="padding: 0px">
+                                                                        @if (li_5.percent_worn != null)
+                                                                        {
+                                                                            @li_5.percent_worn
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+
+                                                        }
+
+                                                        @if (config.five_ri != 0)
+                                                        {
+                                                            var ri_5 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "5_ri").FirstOrDefault();
+
+                                                            if (ri_5 != null)
+                                                            {
+                                                                <tr>
+                                                                    <td style="padding:0px">
+                                                                        5Ri
+                                                                    </td>
+                                                                    <td style="padding:0px">@ri_5.actual_psi</td>
+                                                                    <td style="padding:0px">@ri_5.spec_psi</td>
+                                                                    <td style="padding:0px">
+                                                                        @if (ri_5.new_32nds != null)
+                                                                        {
+                                                                            @ri_5.new_32nds
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                    <td style="padding:0px">@ri_5.actual_32nds</td>
+                                                                    <td style="padding: 0px">@ri_5.brand</td>
+                                                                    <td style="padding:0px">@ri_5.model</td>
+                                                                    <td style="padding:0px">@ri_5.size</td>
+                                                                    <td style="padding:0px">@ri_5.condition_wear</td>
+                                                                    <td style="padding:0px">@ri_5.condition_tire</td>
+                                                                    <td style="padding:0px">@ri_5.valve</td>
+                                                                    <td style="padding:0px">@ri_5.condition_wheel</td>
+                                                                    <td style="padding: 0px">
+                                                                        @if (ri_5.percent_worn != null)
+                                                                        {
+                                                                            @ri_5.percent_worn
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+
+                                                        }
+
+                                                        @if (config.five_ro != 0)
+                                                        {
+                                                            var ro_5 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "5_ro").FirstOrDefault();
+
+                                                            if (ro_5 != null)
+                                                            {
+                                                                <tr>
+                                                                    <td style="padding:0px">
+                                                                        5Ro
+                                                                    </td>
+                                                                    <td style="padding:0px">@ro_5.actual_psi</td>
+                                                                    <td style="padding:0px">@ro_5.spec_psi</td>
+                                                                    <td style="padding:0px">
+                                                                        @if (ro_5.new_32nds != null)
+                                                                        {
+                                                                            @ro_5.new_32nds
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                    <td style="padding:0px">@ro_5.actual_32nds</td>
+                                                                    <td style="padding:0px">@ro_5.brand</td>
+                                                                    <td style="padding:0px">@ro_5.model</td>
+                                                                    <td style="padding:0px">@ro_5.size</td>
+                                                                    <td style="padding:0px">@ro_5.condition_wear</td>
+                                                                    <td style="padding:0px">@ro_5.condition_tire</td>
+                                                                    <td style="padding:0px">@ro_5.valve</td>
+                                                                    <td style="padding:0px">@ro_5.condition_wheel</td>
+                                                                    <td style="padding: 0px">
+                                                                        @if (ro_5.percent_worn != null)
+                                                                        {
+                                                                            @ro_5.percent_worn
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="na">
+                                                                                n/a
+                                                                            </span>
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+                                                        }
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <div class="row" style="overflow-x:hidden; overflow-y:hidden">
+                                                <div class="col-md-4">
+                                                    <div class="row" style="margin-top:10px">
+                                                        <b style="margin-left:auto; margin-right:auto">Brand Distribution</b>
+                                                    </div>
+
+                                                    @{
+
+                                                        string brandDistribution = "";
+                                                        string finalColor = "";
+
+
+                                                        var colorString = new List<string> { "#FFBF00", "#FF7F50", "#DE3163", "#9FE2BF", "#40E0D0", "#6495ED", "#CCCCFF", "#800080", "#000080" };
+
+                                                        int i = 0;
+
+                                                        foreach (string brand in Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number).Select(x => x.brand).Distinct())
+                                                        {
+                                                            string brandName = brand;
+                                                            string count = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.brand == brand).Count().ToString();
+
+
+                                                            string final = "['" + brandName + "'," + count + "]";
+
+                                                            finalColor = finalColor + "'" + colorString[i] + "',";
+
+                                                            brandDistribution = brandDistribution + final + ",";
+
+                                                            i = i + 1;
+
+                                                        }
+
+                                                        brandDistribution = "[" + brandDistribution.Remove(brandDistribution.LastIndexOf(",")) + "]";
+
+                                                        //finalColor = finalColor.Remove(brandDistribution.LastIndexOf(","));
+
+                                                        //<input type="text" name="name" value="@finalColor" />
+
+                                                        //string brandDistribution = "[['Position Distribution',0.98],['Wear Distribution',0.81]]";
+
+                                                        <tlx-chart style="margin:0px; padding:0px" chart-options="${{colors: [@finalColor]}}" chart-type="PieChart" chart-columns="${['Element','Percentage']}" chart-data="${@brandDistribution}">
+
+                                                        </tlx-chart>
+                                                    }
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="row" style="margin-top:10px">
+                                                        <b style="margin-left:auto; margin-right:auto">Inflation Distribution</b>
+                                                    </div>
+                                                    @{
+                                                        double inflation;
+                                                        double greeninf;
+                                                        double orangeinf;
+                                                        double redinf;
+
+                                                        if (Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.inflation != null).Count() == 0)
+                                                        {
+                                                            inflation = 1;
+                                                        }
+                                                        else
+                                                        {
+                                                            inflation = 0;
+                                                        }
+
+                                                        if (Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.inflation <= 79).Count() == 0)
+                                                        {
+                                                            greeninf = 0;
+                                                        }
+                                                        else
+                                                        {
+                                                            greeninf = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.inflation <= 79).Count();
+                                                        }
+
+                                                        if (Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.inflation <= 89 && x.inflation >= 80).Count() == 0)
+                                                        {
+                                                            orangeinf = 0;
+                                                        }
+                                                        else
+                                                        {
+                                                            orangeinf = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.inflation <= 89 && x.inflation >= 80).Count();
+                                                        }
+
+                                                        if (Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.inflation >= 90).Count() == 0)
+                                                        {
+                                                            redinf = 0;
+                                                        }
+                                                        else
+                                                        {
+                                                            redinf = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.inflation >= 90).Count();
+                                                        }
+
+                                                        if (inflation == 1)
+                                                        {
+                                                            greeninf = inflation;
+                                                        }
+
+                                                        <tlx-chart style="margin:0px; padding:0px" chart-options="${{colors: ['red','orange','green']}}" chart-type="PieChart" chart-columns="${['Element','Percentage']}" chart-data="${[['< 79%',@greeninf],['80-89%',@orangeinf],['> 90%',@redinf]]}">
+
+                                                        </tlx-chart>
+
+                                                    }
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="row" style="margin-top:10px">
+                                                        <b style="margin-left:auto; margin-right:auto">% Worn Distribution</b>
+                                                    </div>
+
+
+                                                    @{
+                                                        double worn;
+                                                        double greenworn;
+                                                        double orangeworn;
+                                                        double redworn;
+
+                                                        if (Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.percent_worn != null).Count() == 0)
+                                                        {
+                                                            worn = 1;
+                                                        }
+                                                        else
+                                                        {
+                                                            worn = 0;
+                                                        }
+
+                                                        if (Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.percent_worn <= 50).Count() == 0)
+                                                        {
+                                                            greenworn = 0;
+                                                        }
+                                                        else
+                                                        {
+                                                            greenworn = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.percent_worn <= 50).Count();
+                                                        }
+
+                                                        if (Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.percent_worn <= 75 && x.percent_worn >= 51).Count() == 0)
+                                                        {
+                                                            orangeworn = 0;
+                                                        }
+                                                        else
+                                                        {
+                                                            orangeworn = @Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.percent_worn <= 75 && x.percent_worn >= 51).Count();
+                                                        }
+
+                                                        if (Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.percent_worn <= 100 && x.percent_worn >= 76).Count() == 0)
+                                                        {
+                                                            redworn = 0;
+                                                        }
+                                                        else
+                                                        {
+                                                            redworn = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.percent_worn <= 100 && x.percent_worn >= 76).Count();
+                                                        }
+
+                                                        if (worn == 1)
+                                                        {
+                                                            greenworn = worn;
+                                                        }
+
+                                                        <tlx-chart style="margin:0px; padding:0px" chart-options="${{colors: ['green','orange','red']}}" chart-type="PieChart" chart-columns="${['Element','Percentage']}" chart-data="${[['0-50%',@greenworn],['51-75%',@orangeworn],['76-100%',@redworn]]}">
+
+                                                        </tlx-chart>
+
+                                                    }
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <script>
+        $('#build').click(function(){
+            $('#RightPane').css("display" , "block")
+            $('.commonClass').css("display" , "none");
+            var obj = $('#span').html().split(",");        
+            obj.forEach(function (code) {
+                if (document.getElementById(code.trim()).checked == true)
+                {
+
+                    let codeclass = code.replace(/\s+/g, '');    
+                    //alert("+" + codeclass + "+")
+                    $('.'+codeclass).css("display" , "block")
+                }
+
+            });
+
+        })
+ 
+        $('#clear').click(function(){
+            $('#RightPane').css("display" , "none")
+        })
+    </script>
+
+    <script>
+        document.getElementById("btnPrint").onclick = function () {
+            $('#snapcard').css("height", "auto")
+            print();
+            $('#snapcard').css("height", "675px")
+        }
+    </script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

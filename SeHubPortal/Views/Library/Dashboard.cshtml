@@ -18,8 +18,14 @@
     <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 
 
-
-
+    @if (Model.SehubAccess.plant > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
 
     @if (Model.SehubAccess.tools > 0)
     {
@@ -193,7 +199,7 @@
             <div class="col-lg-2">
                 <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#AddDocuments" style="width:260px; height:360px">
                     <div class="card-body text-center" style="height:270px; padding-left:15px;  padding-top:55px">
-                        <img src="~/Content/AddDocument.png" style="margin-top:5px; margin-bottom:40px; width:170px;">
+                        <img src="~/Content/new_document.png" style="margin-top:5px; margin-bottom:40px; width:170px;">
                         <h5><b>Add Document Request</b></h5>
                     </div>
                 </div>

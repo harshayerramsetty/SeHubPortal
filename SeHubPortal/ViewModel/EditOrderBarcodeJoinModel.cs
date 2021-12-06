@@ -29,5 +29,6 @@ namespace SeHubPortal.ViewModel
         public int size_id { get; set; }
         public int brand_id { get; set; }
         public int tread_id { get; set; }
+        public bool virgin { get; set; }
     }
 }
