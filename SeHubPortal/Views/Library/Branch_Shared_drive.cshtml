@@ -148,8 +148,6 @@
         font-weight: bold;
     }
 
-
-
     body {
         background-color: #f0f2f5;
         padding-right: 0 !important;
@@ -172,45 +170,40 @@
 </style>
 
 <body style="overflow-y: hidden;">
-    <div class="row heading" style="padding:10px 20px 0px 15px">
-        <div class="col">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb" style="background-color: white;height: 100%;margin-top: 0px;">
-                    <li class="breadcrumb-item"><a href="@Url.Action("Branch_Shared_drive", "Library")">Library</a></li>
-                    <li class="breadcrumb-item " aria-current="page">Branch Shared Drive</li>
 
-                    @if (Model.SehubAccess.library_branch_shared_drive >= 2)
+    <div class="row heading" style="margin-right:0px">
+        <div class="col" style="margin:10px 10px 10px 30px; padding:10px; background-color:white">
+
+            <div style="display:flex; justify-content:space-between; align-items:center">
+                <div>
+                    <a href="@Url.Action("Branch_Shared_drive", "Library")">Library </a>/ Branch Shared Drive
+                </div>
+
+                <div style="display:flex;">
+                    @using (Html.BeginForm("UploadBranchShareDrive", "Library", FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
-                        using (Html.BeginForm("UploadBranchShareDrive", "Library", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                        {
-                            <input type="text" readonly style="visibility:visible; height:23px; width:100px; margin-left:459px" class="btn btn-success Upload" name="name" value="Upload" onclick="document.getElementById('Upload').click()" />
-                            <input id="Upload" type="file" name="BranchShareDrive" style="visibility:hidden; height: 23px;width: 100px;margin-left: 450px;display: none" onchange="form.submit()" />
-                            <input id="1" type="text" readonly data-toggle="modal" data-target="#BranchShareDriveManage" style="visibility:visible; height: 23px; width: 100px; margin-left: 20px" class="btn btn-primary Manage" name="name" value="Manage" />
-                            @Html.EditorFor(m => m.Location_ID, new { htmlAttributes = new { @class = "text-center", @style = "height:28px; display:none" } })
-                            @Html.EditorFor(m => m.Pane, new { htmlAttributes = new { @id = "pane", @class = "text-center", @style = "height:28px; display:none", @Value = "1" } })
-                        }
-
-                        <label style="margin: 0px 3px 0px 480px ">Location</label>
-                        <div>
-                            @using (Html.BeginForm("Branch_Shared_drive_ChangeLocation", "Library", FormMethod.Post))
-                            {
-                                @Html.DropDownListFor(m => m.Location_ID, Model.LocationsList, new { @onChange = "this.form.submit()", @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
-                            }
-
-
-                        </div>
+                        <input type="text" readonly style="visibility:visible; height:23px; width:100px;" class="btn btn-success Upload" name="name" value="Upload" onclick="document.getElementById('Upload').click()" />
+                        <input id="Upload" type="file" name="BranchShareDrive" style="visibility:hidden; height: 23px;width: 100px;margin-left: 450px;display: none" onchange="form.submit()" />
+                        <input id="1" type="text" readonly data-toggle="modal" data-target="#BranchShareDriveManage" style="visibility:visible; height: 23px; width: 100px; margin-left: 20px" class="btn btn-primary Manage" name="name" value="Manage" />
+                        @Html.EditorFor(m => m.Location_ID, new { htmlAttributes = new { @class = "text-center", @style = "height:28px; display:none" } })
+                        @Html.EditorFor(m => m.Pane, new { htmlAttributes = new { @id = "pane", @class = "text-center", @style = "height:28px; display:none", @Value = "1" } })
                     }
+                </div>
 
-
-                </ol>
-            </nav>
+                <div style="display:flex; justify-content:space-around; align-items:center">
+                    <label style="margin-right:10px">Location</label>
+                    @using (Html.BeginForm("Branch_Shared_drive_ChangeLocation", "Library", FormMethod.Post))
+                    {
+                        @Html.DropDownListFor(m => m.Location_ID, Model.LocationsList, new { @onChange = "this.form.submit()", @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
+                    }
+                </div>
+            </div>
         </div>
-        <button type="button" id="clickThis" class="btn" style=" margin-bottom: 14px;">
-            <i class="fa fa-bars" style="font-size: 25px "></i>
+        <button type="button" id="clickThis" class="btn">
+            <i class="fa fa-bars" style="font-size:25px"></i>
             <span class="sr-only">Toggle Menu</span>
         </button>
     </div>
-
 
     @if (Model.Permission != 4)
     {
@@ -733,9 +726,9 @@
             </div>
         </div>
 
-        
 
-        
+
+
 
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -814,7 +807,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    
+
                                                 </div>
                                             }
                                         }

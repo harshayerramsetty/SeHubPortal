@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Settings_Harpoon.cshtml";
 }
 
-@model SeHubPortal.ViewModel.MyStaffViewModel
+@model SeHubPortal.ViewModel.HarpoonDevicesViewModel
 
 <html lang="en">
 <head>
@@ -18,6 +18,14 @@
 
 
     <style>
+
+        #SettingsClicked {
+                display: block !important;
+            }
+
+            #ManagementClicked {
+                display: block !important;
+            }
 
         .example::-webkit-scrollbar {
             display: none;
@@ -106,21 +114,31 @@
             height: 30px;
             width: 100px;
         }
+
+        .modal-backdrop.show {
+            opacity: 0.7;
+        }
+
     </style>
 </head>
 
 <body>
     <div class="row heading">
-        <div class="col">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
-                    <li class="breadcrumb-item"><a href="@Url.Action("Devices", "SettingsHarpoon")">Settings</a></li>
-                    <li class="breadcrumb-item " aria-current="page">Devices</li>
-                    <input id="AddEmployeeBtn" readonly type="text" class="btn btn-success EmpTransBtns " data-toggle="modal" data-target="#AddEmployeeModal" value="Add" style="height:23px; width:100px; margin-left:520px" />
 
-                </ol>
-            </nav>
+
+        <div class="col" style="margin:0px 5px 15px 15px; padding:10px; background-color:white">
+
+            <div style="display:flex; justify-content:space-between; align-items:center">
+                <div>
+                    <a href="@Url.Action("Devices", "SettingsHarpoon")">Settings </a>/ Devices
+                </div>
+                <input onclick="clearAdd()" readonly type="text" class="btn btn-success EmpTransBtns" value="Add" style="height:23px; width:100px" />
+                <div style="display:flex; justify-content:space-around; align-items:center">
+                    <label style="visibility:hidden">Location</label>
+                </div>
+            </div>
         </div>
+
         <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
             <i class="fa fa-bars" style="font-size:25px"></i>
             <span class="sr-only">Toggle Menu</span>
@@ -128,93 +146,471 @@
     </div>
 
     <div class="row" style="margin:0px 10px 20px 15px">
-        <div class="col-lg-3" style="padding:0px">
-            <div class="card">
-                <div class="card-header" style="padding:8px 0px 0px 15px">
-                    <div class="row">
-                        <div class="col-lg-10">
-                            <h5>TimeClock [Loc_id]</h5>
+
+        @foreach (var user in Model.devices)
+        {
+            <div class="card shadow-lg " type="button" style="height:355px; margin-right:15px">
+
+                <div class="card-body text-center" style="height: 270px; font-size: 11px; padding: 10px 20px 0px 20px ">
+
+                    <div class="row" style="margin:0px">
+                        <div class="col-lg-12 text-right" style="padding:0px">
+                            <span>
+                                <button value="@user.serial_number;@user.client_id;@user.auto_loc_id;@user.location_zone;@user.display_color;@user.IP_address;@user.software_version" onclick="edit(this.value)" data-toggle="modal" data-target="#EditHarpoonDevice" style="background-color: transparent;border: none;outline: none;">
+                                    <i class="fa fa-edit" style="font-size:25px;color:black;float:right"></i>
+                                </button>
+                            </span>
                         </div>
-                        <div class="col-lg-2" style="padding-right:20px">
-                            <button style="background-color:transparent; border:none; outline:none; float:right"><i class="fa fa-edit" style="font-size:25px;color:black;float:right"></i></button>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <img src="~/Content/harpoonDevices.png" style="margin-bottom:10px;width:200px;">
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top:10px">
+                        <div class="col-lg-6 text-right" style="padding-right:5px;">
+                            Serial Number
+                        </div>
+                        <div class="col-lg-6 text-left" style="padding-left:5px;">
+                            <span><b>@user.serial_number</b></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 text-right" style="padding-right:5px;">
+                            Location ID
+                        </div>
+                        <div class="col-lg-6 text-left" style="padding-left:5px;">
+                            <span><b>@Model.Locations.Where(x => x.auto_loc_id == user.auto_loc_id).Select(x => x.location_id).FirstOrDefault()</b></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 text-right" style="padding-right:5px;">
+                            Location Name
+                        </div>
+                        <div class="col-lg-6 text-left" style="padding-left:5px;">
+                            <span><b>@Model.Locations.Where(x => x.auto_loc_id == user.auto_loc_id).Select(x => x.location_name).FirstOrDefault()</b></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 text-right" style="padding-right:5px;">
+                            Location Zone
+                        </div>
+                        <div class="col-lg-6 text-left" style="padding-left:5px; font-size:10px">
+                            <span><b>@user.location_zone</b></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 text-right" style="padding-right:5px;">
+                            Display Color
+                        </div>
+                        <div class="col-lg-6 text-left" style="padding-left:5px;">
+                            <span><b>@user.display_color</b></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 text-right" style="padding-right:5px;">
+                            IP Address
+                        </div>
+                        <div class="col-lg-6 text-left" style="padding-left:5px;">
+                            <span><b>@user.IP_address</b></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 text-right" style="padding-right:5px;">
+                            Software Version
+                        </div>
+                        <div class="col-lg-6 text-left" style="padding-left:5px;">
+                            <span><b>@user.software_version</b></span>
+                        </div>
+                    </div>
+
+
+                </div>
+                </div>
+        }
+
+
+
+    </div>
+
+    <div class="modal" id="AddHarpoonDevice" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+
+            @using (Html.BeginForm("AddDevice", "SettingsHarpoon", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+
+                <div class="modal-content" style="width:400px">
+                    <div class="modal-header" style="padding:5px 5px 5px 15px">
+                        <h5 class="modal-title">Add Device</h5>
+                    </div>
+                    <div class="modal-body" style="padding-right:0px; padding-bottom:0px">
+
+                        <div class="row" style="margin-bottom:10px">
+                            <div class="col-lg-12 text-center">
+                                <img src="~/Content/harpoonDevices.png" style="margin-bottom:10px;width:200px;">
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom:10px;">
+                            <div class="col-lg-5 text-right" style="font-weight:bold; color:dimgray">
+                                Serial Number
+                            </div>
+                            <div class="col-lg-6" style="padding-right:0px">
+                                @Html.EditorFor(m => m.newDevice.serial_number, new { htmlAttributes = new { @maxlength = "6", @oninput = "checkMaxLength(this.value)", @id = "addSerialNumber", @style = "text-align:center; font-weight:bold; width:100%;", @required = "required" } })
+
+                            </div>
+                        </div>
+
+                        <div class="row" id="verification" style="margin-bottom:10px">
+                            <div class="col-lg-5 text-right verification" style="display:none; font-weight:bold; color:dimgray">
+                                Verification Code
+                            </div>
+                            <div class="col-lg-6 verification" style="display:none; padding-right:0px">
+                                <div class="row">
+                                    <div class="col-lg-6" style="padding-right:0px">
+                                        @Html.EditorFor(m => m.verificationCode, new { htmlAttributes = new { @oninput = "CheckRequiredFeilds()", @id = "verificationCode", @style = "text-align:center; font-weight:bold; width:100%;" } })
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <button type="button" style="padding:2px 10px 2px 10px" onclick="checkVerificationCode()" class="btn btn-primary">Confirm</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right deviceDetails" style="display:none; font-weight:bold; color:dimgray">
+                                    @if (Model.locIDorName)
+                                    {
+                                        <span>Location ID</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Location Name</span>
+                                    }
+                                </div>
+                                <div class="col-lg-6 deviceDetails" style="display:none; padding-right:0px">
+                                    @Html.DropDownListFor(m => m.newDevice.auto_loc_id, Model.LocationsList, new { @onchange = "CheckRequiredFeilds()", @id = "location", @style = "text-align:center; font-weight:bold; width:100%;", @required = "required" })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right deviceDetails" style="display:none; font-weight:bold; color:dimgray">
+                                    Location Zone
+                                </div>
+                                <div class="col-lg-6 deviceDetails" style="        display: none;
+        padding-right: 0px">
+                                    @Html.DropDownListFor(m => m.newDevice.location_zone, Model.LocationZonesList, new { @onchange = "CheckRequiredFeilds()", @id = "locationZone", @style = "text-align:center; font-weight:bold; width:100%;", @required = "required" })
+                                </div>
+                            </div>
+
+                            <div class="row finalRow" style="margin-bottom:0px">
+                                <div class="col-lg-5 text-right deviceDetails" style="display:none; font-weight:bold; color:dimgray">
+                                    Display Color
+                                </div>
+                                <div class="col-lg-6 deviceDetails" style="display:none; padding-right:0px">
+                                    @Html.DropDownListFor(m => m.newDevice.display_color, Model.ColorsList, new { @onchange = "CheckRequiredFeilds()", @id = "dispColor", @style = "text-align:center; font-weight:bold; width:100%;", @required = "required" })
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer" style="padding:5px 15px 5px 5px">
+                        <button id="addSubmit" style="display:none; padding:2px 28px 2px 28px" type="submit" class="btn btn-success">Save</button>
+                        <button style="padding:2px 20px 2px 20px" type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+
+            }
+
+
+        </div>
+    </div>
+
+    <div class="modal" id="EditHarpoonDevice" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+
+            @using (Html.BeginForm("EditDevice", "SettingsHarpoon", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+
+                <div class="modal-content" style="width:400px">
+                    <div class="modal-header" style="padding:5px 5px 5px 15px">
+                        <h5 class="modal-title">Edit Device</h5>
+                    </div>
+                    <div class="modal-body" style="padding-right:0px; padding-bottom:0px">
+
+                        <div class="row" style="margin-bottom:10px">
+                            <div class="col-lg-1 text-left" style="padding-left:0px; padding-top:0px">
+                                <button type="button" data-dismiss="modal" data-toggle="modal" data-target="#DeletePopup" class="btn" style="border: none;outline: none; background-color: transparent"><img style="width:30px" src="~/Content/Trash Can.png" alt="Alternate Text" /></button>
+                            </div>
+                            <div class="col-lg-10 text-center">
+                                <img src="~/Content/harpoonDevices.png" style="margin-bottom:10px;width:200px;">
+                            </div>
+                            <div class="col-lg-1"></div>
+                        </div>
+
+
+                        <div class="row" style="margin-bottom:10px;">
+                            <div class="col-lg-5 text-right" style="font-weight:bold; color:dimgray">
+                                Serial Number
+                            </div>
+                            <div class="col-lg-6" style="padding-right:0px">
+                                @Html.EditorFor(m => m.editDevice.serial_number, new { htmlAttributes = new { @maxlength = "6", @readonly = true, @id = "serial_number", @style = "text-align:center; font-weight:bold; width:100%;", @required = "required" } })
+
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom:10px">
+                            <div class="col-lg-5 text-right " style="font-weight: bold; color: dimgray">
+                                Location id
+                            </div>
+                            <div class="col-lg-6 " style="padding-right:0px">
+                                @Html.DropDownListFor(m => m.editDevice.auto_loc_id, Model.LocationsList, new { @id = "location_id", @style = "text-align:center; font-weight:bold; width:100%;", @required = "required" })
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom:10px">
+                            <div class="col-lg-5 text-right " style="font-weight:bold; color:dimgray">
+                                Location Zone
+                            </div>
+                            <div class="col-lg-6 " style="padding-right:0px">
+                                @Html.DropDownListFor(m => m.editDevice.location_zone, Model.LocationZonesList, new { @id = "location_zone", @style = "text-align:center; font-weight:bold; width:100%;", @required = "required" })
+                            </div>
+                        </div>
+
+                        <div class="row finalRow" style="margin-bottom:15px">
+                            <div class="col-lg-5 text-right" style="font-weight:bold; color:dimgray">
+                                Display Color
+                            </div>
+                            <div class="col-lg-6" style="padding-right:0px">
+                                @Html.DropDownListFor(m => m.editDevice.display_color, Model.ColorsList, new { @id = "display_color", @style = "text-align:center; font-weight:bold; width:100%;", @required = "required" })
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div class="modal-footer" style="padding:5px 15px 5px 5px">
+                        <button style="padding:2px 30px 2px 30px" type="submit" class="btn btn-success">Save</button>
+                        <button style="padding:2px 20px 2px 20px" type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+
+            }
+
+
+
+
+        </div>
+    </div>
+
+    <div class="modal" id="DeletePopup" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content" style="width:400px">
+                <div class="modal-header" style="padding:5px 5px 5px 15px">
+                    <h5 class="modal-title">Confirm to delete</h5>
+                </div>
+                <div class="modal-body" style="padding-right:0px; padding-bottom:0px">
+
+                    <div class="row" style="margin-bottom:15px">
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-4 text-center">
+                            <button style="padding:5px 35px 5px 35px" type="button" onclick="yesclick()" id="yes" class="btn btn-success">Yes</button>
+                        </div>
+                        <div class="col-lg-4 text-center">
+
+                            <button style="padding:5px 40px 5px 40px" type="button" data-dismiss="modal" id="no" class="btn btn-danger">No</button>
+                        </div>
+                        <div class="col-lg-2"></div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal" id="AddLocAlert" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content">
+                <div class="modal-header" style="padding:5px 5px 5px 15px">
+                    <h5 class="modal-title">Acknowledgement</h5>
+                </div>
+                <div class="modal-body" style="padding-right:0px; padding-bottom:0px">
+
+                    <div class="row" style="margin-bottom:15px">
+                        <div class="col-lg-12 text-center">
+                            <h6><b>Please add location details prior to adding Devices</b></h6>
                         </div>
                     </div>
 
                 </div>
-                <div class="card-body">
-                    <div class="row" style="margin-bottom:10px">
-                        <div class="col-lg-6 text-right">
-                            Serial Number
-                        </div>
-                        <div class="col-lg-6">
-                            <input type="text" style="width:100%" name="name" value="" />
-                        </div>
-                    </div>
-                    <div class="row" style="margin-bottom:10px">
-                        <div class="col-lg-6 text-right">
-                            Model
-                        </div>
-                        <div class="col-lg-6">
-                            <input type="text" style="width:100%" name="name" value="" />
-                        </div>
-                    </div>
-                    <div class="row" style="margin-bottom:10px">
-                        <div class="col-lg-6 text-right">
-                            Location_id
-                        </div>
-                        <div class="col-lg-6">
-                            <input type="text" style="width:100%" name="name" value="" />
-                        </div>
-                    </div>
-                    <div class="row" style="margin-bottom:10px">
-                        <div class="col-lg-6 text-right">
-                            Location Zone
-                        </div>
-                        <div class="col-lg-6">
-                            <input type="text" style="width:100%" name="name" value="" />
-                        </div>
-                    </div>
-                    <div class="row" style="margin-bottom:10px">
-                        <div class="col-lg-6 text-right">
-                            Device Color
-                        </div>
-                        <div class="col-lg-6">
-                            <input type="text" style="width:100%" name="name" value="" />
-                        </div>
-                    </div>
-                    <div class="row" style="margin-bottom:10px">
-                        <div class="col-lg-6 text-right">
-                            Display Color
-                        </div>
-                        <div class="col-lg-6">
-                            <input type="text" style="width:100%" name="name" value="" />
-                        </div>
-                    </div>
-                    <div class="row" style="margin-bottom:10px">
-                        <div class="col-lg-6 text-right">
-                            IP Address
-                        </div>
-                        <div class="col-lg-6">
-                            <input type="text" style="width:100%" name="name" value="" />
-                        </div>
-                    </div>
-                    <div class="row" style="margin-bottom:10px">
-                        <div class="col-lg-6 text-right">
-                            Software
-                        </div>
-                        <div class="col-lg-6">
-                            <input type="text" style="width:100%" name="name" value="" />
-                        </div>
-                    </div>
+                <div class="modal-footer" style="padding:5px">
+                    <button onclick="location.reload()" data-dismiss="modal" style="padding:3px 30px 3px 30px" class="btn btn-danger" type="button">Close</button>
                 </div>
             </div>
+
         </div>
-        <div class="col-lg-6"></div>
     </div>
+
+    <div class="modal" id="SerialExists" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content" style="width:400px">
+                <div class="modal-header" style="padding:5px 5px 5px 15px">
+                    <h5 class="modal-title">Acknowledgement</h5>
+                </div>
+                <div class="modal-body" style="padding-right:0px; padding-bottom:0px">
+
+                    <div class="row" style="margin-bottom:15px">
+                        <div class="col-lg-12">
+                            <h5><b>Serial number already registered</b></h5>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer" style="padding:5px">
+                    <button onclick="location.reload()" data-dismiss="modal" style="padding:3px 30px 3px 30px" class="btn btn-danger" type="button">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <script src="jquery-3.5.1.min.js"></script>
 
     <script>
 
+        $(document).ready(function () {
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+                $('#divLoader').css('display', 'block');
+            });
+
+        });
+
+        function edit(val) {
+            var data = val.split(";");
+            $('#serial_number').val(data[0]);
+            $('#client_id').val(data[1]);
+            $('#location_id').val(data[2]);
+            $('#location_zone').val(data[3]);
+            $('#display_color').val(data[4]);
+            $('#IP_address').val(data[5]);
+            $('#software_version').val(data[6]);
+        }
+
+
+        function checkMaxLength(val) {
+            if (val.length == 6) {
+                $('.verification').css("display", "block")
+            }
+            CheckRequiredFeilds()
+        }
+
+        function checkVerificationCode() {
+
+            $.ajax({
+                url: '@Url.Action("checkSerialNumber", "SettingsHarpoon")',
+                data: { value: $('#addSerialNumber').val(), verif : $('#verificationCode').val()},
+                type: 'POST',
+                success: function (data) {
+
+                    if (data == "true") {
+                        $('#AddHarpoonDevice').modal().hide();
+                        $('#SerialExists').modal()
+                    }
+                    else {
+
+                        if (data != "incorrect verification") {
+                            $('#addSerialNumber').css("background-color", "#bdbdbd");
+                            $('#addSerialNumber').attr('readonly', 'true');
+                            $('.deviceDetails').css("display", "block")
+                            $('.verification').css("display", "none")
+                            $('.finalRow').css("margin-bottom", "10px")
+                        }
+                        else {
+                            alert("Incorrect Verification Code!")
+                            $('#AddHarpoonDevice input').val("")
+                        }
+                    }
+                }
+            });
+        }
+
+        function CheckRequiredFeilds(){
+            if ($('#addSerialNumber').val().length != 0 && $('#verificationCode').val().length != 0 && $('#location').val() != "Select"  && $('#locationZone').val() != "Select"  && $('#dispColor').val() != "Select") {
+                $('#addSubmit').css("display", "block")
+            }
+            else {
+                $('#addSubmit').css("display", "none")
+            }
+        }
+
+
+        function deleteDevice() {
+            $('#yes').css("visibility", "visible")
+            $('#no').css("visibility", "visible")
+        }
+
+        function noclick() {
+            $('#yes').css("visibility", "hidden")
+            $('#no').css("visibility", "hidden")
+        }
+
+        function yesclick() {
+            $.ajax({
+                url: '@Url.Action("deleteDevice", "SettingsHarpoon")',
+                data: { value: $('#serial_number').val() },
+                type: 'POST',
+                success: function (data) {
+                    location.reload();
+                }
+            });
+
+        }
+
+        function clearAdd() {
+
+            $.ajax({
+                url: '@Url.Action("checkLocationExistance", "SettingsHarpoon")',
+                type: 'POST',
+                success: function (data) {
+                    if (data == "True") {
+                        $('#AddHarpoonDevice').modal()
+                        $('#AddHarpoonDevice input').val("")
+                    }
+                    else {
+                        $('#AddLocAlert').modal()
+                    }
+                }
+            });
+
+            /*
+             $("#addSerialNumber").val("");
+            $("#verificationCode").val("");
+            $("#location").val("Select");
+            $("#locationZone").val("Select");
+            $("#dispColor").val("Select");
+            $(".deviceDetails").css("display", "none")
+            $(".verification").css("display", "none")
+            $('#addSerialNumber').css("background-color", "white");
+            $('#addSerialNumber').attr('readonly', false);
+             */            
+        }
+
     </script>
+
 </body>
 
 </html>

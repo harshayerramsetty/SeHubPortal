@@ -12,11 +12,14 @@ namespace SeHubPortal.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class tbl_commercial_tire_manufacturers
+    public partial class tbl_Efficiancy_Technician_Commissions
     {
-        public string manufacturers { get; set; }
-        public Nullable<int> tread_tracker { get; set; }
-        public Nullable<int> fleetTVT { get; set; }
-        public byte[] brand_image { get; set; }
+        public int employee_id { get; set; }
+        public string loc_id { get; set; }
+        public string payroll_id { get; set; }
+        public double door_rate { get; set; }
+        public Nullable<double> commissionable_sales_due { get; set; }
+        public string commission_plan { get; set; }
+        public string commissions { get; set; }
     }
 }

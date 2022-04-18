@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - City Tire</title>
-    <link rel="shortcut icon" type="image/x-icon" href="~/Content/title_logo_2.png">
+    <title>@ViewBag.Title</title>
+    <link rel="shortcut icon" type="image/x-icon" href="~/Content/Harpoonn.png">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
@@ -14,10 +14,10 @@
     @*<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>*@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <style>
-        
+
         body {
-         overflow-x: hidden!important;
-         overflow-y: hidden;
+            overflow-x: hidden !important;
+            overflow-y: hidden;
         }
 
 
@@ -53,27 +53,26 @@
             box-shadow: none;
         }
 
-        #upload{
-            padding-left:10%
+        #upload {
+            padding-left: 10%
         }
-
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-md navbar-light bg-white" style="border:2px solid  #f0f2f5">
         @*<a href="#" class="navbar-brand">City Tire</a>*@
-        <img src="~/Content/Harpoon.png" style="height:90px;width:150px; padding-left:70px" class="navbar-brand" />
-        
+        <img id="harpoonMainLogo" src="~/Content/HarpoonLongg.png" style="height:90px;" class="navbar-brand" />
+
 
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav" id="TabLinks">
 
-                <a id="ManagementClicked" href="@Url.Action("Dashboard", "SettingsHarpoon")" style="margin-left: 20px;margin-right: 20px;padding: 10px;border-radius: 5px" class="text-center">
+                <a id="ManagementClicked" href="@Url.Action("TimeClockEvents", "ManagementHarpoon")" style="display:none; margin-left: 20px;margin-right: 20px;padding: 10px;border-radius: 5px" class="text-center">
                     <img src="~/Content/man.png" /><br />
                     <input type="button" id="managementBtn" class="btn btn-outline my-2 my-sm-0" style="visibility:visible;border-color:transparent;font-size:18px;color:black;" value="Management" />
                 </a>
 
-                <a id="SettingsClicked" href="@Url.Action("Employees", "SettingsHarpoon")" style="margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center">
+                <a id="SettingsClicked" href="@Url.Action("System", "SettingsHarpoon")" style="display:none; margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center">
 
                     <img style="height:20px;" src="~/Content/settings.png" /><br />
                     <input type="button" id="libraryBtn" class="btn btn-outline my-2 my-sm-0 settingsBtn" style="visibility:visible;border-color:transparent;font-size:18px;color:black;" value="Settings" />
@@ -81,8 +80,16 @@
 
             </div>
         </div>
-        <div class="flex-grow-0" id="profileBlock" style="padding:0px !important">
+        <div class="flex-grow-0" id="profileBlock" style="display:flex; align-items:center; width:270px; padding:0px !important">
 
+        </div>
+        <div style="display:flex; flex-direction:column">
+            <a style="float:right" href="@Url.Action("HarpoonLogin", "Login")" class="btn">
+                <img src="~/Content/power.png" />
+            </a>
+            <a style="float:right" data-toggle="modal" data-target="#ResetProfilePassword" class="btn">
+                <img style="width:30px" src="~/Content/profile.png" />
+            </a>
         </div>
 
         <div class="modal fade" id="upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -110,7 +117,36 @@
             </div>
         </div>
 
+
+
+        <div class="modal fade " id="ResetProfilePassword" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" id="editProfile" role="document">
+
+            </div>
+        </div>
+
+
+
+
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+        <script>
+            $.ajax({
+                url: '@Url.Action("ProfileBlock", "SettingsHarpoon")',
+                success: function (data) {
+                    $('#profileBlock').html(data)
+                }
+            });
+        </script>
+
+        <script>
+            $.ajax({
+                url: '@Url.Action("EditProfile", "Login")',
+                success: function (data) {
+                    $('#editProfile').html(data)
+                }
+            });
+        </script>
 
         <script>
 
@@ -131,23 +167,19 @@
                 readURL(this);
             });
 
-            
+
         </script>
 
 
 
-        <div>
-            <a style="float:right" href="@Url.Action("LogOut", "Main")" class="btn">
-                <img src="~/Content/power.png" />
-            </a>
-        </div>
+
     </nav>
     <div id="MainDiv">
         @RenderBody()
     </div>
     <script>
         $.ajax({
-            url: '@Url.Action("ProfileBlock", "Main")',
+            url: '@Url.Action("ProfileBlock", "SettingsHarpoon")',
             success: function (data) {
                 $('#profileBlock').html(data)
             }

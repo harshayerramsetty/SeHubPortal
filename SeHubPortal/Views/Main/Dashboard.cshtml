@@ -174,25 +174,25 @@
     </style>
 </head>
 <body>
-    <div class="row heading" style="margin-right:15px">
-        <div class="col">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
-                    <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Main")">Main</a></li>
-                    <li class="breadcrumb-item " aria-current="page">Dashboard</li>
-                </ol>
-            </nav>
+    <div class="row heading">
+        <div class="col" style="margin:0px 5px 15px 15px; padding:10px; background-color:white">
+
+            <div style="display: flex; justify-content: space-between; align-items: center">
+                <div>
+                    <a href="@Url.Action("Dashboard", "Main")">Main </a>/ Dashboard
+                </div>
+            </div>
+
         </div>
-        <button type="button" id="clickThis" class="btn" style="margin-bottom: 14px;">
-            <i class="fa fa-bars" style="        font-size: 25px
-"></i>
+        <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+            <i class="fa fa-bars" style="font-size:25px"></i>
             <span class="sr-only">Toggle Menu</span>
         </button>
     </div>
 
-    <div class="row" style="padding:0px 15px 15px 15px">
-        <div class="col-md-12" style=" text-align: center">
-            <div class="card" style="height:366px;">
+    <div class="row" style="padding:0px 25px 15px 15px">
+        <div class="col-md-12 col-lg-12" style=" text-align: center">
+            <div class="card" style="height:366px; width:100%">
                 <div class="card-header">
                     <h6>Weekly Events</h6>
                 </div>
@@ -203,23 +203,6 @@
         </div>
     </div>
 
-    <div class="row" style="        text-align: center;
-        margin: 0px 23px 15px 15px;
-        height: 420px;
-        width: 1640px">
-
-
-    </div>
-
-
-
-
-    <div class="row" style="padding:0px 15px 15px 15px;">
-        <div class="row" style="padding:0px 15px 15px 15px; ">
-            @*padding:15px 15px 15px 15px; background-color:white*@
-        </div>
-
-    </div>
 
     <div id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
@@ -241,6 +224,7 @@
         </div>
     </div>
 
+
     <script>
         $(document).ready(function () {
             $('#clickThis').on('click', function () {
@@ -249,13 +233,14 @@
         });
     </script>
 
+
     @section Scripts{
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
 
         <script>
             $(document).ready(function () {
-
                 var events = [];
                 $.ajax({
                     type: "GET",
@@ -290,7 +275,7 @@
                         GenerateCalender(events);
                     },
                     error: function (error) {
-                        alert('failed');
+                        //alert('failed');
                     }
                 })
 
@@ -320,7 +305,7 @@
                         GenerateCalender(events);
                     },
                     error: function (error) {
-                        alert('failed');
+                        //alert('failed');
                     }
                 })
 
@@ -373,7 +358,6 @@
                 }
                 $("#basicWeek").click();
             })
-
         </script>
     }
 

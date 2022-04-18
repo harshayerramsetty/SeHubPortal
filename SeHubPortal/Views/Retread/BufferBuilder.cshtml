@@ -142,7 +142,7 @@
         }
 
         #StatusModal {
-            padding-right: 15%
+            padding-right: 20%
         }
 
         #TreadModal {
@@ -150,11 +150,11 @@
         }
 
         #SizesModal {
-            padding-right: 15%
+            padding-right: 10%
         }
 
         #ShiptoModal {
-            padding-right: 15%
+            padding-right: 4%
         }
 
         #BrandModel {
@@ -174,7 +174,7 @@
         <div class="col-md-12">
             <div class="row" style="padding:10px 30px 10px 30px">
                 <div class="col-md-4" style="padding:10px; background-color:white;">
-                    <a href="@Url.Action("Plant", "Retread")">Retread Plant</a> / Buffer Builder
+                    <a href="@Url.Action("Plant", "Retread")">Retread Plant</a> / @ViewData["Station"]
                 </div>
                 <div class="col-md-4 text-center" style="padding:10px; background-color:white;">
                     @if (Model.paneType != "barcode")
@@ -299,15 +299,15 @@
                                                         <div class="col-lg-2 text-left" style="padding:0px 15px 0px 0px">
                                                             @if (Model.barcodeInfo.final_inspection_result != null)
                                                             {
-                                                                <input type="submit" disabled class="btn btn-success" style="width:100%; font-weight:bold; font-size:25px;" name="name" value="Submit" />
+                                                                <input id="SubmitButtons" disabled type="submit" class="btn btn-success" style="width:100%; font-weight:bold; font-size:25px;" name="name" value="Submit" />
                                                             }
                                                             else
                                                             {
-                                                                <input type="submit" class="btn btn-success" style="width:100%; font-weight:bold; font-size:25px;" name="name" value="Submit" />
+                                                                <input id="SubmitButton" type="submit" disabled class="btn btn-secondary" style="width:100%; font-weight:bold; font-size:25px;" name="name" value="Submit" />
                                                             }
                                                         </div>
                                                         <div class="col-lg-2 text-left" style="padding:0px 15px 0px 0px">
-                                                            <input type="button" class="btn btn-danger" style="width:100%; font-weight:bold; font-size:25px;" name="name" value="Cancel" />
+                                                            <input onclick="location.reload()" type="button" class="btn btn-danger" style="width:100%; font-weight:bold; font-size:25px;" name="name" value="Cancel" />
                                                         </div>
                                                     </div>
                                                     <div class="row" style="padding-bottom:0px; padding-left:15px; padding-right:15px">
@@ -342,16 +342,16 @@
                                                             <tbody style="font-size:20px; font-weight:bold">
                                                                 <tr>
                                                                     <td style="padding:3px">
-                                                                        @Html.EditorFor(m => m.barcodeInfo.retread_design, new { htmlAttributes = new { @id = "treadInput", @style = "width:100%; font-weight:bold; background-color:transparent; text-align:center; border:none; outline:none" } })
+                                                                        @Html.EditorFor(m => m.barcodeInfo.retread_design, new { htmlAttributes = new { @readonly = true, @id = "treadInput", @style = "width:100%; font-weight:bold; background-color:transparent; text-align:center; border:none; outline:none" } })
 
                                                                     </td>
                                                                     <td style="padding:3px">
-                                                                        @Html.EditorFor(m => m.barcodeInfo.casing_size, new { htmlAttributes = new { @id = "sizeInput", @style = "width:100%; font-weight:bold; background-color:transparent; text-align:center; border:none; outline:none" } })
+                                                                        @Html.EditorFor(m => m.barcodeInfo.casing_size, new { htmlAttributes = new { @readonly = true, @id = "sizeInput", @style = "width:100%; font-weight:bold; background-color:transparent; text-align:center; border:none; outline:none" } })
 
                                                                     </td>
                                                                     <td style="padding:3px">
 
-                                                                        @Html.EditorFor(m => m.barcodeInfo.casing_brand, new { htmlAttributes = new { @id = "brandInput", @style = "width:100%; font-weight:bold; background-color:transparent; text-align:center; border:none; outline:none" } })
+                                                                        @Html.EditorFor(m => m.barcodeInfo.casing_brand, new { htmlAttributes = new { @readonly = true, @id = "brandInput", @style = "width:100%; font-weight:bold; background-color:transparent; text-align:center; border:none; outline:none" } })
 
                                                                     </td>
                                                                 </tr>
@@ -378,7 +378,7 @@
                                                                         @Model.barcodeInfo.serial_dot
                                                                     </td>
                                                                     <td style="padding:3px">
-                                                                        @Html.EditorFor(m => m.barcodeInfo.ship_to_location, new { htmlAttributes = new { @id = "shiptoInput", @style = "font-weight:bold; background-color:transparent; text-align:center; border:none; outline:none" } })
+                                                                        @Html.EditorFor(m => m.barcodeInfo.ship_to_location, new { htmlAttributes = new { @readonly = true, @id = "shiptoInput", @style = "font-weight:bold; background-color:transparent; text-align:center; border:none; outline:none" } })
                                                                     </td>
                                                                     <td style="padding:3px">
                                                                         @Model.barcodeInfo.line_code
@@ -395,9 +395,7 @@
                                                                 </span>
                                                             </div>
                                                             <div class="row">
-                                                                <textarea rows="7" placeholder="Comments" style="width:100%">
-                                                                    @Model.workOrderInfo.comments
-                                                                </textarea>
+                                                                @Html.TextAreaFor(m => m.barcodeInfo.comments, new { @style = "width:100%; height:170px", @oninput = "$('#SubmitButton').removeAttr('disabled').removeClass('btn-secondary').addClass('btn-success')" })
                                                             </div>
                                                         </div>
                                                     </div>
@@ -407,74 +405,137 @@
                                         </div>
                                         <div class="row">
 
-                                            <div class="col-lg-12" style="padding:0px 20px 0px 0px;">
+                                            <div class="col-lg-12" style="padding:2px 20px 0px 0px;">
 
-                                                <div class="row" style="margin:10px 0px 10px 0px">
-                                                    <div class="col-lg-2 text-center">
-                                                        <img style="width:40px; margin-top:10px" src="~/Content/NDT.png" />
-                                                    </div>
-                                                    <div class="col-lg-2 text-center">
-                                                        <img style="width:40px; margin-top:10px" src="~/Content/Buffer.png" />
-                                                    </div>
-                                                    <div class="col-lg-2 text-center">
-                                                        <img style="width:55px;" src="~/Content/Extensions.png" />
-                                                    </div>
-                                                    <div class="col-lg-2 text-center">
-                                                        <img style="width:70px; margin-top:15px" src="~/Content/Builder.png" />
-                                                    </div>
-                                                    <div class="col-lg-2 text-center">
-                                                        <img style="width:75px; margin-top:20px" src="~/Content/CuringChamber.png" />
-                                                    </div>
-                                                    <div class="col-lg-2 text-center">
-                                                        <img style="width:60px; margin-top:10px" src="~/Content/Final.png" />
-                                                    </div>
+                                                <div class="row" style="display:flex; margin:10px 0px 10px 0px; justify-content:space-evenly">
+                                                    <img style="object-fit:contain; width:40px; margin-top:10px" src="~/Content/NDT.png" />
+                                                    <img style="object-fit:contain; width:55px; margin-top:10px" src="~/Content/Prilim.png" />
+                                                    <img style="object-fit:contain; width:40px; margin-top:10px" src="~/Content/Buffer.png" />
+                                                    <img style="object-fit:contain; width:55px;" src="~/Content/Extensions.png" />
+                                                    <img style="object-fit:contain; width:65px; margin-top:15px" src="~/Content/Builder.png" />
+                                                    <img style="object-fit:contain; width:75px; margin-top:20px" src="~/Content/CuringChamber.png" />
+                                                    <img style="object-fit:contain; width:60px; margin-top:10px" src="~/Content/Final.png" />
                                                 </div>
 
                                                 @{
                                                     string count = "0%";
-                                                    string color = "red";
+                                                    string color = "green";
 
                                                     if (Model.barcodeInfo.preliminary_inspection_result == "GOOD" && Model.barcodeInfo.ndt_machine_result != "GOOD" && Model.barcodeInfo.buffer_builder_result != "GOOD" && Model.barcodeInfo.final_inspection_result != "GOOD")
                                                     {
                                                         count = "16.6%";
-                                                        color = "red";
                                                     }
                                                     else if (Model.barcodeInfo.preliminary_inspection_result == "GOOD" && Model.barcodeInfo.ndt_machine_result == "GOOD" && Model.barcodeInfo.buffer_builder_result != "GOOD" && Model.barcodeInfo.final_inspection_result != "GOOD")
                                                     {
-                                                        count = "33.33%";
-                                                        color = "red";
+                                                        count = "28%";
                                                     }
                                                     else if (Model.barcodeInfo.preliminary_inspection_result == "GOOD" && Model.barcodeInfo.ndt_machine_result == "GOOD" && Model.barcodeInfo.buffer_builder_result == "GOOD" && Model.barcodeInfo.final_inspection_result != "GOOD")
                                                     {
-                                                        count = "66.6%";
-                                                        color = "red";
+                                                        count = "68%";
                                                     }
                                                     else if (Model.barcodeInfo.preliminary_inspection_result == "GOOD" && Model.barcodeInfo.ndt_machine_result == "GOOD" && Model.barcodeInfo.buffer_builder_result == "GOOD" && Model.barcodeInfo.final_inspection_result == "GOOD")
                                                     {
                                                         count = "100%";
+                                                    }
+
+                                                    if (Model.barcodeInfo.preliminary_inspection_result != null & Model.barcodeInfo.preliminary_inspection_result != "GOOD")
+                                                    {
+                                                        color = "green";
+                                                    }
+
+                                                    if (Model.barcodeInfo.final_inspection_result != null && Model.barcodeInfo.final_inspection_result == "GOOD")
+                                                    {
+                                                        color = "green";
+                                                    }
+                                                    else if (Model.barcodeInfo.buffer_builder_result != null && Model.barcodeInfo.buffer_builder_result == "GOOD")
+                                                    {
+                                                        color = "green";
+                                                    }
+                                                    else if (Model.barcodeInfo.ndt_machine_result != null && Model.barcodeInfo.ndt_machine_result == "GOOD")
+                                                    {
                                                         color = "green";
                                                     }
 
                                                     if (color == "green")
                                                     {
-                                                        <div class="progress" style="width:100%; height:35px">
+                                                        <div class="progress" style="width:100%; height:35px;">
                                                             <div class="progress-bar progress-bar-striped bg-success" role="progressbar" aria-valuenow="70"
                                                                  aria-valuemin="0" aria-valuemax="100" style="width:@count">
                                                                 <div class="row">
-                                                                    <div class="col-lg-2 text-center">
-                                                                        <b>@Model.barcodeInfo.preliminary_inspection_date.Value.ToString("MMM dd, yyyy")</b>
-                                                                    </div>
-                                                                    <div class="col-lg-2 text-center">
-                                                                        <b>@Model.barcodeInfo.ndt_machine_date.Value.ToString("MMM dd, yyyy")</b>
-                                                                    </div>
-                                                                    <div class="col-lg-2"></div>
-                                                                    <div class="col-lg-2 text-center">
-                                                                        <b>@Model.barcodeInfo.buffer_builder_date.Value.ToString("MMM dd, yyyy")</b>
-                                                                    </div>
-                                                                    <div class="col-lg-2"></div>
-                                                                    <div class="col-lg-2 text-center">
-                                                                        <b>@Model.barcodeInfo.final_inspection_date.Value.ToString("MMM dd, yyyy")</b>
-                                                                    </div>
+                                                                    @if (count == "16.6%")
+                                                                    {
+                                                                        <div class="col-lg-12">
+                                                                            <b>
+                                                                                @if (Model.barcodeInfo.preliminary_inspection_date.HasValue)
+                                                                                {
+                                                                                    @Model.barcodeInfo.preliminary_inspection_date.Value.ToString("MMM dd, yyyy")
+                                                                                }
+                                                                            </b>
+                                                                        </div>
+                                                                    }
+                                                                    else if (count == "28%")
+                                                                    {
+                                                                        <div class="col-lg-6">
+                                                                            <b>
+                                                                                @if (Model.barcodeInfo.preliminary_inspection_date.HasValue)
+                                                                                {
+                                                                                    @Model.barcodeInfo.preliminary_inspection_date.Value.ToString("MMM dd, yyyy")
+                                                                                }
+                                                                            </b>
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <b>
+                                                                                @if (Model.barcodeInfo.ndt_machine_date.HasValue)
+                                                                                {
+                                                                                    @Model.barcodeInfo.ndt_machine_date.Value.ToString("MMM dd, yyyy")
+                                                                                }
+                                                                            </b>
+                                                                        </div>
+                                                                    }
+                                                                    else if (count == "68%")
+                                                                    {
+                                                                        <div class="col-lg-7">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-5 text-right">
+                                                                                    <b>
+                                                                                        @if (Model.barcodeInfo.preliminary_inspection_date.HasValue)
+                                                                                        {
+                                                                                            @Model.barcodeInfo.preliminary_inspection_date.Value.ToString("MMM dd, yyyy")
+                                                                                        }
+                                                                                    </b>
+                                                                                </div>
+                                                                                <div class="col-lg-5 text-left">
+                                                                                    <b>
+                                                                                        @if (Model.barcodeInfo.ndt_machine_date.HasValue)
+                                                                                        {
+                                                                                            @Model.barcodeInfo.ndt_machine_date.Value.ToString("MMM dd, yyyy")
+                                                                                        }
+                                                                                    </b>
+                                                                                </div>
+                                                                                <div class="col-lg-2"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-2"></div>
+                                                                        <div class="col-lg-3">
+                                                                            <b>
+                                                                                @if (Model.barcodeInfo.buffer_builder_date.HasValue)
+                                                                                {
+                                                                                    @Model.barcodeInfo.buffer_builder_date.Value.ToString("MMM dd, yyyy")
+                                                                                }
+                                                                            </b>
+                                                                        </div>
+                                                                    }
+                                                                    else if (count == "100%")
+                                                                    {
+                                                                        <div class="col-lg-12">
+                                                                            <div class="row" style="display:flex">
+                                                                                <b style="margin-left:40px">@Model.barcodeInfo.preliminary_inspection_date.Value.ToString("MMM dd, yyyy")</b>
+                                                                                <b style="margin-left:30px">@Model.barcodeInfo.ndt_machine_date.Value.ToString("MMM dd, yyyy")</b>
+                                                                                <b style="margin-left:210px">@Model.barcodeInfo.buffer_builder_date.Value.ToString("MMM dd, yyyy")</b>
+                                                                                <b style="margin-left:140px">@Model.barcodeInfo.final_inspection_date.Value.ToString("MMM dd, yyyy")</b>
+                                                                            </div>
+                                                                        </div>
+                                                                    }
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -496,7 +557,7 @@
                                                                             </b>
                                                                         </div>
                                                                     }
-                                                                    else if (count == "33.33%")
+                                                                    else if (count == "28%")
                                                                     {
                                                                         <div class="col-lg-6">
                                                                             <b>
@@ -515,25 +576,30 @@
                                                                             </b>
                                                                         </div>
                                                                     }
-                                                                    else if (count == "66.6%")
+                                                                    else if (count == "68%")
                                                                     {
-                                                                        <div class="col-lg-3">
-                                                                            <b>
-                                                                                @if (Model.barcodeInfo.preliminary_inspection_date.HasValue)
-                                                                                {
-                                                                                    @Model.barcodeInfo.preliminary_inspection_date.Value.ToString("MMM dd, yyyy")
-                                                                                }
-                                                                            </b>
+                                                                        <div class="col-lg-7">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-5 text-right">
+                                                                                    <b>
+                                                                                        @if (Model.barcodeInfo.preliminary_inspection_date.HasValue)
+                                                                                        {
+                                                                                            @Model.barcodeInfo.preliminary_inspection_date.Value.ToString("MMM dd, yyyy")
+                                                                                        }
+                                                                                    </b>
+                                                                                </div>
+                                                                                <div class="col-lg-5 text-left">
+                                                                                    <b>
+                                                                                        @if (Model.barcodeInfo.ndt_machine_date.HasValue)
+                                                                                        {
+                                                                                            @Model.barcodeInfo.ndt_machine_date.Value.ToString("MMM dd, yyyy")
+                                                                                        }
+                                                                                    </b>
+                                                                                </div>
+                                                                                <div class="col-lg-2"></div>
+                                                                            </div>
                                                                         </div>
-                                                                        <div class="col-lg-3">
-                                                                            <b>
-                                                                                @if (Model.barcodeInfo.ndt_machine_date.HasValue)
-                                                                                {
-                                                                                    @Model.barcodeInfo.ndt_machine_date.Value.ToString("MMM dd, yyyy")
-                                                                                }
-                                                                            </b>
-                                                                        </div>
-                                                                        <div class="col-lg-3"></div>
+                                                                        <div class="col-lg-2"></div>
                                                                         <div class="col-lg-3">
                                                                             <b>
                                                                                 @if (Model.barcodeInfo.buffer_builder_date.HasValue)
@@ -543,39 +609,15 @@
                                                                             </b>
                                                                         </div>
                                                                     }
-                                                                    else if (count == "75%")
+                                                                    else if (count == "100%")
                                                                     {
-                                                                        <div class="col-lg-3">
-                                                                            <b>
-                                                                                @if (Model.barcodeInfo.preliminary_inspection_date.HasValue)
-                                                                                {
-                                                                                    @Model.barcodeInfo.preliminary_inspection_date.Value.ToString("MMM dd, yyyy")
-                                                                                }
-                                                                            </b>
-                                                                        </div>
-                                                                        <div class="col-lg-3">
-                                                                            <b>
-                                                                                @if (Model.barcodeInfo.ndt_machine_date.HasValue)
-                                                                                {
-                                                                                    @Model.barcodeInfo.ndt_machine_date.Value.ToString("MMM dd, yyyy")
-                                                                                }
-                                                                            </b>
-                                                                        </div>
-                                                                        <div class="col-lg-3">
-                                                                            <b>
-                                                                                @if (Model.barcodeInfo.buffer_builder_date.HasValue)
-                                                                                {
-                                                                                    @Model.barcodeInfo.buffer_builder_date.Value.ToString("MMM dd, yyyy")
-                                                                                }
-                                                                            </b>
-                                                                        </div>
-                                                                        <div class="col-lg-3">
-                                                                            <b>
-                                                                                @if (Model.barcodeInfo.final_inspection_date.HasValue)
-                                                                                {
-                                                                                    @Model.barcodeInfo.final_inspection_date.Value.ToString("MMM dd, yyyy")
-                                                                                }
-                                                                            </b>
+                                                                        <div class="col-lg-12">
+                                                                            <div class="row" style="display:flex">
+                                                                                <b style="margin-left:40px">@Model.barcodeInfo.preliminary_inspection_date.Value.ToString("MMM dd, yyyy")</b>
+                                                                                <b style="margin-left:30px">@Model.barcodeInfo.ndt_machine_date.Value.ToString("MMM dd, yyyy")</b>
+                                                                                <b style="margin-left:210px">@Model.barcodeInfo.buffer_builder_date.Value.ToString("MMM dd, yyyy")</b>
+                                                                                <b style="margin-left:140px">@Model.barcodeInfo.final_inspection_date.Value.ToString("MMM dd, yyyy")</b>
+                                                                            </div>
                                                                         </div>
                                                                     }
                                                                 </div>
@@ -589,14 +631,14 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-2">
-                                        <div class="row" style="margin-bottom:10px">
 
-                                            @if (Model.barcodeInfo.final_inspection_date != null)
+                                        <div class="row" style="margin-bottom:10px">
+                                            @if (Model.status == 1)
                                             {
-                                                <button disabled style="outline: none;border-radius: 5px">
+                                                <button onclick="$('#tempStatus').css('display', 'none'); $('#tempStatus').css('display', 'none'); $('.commonFailureCodes').css('font-weight', 'normal'); $('#'+$('#statusInput').val()).css('border', '3px solid #007bff')" data-toggle="modal" data-target="#StatusModal" style="outline: none;border-radius: 5px">
                                                     <div class="row">
                                                         <div class="col-lg-12" style="padding-bottom:0px">
-                                                            <img class="btn" src="~/Content/status.png" style="width:80%; height:100%" />
+                                                            <img class="btn" src="~/Content/status.png" style="width:52%; height:100%" />
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -608,10 +650,10 @@
                                             }
                                             else
                                             {
-                                                <button data-toggle="modal" data-target="#StatusModal" style="outline: none;border-radius: 5px">
+                                                <button disabled onclick="$('#tempStatus').css('display', 'none'); $('#tempStatus').css('display', 'none'); $('.commonFailureCodes').css('font-weight', 'normal'); $('#'+$('#statusInput').val()).css('border', '3px solid #007bff')" data-toggle="modal" data-target="#StatusModal" style="outline: none;border-radius: 5px">
                                                     <div class="row">
                                                         <div class="col-lg-12" style="padding-bottom:0px">
-                                                            <img class="btn" src="~/Content/status.png" style="width:80%; height:100%" />
+                                                            <img class="btn" src="~/Content/status.png" style="width:52%; height:100%" />
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -622,17 +664,15 @@
                                                 </button>
                                             }
 
-                                            
                                         </div>
 
                                         <div class="row" style="margin-bottom:10px">
-                                            @if (Model.barcodeInfo.final_inspection_date != null)
+                                            @if (Model.tread == 1)
                                             {
-
-                                                <button disabled style="outline: none;border-radius: 5px">
+                                                <button onclick="$('#tempTread').css('display', 'none'); $('.commonTreadClass').css('border', '2px solid dimgray').css('color', 'dimgray').css('background-color', 'transparent'); $('#'+$('#treadInput').val()).css('background-color', '#007bff').css('color', 'white').css('border', 'none')" data-toggle="modal" data-target="#TreadModal" style="outline: none;border-radius: 5px">
                                                     <div class="row">
                                                         <div class="col-lg-12" style="padding-bottom:0px">
-                                                            <img class="btn" src="~/Content/Ctread.png" style="width:80%; height:100%" />
+                                                            <img class="btn" src="~/Content/Ctread.png" style="width:52%; height:100%" />
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -641,15 +681,13 @@
                                                         </div>
                                                     </div>
                                                 </button>
-
                                             }
                                             else
                                             {
-
-                                                <button data-toggle="modal" data-target="#TreadModal" style="outline: none;border-radius: 5px">
+                                                <button disabled onclick="$('#tempTread').css('display', 'none'); $('.commonTreadClass').css('border', '2px solid dimgray').css('color', 'dimgray').css('background-color', 'transparent'); $('#'+$('#treadInput').val()).css('background-color', '#007bff').css('color', 'white').css('border', 'none')" data-toggle="modal" data-target="#TreadModal" style="outline: none;border-radius: 5px">
                                                     <div class="row">
                                                         <div class="col-lg-12" style="padding-bottom:0px">
-                                                            <img class="btn" src="~/Content/Ctread.png" style="width:80%; height:100%" />
+                                                            <img class="btn" src="~/Content/Ctread.png" style="width:52%; height:100%" />
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -658,19 +696,17 @@
                                                         </div>
                                                     </div>
                                                 </button>
-
                                             }
 
                                         </div>
 
                                         <div class="row" style="margin-bottom:10px">
-                                            @if (Model.barcodeInfo.final_inspection_date != null)
+                                            @if (Model.size == 1)
                                             {
-
-                                                <button disabled style="outline: none;border-radius: 5px">
+                                                <button onclick="$('#tempSize').css('display', 'none'); $('.commonSizeClass').css('border', '2px solid dimgray').css('color', 'dimgray').css('background-color', 'transparent'); preSizeSelection()" data-toggle="modal" data-target="#SizesModal" style="outline: none;border-radius: 5px">
                                                     <div class="row">
                                                         <div class="col-lg-12" style="padding-bottom:0px">
-                                                            <img class="btn" src="~/Content/csize.png" style="width:80%; height:100%" />
+                                                            <img class="btn" src="~/Content/csize.png" style="width:52%; height:100%" />
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -679,15 +715,13 @@
                                                         </div>
                                                     </div>
                                                 </button>
-
                                             }
                                             else
                                             {
-
-                                                <button  data-toggle="modal" data-target="#SizesModal" style="outline: none;border-radius: 5px">
+                                                <button disabled onclick="$('#tempSize').css('display', 'none'); $('.commonSizeClass').css('border', '2px solid dimgray').css('color', 'dimgray').css('background-color', 'transparent'); preSizeSelection()" data-toggle="modal" data-target="#SizesModal" style="outline: none;border-radius: 5px">
                                                     <div class="row">
                                                         <div class="col-lg-12" style="padding-bottom:0px">
-                                                            <img class="btn" src="~/Content/csize.png" style="width:80%; height:100%" />
+                                                            <img class="btn" src="~/Content/csize.png" style="width:52%; height:100%" />
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -701,13 +735,12 @@
                                         </div>
 
                                         <div class="row" style="margin-bottom:10px">
-                                            @if (Model.barcodeInfo.final_inspection_date != null)
+                                            @if (Model.brand == 1)
                                             {
-
-                                                <button disabled style="outline: none;border-radius: 5px">
+                                                <button onclick="$('#tempBrand').css('display', 'none'); $('.commonBrandClass').css('border', '2px solid dimgray'); $('#'+$('#brandInput').val()).css('border', '10px solid #007bff')" data-toggle="modal" data-target="#BrandModel" style="outline: none;border-radius: 5px">
                                                     <div class="row">
                                                         <div class="col-lg-12" style="padding-bottom:0px">
-                                                            <img class="btn" src="~/Content/brand.png" style="width:80%; height:100%" />
+                                                            <img class="btn" src="~/Content/brand.png" style="width:52%; height:100%" />
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -716,15 +749,13 @@
                                                         </div>
                                                     </div>
                                                 </button>
-
                                             }
                                             else
                                             {
-
-                                                <button  data-toggle="modal" data-target="#BrandModel" style="outline: none;border-radius: 5px">
+                                                <button disabled onclick="$('#tempBrand').css('display', 'none'); $('.commonBrandClass').css('border', '2px solid dimgray'); $('#'+$('#brandInput').val()).css('border', '10px solid #007bff')" data-toggle="modal" data-target="#BrandModel" style="outline: none;border-radius: 5px">
                                                     <div class="row">
                                                         <div class="col-lg-12" style="padding-bottom:0px">
-                                                            <img class="btn" src="~/Content/brand.png" style="width:80%; height:100%" />
+                                                            <img class="btn" src="~/Content/brand.png" style="width:52%; height:100%" />
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -733,18 +764,17 @@
                                                         </div>
                                                     </div>
                                                 </button>
-
                                             }
 
                                         </div>
 
-                                        <div class="row">
-                                            @if (Model.barcodeInfo.final_inspection_date != null)
+                                        <div class="row" style="margin-bottom:10px">
+                                            @if (Model.shipto == 1)
                                             {
-                                                <button disabled style="outline: none;border-radius: 5px">
+                                                <button onclick="$('#tempShip').css('display', 'none'); $('.commonShipText').css('font-weight', 'normal'); $('.commonShipClass').css('bordor', '2px solid dimgray').css('background-color', 'transparent').css('color', 'dimgray'); $('#'+$('#shiptoInput').val()).css('bordor', 'none').css('background-color', '#007bff').css('color', 'white')" data-toggle="modal" data-target="#ShiptoModal" style="outline: none;border-radius: 5px">
                                                     <div class="row">
                                                         <div class="col-lg-12" style="padding-bottom:0px">
-                                                            <img class="btn" src="~/Content/shipto.png" style="width:80%; height:100%" />
+                                                            <img class="btn" src="~/Content/shipto.png" style="width:52%; height:100%" />
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -756,11 +786,10 @@
                                             }
                                             else
                                             {
-
-                                                <button  data-toggle="modal" data-target="#ShiptoModal" style="outline: none;border-radius: 5px">
+                                                <button disabled onclick="$('#tempShip').css('display', 'none'); $('.commonShipText').css('font-weight', 'normal'); $('.commonShipClass').css('bordor', '2px solid dimgray').css('background-color', 'transparent').css('color', 'dimgray'); $('#'+$('#shiptoInput').val()).css('bordor', 'none').css('background-color', '#007bff').css('color', 'white')" data-toggle="modal" data-target="#ShiptoModal" style="outline: none;border-radius: 5px">
                                                     <div class="row">
                                                         <div class="col-lg-12" style="padding-bottom:0px">
-                                                            <img class="btn" src="~/Content/shipto.png" style="width:80%; height:100%" />
+                                                            <img class="btn" src="~/Content/shipto.png" style="width:52%; height:100%" />
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -769,11 +798,81 @@
                                                         </div>
                                                     </div>
                                                 </button>
-
                                             }
 
                                         </div>
 
+                                        <div class="row" style="margin-bottom:10px">
+
+                                            @if (Model.consumables == 1)
+                                            {
+                                                <button data-toggle="modal" data-target="#" style="outline: none;border-radius: 5px">
+                                                    <div class="row">
+                                                        <div class="col-lg-12" style="padding-bottom:0px">
+                                                            <img class="btn" src="~/Content/Consumables.png" style="width:52%; height:100%" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-12 text-center" style="padding-top:0px">
+                                                            <b>Consumables</b>
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button disabled data-toggle="modal" data-target="#" style="outline: none;border-radius: 5px">
+                                                    <div class="row">
+                                                        <div class="col-lg-12" style="padding-bottom:0px">
+                                                            <img class="btn" src="~/Content/Consumables.png" style="width:52%; height:100%" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-12 text-center" style="padding-top:0px">
+                                                            <b>Consumables</b>
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            }
+
+
+                                        </div>
+
+                                        <div class="row" style="margin-bottom:10px">
+
+                                            @if (Model.reprint == 1)
+                                            {
+                                                <button style="outline: none;border-radius: 5px">
+                                                    <div class="row">
+                                                        <div class="col-lg-12" style="padding-bottom:0px">
+                                                            <img class="btn" src="~/Content/reprint.png" style="width:52%; height:100%" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-12 text-center" style="padding-top:0px">
+                                                            <b>Re Print</b>
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button disabled style="outline: none;border-radius: 5px">
+                                                    <div class="row">
+                                                        <div class="col-lg-12" style="padding-bottom:0px">
+                                                            <img class="btn" src="~/Content/reprint.png" style="width:52%; height:100%; opacity:0.2" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-12 text-center" style="padding-top:0px">
+                                                            <b>Re Print</b>
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            }
+
+
+                                        </div>
 
                                     </div>
                                 </div>
@@ -781,23 +880,47 @@
                             </div>
                         </div>
 
+                        @if (Model.barcodeInfo.line_code == 9)
+                        {
+                            <div style="top:0px; position:absolute; background-color:white; width:100%; height:100%; opacity:0.5">
+
+                            </div>
+                            <JavaBlink style="padding-right:200px">
+                                <h1 style="color:#007bff; font-size:100px; font-weight:bold; transform: rotate(-45deg); position:absolute; top:40%; left:15%">
+                                    Scrap Casing
+                                </h1>
+                            </JavaBlink>
+
+                        }
+                        else if (Model.barcodeInfo.ndt_machine_date == null && Model.barcodeInfo.ndt_machine_result == null)
+                        {
+                            <div style="top:0px; position:absolute; background-color:white; width:100%; height:100%; opacity:0.5">
+
+                            </div>
+                            <JavaBlink style="padding-right:200px">
+                                <h1 style="color:#007bff; font-size:60px; font-weight:bold; transform: rotate(-45deg); position:absolute; top:35%; left:5%">
+                                    Work Station Skipped - please inspect casing at NDT-Station
+                                </h1>
+                            </JavaBlink>
+
+                        }
                     </div>
                     <div class="col-lg-3"></div>
                 }
                 else
                 {
-                    <div id="mouseClick" class="col-md-12 text-center" style="padding-top:8%">
+                    <div id="mouseClick" class="col-md-12 text-center" style="padding-top:5%">
 
                         <div class="row">
-                            <div class="card shadow-lg" style="margin-left:auto; margin-right:auto; width:260px;" type="button">
-                                <div class="card-body text-center" style="height:338px; margin-left:auto; margin-right:auto; margin-top:20px; padding-top:40px">
-                                    <img src="~/Content/Buffer.png" style="margin-bottom:30px; width:150px;">
+                            <div class="card shadow-lg" style="margin-left:auto; margin-right:auto; width:300px; height:400px" type="button">
+                                <div class="card-body text-center" style="display:flex; flex-direction:column; align-items:center; height:338px; margin-left:auto; margin-right:auto; margin-top:15px; padding-top:40px">
+                                    <img src="~/Content/Buffer.png" style="margin-bottom:40px; width:180px;">
                                     <h3 style="font-weight:bold; color:black">Buffer Station</h3>
                                 </div>
                             </div>
                         </div>
 
-                        <JavaBlink><p style="margin-top:30px; font-weight:bold ; font-size:40px ; color:dimgray">SCAN BARCODE TO START</p></JavaBlink>
+                        <JavaBlink class="blinkClass"><p style="margin-top:60px; font-weight:bold ; font-size:40px ; color:dimgray">SCAN BARCODE TO START</p></JavaBlink>
 
                         @using (Html.BeginForm("BufferBuilderBarcode", "Retread", FormMethod.Post, new { htmlAttributes = new { @autocomplete = "off" } }))
                         {
@@ -956,9 +1079,9 @@
 
     <div class="modal fade " data-backdrop="static" id="StatusModal" tabindex="-1" role="dialog" aria-labelledby="IncorrectBarcodeLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content " style="width:800px">
-                <div class="modal-header" style="padding: 10px">
-                    <h5 class="modal-title" style="color:black"><strong>Status</strong></h5>
+            <div class="modal-content " style="width:900px">
+                <div class="modal-header text-center" style="padding: 10px">
+                    <h3 class="modal-title" style="color:black; margin-left:auto; margin-right:auto"><strong>Station Inspection Result</strong></h3>
                 </div>
                 <div class="modal-body example" style="height:700px; overflow-y:auto">
                     @if (Model.paneType == "barcode")
@@ -966,40 +1089,30 @@
 
                         <div class="row" style="margin-bottom:5px">
 
-                            <div class="col-md-1 text-right" style="padding-top:11px; padding-right:0px">
-                                <input style="width:25px; height:25px;" onclick="StatusInfo(this.value)" value="GOOD" type="radio" name="Status">
-                            </div>
-                            <div class="col-md-2">
-                                <input class="text-success" style="font-size:30px; font-weight:bold; width:100px; border:none; outline:none" type="text" readonly name="name" value="GOOD" />
+                            <div class="col-md-3 text-center">
+                                <button id="GOOD" class="btn commonStatusClass" onclick="SaveToTempStatus(this.value)" style="background-color:transparent; text-align:center; color:forestgreen; padding-left:10px; font-size:30px;font-weight:bold; width:150px; border:none" value="GOOD">GOOD</button>
                             </div>
                             <div class="col-md-8"></div>
-
-
-
 
                         </div>
 
                         foreach (var code in Model.FailureCodes)
                         {
                             <div class="row" style="margin-bottom:5px">
-
-                                <div class="col-md-1 text-right" style="padding-top:12px; padding-right:0px">
-                                    <input style="width:25px; height:25px;" onclick="StatusInfo(this.value)" value="@code.code" type="radio" name="Status">
+                                <div class="col-md-3 text-center">
+                                    <button id="@code.code" class="btn commonStatusClass" onclick="SaveToTempStatus(this.value)" style="background-color:transparent; text-align:center; color:red; padding-left:10px; font-size:30px;font-weight:bold; width:150px; border:none" value="@code.code">@code.code</button>
                                 </div>
-                                <div class="col-md-2">
-                                    <input style="padding-left:10px; font-size:30px;font-weight:bold; width:100px; border:none; outline:none" type="text" readonly name="name" value="@code.code" />
-                                </div>
-                                <div class="col-md-8" style="font-size:30px">
+                                <div class="col-md-8 commonFailureCodes @code.code" style="font-size:30px">
                                     @code.description
                                 </div>
-
                             </div>
                         }
                     }
 
                 </div>
                 <div class="modal-footer" style="padding:8px">
-                    <input id="close" type="text" readonly class="btn btn-danger" data-dismiss="modal" name="name" value="Close" style="height: 25px;width: 100px" />
+                    <button data-dismiss="modal" class="btn btn-primary" style="display:none; padding:0px 43px 0px 43px" onclick="StatusInfo(this.value)" id="tempStatus" value="">Ok</button>
+                    <input id="close" type="text" readonly class="btn btn-danger" data-dismiss="modal" name="name" value="Cancel" style="height: 25px;width: 100px" />
                 </div>
             </div>
         </div>
@@ -1008,28 +1121,28 @@
     <div class="modal fade " data-backdrop="static" id="TreadModal" tabindex="-1" role="dialog" aria-labelledby="IncorrectBarcodeLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content " style="width:800px">
-                <div class="modal-header" style="padding: 10px
-">
-                    <h5 class="modal-title" style="color:black"><strong>Treads</strong></h5>
+                <div class="modal-header" style="padding: 10px">
+                    <h3 class="modal-title" style="color:black; margin-left:auto; margin-right:auto"><strong>Tread Design</strong></h3>
                 </div>
-                <div class="modal-body example" style="height:700px; overflow-y:auto">
-                    @if (Model.paneType == "barcode")
-                    {
-                        foreach (var code in Model.TreadList)
+                <div class="modal-body example" style="padding-bottom:0px; overflow-y:auto">
+                    <div class="row">
+                        @if (Model.paneType == "barcode")
                         {
-                            <div class="row" style="margin-bottom:5px">
-                                <div class="col-md-1 text-right" style="padding-top:11px; padding-right:0px">
-                                    <input style="width:25px; height:25px;" onclick="SaveTread(this.value)" value="@code.tread_design" type="radio" name="Status">
-                                </div>
-                                <div class="col-md-2">
-                                    <input style="font-size:30px;font-weight:bold; width:150px; border:none; outline:none" type="text" readonly name="name" value="@code.tread_design" />
-                                </div>
-                                <div class="col-md-8"></div>
-                            </div>
+                            foreach (var code in Model.TreadList)
+                            {
+                                if (code.tread_tracker == 1)
+                                {
+                                    <div class="col-lg-3">
+                                        <input class="btn btn-secondary commonTreadClass" id="@code.tread_design" onclick="SaveToTempTread(this.value)" style="background-color:transparent; border:2px solid dimgray; color:dimgray; margin-bottom:20px; font-size:25px;font-weight:bold; width:100%; height:95px" type="text" readonly name="name" value="@code.tread_design" />
+                                    </div>
+                                }
+                            }
                         }
-                    }
+
+                    </div>
                 </div>
                 <div class="modal-footer" style="padding:8px">
+                    <button data-dismiss="modal" class="btn btn-primary" style="display:none; padding:0px 43px 0px 43px" onclick="SaveTread(this.value)" id="tempTread" value="">Ok</button>
                     <input id="close" type="text" readonly class="btn btn-danger" data-dismiss="modal" name="name" value="Close" style="height: 25px;width: 100px" />
                 </div>
             </div>
@@ -1038,29 +1151,152 @@
 
     <div class="modal fade " data-backdrop="static" id="SizesModal" tabindex="-1" role="dialog" aria-labelledby="IncorrectBarcodeLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content " style="width:800px">
-                <div class="modal-header" style="        padding: 10px
-">
-                    <h5 class="modal-title" style="color:black"><strong>Sizes</strong></h5>
+            <div class="modal-content " style="width:630px; overflow-x:hidden">
+                <div class="modal-header" style="padding: 10px">
+                    <h3 class="modal-title" style="color:black; margin-left:auto; margin-right:auto"><strong>Casing Size</strong></h3>
                 </div>
-                <div class="modal-body example" style="height:700px; overflow-y:auto">
+                <div class="modal-body example" style="padding:10px 30px 10px 30px; background-color:white; overflow-y:auto; ">
                     @if (Model.paneType == "barcode")
                     {
-                        foreach (var code in Model.SizeList)
-                        {
-                            <div class="row" style="margin-bottom:5px">
-                                <div class="col-md-1 text-right" style="padding-top:11px; padding-right:0px">
-                                    <input style="width:25px; height:25px;" onclick="SaveSize(this.value)" value="@code.casing_size" type="radio" name="Status">
-                                </div>
-                                <div class="col-md-2">
-                                    <input style="font-size:30px;font-weight:bold; width:200px; border:none; outline:none" type="text" readonly name="name" value="@code.casing_size" />
-                                </div>
-                                <div class="col-md-8"></div>
+
+                        <div class="row" style="background-color:white; border:2px solid #b9bbbd">
+                            <!-- Navigation Buttons -->
+                            <div class="col-md-3" style="background-color:#dcdee0; padding-top:0px; padding-left:0px; padding-right:0px">
+                                <ul class="nav nav-pills nav-stacked" id="myTabs">
+                                    <li class="active text-center liCommonClass" id="PartsLink" style="border-bottom:2px solid white; background-color: white; display:flex; justify-content:center; align-items:center; width:320px; height:125px; font-size:25px;" onclick="selectLI(this.id)">
+                                        <a href="#PARTS" data-toggle="pill" style="display:flex; justify-content:center; align-items:center; width:100%; height:100%; font-weight:bold">
+                                            R24.5
+                                        </a>
+                                    </li>
+
+                                    <li class="text-center liCommonClass" style="border-bottom:2px solid white; display:flex; justify-content:center; align-items:center; width:320px; height:125px; font-size:25px; " id="TireLink" onclick="selectLI(this.id)">
+                                        <a href="#TIRES" data-toggle="pill" style="display:flex; justify-content:center; align-items:center; width:100%; height:100%; font-weight:normal; color:white">
+                                            R22.5
+                                        </a>
+                                    </li>
+
+                                    <li class="text-center liCommonClass" style="border-bottom:2px solid white; display:flex; justify-content:center; align-items:center; width:320px; height:125px; font-size:25px" id="WheelLink" onclick="selectLI(this.id)">
+                                        <a href="#WHEEL" data-toggle="pill" style="display:flex; justify-content:center; align-items:center; width:100%; height:100%; font-weight:normal; color:white">
+                                            R19.5
+                                        </a>
+                                    </li>
+
+                                    <li class="text-center liCommonClass" style="border-bottom:2px solid white; display:flex; justify-content:center; align-items:center; width:320px; height:125px; font-size:25px" id="ScsLink" onclick="selectLI(this.id)">
+                                        <a href="#SCS" data-toggle="pill" style="display:flex; justify-content:center; align-items:center; width:100%; height:100%; font-weight:normal; color:white">
+                                            R17.5
+                                        </a>
+                                    </li>
+
+                                    <li class="text-center liCommonClass" style="display:flex; justify-content:center; align-items:center; width:320px; height:125px; font-size:25px" id="FreightLink" onclick="selectLI(this.id)">
+                                        <a href="#FREIGHT" data-toggle="pill" style="display:flex; justify-content:center; align-items:center; width:100%; height:100%; font-weight:normal; color:white">
+                                            R16
+                                        </a>
+                                    </li>
+
+                                </ul>
                             </div>
-                        }
+                            <!-- Content -->
+                            <div class="col-md-9 example" style="padding-top:10px; overflow-y:auto; height:625px">
+                                <div class="tab-content" style="padding-left:10px">
+                                    <div class="tab-pane active" id="PARTS">
+                                        <div class="row">
+                                            @foreach (var code in Model.SizeList)
+                                            {
+                                                if (code.casing_size.Contains("R24.5"))
+                                                {
+                                                    <div class="col-md-6">
+                                                        <button class="btn commonSizeClass @code.size_id" onclick="SaveToTemp(this.value); changeBackground(this)" style="margin:0px 0px 40px 0px; font-size:20px;font-weight:bold; width:100%; height:120px; outline:none; background-color:transparent; border:2px solid dimgray; color:dimgray" value="@code.casing_size">
+                                                            <p style="font-size:40px; margin-bottom:0px">@code.casing_size.Split('R')[0]</p>
+                                                            <p>R24.5</p>
+                                                        </button>
+                                                    </div>
+                                                }
+
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="TIRES">
+                                        <div class="row">
+                                            @foreach (var code in Model.SizeList)
+                                            {
+                                                if (code.casing_size.Contains("R22.5"))
+                                                {
+                                                    <div class="col-md-6">
+                                                        <button class="btn commonSizeClass @code.size_id" onclick="SaveToTemp(this.value); changeBackground(this)" style="margin:0px 0px 40px 0px; font-size:20px;font-weight:bold; width:100%; height:120px; outline:none; background-color:transparent; border:2px solid dimgray; color:dimgray" value="@code.casing_size">
+                                                            <p style="font-size:40px; margin-bottom:0px">@code.casing_size.Split('R')[0]</p>
+                                                            <p>R22.5</p>
+                                                        </button>
+                                                    </div>
+                                                }
+
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="WHEEL">
+                                        <div class="row">
+                                            @foreach (var code in Model.SizeList)
+                                            {
+                                                if (code.casing_size.Contains("R19.5"))
+                                                {
+                                                    <div class="col-md-6">
+                                                        <button class="btn commonSizeClass @code.size_id" onclick="SaveToTemp(this.value); changeBackground(this)" style="margin:0px 0px 40px 0px; font-size:20px;font-weight:bold; width:100%; height:120px; outline:none; background-color:transparent; border:2px solid dimgray; color:dimgray" value="@code.casing_size">
+                                                            <p style="font-size:40px; margin-bottom:0px">@code.casing_size.Split('R')[0]</p>
+                                                            <p>R19.5</p>
+                                                        </button>
+                                                    </div>
+                                                }
+
+                                            }
+                                        </div>
+
+                                    </div>
+                                    <div class="tab-pane" id="SCS">
+                                        <div class="row">
+                                            @foreach (var code in Model.SizeList)
+                                            {
+                                                if (code.casing_size.Contains("R17.5"))
+                                                {
+                                                    <div class="col-md-6">
+                                                        <button class="btn commonSizeClass @code.size_id" onclick="SaveToTemp(this.value); changeBackground(this)" style="margin:0px 0px 40px 0px; font-size:20px;font-weight:bold; width:100%; height:120px; outline:none; background-color:transparent; border:2px solid dimgray; color:dimgray" value="@code.casing_size">
+                                                            <p style="font-size:40px; margin-bottom:0px">@code.casing_size.Split('R')[0]</p>
+                                                            <p>R17.5</p>
+                                                        </button>
+                                                    </div>
+                                                }
+
+                                            }
+                                        </div>
+
+                                    </div>
+                                    <div class="tab-pane" id="FREIGHT">
+                                        <div class="row" style="margin-bottom:5px">
+                                            @foreach (var code in Model.SizeList)
+                                            {
+                                                if (code.casing_size.Contains("R16"))
+                                                {
+                                                    <div class="col-md-6">
+                                                        <button class="btn commonSizeClass @code.size_id" onclick="SaveToTemp(this.value); changeBackground(this)" style="margin:0px 0px 40px 0px; font-size:20px;font-weight:bold; width:100%; height:120px; outline:none; background-color:transparent; border:2px solid dimgray; color:dimgray" value="@code.casing_size">
+                                                            <p style="font-size:40px; margin-bottom:0px">@code.casing_size.Split('R')[0]</p>
+                                                            <p>R16</p>
+                                                        </button>
+                                                    </div>
+                                                }
+
+                                            }
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
                     }
                 </div>
+
                 <div class="modal-footer" style="padding:8px">
+                    <button data-dismiss="modal" class="btn btn-primary" style="display:none; padding:0px 43px 0px 43px" onclick="SaveSize(this.value)" id="tempSize" value="">Ok</button>
                     <input id="close" type="text" readonly class="btn btn-danger" data-dismiss="modal" name="name" value="Close" style="height: 25px;width: 100px" />
                 </div>
             </div>
@@ -1069,35 +1305,37 @@
 
     <div class="modal fade " data-backdrop="static" id="ShiptoModal" tabindex="-1" role="dialog" aria-labelledby="IncorrectBarcodeLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content " style="width:800px">
-                <div class="modal-header" style="        padding: 10px
-">
-                    <h5 class="modal-title" style="color:black"><strong>Ship To</strong></h5>
+            <div class="modal-content " style="width: 550px">
+                <div class="modal-header" style="padding: 10px">
+                    <h3 class="modal-title" style="color:black; margin-left:auto; margin-right:auto"><strong>Product Ship To</strong></h3>
                 </div>
-                <div class="modal-body example" style="        height: 600px;
-        overflow-y: auto">
+                <div class="modal-body example" style="overflow-y:auto">
                     @if (Model.paneType == "barcode")
                     {
                         foreach (var code in Model.LocationList)
                         {
-                            <div class="row" style="margin-bottom:10px">
-                                <div class="col-md-1 text-right" style="padding-top:11px; padding-right:0px">
-                                    <input style="width:25px; height:25px;" onclick="SaveShipto(this.value)" value="@code.loc_id" type="radio" name="Status">
-                                </div>
-                                <div class="col-md-1">
-                                    <input style="font-size:30px;font-weight:bold; width:200px; border:none; outline:none" type="text" readonly name="name" value="@code.loc_id" />
-                                </div>
-                                <div class="col-md-7" style="padding-top:11px;">
-                                    <input style="font-size:13px;font-weight:bold; width:100%; border:none; outline:none" type="text" readonly name="name" value="@code.cta_street1, @code.cta_street2, @code.cta_city, @code.cta_province, @code.cta_postal_code " />
-                                </div>
-                                <div class="col-md-1 text-right" style="padding-top:11px;">
-                                    <label><b>@code.nonsig_num</b></label>
+                            <div class="row" style="margin-bottom:20px">
+                                <div class="col-md-11">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <input class="btn btn-secondary commonShipClass" id="@code.loc_id" style="background-color:transparent; color:dimgray; height:70px; width:100%; font-size:40px; font-weight:bold; margin-right:10px" onclick="SaveToTempShip(this.value)" value="@code.loc_id" type="button" name="Status">
+                                        </div>
+                                        <div class="col-lg-8 commonShipText @code.loc_id" style="font-size:20px">
+                                            <div class="row">
+                                                <span>@code.cta_city, @code.cta_province @code.cta_postal_code</span>
+                                            </div>
+                                            <div class="row">
+                                                <span><i>@code.nonsig_num</i></span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         }
                     }
                 </div>
                 <div class="modal-footer" style="padding:8px">
+                    <button data-dismiss="modal" class="btn btn-primary" style="display:none; padding:0px 43px 0px 43px" onclick="SaveShipto(this.value)" id="tempShip" value="">Ok</button>
                     <input id="close" type="text" readonly class="btn btn-danger" data-dismiss="modal" name="name" value="Close" style="height: 25px;width: 100px" />
                 </div>
             </div>
@@ -1107,12 +1345,10 @@
     <div class="modal fade " data-backdrop="static" id="BrandModel" tabindex="-1" role="dialog" aria-labelledby="IncorrectBarcodeLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content " style="width:800px">
-                <div class="modal-header" style="        padding: 10px
-">
-                    <h5 class="modal-title" style="color:black"><strong>Ship To</strong></h5>
+                <div class="modal-header" style="padding: 10px">
+                    <h3 class="modal-title" style="margin-left:auto; margin-right:auto; color:black"><strong>CASING MANUFACTURER</strong></h3>
                 </div>
-                <div class="modal-body example" style="        height: 600px;
-        overflow-y: auto">
+                <div class="modal-body example" style="overflow-y:auto">
                     <div class="row">
                         @if (Model.paneType == "barcode")
                         {
@@ -1130,23 +1366,25 @@
                                         base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(code.brand_image);
                                     }
 
-
-                                    <div class="col-lg-3" style="margin-bottom:20px">
-                                        <button data-dismiss="modal" onclick="SaveBrand(this.value)" value="@code.manufacturers" style="outline:none; border-radius:10px; width:100%; height:100px;">
-                                            @if (code.manufacturers == "Chinese-ALL")
-                                            {
-                                                <img class="imageClass" style="width:80%; height: 70%" alt="@code.manufacturers" src="@base64ProfilePic" />
-                                            }
-                                            else if (code.manufacturers == "Toyo")
-                                            {
-                                                <img class="imageClass" style="width:80%; height: 90%" alt="@code.manufacturers" src="@base64ProfilePic" />
-                                            }
-                                            else
-                                            {
-                                                <img class="imageClass" style="width:100%" alt="@code.manufacturers" src="@base64ProfilePic" />
-                                            }
-                                        </button>
-                                    </div>
+                                    if (code.tread_tracker == 1)
+                                    {
+                                        <div class="col-lg-3" style="margin-bottom:20px">
+                                            <button class="commonBrandClass" id="@code.manufacturers" onclick="SaveToTempBrand(this.value)" value="@code.manufacturers" style="outline: none;border-radius: 10px;width: 100%;height: 100px;">
+                                                @if (code.manufacturers == "Chinese-ALL")
+                                                {
+                                                    <img class="imageClass" style="width:80%; height: 70%" alt="@code.manufacturers" src="@base64ProfilePic" />
+                                                }
+                                                else if (code.manufacturers == "Toyo")
+                                                {
+                                                    <img class="imageClass" style="width:80%; height: 90%" alt="@code.manufacturers" src="@base64ProfilePic" />
+                                                }
+                                                else
+                                                {
+                                                    <img class="imageClass" style="width:100%" alt="@code.manufacturers" src="@base64ProfilePic" />
+                                                }
+                                            </button>
+                                        </div>
+                                    }
 
 
                                 }
@@ -1158,32 +1396,112 @@
 
                 </div>
                 <div class="modal-footer" style="padding:8px">
+                    <button data-dismiss="modal" class="btn btn-primary" style="display:none; padding:0px 43px 0px 43px" onclick="SaveBrand(this.value)" id="tempBrand" value="">Ok</button>
                     <input id="close" type="text" readonly class="btn btn-danger" data-dismiss="modal" name="name" value="Close" style="height: 25px;width: 100px" />
                 </div>
             </div>
         </div>
     </div>
 
+    <SCRIPT type="text/javascript">
+        function JavaBlink() {
+            var blinks = document.getElementsByClassName('blinkClass');;
+            for (var i = blinks.length - 1; i >= 0; i--) {
+                var s = blinks[i];
+                s.style.visibility = (s.style.visibility === 'visible') ? 'hidden' : 'visible';
+            }
+            window.setTimeout(JavaBlink, 1500);
+        }
+        if (document.addEventListener) document.addEventListener("DOMContentLoaded", JavaBlink, false);
+        else if (window.addEventListener) window.addEventListener("load", JavaBlink, false);
+        else if (window.attachEvent) window.attachEvent("onload", JavaBlink);
+        else window.onload = JavaBlink;
+    </SCRIPT>
+
     <script>
+
+        function preSizeSelection() {
+            $.ajax({
+                url: '@Url.Action("getSizeID", "Retread")',
+                data: { size: $('#sizeInput').val() },
+                type: 'POST',
+                success: function (data) {
+                    //alert(data)
+                    $('.' + data).css('border', 'none').css('color', 'white').css('background-color', '#007bff')
+                }
+            });
+
+        }
+
+        function SaveToTempShip(val) {
+            $('.commonShipClass').css('bordor', '2px solid dimgray').css('background-color', 'transparent').css('color', 'dimgray')
+            $('#' + val).css('bordor', 'none').css('background-color', '#007bff').css('color', 'white')
+
+            $('.commonShipText').css('font-weight', 'normal')
+            $('.' + val).css('font-weight', 'bold')
+
+
+            $('#tempShip').val(val)
+            $('#tempShip').css("display", "block")
+        }
+
+        function SaveToTempBrand(val) {
+            $('.commonBrandClass').css('border', '2px solid dimgray')
+            $('#' + val).css('border', '10px solid #007bff')
+            $('#tempBrand').val(val)
+            $('#tempBrand').css("display", "block")
+        }
+
+        function SaveToTempTread(val) {
+            $('.commonTreadClass').css('border', '2px solid dimgray').css('color', 'dimgray').css('background-color', 'transparent')
+            $('#' + val).css('background-color', '#007bff').css('color', 'white').css('border', 'none')
+            $('#tempTread').val(val)
+            $('#tempTread').css("display", "block")
+        }
+
+        function SaveToTempStatus(val) {
+            $('.commonFailureCodes').css("font-weight", "normal")
+            $('.' + val).css("font-weight", "bold")
+            $('#tempStatus').val(val)
+            $('#tempStatus').css("display", "block")
+        }
+
+        function SaveToTemp(val) {
+            $('.commonSizeClass').css('border', '2px solid dimgray').css('color', 'dimgray').css('background-color', 'transparent')
+            $('#tempSize').val(val)
+            $('#tempSize').css("display", "block")
+        }
+        function changeBackground(e) {
+            $(e).css('background-color', '#007bff').css('color', 'white').css('border', 'none')
+        }
 
         function StatusInfo(val) {
             $('#statusInput').val(val);
+            $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success");
         }
 
         function SaveTread(val) {
             $('#treadInput').val(val);
+            $('#okTread').css("display", "block");
+            $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success");
         }
 
         function SaveSize(val) {
             $('#sizeInput').val(val);
+            $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success");
         }
 
         function SaveShipto(val) {
             $('#shiptoInput').val(val);
+            $('#okShip').css("display", "block");
+            $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success");
         }
 
         function SaveBrand(val) {
             $('#brandInput').val(val);
+            $('#okBrand').css("display", "block");
+            $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success");
+
         }
 
         $(document).ready(function () {
@@ -1263,22 +1581,15 @@
 
     </script>
 
-    <SCRIPT type="text/javascript">
-        function JavaBlink() {
-            var blinks = document.getElementsByTagName('JavaBlink');
-            for (var i = blinks.length - 1; i >= 0; i--) {
-                var s = blinks[i];
-                s.style.visibility = (s.style.visibility === 'visible') ? 'hidden' : 'visible';
-            }
-            window.setTimeout(JavaBlink, 600);
-        }
-        if (document.addEventListener) document.addEventListener("DOMContentLoaded", JavaBlink, false);
-        else if (window.addEventListener) window.addEventListener("load", JavaBlink, false);
-        else if (window.attachEvent) window.attachEvent("onload", JavaBlink);
-        else window.onload = JavaBlink;
-    </SCRIPT>
+
 
     <script>
+
+        function selectLI(val) {
+            $('.liCommonClass').css("background-color", "#dcdee0").children().css('color', 'white').css('font-weight', 'normal');
+            $('#' + val).css("background-color", "white").css('color', 'blue').children().css('color', '#007bff').css('font-weight', 'bold');
+        }
+
         $(document).ready(function () {
             $('#textBox').focus();
         });

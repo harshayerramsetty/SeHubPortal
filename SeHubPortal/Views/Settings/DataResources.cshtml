@@ -1,0 +1,401 @@
+﻿
+@{
+    ViewBag.Title = "DataResources";
+    Layout = "~/Views/Shared/_Settings.cshtml";
+}
+
+@model SeHubPortal.ViewModel.MyStaffViewModel
+
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>*@
+
+
+    <script>
+        $(document).ready(function () {
+            function getUrlVars() {
+                var vars = [], hash;
+                var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                for (var i = 0; i < hashes.length; i++) {
+                    hash = hashes[i].split('=');
+                    vars.push(hash[0]);
+                    vars[hash[0]] = hash[1];
+                }
+                return vars;
+            }
+
+            var acknowledgment = getUrlVars()["ack"];
+            if (acknowledgment == "incorrectReport") {
+                $('#myModal #eventTitle').text("Incorrect Report");
+                $('#myModal').modal();
+            }
+            else if (acknowledgment == "incorrectPayroll") {
+                $('#myModal #eventTitle').text("Incorrect Payroll");
+                $('#myModal').modal();
+            }
+            else if (acknowledgment == "DataImported") {
+                $('#myModal #eventTitle').text("Data Imported Successfully");
+                $('#myModal').modal();
+            }
+            else {
+
+            }
+        });
+
+    </script>
+
+    @if (Model.SehubAccess.plant > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.tools > 0)
+    {
+        <style>
+            #toolsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.management > 0)
+    {
+        <style>
+            #ManagementClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings_managePermissions > 0)
+    {
+        <style>
+            #EmployeePermissionsLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings_customers > 0)
+    {
+        <style>
+            #CustomersLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings_administration > 0)
+    {
+        <style>
+            #AdministrationLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings_dashboard > 0)
+    {
+        <style>
+            #SettingsLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.payroll > 0)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.fleetTVT > 0)
+    {
+        <style>
+            #FleetTVTClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTracker > 0)
+    {
+        <style>
+            #treadTrackereClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_access > 0)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.main > 0)
+    {
+        <style>
+            #mainClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_access == 3)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    <style>
+
+        #SettingsLink {
+            display: block !important;
+        }
+
+        .example::-webkit-scrollbar {
+            display: none;
+        }
+
+        .example {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+
+        #DataResourcesLink {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #SettingsClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        .settingsBtn {
+            font-weight: bold;
+        }
+
+        #SystemLink {
+            color: black;
+            font-weight: 700;
+            background-color: #f0f2f5;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            padding-right: 0 !important;
+        }
+
+        .heading {
+            margin: 10px 0px 0px 0px;
+        }
+
+            .heading h2 {
+                margin-top: 8px;
+            }
+
+        .card-header {
+            background-color: #cde8ca;
+        }
+
+            .card-header h6 {
+                color: black;
+            }
+
+        .imageClass {
+            width: 100%;
+            height: 80%;
+            border-radius: 50%;
+        }
+
+        .card {
+            border: 1px solid #ededed;
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+
+        .card {
+            position: relative;
+            display: -ms-flexbox;
+            display: flex;
+            height: auto;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid rgba(0,0,0,.125);
+            border-radius: .25rem;
+        }
+
+        p {
+            font-size: 14px;
+        }
+
+        #MatchedStaffLocID {
+            height: 30px;
+            width: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row heading">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
+                    <li class="breadcrumb-item"><a href="@Url.Action("System", "SettingsHarpoon")">Settings</a></li>
+                    <li class="breadcrumb-item " aria-current="page">System</li>
+                </ol>
+            </nav>
+        </div>
+        <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+            <i class="fa fa-bars" style="font-size: 25px"></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+
+    <div class="row" style="margin:0px 10px 20px 0px">
+
+        <div class="col-lg-2">
+            <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#HoursBilled" style="width:260px; height:350px">
+
+                <div class="card-body text-center" style="height:320px; margin-left:auto; margin-right:auto; margin-top:40px; padding-top:30px">
+                    <img src="~/Content/billingHours.png" style="margin-bottom:40px; width:180px;">
+                    <h5 style="font-weight:bold; color:black">Technician Billing Hours</h5>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="HoursBilled" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                @using (Html.BeginForm("UploadCSV", "Management", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    
+                    <div class="modal-header" style="justify-content:center; align-items:center; padding:5px">
+                        <h4 class="modal-title" style="color:black"><strong><span>IMPORT</span></strong></h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <p>Auto Technician Commission Report</p>
+                                <p  style="margin-bottom:0px"><b>Reports on file</b></p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <table class="table table-striped table-bordered">
+
+                                    @if (Model.DataResources != null)
+                                    {
+                                        <thead style="background-color:gray; color:white">
+                                            <tr>
+
+                                                <th style="padding:0px; font-size:8px; text-align:center" scope="col">Payroll ID</th>
+                                                <th style="padding:0px; font-size:8px; text-align:center" scope="col">Start Date</th>
+                                                <th style="padding:0px; font-size:8px; text-align:center" scope="col">End Date</th>
+                                                <th style="padding:0px; font-size:8px; text-align:center" scope="col">Imported By</th>
+                                            </tr>
+                                        </thead>
+                                    }
+
+
+                                    <tbody>
+
+                                        @foreach (var payrol in Model.DataResources)
+                                        {
+                                            <tr>
+                                                <td style="padding:0px; font-size:10px; text-align:center; padding-left:10px">@payrol.payroll_Id</td>
+                                                <td style="padding:0px; font-size:10px; text-align:center">@payrol.start_date.Value.ToString("yyyy-MM-dd")</td>
+                                                <td style="padding:0px; font-size:10px; text-align:center">@payrol.end_date.Value.ToString("yyyy-MM-dd")</td>
+                                                <td style="padding:0px; font-size:10px; text-align:center"></td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <input type="file" name="postedFile" />
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top:10px">
+                            <div class="col-lg-12">
+                                <input type="checkbox" name="name" value="" />
+                                Overwrite existing
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer" style="padding:8px">
+                        <button type="submit" class="btn btn-success" style="padding:1px 25px 1px 25px">Import</button>
+                        <input type="text" readonly class="btn btn-danger" data-dismiss="modal" name="name" value="Close" style="height:28px; width:100px" />
+                    </div>
+                }
+            </div>
+                
+                
+        </div>
+    </div>
+
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:10px">
+                    <h5 class="modal-title" style="color:black"><strong><span>Acknowledgment </span></strong></h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h6 id="eventTitle"></h6>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer" style="padding:8px">
+                    <input type="text" readonly class="btn btn-danger" data-dismiss="modal" name="name" value="Close" style="height:25px; width:100px" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+    </script>
+</body>
+
+</html>

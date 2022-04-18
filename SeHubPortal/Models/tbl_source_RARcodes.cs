@@ -16,10 +16,10 @@ namespace SeHubPortal.Models
     {
         public string code { get; set; }
         public string description { get; set; }
-        public Nullable<int> prelim_inspection { get; set; }
-        public Nullable<int> NDT { get; set; }
-        public Nullable<int> Buffer { get; set; }
-        public Nullable<int> Builder { get; set; }
-        public Nullable<int> Final { get; set; }
+        public Nullable<int> TT050 { get; set; }
+        public Nullable<int> TT100 { get; set; }
+        public Nullable<int> TT200 { get; set; }
+        public Nullable<int> TT400 { get; set; }
+        public Nullable<int> TT600 { get; set; }
     }
 }

@@ -1,0 +1,79 @@
+﻿@model SeHubPortal.ViewModel.HarpoonProfileBlockViewModel
+
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title></title>
+    </head>
+    <body>
+        <div class="row" style="padding:0px; width:300px; ">
+
+            @{
+                string base64ProfilePic = "";
+
+                if(Model.client != null)
+                {
+                    if (Model.client.client_logo is null)
+                    {
+                        base64ProfilePic = "";
+                    }
+                    else
+                    {
+                        base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(Model.client.client_logo);
+                    }
+                }
+            }
+
+            <div class="col-lg-3" style="padding:0px">
+
+                @if (base64ProfilePic == "")
+                {
+                    <img class="imageClass" data-toggle="modal" data-target="#upload" style="margin:0px; border-radius:80px; width:80px; height:80px" src="~/Content/profilepic.jpg" alt="ProfilePic" />
+                }
+                else
+                {
+                    <img class="imageClass" data-toggle="modal" data-target="#upload" style="margin:0px; border-radius:80px; width:65px; height:65px" alt="profilePic" src="@base64ProfilePic" />
+                }
+
+
+            </div>
+            <div class="col-lg-9 text-left" style="display:flex; align-items:center; padding:0px 0px 0px 10px">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p style="margin:0px; font-size:13px"><span><b>@Model.user.profile</b></span></p>
+                        <p style="margin:0px; font-size:13px">
+                            @if (@Model.user.email.Length <= 29)
+                            {
+                                @Model.user.email
+                            }
+                            else
+                            {
+                                @Model.user.email.Substring(0, 29)
+                            }
+                        </p>
+                        <p style="margin:0px; font-size:15px">
+                            <b>
+                                @if (Model.client != null)
+                                {
+                                    @Model.client.client_name
+                                }
+                            </b>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <input id="base64string" type="text" style="display:none" name="name" value="@base64ProfilePic" />
+        <script>
+
+            if ($('#base64string').val() != "" && $('#base64string').val() != null) {
+                $('#UploatImage').attr("src", $('#base64string').val());
+            }
+
+        </script>
+
+    </body>
+    </html>
+
+

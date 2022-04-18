@@ -166,35 +166,38 @@
 </style>
 
 <body style="overflow-y: hidden;">
-    <div class="row heading" style="padding: 10px 20px 0px 15px ">
-        <div class="col">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb" style="        background-color: white;
-        height: 100%;
-        margin-top: 0px;">
-                    <li class="breadcrumb-item"><a href="@Url.Action("Supplier_Documents", "Library")">Library</a></li>
-                    <li class="breadcrumb-item " aria-current="page">Supplier Documents</li>
 
+    <div class="row heading" style="margin-right:0px">
+        <div class="col" style="margin:10px 10px 10px 30px; padding:10px; background-color:white">
+
+            <div style="display:flex; justify-content:space-between; align-items:center">
+                <div>
+                    <a href="@Url.Action("Supplier_Documents", "Library")">Library </a>/ Supplier Documents
+                </div>
+
+                <div style="display:flex;">
                     @if (Model.SehubAccess.library_supplier_documents >= 2)
                     {
                         using (Html.BeginForm("UploadSupplierDocuments", "Library", FormMethod.Post, new { enctype = "multipart/form-data" }))
                         {
-                            <input for="Upload" type="text" readonly style="height:23px; width:100px; margin-left:459px" class="btn btn-success" name="name" value="Upload" onclick="document.getElementById('Upload').click()" />
+                            <input for="Upload" type="text" readonly style="height:23px; width:100px" class="btn btn-success" name="name" value="Upload" onclick="document.getElementById('Upload').click()" />
                             <input id="Upload" type="file" name="SupplierDocuments" style="height: 23px;width: 100px;margin-left: 450px;display: none" onchange="form.submit()" />
                             <input id="1" type="text" data-toggle="modal" data-target="#SupplierDocManage" readonly style="height:23px; width:100px; margin-left:20px" class="btn btn-primary" name="name" value="Manage" />
                         }
                     }
+                </div>
 
-                </ol>
-            </nav>
+                <div style="visibility:hidden">hidden</div>
+
+            </div>
         </div>
-        <button type="button" id="clickThis" class="btn" style=" margin-bottom: 14px;">
-            <i class="fa fa-bars" style="font-size: 25px "></i>
+        <button type="button" id="clickThis" class="btn">
+            <i class="fa fa-bars" style="font-size:25px"></i>
             <span class="sr-only">Toggle Menu</span>
         </button>
     </div>
 
-
+   
     @if (Model.Permission != 4)
     {
 

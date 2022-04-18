@@ -13,5 +13,6 @@ namespace SeHubPortal.ViewModel
         public tbl_cta_location_info locdesc { get; set; }
         public List<SelectListItem> LocationsList { get; set; }
         public string SelectedLocationId { get; set; }
+        public List<tbl_employee> employees { get; set; }
     }
 }

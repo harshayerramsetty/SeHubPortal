@@ -1263,7 +1263,7 @@ namespace SeHubPortal.Controllers
             List<SelectListItem> items = new List<SelectListItem>();
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
 
-            var config = db.tbl_commercial_tire_manufacturers.Where(x => x.fleetTVT == 1 && x.manufacturers != "CTA Retread" && x.manufacturers != "Other").ToList();
+            var config = db.tbl_source_commercial_tire_manufacturers.Where(x => x.fleetTVT == 1 && x.manufacturers != "CTA Retread" && x.manufacturers != "Other").ToList();
 
             items.Add(new SelectListItem
             {

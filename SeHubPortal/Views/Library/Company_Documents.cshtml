@@ -210,40 +210,40 @@
     </style>
 
 </head>
-    <body style="overflow-y: hidden;">
+<body style="overflow-y: hidden;">
 
+    <div class="row heading" style="margin-right:0px">
+        <div class="col" style="margin:10px 10px 10px 30px; padding:10px; background-color:white">
 
-        <div class="row heading" style="padding: 10px 20px 0px 15px">
-            <div class="col">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb" style="background-color: white;
-                      height: 100%;
-                      margin-top: 0px;
-                      ">
-                        <li class="breadcrumb-item"><a href="@Url.Action("Company_Documents", "Library")">Library</a></li>
-                        <li class="breadcrumb-item " aria-current="page">Company Documents</li>
+            <div style="display:flex; justify-content:space-between; align-items:center">
+                <div>
+                    <a href="@Url.Action("Company_Documents", "Library")">Library </a>/ Company Documents
+                </div>
 
-                        @if (Model.SehubAccess.library_company_Documents >= 2)
+                <div style="display:flex;">
+                    @if (Model.SehubAccess.library_company_Documents >= 2)
+                    {
+                        using (Html.BeginForm("UploadCompanyDocuments", "Library", FormMethod.Post, new { enctype = "multipart/form-data" }))
                         {
-                            using (Html.BeginForm("UploadCompanyDocuments", "Library", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                            {
-                                <input for="Upload" type="text" readonly style="height:23px; width:100px; margin-left:450px" class="btn btn-success" name="name" value="Upload" onclick="document.getElementById('Upload').click()" />
-                                <input id="Upload" type="file" name="CompanyDocument" style="height:23px; width:100px; margin-left:450px; display:none" onchange="form.submit()" />
-                                <input id="1" type="text" data-toggle="modal" data-target="#SupplierDocManage" readonly style="height:23px; width:100px; margin-left:20px" class="btn btn-primary" name="name" value="Manage" />
-                            }
+                            <input for="Upload" type="text" readonly style="height:23px; width:100px;" class="btn btn-success" name="name" value="Upload" onclick="document.getElementById('Upload').click()" />
+                            <input id="Upload" type="file" name="CompanyDocument" style="height:23px; width:100px; margin-left:450px; display:none" onchange="form.submit()" />
+                            <input id="1" type="text" data-toggle="modal" data-target="#SupplierDocManage" readonly style="height:23px; width:100px; margin-left:20px" class="btn btn-primary" name="name" value="Manage" />
                         }
+                    }
+                </div>
 
-                    </ol>
-                </nav>
+                <div style="visibility:hidden">hidden</div>
+
             </div>
-            <button type="button" id="clickThis" class="btn" style=" margin-bottom: 14px;">
-                <i class="fa fa-bars" style="font-size: 25px "></i>
-                <span class="sr-only">Toggle Menu</span>
-            </button>
         </div>
+        <button type="button" id="clickThis" class="btn">
+            <i class="fa fa-bars" style="font-size:25px"></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
 
 
-        @*
+    @*
             <div class="row" style="padding-left:20px">
             <img id="Aimage" style="width:40px; margin:10px" src="" />
             <img id="Bimage" style="width:40px; margin:10px" src="" />
@@ -272,466 +272,464 @@
             <img id="Yimage" style="width:40px; margin:10px" src="" />
             <img id="Zimage" style="width:40px; margin:10px" src="" />
         </div>
-        *@
+    *@
 
-        @if (true)
-        {
+    @if (true)
+    {
 
-            <div class="row" style="height:740px; overflow-y: auto; overflow-x: hidden;">
+        <div class="row" style="height:740px; overflow-y: auto; overflow-x: hidden;">
 
 
-                <div class="col-lg-12">
-                    <div class="row">
-                        @foreach (var items in Model.URLName)
-                        {
-
-                            <div id="div" class="col-lg-2 text-center" style="margin:0px !important; padding: 20px !important;">
-                                <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
-                                <div style="word-wrap: break-word; white-space: normal; padding-top: 0px; color: cornflowerblue; font-size: 15px; margin-left: 30px; margin-right: 30px">
-                                    <strong>@items.Value</strong>
-                                </div>
+            <div class="col-lg-12">
+                <div class="row">
+                    @foreach (var items in Model.URLName)
+                    {
+                        <div id="div" class="col-lg-2 text-center" style="margin:0px !important; padding: 20px !important;">
+                            <a id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 150px; border-color: white"></p></a>
+                            <div style="word-wrap: break-word; white-space: normal; padding-top: 0px; color: cornflowerblue; font-size: 15px; margin-left: 30px; margin-right: 30px">
+                                <strong>@items.Value</strong>
                             </div>
-
-                        }
-                    </div>
+                        </div>
+                    }
                 </div>
             </div>
+        </div>
 
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content" style="height:800px; width:1000px">
-                        <div class="modal-body" style="padding:0px">
-                            <div>
-                                <iframe id="modal_content" src="" style="width:100%;height:880px;"></iframe>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <div id="AcknowledgmentModal" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content" style="width:450px">
-                        <div class="modal-header" style="padding:10px">
-                            <h5 class="modal-title" style="color:black"><strong>Acknowledgment</strong></h5>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-lg-8" style="color:black; padding-top:9%"><h6>successfully uploaded</h6></div>
-                                <div class="col-lg-4 text-right"><img id="EventImage" src="~/Content/uploadSuccess.png" style="width:100px; height:100px" /></div>
-                            </div>
-
-                        </div>
-                        <div class="modal-footer" style="padding:8px">
-                            <input type="text" readonly class="btn btn-danger" data-dismiss="modal" name="name" value="Close" style="height:25px; width:100px" />
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" style="height:800px; width:1000px">
+                    <div class="modal-body" style="padding:0px">
+                        <div>
+                            <iframe id="modal_content" src="" style="width:100%;height:880px;"></iframe>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div id="AcknowledgmentModalExist" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content" style="width:450px">
-                        <div class="modal-header" style="padding:10px">
-                            <h5 class="modal-title" style="color:black"><strong>Acknowledgment</strong></h5>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-lg-8" style="color:black; padding-top:9%"><h6>File already exists</h6></div>
-                                <div class="col-lg-4 text-right"><img id="EventImage" src="~/Content/doc-icon.png" style="width:100px; height:100px" /></div>
-                            </div>
 
+        <div id="AcknowledgmentModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content" style="width:450px">
+                    <div class="modal-header" style="padding:10px">
+                        <h5 class="modal-title" style="color:black"><strong>Acknowledgment</strong></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-8" style="color:black; padding-top:9%"><h6>successfully uploaded</h6></div>
+                            <div class="col-lg-4 text-right"><img id="EventImage" src="~/Content/uploadSuccess.png" style="width:100px; height:100px" /></div>
                         </div>
-                        <div class="modal-footer" style="padding:8px">
-                            <input type="text" readonly class="btn btn-danger" data-dismiss="modal" name="name" value="Close" style="height:25px; width:100px" />
-                        </div>
+
+                    </div>
+                    <div class="modal-footer" style="padding:8px">
+                        <input type="text" readonly class="btn btn-danger" data-dismiss="modal" name="name" value="Close" style="height:25px; width:100px" />
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div id="AcknowledgmentModalFormatNotSupported" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content" style="width:450px">
-                        <div class="modal-header" style="padding:10px">
-                            <h5 class="modal-title" style="color:black"><strong>Acknowledgment</strong></h5>
+        <div id="AcknowledgmentModalExist" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content" style="width:450px">
+                    <div class="modal-header" style="padding:10px">
+                        <h5 class="modal-title" style="color:black"><strong>Acknowledgment</strong></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-8" style="color:black; padding-top:9%"><h6>File already exists</h6></div>
+                            <div class="col-lg-4 text-right"><img id="EventImage" src="~/Content/doc-icon.png" style="width:100px; height:100px" /></div>
                         </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-lg-8" style="color:black; padding-top:5px">
-                                    <p><h6>File Format Not Supported,</h6></p>
-                                    <p><h6>Please contact IT Deparement at</h6></p>
-                                    <p><h6>IT@citytire.com</h6></p>
-                                </div>
-                                <div class="col-lg-4 text-right" style="padding-top:13px"><img id="EventImage" src="~/Content/FileNotSupported.png" style="width:100px; height:100px" /></div>
-                            </div>
 
-                        </div>
-                        <div class="modal-footer" style="padding:8px">
-                            <input type="text" readonly class="btn btn-danger" data-dismiss="modal" name="name" value="Close" style="height:25px; width:100px" />
-                        </div>
+                    </div>
+                    <div class="modal-footer" style="padding:8px">
+                        <input type="text" readonly class="btn btn-danger" data-dismiss="modal" name="name" value="Close" style="height:25px; width:100px" />
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div id="AcknowledgmentModalFormatNotSupported" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content" style="width:450px">
+                    <div class="modal-header" style="padding:10px">
+                        <h5 class="modal-title" style="color:black"><strong>Acknowledgment</strong></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-8" style="color:black; padding-top:5px">
+                                <p><h6>File Format Not Supported,</h6></p>
+                                <p><h6>Please contact IT Deparement at</h6></p>
+                                <p><h6>IT@citytire.com</h6></p>
+                            </div>
+                            <div class="col-lg-4 text-right" style="padding-top:13px"><img id="EventImage" src="~/Content/FileNotSupported.png" style="width:100px; height:100px" /></div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer" style="padding:8px">
+                        <input type="text" readonly class="btn btn-danger" data-dismiss="modal" name="name" value="Close" style="height:25px; width:100px" />
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
 
-            <div class="modal manage fade" id="SupplierDocManage" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg manageDialog" role="document">
-                    <div class="modal-content" style="width:680px">
-                        <div class="modal-body " style="padding:0px">
-                            <div class="card">
-                                <div class="card-header" style="padding:8px 10px 3px 30px">
-                                    <div class="row">
-                                        <div class="col-lg-7">
-                                            <h5><strong>Manage Company Documents</strong></h5>
-                                        </div>
-                                        <div class="col-lg-5">
-                                            <input style="width:200px;border-radius:4px; float:right " type="text" id="myInput" onkeyup="myFunction()" placeholder="Search with name" title="Type in a name">
-                                        </div>
+        <div class="modal manage fade" id="SupplierDocManage" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg manageDialog" role="document">
+                <div class="modal-content" style="width:680px">
+                    <div class="modal-body " style="padding:0px">
+                        <div class="card">
+                            <div class="card-header" style="padding:8px 10px 3px 30px">
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <h5><strong>Manage Company Documents</strong></h5>
+                                    </div>
+                                    <div class="col-lg-5">
+                                        <input style="width:200px;border-radius:4px; float:right " type="text" id="myInput" onkeyup="myFunction()" placeholder="Search with name" title="Type in a name">
                                     </div>
                                 </div>
-                                <div class="card-body manageBody">
+                            </div>
+                            <div class="card-body manageBody">
 
-                                    <table id="myTable">
-                                        @{
+                                <table id="myTable">
+                                    @{
 
-                                            int i = 1;
-                                            foreach (var items in Model.URLName)
+                                        int i = 1;
+                                        foreach (var items in Model.URLName)
+                                        {
+                                            string k = i.ToString();
+                                            string Rename = "#R" + k;
+                                            string Delete = "#D" + k;
+                                            string Deleteid = Delete.Substring(1);
+                                            string Renameid = Rename.Substring(1);
+
+                                            using (Html.BeginForm("RenameCompanyDocumentBlob", "Library", new { currentFileName = items.Value }, FormMethod.Post))
                                             {
-                                                string k = i.ToString();
-                                                string Rename = "#R" + k;
-                                                string Delete = "#D" + k;
-                                                string Deleteid = Delete.Substring(1);
-                                                string Renameid = Rename.Substring(1);
+                                                <tr>
+                                                    <td style="width:100px;">
+                                                        <a id="anchor" class="btn" data-toggle="modal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 60px; border-color: white"></p></a>
+                                                    </td>
+                                                    <td style="width:410px;">
+                                                        <strong>@items.Value</strong>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-primary" style="padding:1px 15px 1px 15px" data-toggle="modal" data-target=@Rename>Rename</button>
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn" data-toggle="modal" data-target=@Delete><img style="height:35px" src="~/Content/trash.png" /></button>
+                                                    </td>
 
-                                                using (Html.BeginForm("RenameCompanyDocumentBlob", "Library", new { currentFileName = items.Value }, FormMethod.Post))
-                                                {
-                                                    <tr>
-                                                        <td style="width:100px;">
-                                                            <a id="anchor" class="btn" data-toggle="modal" style="padding-left:0px" href=""><span style="display:none">@items.Key</span><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 60px; border-color: white"></p></a>
-                                                        </td>
-                                                        <td style="width:410px;">
-                                                            <strong>@items.Value</strong>
-                                                        </td>
-                                                        <td>
-                                                            <button class="btn btn-primary" style="padding:1px 15px 1px 15px" data-toggle="modal" data-target=@Rename>Rename</button>
-                                                        </td>
-                                                        <td>
-                                                        </td>
-                                                        <td>
-                                                            <button class="btn" data-toggle="modal" data-target=@Delete><img style="height:35px" src="~/Content/trash.png" /></button>
-                                                        </td>
-
-                                                        <td>
-                                                            <div class="modal fade renameModal" id=@Renameid role="dialog">
-                                                                <div class="modal-dialog modal-sm">
-                                                                    <div class="modal-content" style="width:550px">
-                                                                        <div class="modal-header" style="padding:3px 20px 3px 20px">
-                                                                            <h6 class="modal-title" style="color:black">Rename: @items.Value</h6>
-                                                                        </div>
-                                                                        <div class="modal-body" style="padding:3px 5px 3px 10px;">
-                                                                            <div class="row" style="padding:3px 0px 3px 3px; margin:0px">
-                                                                                <div class="col-md-8" style="padding-left:0px; padding-top:12px">@Html.EditorFor(m => m.RenameString, new { htmlAttributes = new { @required = "required", @style = "height:35px; width:330px", @value = "@items.Value" } })</div>
-                                                                                <div class="col-md-2" style="padding-top:1px"><button class="btn" type="submit"><img style="height:40px" src="~/Content/Tick.png" /></button></div>
-                                                                                <div class="col-md-2" style="padding-top:4px"><button class="btn" style="margin-left:8px" type="button" data-toggle="modal" aria-expanded="false" data-target=@Rename><img style="height:40px" src="~/Content/Cross.png" /></button></div>
-                                                                            </div>
+                                                    <td>
+                                                        <div class="modal fade renameModal" id=@Renameid role="dialog">
+                                                            <div class="modal-dialog modal-sm">
+                                                                <div class="modal-content" style="width:550px">
+                                                                    <div class="modal-header" style="padding:3px 20px 3px 20px">
+                                                                        <h6 class="modal-title" style="color:black">Rename: @items.Value</h6>
+                                                                    </div>
+                                                                    <div class="modal-body" style="padding:3px 5px 3px 10px;">
+                                                                        <div class="row" style="padding:3px 0px 3px 3px; margin:0px">
+                                                                            <div class="col-md-8" style="padding-left:0px; padding-top:12px">@Html.EditorFor(m => m.RenameString, new { htmlAttributes = new { @required = "required", @style = "height:35px; width:330px", @value = "@items.Value" } })</div>
+                                                                            <div class="col-md-2" style="padding-top:1px"><button class="btn" type="submit"><img style="height:40px" src="~/Content/Tick.png" /></button></div>
+                                                                            <div class="col-md-2" style="padding-top:4px"><button class="btn" style="margin-left:8px" type="button" data-toggle="modal" aria-expanded="false" data-target=@Rename><img style="height:40px" src="~/Content/Cross.png" /></button></div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </td>
+                                                        </div>
+                                                    </td>
 
-                                                        <td>
-                                                            <div class="modal fade deleteModal" id=@Deleteid role="dialog">
-                                                                <div class="modal-dialog modal-sm">
-                                                                    <div class="modal-content" style="width:550px">
-                                                                        <div class="modal-header" style="padding:3px 20px 3px 20px">
-                                                                            <h6 class="modal-title" style="color:black">Please Confirm</h6>
-                                                                        </div>
-                                                                        <div class="modal-body" style="padding:3px 5px 3px 5px;">
-                                                                            <div class="row" style="padding-right:5px; margin:0px">
-                                                                                <div class="col-md-8" style="padding-top:17px"><label style="color:black">Delete: @items.Value</label></div>
-                                                                                <div class="col-md-2" style="padding-top:4px"><a class="btn" onclick="location.href='@Url.Action("DeleteCompanyDocumentsBlob", "Library", new { fileName = items.Value})';"><img style="height:40px" src="~/Content/Tick.png" /></a></div>
-                                                                                <div class="col-md-2" style="padding-top:4px"><button class="btn" style="margin-left:8px" type="button" data-toggle="modal" aria-expanded="false" data-target=@Delete><img style="height:40px" src="~/Content/Cross.png" /></button></div>
-                                                                            </div>
+                                                    <td>
+                                                        <div class="modal fade deleteModal" id=@Deleteid role="dialog">
+                                                            <div class="modal-dialog modal-sm">
+                                                                <div class="modal-content" style="width:550px">
+                                                                    <div class="modal-header" style="padding:3px 20px 3px 20px">
+                                                                        <h6 class="modal-title" style="color:black">Please Confirm</h6>
+                                                                    </div>
+                                                                    <div class="modal-body" style="padding:3px 5px 3px 5px;">
+                                                                        <div class="row" style="padding-right:5px; margin:0px">
+                                                                            <div class="col-md-8" style="padding-top:17px"><label style="color:black">Delete: @items.Value</label></div>
+                                                                            <div class="col-md-2" style="padding-top:4px"><a class="btn" onclick="location.href='@Url.Action("DeleteCompanyDocumentsBlob", "Library", new { fileName = items.Value})';"><img style="height:40px" src="~/Content/Tick.png" /></a></div>
+                                                                            <div class="col-md-2" style="padding-top:4px"><button class="btn" style="margin-left:8px" type="button" data-toggle="modal" aria-expanded="false" data-target=@Delete><img style="height:40px" src="~/Content/Cross.png" /></button></div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </td>
-                                                    </tr>
-                                                }
-
-                                                i = i + 1;
+                                                        </div>
+                                                    </td>
+                                                </tr>
                                             }
 
+                                            i = i + 1;
                                         }
 
-                                    </table>
-                                </div>
+                                    }
+
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
+    }
+
+    <script>
+        function myFunction() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
         }
+    </script>
 
-        <script>
-            function myFunction() {
-                var input, filter, table, tr, td, i, txtValue;
-                input = document.getElementById("myInput");
-                filter = input.value.toUpperCase();
-                table = document.getElementById("myTable");
-                tr = table.getElementsByTagName("tr");
-                for (i = 0; i < tr.length; i++) {
-                    td = tr[i].getElementsByTagName("td")[0];
-                    if (td) {
-                        txtValue = td.textContent || td.innerText;
-                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                            tr[i].style.display = "";
-                        } else {
-                            tr[i].style.display = "none";
-                        }
-                    }
+    <script>
+        $(document).ready(function () {
+
+            function getUrlVars() {
+                var vars = [], hash;
+                var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                for (var i = 0; i < hashes.length; i++) {
+                    hash = hashes[i].split('=');
+                    vars.push(hash[0]);
+                    vars[hash[0]] = hash[1];
                 }
+                return vars;
             }
-        </script>
-
-        <script>
-            $(document).ready(function () {
-
-                function getUrlVars() {
-                    var vars = [], hash;
-                    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-                    for (var i = 0; i < hashes.length; i++) {
-                        hash = hashes[i].split('=');
-                        vars.push(hash[0]);
-                        vars[hash[0]] = hash[1];
-                    }
-                    return vars;
-                }
 
 
-                var acknowledgment = getUrlVars()["ac"];
-                if (acknowledgment == "success") {
-                    $("#AcknowledgmentModal").modal('show');
-                }
-                else if (acknowledgment == "FileAlreadyExists") {
-                    $("#AcknowledgmentModalExist").modal('show');
-                }
-                else if (acknowledgment == "WrongFormat") {
-                    $("#AcknowledgmentModalFormatNotSupported").modal('show');
-                }
+            var acknowledgment = getUrlVars()["ac"];
+            if (acknowledgment == "success") {
+                $("#AcknowledgmentModal").modal('show');
+            }
+            else if (acknowledgment == "FileAlreadyExists") {
+                $("#AcknowledgmentModalExist").modal('show');
+            }
+            else if (acknowledgment == "WrongFormat") {
+                $("#AcknowledgmentModalFormatNotSupported").modal('show');
+            }
 
 
 
+        });
+        $(document).ready(function () {
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
             });
-            $(document).ready(function () {
-                $('#clickThis').on('click', function () {
-                    $('#sidebar').toggleClass('active');
-                });
-            });
+        });
 
 
 
-            $('#div a').click(function (e) {
-                e.preventDefault()
-                $that = $(this);
-                $that.parent().find('a');
-                var seleccionado = $(this).children("span").html();
-                console.log(seleccionado);
-                $('#modal_content').attr('src', seleccionado);
+        $('#div a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
 
-            });
+        });
 
-            if ($("#A").val() == "A") {
-                $("#Aimage").attr("src", "/Content/A.png");
-            }
-            else {
-                $("#Aimage").attr("src", "");
-            };
+        if ($("#A").val() == "A") {
+            $("#Aimage").attr("src", "/Content/A.png");
+        }
+        else {
+            $("#Aimage").attr("src", "");
+        };
 
-            if ($("#B").val() == "B") {
-                $("#Bimage").attr("src", "/Content/B.png");
-            }
-            else {
-                $("#Bimage").attr("src", "");
-            };
+        if ($("#B").val() == "B") {
+            $("#Bimage").attr("src", "/Content/B.png");
+        }
+        else {
+            $("#Bimage").attr("src", "");
+        };
 
-            if ($("#C").val() == "C") {
-                $("#Cimage").attr("src", "/Content/C.png");
-            }
-            else {
-                $("#Cimage").attr("src", "");
-            };
+        if ($("#C").val() == "C") {
+            $("#Cimage").attr("src", "/Content/C.png");
+        }
+        else {
+            $("#Cimage").attr("src", "");
+        };
 
-            if ($("#D").val() == "D") {
-                $("#Dimage").attr("src", "/Content/D.png");
-            }
-            else {
-                $("#Dimage").attr("src", "");
-            };
+        if ($("#D").val() == "D") {
+            $("#Dimage").attr("src", "/Content/D.png");
+        }
+        else {
+            $("#Dimage").attr("src", "");
+        };
 
-            if ($("#E").val() == "E") {
-                $("#Eimage").attr("src", "/Content/E.png");
-            }
-            else {
-                $("#Eimage").attr("src", "");
-            };
+        if ($("#E").val() == "E") {
+            $("#Eimage").attr("src", "/Content/E.png");
+        }
+        else {
+            $("#Eimage").attr("src", "");
+        };
 
-            if ($("#F").val() == "F") {
-                $("#Fimage").attr("src", "/Content/F.png");
-            }
-            else {
-                $("#Fimage").attr("src", "");
-            };
+        if ($("#F").val() == "F") {
+            $("#Fimage").attr("src", "/Content/F.png");
+        }
+        else {
+            $("#Fimage").attr("src", "");
+        };
 
-            if ($("#G").val() == "G") {
-                $("#Gimage").attr("src", "/Content/G.png");
-            }
-            else {
-                $("#Gimage").attr("src", "");
-            };
+        if ($("#G").val() == "G") {
+            $("#Gimage").attr("src", "/Content/G.png");
+        }
+        else {
+            $("#Gimage").attr("src", "");
+        };
 
-            if ($("#H").val() == "H") {
-                $("#Himage").attr("src", "/Content/H.png");
-            }
-            else {
-                $("#Himage").attr("src", "");
-            };
+        if ($("#H").val() == "H") {
+            $("#Himage").attr("src", "/Content/H.png");
+        }
+        else {
+            $("#Himage").attr("src", "");
+        };
 
-            if ($("#I").val() == "I") {
-                $("#Iimage").attr("src", "/Content/I.png");
-            }
-            else {
-                $("#Iimage").attr("src", "");
-            };
+        if ($("#I").val() == "I") {
+            $("#Iimage").attr("src", "/Content/I.png");
+        }
+        else {
+            $("#Iimage").attr("src", "");
+        };
 
-            if ($("#J").val() == "J") {
-                $("#Jimage").attr("src", "/Content/J.png");
-            }
-            else {
-                $("#Jimage").attr("src", "");
-            };
+        if ($("#J").val() == "J") {
+            $("#Jimage").attr("src", "/Content/J.png");
+        }
+        else {
+            $("#Jimage").attr("src", "");
+        };
 
-            if ($("#K").val() == "K") {
-                $("#Kimage").attr("src", "/Content/K.png");
-            }
-            else {
-                $("#Kimage").attr("src", "");
-            };
+        if ($("#K").val() == "K") {
+            $("#Kimage").attr("src", "/Content/K.png");
+        }
+        else {
+            $("#Kimage").attr("src", "");
+        };
 
-            if ($("#L").val() == "L") {
-                $("#Limage").attr("src", "/Content/L.png");
-            }
-            else {
-                $("#Limage").attr("src", "");
-            };
+        if ($("#L").val() == "L") {
+            $("#Limage").attr("src", "/Content/L.png");
+        }
+        else {
+            $("#Limage").attr("src", "");
+        };
 
-            if ($("#M").val() == "M") {
-                $("#Mimage").attr("src", "/Content/M.png");
-            }
-            else {
-                $("#Mimage").attr("src", "");
-            };
+        if ($("#M").val() == "M") {
+            $("#Mimage").attr("src", "/Content/M.png");
+        }
+        else {
+            $("#Mimage").attr("src", "");
+        };
 
-            if ($("#N").val() == "N") {
-                $("#Nimage").attr("src", "/Content/N.png");
-            }
-            else {
-                $("#Nimage").attr("src", "");
-            };
+        if ($("#N").val() == "N") {
+            $("#Nimage").attr("src", "/Content/N.png");
+        }
+        else {
+            $("#Nimage").attr("src", "");
+        };
 
-            if ($("#O").val() == "O") {
-                $("#Oimage").attr("src", "/Content/O.png");
-            }
-            else {
-                $("#Oimage").attr("src", "");
-            };
+        if ($("#O").val() == "O") {
+            $("#Oimage").attr("src", "/Content/O.png");
+        }
+        else {
+            $("#Oimage").attr("src", "");
+        };
 
-            if ($("#P").val() == "P") {
-                $("#Pimage").attr("src", "/Content/P.png");
-            }
-            else {
-                $("#Pimage").attr("src", "");
-            };
+        if ($("#P").val() == "P") {
+            $("#Pimage").attr("src", "/Content/P.png");
+        }
+        else {
+            $("#Pimage").attr("src", "");
+        };
 
-            if ($("#Q").val() == "Q") {
-                $("#Qimage").attr("src", "/Content/Q.png");
-            }
-            else {
-                $("#Qimage").attr("src", "");
-            };
+        if ($("#Q").val() == "Q") {
+            $("#Qimage").attr("src", "/Content/Q.png");
+        }
+        else {
+            $("#Qimage").attr("src", "");
+        };
 
-            if ($("#R").val() == "R") {
-                $("#Rimage").attr("src", "/Content/R.png");
-            }
-            else {
-                $("#Rimage").attr("src", "");
-            };
+        if ($("#R").val() == "R") {
+            $("#Rimage").attr("src", "/Content/R.png");
+        }
+        else {
+            $("#Rimage").attr("src", "");
+        };
 
-            if ($("#S").val() == "S") {
-                $("#Simage").attr("src", "/Content/S.png");
-            }
-            else {
-                $("#Simage").attr("src", "");
-            };
+        if ($("#S").val() == "S") {
+            $("#Simage").attr("src", "/Content/S.png");
+        }
+        else {
+            $("#Simage").attr("src", "");
+        };
 
-            if ($("#T").val() == "T") {
-                $("#Timage").attr("src", "/Content/T.png");
-            }
-            else {
-                $("#Timage").attr("src", "");
-            };
+        if ($("#T").val() == "T") {
+            $("#Timage").attr("src", "/Content/T.png");
+        }
+        else {
+            $("#Timage").attr("src", "");
+        };
 
-            if ($("#U").val() == "U") {
-                $("#Uimage").attr("src", "/Content/U.png");
-            }
-            else {
-                $("#Uimage").attr("src", "");
-            };
+        if ($("#U").val() == "U") {
+            $("#Uimage").attr("src", "/Content/U.png");
+        }
+        else {
+            $("#Uimage").attr("src", "");
+        };
 
-            if ($("#V").val() == "V") {
-                $("#Vimage").attr("src", "/Content/V.png");
-            }
-            else {
-                $("#Vimage").attr("src", "");
-            };
+        if ($("#V").val() == "V") {
+            $("#Vimage").attr("src", "/Content/V.png");
+        }
+        else {
+            $("#Vimage").attr("src", "");
+        };
 
-            if ($("#W").val() == "W") {
-                $("#Wimage").attr("src", "/Content/W.png");
-            }
-            else {
-                $("#Wimage").attr("src", "");
-            };
+        if ($("#W").val() == "W") {
+            $("#Wimage").attr("src", "/Content/W.png");
+        }
+        else {
+            $("#Wimage").attr("src", "");
+        };
 
-            if ($("#X").val() == "X") {
-                $("#Ximage").attr("src", "/Content/X.png");
-            }
-            else {
-                $("#Ximage").attr("src", "");
-            };
+        if ($("#X").val() == "X") {
+            $("#Ximage").attr("src", "/Content/X.png");
+        }
+        else {
+            $("#Ximage").attr("src", "");
+        };
 
-            if ($("#Y").val() == "Y") {
-                $("#Yimage").attr("src", "/Content/Y.png");
-            }
-            else {
-                $("#Yimage").attr("src", "");
-            };
+        if ($("#Y").val() == "Y") {
+            $("#Yimage").attr("src", "/Content/Y.png");
+        }
+        else {
+            $("#Yimage").attr("src", "");
+        };
 
-            if ($("#Z").val() == "Z") {
-                $("#Zimage").attr("src", "/Content/Z.png");
-            }
-            else {
-                $("#Zimage").attr("src", "");
-            };
+        if ($("#Z").val() == "Z") {
+            $("#Zimage").attr("src", "/Content/Z.png");
+        }
+        else {
+            $("#Zimage").attr("src", "");
+        };
 
-        </script>
+    </script>
 
 
-    </body>
+</body>
     </html>
   
 

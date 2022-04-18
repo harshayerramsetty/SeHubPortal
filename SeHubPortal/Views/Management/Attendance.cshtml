@@ -371,333 +371,43 @@
                         <span class="sr-only">Toggle Menu</span>
                     </button>
                 </div>
-                <div class="payRollMainBody example" style="max-height:734px; overflow:auto">
-                    <div>
-                        <div class="fleft ">
-                            <div class="row bg-secondary" style="height: 30px;padding-top: 4px;margin-left: 2px;margin-right: 1px;">
-                                <div class="col-md-7">
-                                    <h5 style="color:white;font-size:19px;">Employee List</h5>
+                <div class="payRollMainBody">
+                    <div class="row" style="margin-left:0px">
+                        <div class="col-lg-2" style="padding-right:0px">
+                            <div class="row example" style="height:78vh; overflow-y:auto">
+                                <div class="col-lg-12" id="ul_list">
+                                    @foreach (var items in Model.employeeList)
+                                    {
+                                        if (Model.SelectedEmployeeId == items.employeeId)
+                                        {
+                                            <div class="row empButton commonClass @items.employeeId selectedEmployee" style="cursor: pointer; font-weight: bold; padding: 15px; background-color: white" id="@items.employeeId" onclick="pullAttendance(this.id)">
+                                                @items.fullName
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="row empButton commonClass @items.employeeId" style="cursor: pointer; font-weight: bold; padding: 15px; background-color: transparent" id="@items.employeeId" onclick="pullAttendance(this.id)">
+                                                @items.fullName
+                                            </div>
+                                        }
+                                    }
                                 </div>
                             </div>
-                            <ul class="list-group shadow-lg  bg-white rounded">
-                                @foreach (var items in Model.employeeList)
-                                {
-                                    if (items.atWork == "True")
-                                    {
 
-
-                                        if (Model.SelectedEmployeeId == items.employeeId)
-                                        {
-                                            <li class="list-group-item btn text-left" style="background-color:#b3b7bb" onclick="location.href='@Url.Action("Attendance", "Management", new { locId = Model.MatchedLocID,employeeId=@items.employeeId})';">
-                                                <img class="btn" style="vertical-align:middle" src="~/Content/like3.png" alt="">
-                                                <span class="btn" style="vertical-align:middle">@items.fullName</span>
-                                            </li>
-                                        }
-                                        else
-                                        {
-                                            <li class="list-group-item btn text-left" onclick="location.href='@Url.Action("Attendance", "Management", new { locId = Model.MatchedLocID,employeeId=@items.employeeId})';">
-                                                <img class="btn" style="vertical-align:middle" src="~/Content/like3.png" alt="">
-                                                <span class="btn" style="vertical-align:middle">@items.fullName</span>
-                                            </li>
-                                        }
-                                    }
-                                    else
-                                    {
-
-                                        if (Model.SelectedEmployeeId == items.employeeId)
-                                        {
-                                            <li class="list-group-item btn text-left"  style="background-color:#b3b7bb" onclick="location.href='@Url.Action("Attendance", "Management", new { locId = Model.MatchedLocID,employeeId=@items.employeeId})';">
-                                                <img class="btn" style="vertical-align:middle" src="~/Content/dislike.png" alt="">
-                                                <span class="btn" style="vertical-align:middle">@items.fullName</span>
-                                            </li>
-                                        }
-                                        else
-                                        {
-                                            <li class="list-group-item btn text-left" onclick="location.href='@Url.Action("Attendance", "Management", new { locId = Model.MatchedLocID,employeeId=@items.employeeId})';">
-                                                <img class="btn" style="vertical-align:middle" src="~/Content/dislike.png" alt="">
-                                                <span class="btn" style="vertical-align:middle">@items.fullName</span>
-                                            </li>
-                                        }
-
-
-                                    }
-                                }
-                            </ul>
-
-                            <br />
-
-                            <ul class="list-group shadow-lg  bg-white rounded">
-
-                                @if (Model.employeeListChangeLocation != null)
-                                {
-                                    foreach (var items in Model.employeeListChangeLocation)
-                                    {
-                                        if (items.atWork == "True")
-                                        {
-                                            <li class="list-group-item btn text-left" onclick="location.href='@Url.Action("Attendance", "Management", new { locId = Model.MatchedLocID,employeeId=@items.employeeId})';">
-                                                <img class="btn" style="vertical-align:middle" src="~/Content/like3.png" alt="">
-                                                <span class="btn" style="vertical-align:middle">@items.fullName</span>
-                                            </li>
-                                        }
-                                        else
-                                        {
-                                            <li class="list-group-item btn text-left" onclick="location.href='@Url.Action("Attendance", "Management", new { locId = Model.MatchedLocID,employeeId=@items.employeeId})';">
-                                                <img class="btn" style="vertical-align:middle" src="~/Content/dislike.png" alt="">
-                                                <span class="btn" style="vertical-align:middle">@items.fullName</span>
-                                            </li>
-                                        }
-                                    }
-                                }
-
-
-                            </ul>
-
+                            
                         </div>
-                        <div class="fright">
-                            <div id="divLoadere" style="display:none; text-align:center;margin-top:150px;"> <img style="height:300px" src="~/Content/blueloader.gif" alt="Loader" /></div>
-                            <div id="AttendanceRightBody" style="display:none">
-                                @if (Model.SelectedEmployeeId is null)
-                                {
-                                }
-                                else
-                                {
-                                    <div style="margin:0px 0px 0px 10px;">
-                                        <div class="card shadow-sm flex-fill grow" style="margin:0px 0px 0px 0px;">
-                                            <div class="card-body ">
-                                                <div class="row EmpDetailsHeader">
-                                                    <div class="col-lg-10">
-                                                        <div class="row" style="height:40px;">
-                                                            <text style="margin-right:10px; font-size:xx-large; font-weight:bold;">@ViewData["EmployeeName"]</text>
-                                                            
-                                                        </div>
-                                                        <div class="row" style="height:30px;">
-                                                            <text style="font-size:medium; margin:10px 0px 0px 0px"> @ViewData["Position"]</text>
-                                                        </div>
-                                                        <div class="row" style="height:30px;">
-                                                            <text style="font-size:medium; ">Employee Id : @ViewData["EmployeeId"] </text>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-2 text-right" style="overflow: hidden">
-                                                        @*<img src="~/Content/mahesh.jpg" alt="ProfilePic" style="width:85%; height:85%; border-radius:50%;">*@
-                                                        @if (@ViewData["ProfileImage"].ToString() == "data:image/png;base64,")
-                                                        {
-                                                            <img src="~/Content/profilepic.jpg" alt="ProfilePic" style="width:65%; height:90%; border-radius:50%;">
-                                                        }
-                                                        else
-                                                        {
-                                                            <img alt="profilePic" src="@ViewData["ProfileImage"]" style="width:65%; height:90%; border-radius:50%;" />
-                                                        }
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div style="margin:20px 0px 0px 10px;">
-
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="dontShowInPrint btn" id="calender" style="width:100%; background-color:white"></div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="row" style="display:none">
-                                            <div class="col-lg-12 col-md-12 d-flex">
-                                                <div class="card shadow-sm flex-fill grow" style="margin:0px 0px 0px 0px;">
-                                                    <div class="card-header" style="padding:2px 5px 0px 20px">
-                                                        <h6 class="card-title mb-0 d-inline-block">Attendance Summary</h6>
-                                                        <div style="display: inline-block">
-                                                            <h6>(@ViewData["start_date"] to @ViewData["end_date"])</h6>
-                                                        </div>
-                                                    </div>
-                                                    <div class="card-body text-center" style="padding:0px 15px 0px 15px">
-                                                        <div class="row">
-                                                            <div class="col-md-1" style="padding-top: 15px">
-                                                                <table class="table text-left" style="margin-top:0px">
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td class="tdProperties" style="border-color:#fff;font-size:14px"></td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td class="tdProperties" style="border-color:#fff;font-size:14px; padding:5px;">ClockIn</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td class="tdProperties" style="border-color:#fff;font-size:14px; padding:5px;">ClockOut  </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td class="tdProperties" style="border-color:#fff;font-size:14px; padding:5px;"><strong>TOTAL</strong></td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                            <div class="col-md-11">
-                                                                <table class="table table-responsive-sm table-bordered" style="margin-top:15px">
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">SUN</td>
-                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">MON</td>
-                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">TUE</td>
-                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">WED</td>
-                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">THU</td>
-                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">FRI</td>
-                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">SAT</td>
-                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">SUN</td>
-                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">MON</td>
-                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">TUE</td>
-                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">WED</td>
-                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">THU</td>
-                                                                            <td class="tdProperties" style="background-color:lightgray; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">FRI</td>
-                                                                            <td class="tdProperties" style="background-color:lightgrey; color:white; font-size:12px; font-weight:bold; padding:0px; border-top:transparent; width:100px">SAT</td>
-                                                                        </tr>
-                                                                        <tr height="35px">
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN1"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN2"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN3"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN4"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN5"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN6"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN7"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN8"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN9"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN10"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN11"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN12"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN13"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["IN14"]</td>
-                                                                        </tr>
-                                                                        <tr height="35px">
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT1"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT2"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT3"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT4"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT5"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT6"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT7"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT8"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT9"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT10"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT11"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT12"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT13"]</td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;">@ViewData["OUT14"]</td>
-                                                                        </tr>
-                                                                        <tr height="35px">
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT1"]</strong></td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT2"]</strong></td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT3"]</strong></td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT4"]</strong></td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT5"]</strong></td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT6"]</strong></td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT7"]</strong></td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT8"]</strong></td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT9"]</strong></td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT10"]</strong></td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT11"]</strong></td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT12"]</strong></td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT13"]</strong></td>
-                                                                            <td class="tdProperties" style="border-top:transparent; padding:5px;"><strong>@ViewData["TOT14"]</strong></td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div style="margin:20px 0px 0px 25px; display:none">
-                                        <div class="row">
-                                            <div class="col-lg-6">
-                                                <div class="row">
-                                                    <div class="card shadow-sm flex-fill grow">
-                                                        <div class="card-header" style="padding:2px 5px 2px 20px">
-                                                            <h6 class="card-title mb-0 d-inline-block">Average</h6>
-                                                            <a href="#" class="d-inline-block float-right text-primary"></a>
-                                                        </div>
-                                                        <div class="card-body text-center" style="padding-top:8px">
-                                                            <div class="row" style="margin:0px 0px 0px 0px; padding:0px;">
-                                                                <div class="col-lg-6 text-center">
-                                                                    <strong>Clock In</strong>
-                                                                </div>
-                                                                <div class="col-lg-6 text-center">
-                                                                    <strong>Clock Out</strong>
-                                                                </div>
-                                                            </div>
-                                                            <hr style="margin-top:8px" />
-                                                            <div class="time-list">
-                                                                <div class="dash-stats-list">
-                                                                    <span class="btn btn-outline-primary" style="font-size:28px;width:130px; height:60px;">@ViewData["avgInHoursCurrent"]</span>
-                                                                    @*<span class="btn btn-outline-primary">7:35 AM</span>*@
-                                                                    <p class="mb-0">Bi-Week</p>
-                                                                </div>
-                                                                <div class="dash-stats-list">
-                                                                    <span class="btn btn-outline-primary" style="font-size:28px;width:130px; height:60px;">TBD</span>@*@ViewData["avgInHoursOverall"]*@
-                                                                    @*<span class="btn btn-outline-primary">7:45 AM</span>*@
-                                                                    <p class="mb-0">Year</p>
-                                                                </div>
-                                                                <div class="dash-stats-list">
-                                                                    <span class="btn btn-outline-primary" style="font-size:28px;width:130px; height:60px;">@ViewData["avgOutHoursCurrent"]</span>
-                                                                    @*<span class="btn btn-outline-primary">17:55 PM</span>*@
-                                                                    <p class="mb-0">Bi-Week</p>
-                                                                </div>
-                                                                <div class="dash-stats-list">
-                                                                    <span class="btn btn-outline-primary" style="font-size:28px;width:130px; height:60px;">TBD</span>@*@ViewData["avgOutHoursOverall"]*@
-                                                                    @*<span class="btn btn-outline-primary">17:25 PM</span>*@
-                                                                    <p class="mb-0">Year</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6 col-md-12 d-flex">
-                                                <div class="card shadow-sm flex-fill grow">
-                                                    <div class="card-header" style="padding:2px 5px 2px 20px">
-                                                        <h6 class="card-title mb-0 d-inline-block">Employee Leave Count</h6>
-                                                    </div>
-                                                    <div class="card-body text-center" style="padding-top:8px">
-                                                        <div class="row" style="margin:0px 0px 0px 0px; padding:0px;">
-                                                            <div class="col-lg-4 text-center">
-                                                                <strong>Vacation Days</strong>
-                                                            </div>
-                                                            <div class="col-lg-4 text-center">
-                                                                <strong>Sick Days</strong>
-                                                            </div>
-                                                            <div class="col-lg-4 text-center">
-                                                                <strong>Off Days</strong>
-                                                            </div>
-                                                        </div>
-                                                        <hr style="margin-top:8px" />
-                                                        <div class="time-list">
-                                                            <div class="dash-stats-list">
-                                                                <span class="btn btn-outline-primary" style="font-size:28px;width:130px; height:60px;">TBD</span>
-                                                                @*<span class="btn btn-outline-primary">7:35 AM</span>*@
-                                                                <p class="mb-0">Bi-Week</p>
-                                                            </div>
-                                                            <div class="dash-stats-list">
-                                                                <span class="btn btn-outline-primary" style="font-size:28px;width:130px; height:60px;">TBD</span>@*@ViewData["avgInHoursOverall"]*@
-                                                                @*<span class="btn btn-outline-primary">7:45 AM</span>*@
-                                                                <p class="mb-0">Year</p>
-                                                            </div>
-                                                            <div class="dash-stats-list">
-                                                                <span class="btn btn-outline-primary" style="font-size:28px;width:130px; height:60px;">TBD</span>
-                                                                @*<span class="btn btn-outline-primary">17:55 PM</span>*@
-                                                                <p class="mb-0">Bi-Week</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
+                        <div class="col-lg-10">
+                            <div id="loading">
+                                <div style="background-color:white; width:100%; height:79vh; display:flex; justify-content:center; align-items:center;">
+                                    <img style="width:100px" src="~/Content/giphy.gif" alt="Alternate Text" />
+                                </div>
                             </div>
+                            <div class="dontShowInPrint btn" id="calender" style="width:100%; background-color:white"></div>
                         </div>
                     </div>
+
+
+                    
                 </div>
             </div>
         </div>
@@ -708,6 +418,35 @@
         $('#divLoader').css('display', 'block');
         });*@
 
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:10px">
+                    <h5 class="modal-title" style="color:black"><strong><span id="eventTitle"></span></strong></h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12 text-center">
+                            <table class="table table-striped table-bordered">
+                                <thead style="background-color:gray; color:white">
+                                    <tr>
+                                        <th style="font-size:10px; padding:0px" scope="col">Clock-IN</th>
+                                        <th style="font-size:10px; padding:0px" scope="col">Clock-Out</th>
+                                        <th style="font-size:10px; padding:0px" scope="col">Duration</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pDetails">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:8px">
+                    <input type="text" readonly class="btn btn-danger" data-dismiss="modal" name="name" value="Close" style="height:25px; width:100px" />
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
 
@@ -744,37 +483,38 @@
                         $.each(data, function (i, v) {
 
                             console.log(v);
+                            const words = v.split(' ');
 
                             if (v.includes("clockIN")) {
                                 events.push({
-                                    start: v.substring(0, 10),
-                                    title: "clockIN" + " -> " + v.substring(10, 22),
+                                    start: words[0],
+                                    title: "clockIN" + " -> " + words[1],
                                     color: 'white',
                                 });
                             }
                             else if (v.includes("clockOUT")) {
                                 events.push({
-                                    start: v.substring(0, 10),
-                                    title: "clockOUT" + " -> " + v.substring(10, 22),
+                                    start: words[0],
+                                    title: "clockOUT" + " -> " + words[1],
                                     color: 'white',
                                 });
                             }
                             else if (v.includes("autoOUT")) {
                                 events.push({
-                                    start: v.substring(0, 10),
-                                    title: "db autoOUT" + " -> " + v.substring(10, 22),
+                                    start: words[0],
+                                    title: "db autoOUT" + " -> " + words[1],
                                     color: '#fc5151',
                                 });
                             }
 
                             eventOrder: 'color,start'
-                            
+
                         })
 
                         GenerateCalender(events);
                     },
                     error: function (error) {
-                        alert('failed');
+
                     }
                 })
 
@@ -782,7 +522,7 @@
                     $('#calender').fullCalendar('destroy');
 
                     $('#calender').fullCalendar({
-                        contentHeight: 600,
+                        contentHeight: 660,
                         defaultDate: new Date(),
                         timeFormat: 'h(:mm)a',
                         displayEventTime: false,
@@ -829,15 +569,215 @@
                             }
                         },
 
-
                         eventClick: function (calEvent, jsEvent, view) {
-                            
-                        },
+                            $.ajax({
+                                url: '@Url.Action("GetSwipDetails", "Management")', 
+                                data: { date: calEvent.start.format("YYYY-MM-DD"), empid: @ViewData["EmployeeId"]},
+                                success: function (data) {
+                                    var clockIN = [];
+                                    var clockOUT = [];
+
+                                    for (i = 0; i < data.length; i++) {
+                                        if (i % 2 == 0) {
+                                            clockIN.push(data[i]);
+                                        }
+                                        else {
+                                            clockOUT.push(data[i]);
+                                        }
+                                    }
+
+                                    $('#pDetails').html("");
+
+                                    var duration = moment.duration('00:00:00')
+                                    for (i = 0; i < data.length; i++) {
+                                        if (i % 2 == 0) {
+                                        }
+                                        else {
+
+                                            let startTime = Date.parse(data[i - 1].split(">")[0]);
+                                            let endTime = Date.parse(data[i].split(">")[0]);
+
+                                            var sessionstart= moment.unix(startTime/1000).format("DD/MM/YYYY HH:mm:ss");
+                                            var sessionend= moment.unix(endTime/1000).format("DD/MM/YYYY HH:mm:ss");
+                                            var ms = moment(sessionend,"DD/MM/YYYY HH:mm:ss").diff(moment(sessionstart,"DD/MM/YYYY HH:mm:ss"));
+                                            var d = moment.duration(ms);
+                                            var timeelapsed = Math.floor(d.asHours()) + moment.utc(ms).format(":mm:ss");
+                                            
+                                            $('#pDetails').html($('#pDetails').html() + '<tr><td style="font-size:12px; padding:0px">'+data[i - 1].split(">")[0]+'</td><td  style="font-size:12px; padding:0px">'+ data[i].split(">")[0] +'</td><td  style="font-size:12px; padding:0px">'+timeelapsed+'</td></tr>');
+
+                                            duration = duration + moment.duration(timeelapsed).as('milliseconds')
+
+                                        }
+                                    }
+
+                                    $('#myModal #eventTitle').empty().html("Net Duration --> " + moment.utc(duration).format("HH:mm:ss") + " (HH:MM:SS)");
+                                    $('#myModal').modal();
+
+                                    //var newDate = new Date();
+                                    //alert(newDate)
+                                }
+                            });
+                            //$('#myModal').modal();
+                        }
                     })
+                    $('#loading').css("display", "none")
                 }
         });
 
-        
+
+        function pullAttendance(val) {
+
+            $('.commonClass').css("background-color", "transparent")
+            $('.'+val).css("background-color", "white")
+
+            var events = [];
+                $.ajax({
+                    type: "GET",
+                    url: "/Management/GetAttendanceDates",
+                    data: { empid: val},
+                    success: function (data) {
+                        $.each(data, function (i, v) {
+
+                            console.log(v);
+                            const words = v.split(' ');
+
+                            if (v.includes("clockIN")) {
+                                events.push({
+                                    start: words[0],
+                                    title: "clockIN" + " -> " + words[1],
+                                    color: 'white',
+                                });
+                            }
+                            else if (v.includes("clockOUT")) {
+                                events.push({
+                                    start: words[0],
+                                    title: "clockOUT" + " -> " + words[1],
+                                    color: 'white',
+                                });
+                            }
+                            else if (v.includes("autoOUT")) {
+                                events.push({
+                                    start: words[0],
+                                    title: "db autoOUT" + " -> " + words[1],
+                                    color: '#fc5151',
+                                });
+                            }
+
+                            eventOrder: 'color,start'
+
+                        })
+
+                        GenerateCalender(events);
+                    },
+                    error: function (error) {
+
+                    }
+                })
+
+                function GenerateCalender(events) {
+                    $('#calender').fullCalendar('destroy');
+
+                    $('#calender').fullCalendar({
+                        contentHeight: 660,
+                        defaultDate: new Date(),
+                        timeFormat: 'h(:mm)a',
+                        displayEventTime: false,
+                        header: {
+                            left: 'prev',
+                            center: 'title',
+                            right: 'next'
+                        },
+
+                        eventLimit: true,
+                        eventColor: '#378006',
+                        events: events,
+
+
+                        eventRender: function(event, eventElement) {
+                        if (event.imageurl) {
+                            eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl +"' width='32' height='30'>");
+                            }
+                        },
+
+                        viewRender: function(view, element) {
+
+                            curdate = new Date();
+                            viewdate = new Date(view.start);
+
+                            // PREV - force minimum display month to current month
+                            if (new Date(viewdate.getFullYear(), viewdate.getMonth() + 1, 1).getTime() <=
+                                new Date(2018, 0, 1).getTime()){
+                                $('.fc-prev-button').prop('disabled', true);
+                                $('.fc-prev-button').css('opacity', 0.5);
+                            } else {
+                                $('.fc-prev-button').prop('disabled', false);
+                                $('.fc-prev-button').css('opacity', 1);
+                            }
+
+                            // NEXT - force max display month to a year from current month
+                            if (new Date(viewdate.getFullYear(), viewdate.getMonth() + 1).getTime() >=
+                                new Date(curdate.getFullYear(), curdate.getMonth()).getTime()){
+                                $('.fc-next-button').prop('disabled', true);
+                                $('.fc-next-button').css('opacity', 0.5);
+                            } else {
+                                $('.fc-next-button').prop('disabled', false);
+                                $('.fc-next-button').css('opacity', 1);
+                            }
+                        },
+
+                        eventClick: function (calEvent, jsEvent, view) {
+                            $.ajax({
+                                url: '@Url.Action("GetSwipDetails", "Management")', 
+                                data: { date: calEvent.start.format("YYYY-MM-DD"), empid: val},
+                                success: function (data) {
+                                    var clockIN = [];
+                                    var clockOUT = [];
+
+                                    for (i = 0; i < data.length; i++) {
+                                        if (i % 2 == 0) {
+                                            clockIN.push(data[i]);
+                                        }
+                                        else {
+                                            clockOUT.push(data[i]);
+                                        }
+                                    }
+
+                                    $('#pDetails').html("");
+
+                                    var duration = moment.duration('00:00:00')
+                                    for (i = 0; i < data.length; i++) {
+                                        if (i % 2 == 0) {
+                                        }
+                                        else {
+
+                                            let startTime = Date.parse(data[i - 1].split(">")[0]);
+                                            let endTime = Date.parse(data[i].split(">")[0]);
+
+                                            var sessionstart= moment.unix(startTime/1000).format("DD/MM/YYYY HH:mm:ss");
+                                            var sessionend= moment.unix(endTime/1000).format("DD/MM/YYYY HH:mm:ss");
+                                            var ms = moment(sessionend,"DD/MM/YYYY HH:mm:ss").diff(moment(sessionstart,"DD/MM/YYYY HH:mm:ss"));
+                                            var d = moment.duration(ms);
+                                            var timeelapsed = Math.floor(d.asHours()) + moment.utc(ms).format(":mm:ss");
+
+                                            $('#pDetails').html($('#pDetails').html() + '<tr><td style="font-size:12px; padding:0px">'+data[i - 1].split(">")[0]+'</td><td  style="font-size:12px; padding:0px">'+ data[i].split(">")[0] +'</td><td  style="font-size:12px; padding:0px">'+timeelapsed+'</td></tr>');
+
+                                            duration = duration + moment.duration(timeelapsed).as('milliseconds')
+
+                                        }
+                                    }
+
+                                    $('#myModal #eventTitle').empty().html("Net Duration --> " + moment.utc(duration).format("HH:mm:ss") + " (HH:MM:SS)");
+                                    $('#myModal').modal();
+
+                                    //var newDate = new Date();
+                                    //alert(newDate)
+                                }
+                            });
+                            //$('#myModal').modal();
+                        }
+                    })
+                }
+        }
 
 
     </script>

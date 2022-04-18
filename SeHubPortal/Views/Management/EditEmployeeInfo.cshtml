@@ -42,15 +42,11 @@
                         <div class="form-row">
                             <div class="form-group col-md-3">
                                 <label>Employee ID</label>
-                                @*<input type="text" class="form-control">*@
                                 @Html.EditorFor(model => model.NewEmployee.employee_id, new { htmlAttributes = new { @readonly = "true", @class = "form-control", @type = "text", @required = "required" } })
-
                             </div>
 
                             <div class="form-group col-md-3">
                                 <label>Loc ID</label>
-                                @*<input type="text" class="form-control">*@
-
                                 @if (Model.SehubAccess.my_staff >= 3)
                                 {
                                     @Html.DropDownListFor(model => model.NewEmployee.loc_ID, Model.MatchedStaffLocs, new { @class = "form-control", @type = "text", @required = "required" })
@@ -59,7 +55,6 @@
                                 {
                                     @Html.EditorFor(model => model.NewEmployee.loc_ID, new { htmlAttributes = new { @readonly = "true", @class = "form-control", @type = "text", @required = "required" } })
                                 }
-
                             </div>
 
                             <div class="form-group col-md-3">
@@ -106,7 +101,6 @@
                                     });
                                 }
                                 @Html.DropDownListFor(model => model.CompensationType, listItems2, "select", new { @id = "selectId", @class = "form-control", @required = "required" })
-                            
                             </div>
 
 
@@ -279,7 +273,7 @@
     $(document).ready(function () {
                        
         var date = $('#DateOFBirth').val();
-        date = date.substring(0, 10);
+        date = date.split(" ")[0]
         $('#DateOFBirth').val(date);
     });
 </script>

@@ -47,7 +47,6 @@ namespace SeHubPortal.Models
         public virtual DbSet<tbl_calculator_GM_parts> tbl_calculator_GM_parts { get; set; }
         public virtual DbSet<tbl_calculator_GM_tire> tbl_calculator_GM_tire { get; set; }
         public virtual DbSet<tbl_fleettvt_Customer> tbl_fleettvt_Customer { get; set; }
-        public virtual DbSet<tbl_commercial_tire_manufacturers> tbl_commercial_tire_manufacturers { get; set; }
         public virtual DbSet<tbl_commercial_tire_sizes> tbl_commercial_tire_sizes { get; set; }
         public virtual DbSet<tbl_fleettvt_configurations> tbl_fleettvt_configurations { get; set; }
         public virtual DbSet<tbl_fleetTVT_fieldsurvey_tire> tbl_fleetTVT_fieldsurvey_tire { get; set; }
@@ -66,10 +65,8 @@ namespace SeHubPortal.Models
         public virtual DbSet<tbl_payroll_submission_branch> tbl_payroll_submission_branch { get; set; }
         public virtual DbSet<tbl_employee_payroll_final> tbl_employee_payroll_final { get; set; }
         public virtual DbSet<tbl_payroll_submission_corporate> tbl_payroll_submission_corporate { get; set; }
-        public virtual DbSet<tbl_source_RARcodes> tbl_source_RARcodes { get; set; }
         public virtual DbSet<tbl_cta_location_info> tbl_cta_location_info { get; set; }
         public virtual DbSet<tbl_tread_tracker_customers> tbl_tread_tracker_customers { get; set; }
-        public virtual DbSet<tbl_source_retread_tread> tbl_source_retread_tread { get; set; }
         public virtual DbSet<tbl_employee_payroll_submission> tbl_employee_payroll_submission { get; set; }
         public virtual DbSet<tbl_sehub_access> tbl_sehub_access { get; set; }
         public virtual DbSet<tbl_fuel_log_invoiced> tbl_fuel_log_invoiced { get; set; }
@@ -78,7 +75,6 @@ namespace SeHubPortal.Models
         public virtual DbSet<tbl_source_tire> tbl_source_tire { get; set; }
         public virtual DbSet<tbl_source_truckTire_sizes> tbl_source_truckTire_sizes { get; set; }
         public virtual DbSet<tbl_customer_reporting_customers> tbl_customer_reporting_customers { get; set; }
-        public virtual DbSet<tbl_retread_tread> tbl_retread_tread { get; set; }
         public virtual DbSet<tbl_vacation_schedule> tbl_vacation_schedule { get; set; }
         public virtual DbSet<tbl_expense_claim_account> tbl_expense_claim_account { get; set; }
         public virtual DbSet<tbl_expense_claim> tbl_expense_claim { get; set; }
@@ -87,5 +83,28 @@ namespace SeHubPortal.Models
         public virtual DbSet<tbl_treadTracker_workStations> tbl_treadTracker_workStations { get; set; }
         public virtual DbSet<tbl_source_DOT_plantcodes> tbl_source_DOT_plantcodes { get; set; }
         public virtual DbSet<tbl_source_DOT_sizecodes> tbl_source_DOT_sizecodes { get; set; }
+        public virtual DbSet<tbl_harpoon_clients> tbl_harpoon_clients { get; set; }
+        public virtual DbSet<tbl_pricelist> tbl_pricelist { get; set; }
+        public virtual DbSet<tbl_Efficiancy_Technician_Commissions> tbl_Efficiancy_Technician_Commissions { get; set; }
+        public virtual DbSet<tbl_harpoon_users> tbl_harpoon_users { get; set; }
+        public virtual DbSet<tbl_harpoon_source_locationZone> tbl_harpoon_source_locationZone { get; set; }
+        public virtual DbSet<tbl_harpoon_source_serialNumbers> tbl_harpoon_source_serialNumbers { get; set; }
+        public virtual DbSet<tbl_harpoon_source_displayColors> tbl_harpoon_source_displayColors { get; set; }
+        public virtual DbSet<tbl_harpoon_settings_schedule> tbl_harpoon_settings_schedule { get; set; }
+        public virtual DbSet<tbl_harpoon_source_userProfiles> tbl_harpoon_source_userProfiles { get; set; }
+        public virtual DbSet<tbl_harpoon_employee_attendance> tbl_harpoon_employee_attendance { get; set; }
+        public virtual DbSet<tbl_harpoon_locations> tbl_harpoon_locations { get; set; }
+        public virtual DbSet<tbl_harpoon_devices> tbl_harpoon_devices { get; set; }
+        public virtual DbSet<tbl_harpoon_settings> tbl_harpoon_settings { get; set; }
+        public virtual DbSet<tbl_harpoon_employee_rfid> tbl_harpoon_employee_rfid { get; set; }
+        public virtual DbSet<tbl_harpoon_employee> tbl_harpoon_employee { get; set; }
+        public virtual DbSet<tbl_source_commercial_tire_manufacturers> tbl_source_commercial_tire_manufacturers { get; set; }
+        public virtual DbSet<tbl_source_retread_tread> tbl_source_retread_tread { get; set; }
+        public virtual DbSet<tbl_source_RARcodes> tbl_source_RARcodes { get; set; }
+        public virtual DbSet<tbl_cta_location_survey> tbl_cta_location_survey { get; set; }
+        public virtual DbSet<tbl_management_training> tbl_management_training { get; set; }
+        public virtual DbSet<tbl_harpoon_departments> tbl_harpoon_departments { get; set; }
+        public virtual DbSet<tbl_production_schedule> tbl_production_schedule { get; set; }
+        public virtual DbSet<tbl_harpoon_jobclock> tbl_harpoon_jobclock { get; set; }
     }
 }

@@ -11,11 +11,13 @@ namespace SeHubPortal.ViewModel
     {
         public List<KeyValuePair<string, string>> URLName { get; set; }
         public string Location_ID { get; set; }
+        public string Payroll_ID { get; set; }
         public string Pane { get; set; }
         public string RenameString { get; set; }
         public int Permission { get; set; }
         public tbl_sehub_access SehubAccess { get; set; }
         public List<SelectListItem> LocationsList { get; set; }
+        public List<SelectListItem> PayrollIdList { get; set; }
         public List<EmployeeAttendanceListModel> employeeList { get; set; }
         public string SelectedEmployeeId { get; set; }
         public List<tbl_vacation_schedule> vacations { get; set; }
@@ -26,7 +28,23 @@ namespace SeHubPortal.ViewModel
         public tbl_employee employee { get; set; }
         public int editVacationEmployee { get; set; }
          
+        public List<TechnicianEfficiencyViewModel> techefficiencyList { get; set; }
         public string SortBy { get; set; }
         public string Year { get; set; }
+
+        public int ytd_barcode { get; set; }
+        public int ytd_barcode_prev_year { get; set; }
+        public double ytd_tech_minutes { get; set; }
+        public double ytd_tech_production { get; set; }
+        public double anual_production { get; set; }
+        public double comparison { get; set; }
+        public double ytd_tech_minutes_last_year { get; set; }
+
+        public string commercialCustomerSurvey_link { get; set; }
+        public string employeeFullName { get; set; }
+        public string employeePosition { get; set; }
+        public string Position { get; set; }
+
+        public List<SelectListItem> Positions { get; set; }
     }
 }

@@ -33,5 +33,20 @@ namespace SeHubPortal.Models
         public Nullable<System.DateTime> final_inspection_date { get; set; }
         public string ship_to_location { get; set; }
         public Nullable<int> virgin { get; set; }
+        public string comments { get; set; }
+        public string TT050_result { get; set; }
+        public Nullable<System.DateTime> TT050_date { get; set; }
+        public string TT100_result { get; set; }
+        public Nullable<System.DateTime> TT100_date { get; set; }
+        public string TT200_result { get; set; }
+        public Nullable<System.DateTime> TT200_date { get; set; }
+        public string TT300_result { get; set; }
+        public Nullable<System.DateTime> TT300_date { get; set; }
+        public string TT400_result { get; set; }
+        public Nullable<System.DateTime> TT400_date { get; set; }
+        public string TT500_result { get; set; }
+        public Nullable<System.DateTime> TT500_date { get; set; }
+        public string TT600_result { get; set; }
+        public Nullable<System.DateTime> TT600_date { get; set; }
     }
 }

@@ -1,0 +1,80 @@
+﻿@model SeHubPortal.ViewModel.LoginViewModel
+
+@using (Html.BeginForm("ResetProfilePassword", "Login", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="modal-content">
+        <div class="modal-header" style="padding:10px 5px 0px 15px">
+            <h5>Edit Profile</h5>
+        </div>
+        <div class="modal-body">
+            <div class="col-lg-12">
+                <div class="row" style="margin-bottom:10px">
+                    <div class="col-lg-5">
+                        <lable>User Profile</lable>
+                    </div>
+                    <div class="col-lg-7">
+                        <input style="width:250px" disabled type="text" name="name" value="@Model.newHarpoonUser.profile" />
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:10px">
+                    <div class="col-lg-5">
+                        <lable>Email Adreess</lable>
+                    </div>
+                    <div class="col-lg-7">
+                        <input style="width:250px" disabled type="text" name="name" value="@Model.newHarpoonUser.email" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <lable style="font-size:12px; color:dimgray; font-weight:bold">Not Editable. To make changes please contact account administrator</lable>
+                    </div>
+                </div>
+                <hr />
+                <div class="row" style="margin-bottom:10px">
+                    <div class="col-lg-5">
+                        <lable>Old Password</lable>
+                    </div>
+                    <div class="col-lg-7">
+                        @Html.EditorFor(m => m.OldPassWord, new { htmlAttributes = new { @id="oldPassword", @style = "width:250px", @type="password", onfocusout="checkRequirements()"} })
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:10px">
+                    <div class="col-lg-5">
+                        <lable>New Password</lable>
+                    </div>
+                    <div class="col-lg-7">
+                        @Html.EditorFor(m => m.NewPassword, new { htmlAttributes = new { @id="newPassword", @style = "width:250px", @type="password", onfocusout="checkRequirements()"} })
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:10px">
+                    <div class="col-lg-5">
+                        <lable>Confirm Password</lable>
+                    </div>
+                    <div class="col-lg-7">
+                        @Html.EditorFor(m => m.ConfirmPassword, new { htmlAttributes = new { @id="confirmPassword", @style = "width:250px", @type="password", onfocusout="checkRequirements()" } })
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="modal-footer" style="padding:5px">
+            <button data-dismiss="modal" style="padding:2px 20px 2px 20px" class="btn btn-danger">Cancel</button>
+            <button id="editProfileSubmit" style="display:none; padding:2px 20px 2px 20px" class="btn btn-success">
+                Submit
+            </button>
+        </div>
+
+        <script>
+            function checkRequirements() {
+                if (($('#newPassword').val() == $('#confirmPassword').val()) && $('#newPassword').val().length > 8) {
+                    $('#editProfileSubmit').css("display", "block");
+                }
+                else {
+                    $('#editProfileSubmit').css("display", "none");
+                }
+            }
+        </script> 
+
+    </div>
+}

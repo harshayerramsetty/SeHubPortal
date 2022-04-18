@@ -1,0 +1,319 @@
+
+@{
+    ViewBag.Title = "DataResources";
+    Layout = "~/Views/Shared/_Settings.cshtml";
+}
+
+@model SeHubPortal.ViewModel.MyStaffViewModel
+
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>*@
+
+
+    <script>
+        $(document).ready(function () {
+            function getUrlVars() {
+                var vars = [], hash;
+                var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                for (var i = 0; i < hashes.length; i++) {
+                    hash = hashes[i].split('=');
+                    vars.push(hash[0]);
+                    vars[hash[0]] = hash[1];
+                }
+                return vars;
+            }
+
+            var acknowledgment = getUrlVars()["ack"];
+            if (acknowledgment == "incorrectReport") {
+                $('#myModal #eventTitle').text("Incorrect Report");
+                $('#myModal').modal();
+            }
+            else if (acknowledgment == "incorrectPayroll") {
+                $('#myModal #eventTitle').text("Incorrect Payroll");
+                $('#myModal').modal();
+            }
+            else if (acknowledgment == "DataImported") {
+                $('#myModal #eventTitle').text("Data Imported Successfully");
+                $('#myModal').modal();
+            }
+            else {
+
+            }
+        });
+
+    </script>
+
+    @if (Model.SehubAccess.plant > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.tools > 0)
+    {
+        <style>
+            #toolsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.management > 0)
+    {
+        <style>
+            #ManagementClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings_managePermissions > 0)
+    {
+        <style>
+            #EmployeePermissionsLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings_customers > 0)
+    {
+        <style>
+            #CustomersLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings_administration > 0)
+    {
+        <style>
+            #AdministrationLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings_dashboard > 0)
+    {
+        <style>
+            #SettingsLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.payroll > 0)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.fleetTVT > 0)
+    {
+        <style>
+            #FleetTVTClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTracker > 0)
+    {
+        <style>
+            #treadTrackereClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_access > 0)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.main > 0)
+    {
+        <style>
+            #mainClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_access == 3)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    <style>
+
+
+
+        .example::-webkit-scrollbar {
+            display: none;
+        }
+
+        .example {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+
+        #SystemLink {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #SettingsClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        .settingsBtn {
+            font-weight: bold;
+        }
+
+        #SystemLink {
+            color: black;
+            font-weight: 700;
+            background-color: #f0f2f5;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            padding-right: 0 !important;
+        }
+
+        .heading {
+            margin: 10px 0px 0px 0px;
+        }
+
+            .heading h2 {
+                margin-top: 8px;
+            }
+
+        .card-header {
+            background-color: #cde8ca;
+        }
+
+            .card-header h6 {
+                color: black;
+            }
+
+        .imageClass {
+            width: 100%;
+            height: 80%;
+            border-radius: 50%;
+        }
+
+        .card {
+            border: 1px solid #ededed;
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+
+        .card {
+            position: relative;
+            display: -ms-flexbox;
+            display: flex;
+            height: auto;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid rgba(0,0,0,.125);
+            border-radius: .25rem;
+        }
+
+        p {
+            font-size: 14px;
+        }
+
+        #MatchedStaffLocID {
+            height: 30px;
+            width: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row heading">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
+                    <li class="breadcrumb-item"><a href="@Url.Action("System", "SettingsHarpoon")">Settings</a></li>
+                    <li class="breadcrumb-item " aria-current="page">System</li>
+                    <input id="AddEmployeeBtn" readonly type="text" class="btn btn-success EmpTransBtns " data-toggle="modal" data-target="#AddEmployeeModal" value="Add" style="height:23px; width:100px; margin-left:520px" />
+                </ol>
+            </nav>
+        </div>
+        <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+            <i class="fa fa-bars" style="font-size:25px"></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+
+    <div class="row" style="margin:0px 10px 20px 15px">
+
+        @using (Html.BeginForm("UploadCSV", "Management", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <input type="file" name="postedFile" />
+            <input type="submit" value="Import" />
+        }
+
+    </div>
+
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:10px">
+                    <h5 class="modal-title" style="color:black"><strong><span>Acknowledgment </span></strong></h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h6 id="eventTitle"></h6>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer" style="padding:8px">
+                    <input type="text" readonly class="btn btn-danger" data-dismiss="modal" name="name" value="Close" style="height:25px; width:100px" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+    </script>
+</body>
+
+</html>
+

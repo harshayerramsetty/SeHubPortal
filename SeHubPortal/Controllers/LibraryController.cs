@@ -222,8 +222,6 @@ namespace SeHubPortal.Controllers
             
         }
 
-        
-
         [HttpPost]
         public ActionResult UploadManagement(HttpPostedFileBase CompanyDocument)
         {
@@ -292,7 +290,6 @@ namespace SeHubPortal.Controllers
 
         }
 
-        
         [HttpPost]
         public ActionResult UploadBranchShareDrive(HttpPostedFileBase BranchShareDrive, FileURL model)
         {

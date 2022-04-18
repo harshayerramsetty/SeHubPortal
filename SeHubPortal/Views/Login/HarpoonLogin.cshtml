@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width" />
     <title>Login</title>
     <meta charset="utf-8">
-    <link rel="shortcut icon" type="image/x-icon" href="~/Content/title_logo_2.png">
+    <link rel="shortcut icon" type="image/x-icon" href="~/Content/Harpoonn.png">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -58,77 +58,245 @@
     </style>
 </head>
 <body style="overflow-x:hidden">
-    <div class="row">
-        <div class="col-lg-12 text-right" style="padding:20px 40px 20px 40px">
-            <a class="text-primary" onclick="location.href='@Url.Action("SignIn", "Login")';"><u>General Login</u></a>
-        </div>
-    </div>
-    <div class="row" style="margin-top:11%">
+    <div class="row" style="display:flex; height:100vh; justify-content:center; align-items:center">
         <div class="col-lg-3 col-sm-12">
 
         </div>
         <div class="col-lg-6 col-sm-12">
+            <div class="row">
+                <div class="col-lg-12 text-center" style="padding:0px">
+                    <img src='~/Content/HarpoonLongg.png' style="width:63%" />
+                </div>
+            </div>
             @using (Html.BeginForm("HarpoonSignIn", "Login", FormMethod.Post))
             {
+                <div class="row" style="margin-left:15%;margin-right:15%;margin-top:20px;">
+                    <div class="form-group col-md-12">
 
-                <div class="row">
-                    <div class="col-md-4">
-                        <img src='~/Content/Harpoon.png' style="width:150px; height:180px; margin-left:45%" />
+                        @*<input type="email" class="form-control input-lg" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">*@
+                        @Html.EditorFor(model => model.EmailAddress, new { htmlAttributes = new { @class = "form-control input-lg", @required = "required", @type = "email", @style = "text-align:center; height:50px", @id = "userEmailAddress" } })
+
                     </div>
-                    <div class="col-md-8">
-                        <div class="row" style="margin-right:13%;margin-top:40px;">
-                            <div class="form-group col-md-12">
+                    <div class="form-group col-md-12">
 
-                                @*<input type="email" class="form-control input-lg" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">*@
-                                @Html.TextBoxFor(model => model.EmailAddress, new { htmlAttributes = new { @class = "form-control input-lg ", @required = "required", @placeholder = "Enter Email", @type = "email", @style = "font-size: 50px;" } })
-
-                            </div>
-                            <div class="form-group col-md-12">
-
-                                @*<input type="password" class="form-control input-lg" id="exampleInputPassword1" placeholder="Password">*@
-                                @Html.PasswordFor(model => model.password, new { htmlAttributes = new { @class = "form-control input-lg ", @required = "required", @placeholder = "Enter Password", @type = "password", @style = "font-size: 50px;" } })
-                            </div>
-                            <div class="form-group col-md-12">
-                                <a id="forgetPwdBtn" style="float:right;margin-right:10px;font-size:16px;" href="#" data-toggle="modal" data-target="#addModal">Forgot Password?</a>
-                            </div>
-                        </div>
+                        @*<input type="password" class="form-control input-lg" id="exampleInputPassword1" placeholder="Password">*@
+                        @Html.PasswordFor(model => model.password, new { htmlAttributes = new { @class = "form-control input-lg ", @required = "required", @placeholder = "Enter Password", @type = "password", @style = "font-size: 50px;" } })
                     </div>
                 </div>
-                <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div id="ForgetPasswordDiv">
+                <div class="row" style="margin-left:15%;margin-right:15%">
 
-                        </div>
-
-                    </div>
-                </div>
-                <hr style="border: 0.5px solid lightgray;margin-left:11%;margin-right:9%" />
-                <div class="row" style="margin-left:13%;margin-right:12%; ">
-                    <div class="col-md-6" style="padding:0px">
+                    <div class="col-md-12 col-sm-12" style="padding-right:0px">
                         <input id="sbumitBtn" type="submit" value="Sign in" class="btn btn-secondary" style="float:left" />
-                    </div>
-                    <div class="col-md-6 text-right" style="padding:0px">
-                        <text style="font-size:16px;text-align:right;margin-right:5px;">Don't have an account?</text>
-                        <a id="SignUpBtn" class="signup" style="font-size:16px;text-align:center;" href="#" data-toggle="modal" data-target="#signupModal">Sign up</a>
+                        <a id="forgetPwdBtn" style="float:right;margin-top:10px;margin-right:10px;font-size:16px;" href="#" data-toggle="modal" onclick="forgot()" data-target="#forgotPassword">Forgot Password?</a>
                     </div>
 
-
-                    <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div id="SignUpDiv">
-
-                            </div>
-
-                        </div>
-                    </div>
                 </div>
             }
-
+            <hr style="border: 0.5px solid lightgray;margin-left:11%;margin-right:9%" />
+            <div class="row" style="margin-left:15%;margin-right:15%">
+                <div class="col-md-12 col-sm-12">
+                    <a id="SignUpBtn" class="signup" onclick="clearSignUp()" style="font-size:16px; float:right" href="#" data-toggle="modal" data-target="#signupModal">Sign up</a>
+                    <text style="margin-right:10px; font-size:16px;text-align:right; float:right">Don't have an account?</text>
+                </div>
+            </div>
         </div>
         <div class="col-lg-3 col-sm-12">
 
         </div>
     </div>
+
+    <div class="modal fade" id="signupModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+
+            @using (Html.BeginForm("HarpoonSignUp", "Login", FormMethod.Post))
+            {
+                <div class="modal-content">
+                    <div class="modal-header" style="padding:10px 5px 5px 5px; color:dimgray">
+                        <h5 style="margin-left:auto; margin-right:auto"><b>ACCOUNT SETUP</b></h5>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="row" style="margin-bottom:10px">
+                                    <div class="col-lg-12">
+                                        <h5><u><b>User Information</b></u></h5>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom:10px; padding:0px 15px 0px 15px">
+                                    <div class="col-lg-12">
+                                        <div class="row" style="margin-bottom:10px; margin-right:0px">
+                                            @Html.EditorFor(m => m.newHarpoonUser.email, new { htmlAttributes = new { @style = "width:100%; border:1px solid red", @Placeholder = "Email", @class = "form-control", @required = "required", @type = "text", onfocusout = "validate(this.value, this.id)" } })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row" style="margin-bottom:10px">
+                                    <div class="col-lg-12">
+                                        <h5><u><b>Company Information</b></u></h5>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom:10px; padding:0px 15px 15px 15px">
+                                    <div class="col-lg-6">
+                                        <div class="row" style="margin-bottom:10px; margin-right:0px">
+                                            @Html.EditorFor(m => m.newHarpoonUser.companyName, new { htmlAttributes = new { @style = "border:1px solid red", @Placeholder = "Company Name", @class = "form-control", @required = "required", @type = "text" } })
+                                        </div>
+                                        <div class="row" style="margin-bottom:10px; margin-right:0px">
+                                            @Html.EditorFor(m => m.newHarpoonUser.companyAddress1, new { htmlAttributes = new { @style = "border:1px solid red", @Placeholder = "Company Address1", @class = "form-control", @required = "required", @type = "text" } })
+                                        </div>
+                                        <div class="row" style="margin-bottom:10px; margin-right:0px">
+                                            @Html.EditorFor(m => m.newHarpoonUser.companyAddress2, new { htmlAttributes = new { @Placeholder = "Company Address2", @class = "form-control", @type = "text" } })
+                                        </div>
+                                        <div class="row" style="margin-bottom:10px; margin-right:0px">
+                                            @Html.EditorFor(m => m.newHarpoonUser.companyCity, new { htmlAttributes = new { @style = "border:1px solid red", @Placeholder = "Company City", @class = "form-control", @required = "required", @type = "text" } })
+                                        </div>
+                                        <div class="row" style="margin-bottom:10px; margin-right:0px">
+                                            <div class="col-lg-6" style="padding:0px 5px 0px 0px">
+                                                @{
+                                                    List
+                                                    <SelectListItem>
+                                                    listItems1 = new List
+                                                    <SelectListItem>
+                                                    ();
+                                                    listItems1.Add(new SelectListItem
+                                                    {
+                                                        Text = "AB",
+                                                        Value = "1"
+                                                    });
+                                                    listItems1.Add(new SelectListItem
+                                                    {
+                                                        Text = "BC",
+                                                        Value = "BC"
+                                                    });
+                                                    listItems1.Add(new SelectListItem
+                                                    {
+                                                        Text = "MB",
+                                                        Value = "MB"
+                                                    });
+                                                    listItems1.Add(new SelectListItem
+                                                    {
+                                                        Text = "NB",
+                                                        Value = "NB"
+                                                    });
+                                                    listItems1.Add(new SelectListItem
+                                                    {
+                                                        Text = "NL",
+                                                        Value = "NL"
+                                                    });
+                                                    listItems1.Add(new SelectListItem
+                                                    {
+                                                        Text = "NT",
+                                                        Value = "NT"
+                                                    });
+                                                    listItems1.Add(new SelectListItem
+                                                    {
+                                                        Text = "NS",
+                                                        Value = "NS"
+                                                    });
+                                                    listItems1.Add(new SelectListItem
+                                                    {
+                                                        Text = "NU",
+                                                        Value = "NU"
+                                                    });
+                                                    listItems1.Add(new SelectListItem
+                                                    {
+                                                        Text = "ON",
+                                                        Value = "6"
+                                                    });
+                                                    listItems1.Add(new SelectListItem
+                                                    {
+                                                        Text = "PE",
+                                                        Value = "PE"
+                                                    });
+                                                    listItems1.Add(new SelectListItem
+                                                    {
+                                                        Text = "QC",
+                                                        Value = "QC"
+                                                    });
+                                                    listItems1.Add(new SelectListItem
+                                                    {
+                                                        Text = "SK",
+                                                        Value = "SK"
+                                                    });
+                                                    listItems1.Add(new SelectListItem
+                                                    {
+                                                        Text = "YT",
+                                                        Value = "YT"
+                                                    });
+
+
+                                                }
+                                                @Html.DropDownListFor(m => m.newHarpoonUser.companyProvince, listItems1, "Prov", new { @style = "width:100%; border:1px solid red", @class = "form-control", @Placeholder = "Province", htmlAttributes = new { @Placeholder = "Province", @required = "required", @type = "text" } })
+                                            </div>
+                                            <div class="col-lg-6" style="padding:0px 0px 0px 5px">
+                                                @Html.EditorFor(m => m.newHarpoonUser.companyPostalCode, new { htmlAttributes = new { @style = "border:1px solid red", @Placeholder = "Postal", @class = "form-control", @required = "required", @type = "text" } })
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-right:0px">
+                                            @Html.EditorFor(m => m.newHarpoonUser.Country, new { htmlAttributes = new { @Placeholder = "Canada", @class = "form-control", @type = "text", @readonly = true } })
+                                        </div>
+
+                                    </div>
+                                    <div class="col-lg-6">
+
+                                        <div class="row" style="margin-bottom:10px">
+                                            @Html.EditorFor(m => m.newHarpoonUser.companyPhone, new { htmlAttributes = new { @style = "border:1px solid red", @Placeholder = "Company Phone", @class = "form-control", @required = "required", @type = "text" } })
+                                        </div>
+                                        <div class="row" style="margin-bottom:10px">
+                                            @Html.EditorFor(m => m.newHarpoonUser.companyFax, new { htmlAttributes = new { @Placeholder = "Company Fax", @class = "form-control", @type = "text" } })
+                                        </div>
+                                        <div class="row" style="margin-bottom:10px">
+                                            @Html.EditorFor(m => m.newHarpoonUser.companyWebsite, new { htmlAttributes = new { @Placeholder = "Company Website", @class = "form-control", @type = "text" } })
+                                        </div>
+                                        <div class="row" style="margin-bottom:10px">
+                                            <div class="col-lg-12">
+                                                <div class="row" style="border-radius:5px; border:1px solid dimgray; height:93px; display:flex; align-items:center; justify-content:center">
+                                                    <span style="color:gray">LOGO</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="">
+                                            <input type="file" name="Logo" value="" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer" style="padding:5px">
+                        <button type="button" data-dismiss="modal" class="btn btn-danger" style="padding:2px 25px 2px 25px">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-success" style="padding:2px 25px 2px 25px">
+                            Submit
+                        </button>
+                    </div>
+                </div>
+
+            }
+
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="forgotPassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:7px 3px 3px 15px">
+                    <h5>Acknowledgment</h5>
+                </div>
+                <div class="modal-body text-center">
+                    <h6 id="modalText"></h6>
+                </div>
+                <div class="modal-footer" style="padding:3px">
+                    <button type="button" style="padding:2px 30px 2px 30px" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -146,7 +314,106 @@
         </div>
     </div>
 
+    <div class="modal fade" id="In-Valid" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:7px 3px 3px 15px">
+                    <h5>Acknowledgment</h5>
+                </div>
+                <div class="modal-body text-center">
+                    <h3>In-Valid Email</h3>
+                </div>
+                <div class="modal-footer" style="padding:3px">
+                    <button type="button" style="padding:2px 30px 2px 30px" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="modal fade" id="ResendEmail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            @using (Html.BeginForm("ResendEmail", "Login", FormMethod.Post))
+            {
+                <div class="modal-content">
+                    <div class="modal-header" style="padding:7px 3px 3px 15px">
+                        <h5>Resend Email</h5>
+                    </div>
+                    <div class="modal-body text-center">
+                        User already exists fro the email.
+                        Do you want to resend the mail to setup password?
+                        <br />
+                        <br />
+                        @Html.EditorFor(m => m.resendEmail, new { htmlAttributes = new { @style = "text-align:center", @Placeholder = "Email", @class = "form-control", @required = "required", @type = "text", @readonly = true, @id = "ResendEmailTextBoxes" } })
+                    </div>
+                    <div class="modal-footer" style="padding:3px">
+                        <button type="button" style="padding:2px 30px 2px 30px" class="btn btn-danger" data-dismiss="modal">No</button>
+                        <button type="submit" style="padding:2px 26px 2px 26px" class="btn btn-success">Yes</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <script>
+
+        function clearSignUp() {
+            $("#signupModal :input").val("");
+        }
+
+
+        function forgot() {
+
+
+                if ($('#userEmailAddress').val() == "") {
+                    $('#modalText').html("Please enter User ID")
+                    $('#forgotPassword').modal();
+                }
+                else {
+                    $.ajax({
+                        url: '@Url.Action("ForgotPassword", "Login")',
+                        data: { email: $('#userEmailAddress').val() },
+                        type: 'POST',
+                        async: false,
+                        success: function (data) {
+                            if (data == "True") {
+                                $('#modalText').html("Check Your mail")
+                                $('#forgotPassword').modal();
+                            }
+                            else {
+                                $('#modalText').html("User does not exist")
+                                $('#forgotPassword').modal();
+                            }
+                        }
+                    });
+                }
+        }
+
+
+
+                                            function validate(val, id) {
+                                                filter = /^([a-zA-Z0-9_\.\-])+\@@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+                                                if (!filter.test(val)) {
+                                                    $('#In-Valid').modal()
+                                                    $('#' + id).val("")
+                                                }
+                                                else {
+                                                    $.ajax({
+                                                        url: '@Url.Action("CheckUserExistance", "Login")',
+                                                        data: { email: val },
+                                                        async:false,
+                                                        type: 'POST',
+                                                        success: function (data) {
+                                                            if (data != "true") {
+                                                                $('#' + id).val("")
+                                                                $('#ResendEmailTextBoxes').val(data);
+                                                                $('#signupModal').modal('hide');
+                                                                $('#ResendEmail').modal();
+                                                            }
+                                                        }
+                                                    });
+                                                }
+                                            }
+    </script>
 
 </body>
 </html>

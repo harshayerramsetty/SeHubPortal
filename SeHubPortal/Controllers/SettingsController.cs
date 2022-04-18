@@ -409,7 +409,7 @@ namespace SeHubPortal.Controllers
 
             if(model.empStatusInfo.date_of_leaving != null)
             {
-                Trace.WriteLine("Reached untill here and there" + model.empStatusInfo.employee_id);
+
                 if (empInfo != null)
                 {
                     empInfo.status = 0;
@@ -417,12 +417,17 @@ namespace SeHubPortal.Controllers
                 int CurrentPayrollId = db.tbl_employee_payroll_dates.Where(x => x.start_date <= DateTime.Today && x.end_date >= DateTime.Today).Select(x => x.payroll_Id).FirstOrDefault();
                 Trace.WriteLine("This is the test" + CurrentPayrollId.ToString());
                 var deletepayrollBiweekly = db.tbl_employee_payroll_biweekly.Where(x => x.employee_id == model.empStatusInfo.employee_id && x.payroll_id == CurrentPayrollId).FirstOrDefault();
+                var deletepayrollSummery = db.tbl_employee_payroll_summary.Where(x => x.employee_id == model.empStatusInfo.employee_id && x.payroll_id == CurrentPayrollId).FirstOrDefault();
                 var deletepayrollSubmission = db.tbl_employee_payroll_submission.Where(x => x.employee_id == model.empStatusInfo.employee_id && x.payroll_id == CurrentPayrollId).FirstOrDefault();
 
                 if (deletepayrollBiweekly != null)
                 {
                     db.tbl_employee_payroll_biweekly.Remove(deletepayrollBiweekly);
 
+                }
+                if (deletepayrollSummery != null)
+                {
+                    db.tbl_employee_payroll_summary.Remove(deletepayrollSummery);
                 }
                 if (deletepayrollSubmission != null)
                 {
@@ -945,6 +950,31 @@ namespace SeHubPortal.Controllers
         }
 
         private delegate void SetTextDeleg(string text);
+
+        [HttpGet]
+        public ActionResult DataResources(string ack)
+        {
+            MyStaffViewModel modal = new MyStaffViewModel();
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+            var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
+            modal.SehubAccess = empDetails;
+            modal.csvData = ack;
+
+            var unqPayroll = db.tbl_Efficiancy_Technician_Commissions.Select(x => x.payroll_id).Distinct();
+
+            List<tbl_employee_payroll_dates> pdates = new List<tbl_employee_payroll_dates>();
+
+            foreach (var payrolid in unqPayroll)
+            {
+                pdates.Add(db.tbl_employee_payroll_dates.Where(x => x.payroll_Id.ToString() == payrolid).OrderByDescending(x => x.payroll_Id).FirstOrDefault());
+            }
+
+            modal.DataResources = pdates.OrderByDescending(x => x.payroll_Id).ToList();
+
+            return View(modal);
+        }
 
     }
 }

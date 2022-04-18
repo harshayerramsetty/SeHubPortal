@@ -16,5 +16,8 @@ namespace SeHubPortal.ViewModel
         public string SelectedEmployeeId { get; set; }
         public int AccessLevel { get; set; }
         public tbl_sehub_access SehubAccess { get; set; }
+        public bool multipleLocation { get; set; }
+        public string AccessType { get; set; }
+        public TimeClockEvent CreateEvent  { get; set; }
     }
 }

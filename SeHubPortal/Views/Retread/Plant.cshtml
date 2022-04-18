@@ -20,6 +20,8 @@
     <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
     <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
 
+    @*
+        
     @if (Model.SehubAccess.tools > 0)
     {
         <style>
@@ -92,7 +94,13 @@
         </style>
     }
 
+        *@
+
     <style>
+
+        #mainNavBar{
+            display:none !important
+        }
 
         #DashboardLink {
             display: block !important;
@@ -136,11 +144,12 @@
 </head>
 <body style="overflow-y: hidden; overflow-x: hidden">
 
-    <div class="row">
+    <div class="row" id="mouseClick">
         <div class="col-md-12">
             <div class="row" style="padding:10px 30px 10px 30px">
                 <div class="col-md-4" style="padding:10px 10px 10px 20px; background-color:white; vertical-align:middle">
-                    <a href="@Url.Action("Plant", "Retread")">Retread Plant</a>
+                    <a href="@Url.Action("Plant", "Retread")">Retread Plant</a>/
+                    <a href="@Url.Action("GetAPIdata", "Retread")">API</a>
                 </div>
                 <div class="col-md-4" style="background-color:white; vertical-align:middle">
                 </div>
@@ -148,88 +157,69 @@
                 </div>
             </div>
 
+            <div id="loadingWheel" style="display:none">
+                <div style="display:flex; width:100%; justify-content:center">
+                    <img src="~/Content/giphy.gif" style="width:150px; margin-top:20em" alt="Alternate Text" />
+                </div>
+            </div>
+            <div id="content">
+                <div style="display:flex; flex-direction:column">
+                    <div style="display:flex; width:100%; justify-content:center; margin-top:10em">
+                        <JavaBlink><p style="font-weight: bold;font-size: 45px;color: dimgray">SCAN WORKSTATION BARCODE TO LOGIN</p></JavaBlink>
+                    </div>
 
-            @using (Html.BeginForm("Station", "Retread", FormMethod.Post, new { htmlAttributes = new { @autocomplete = "off" } }))
-            {
+                    <div style="display:flex; width:100%; justify-content:center">
+                        <img src="~/Content/ScanBarcode.png" style="width:300px" alt="Alternate Text" />
+                    </div>
 
-                <div class="row" id="mouseClick" style="height:340px; padding:10px 30px 10px 30px;">
-                    <div class="col-md-12 text-center" style="padding-top:3%">
+                    @using (Html.BeginForm("Station", "Retread", FormMethod.Post, new { htmlAttributes = new { @autocomplete = "off" } }))
+                    {
+                        <div>
+                            @Html.EditorFor(m => m.stationBarcode, new { htmlAttributes = new { @autocomplete = "off", @style = "background-color:#f0f2f5; color:#f0f2f5; border:none; outline:none", @id = "textBox" } })
+                        </div>
+                    }
 
-                        <JavaBlink><p style="margin-top:20px; font-weight: bold;font-size: 45px;color: dimgray">SCAN WORKSTATION BARCODE TO LOGIN</p></JavaBlink>
-
-                        <div class="row">
-                            <div class="col-lg-12 text-center">
-                                <img src="~/Content/ScanBarcode.png" style="width:300px" alt="Alternate Text" />
+                    <div style="display:flex">
+                        <div style="display:flex; flex:1"></div>
+                        <div style="display:flex; flex:10; justify-content:space-between; align-items:center; border:3px solid #b4b6b8; padding:20px; border-radius:10px">
+                            <div style="padding:5px; border:2px solid #d4d4d4; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center">
+                                <b>Prelim</b>
+                                <img style="float:left; width:60px" src="~/Content/plant_prelim.png" />
+                            </div>
+                            <img style="opacity:0.4; float:right; width:40px; margin-top:10px" src="~/Content/RightArrow.png" />
+                            <div style="padding:5px; border:2px solid #d4d4d4; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center">
+                                <b>NDT</b>
+                                <img style="float:left; width:60px" src="~/Content/plant_NDT.png" />
+                            </div>
+                            <img style="opacity: 0.4; float: right; width: 40px; margin-top: 10px" src="~/Content/RightArrow.png" />
+                            <div style="padding:5px; border:2px solid #d4d4d4; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center">
+                                <b>Buffer</b>
+                                <img style="float:left; width:60px" src="~/Content/plant_buffer.png" />
+                            </div>
+                            <img style="opacity:0.4; float:right; width:40px; margin-top:10px" src="~/Content/RightArrow.png" />
+                            <div style="padding:5px; border:2px solid #d4d4d4; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center">
+                                <b>Repair</b>
+                                <img style="float:left; width:60px" src="~/Content/plant_repair.png" />
+                            </div>
+                            <img style="opacity:0.4; float:right; width:40px; margin-top:10px" src="~/Content/RightArrow.png" />
+                            <div style="padding:5px; border:2px solid #d4d4d4; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center">
+                                <b>Builder</b>
+                                <img style="float:left; width:60px" src="~/Content/plant_builder.png" />
+                            </div>
+                            <img style="opacity:0.4; float:right; width:40px; margin-top:10px" src="~/Content/RightArrow.png" />
+                            <div style="padding:5px; border:2px solid #d4d4d4; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center">
+                                <b>Chamber</b>
+                                <img style="float:left; width:60px" src="~/Content/plant_chamber.png" />
+                            </div>
+                            <img style="opacity:0.4; float:right; width:40px; margin-top:10px" src="~/Content/RightArrow.png" />
+                            <div style="padding:5px; border:2px solid #d4d4d4; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center">
+                                <b>Final</b>
+                                <img style="float: left; width: 60px" src="~/Content/plant_final.png" />
                             </div>
                         </div>
-
-
-                        @Html.EditorFor(m => m.stationBarcode, new { htmlAttributes = new { @autocomplete = "off", @style = "background-color:#f0f2f5; color:#f0f2f5; border:none; outline:none", @id = "textBox" } })
-
-                        @*
-        <img src="~/Content/wheelspin.gif" alt="Alternate Text" />
-                        *@
+                        <div style="display:flex; flex:1"></div>
                     </div>
                 </div>
-
-            }
-
-            <div class="row" style="margin:180px 0px 10px 0px">
-                <div class="col-lg-3"></div>
-                <div class="col-lg-6">
-                    <div class="row" style="padding: 5px 20px 10px 20px; border-radius:10px; border:3px solid #b4b6b8">
-                        <div class="col-lg-12" style="padding:0px">
-                            <div class="row">
-                                <div class="col-lg-2" style="padding-left:20px">
-                                    <b>NDT</b>
-                                </div>
-                                <div class="col-lg-2" style="padding-left:20px">
-                                    <b>Buffer</b>
-                                </div>
-                                <div class="col-lg-2" style="padding-left:20px">
-                                    <b>Repair</b>
-                                </div>
-                                <div class="col-lg-2" style="padding-left:35px">
-                                    <b>Builder</b>
-                                </div>
-                                <div class="col-lg-3" style="padding-left:50px">
-                                    <b>Chamber</b>
-                                </div>
-                                <div class="col-lg-1">
-                                    <b>Final</b>
-                                </div>
-
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-2 text-center" style="padding-right:30px">
-                                    <img style="float:left; width:40px; margin-top:10px" src="~/Content/NDT.png" />
-                                    <img style="opacity:0.4; float:right; width:40px; margin-top:10px" src="~/Content/RightArrow.png" />
-                                </div>
-                                <div class="col-lg-2 text-center">
-                                    <img style="width:40px; margin-top:5px; margin-right:30px" src="~/Content/Buffer.png" />
-                                    <img style="opacity:0.4; float:right; width:40px; margin-top:10px" src="~/Content/RightArrow.png" />
-                                </div>
-                                <div class="col-lg-2 text-center">
-                                    <img style="width:55px; margin-right:30px" src="~/Content/Extensions.png" />
-                                    <img style="opacity:0.4; float:right; width:40px; margin-top:10px" src="~/Content/RightArrow.png" />
-                                </div>
-                                <div class="col-lg-2 text-center" style="padding-left:0px">
-                                    <img style="width:70px; margin-top:10px;" src="~/Content/Builder.png" />
-                                    <img style="opacity:0.4; float:right; width:40px; margin-top:10px" src="~/Content/RightArrow.png" />
-                                </div>
-                                <div class="col-lg-3 text-center">
-                                    <img style="width:110px; height:45px; margin-top:10px; margin-right:30px" src="~/Content/CuringChamber.png" />
-                                    <img style="opacity:0.4; float:right; width:40px; margin-top:10px" src="~/Content/RightArrow.png" />
-                                </div>
-                                <div class="col-lg-1 text-center">
-                                    <img style="float:right; width:60px; margin-top:5px" src="~/Content/Final.png" />
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-lg-3"></div>
             </div>
 
         </div>
@@ -243,7 +233,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-lg-8" style="color:black; padding-top:20px">
+                        <div class="col-lg-8" style="color: black; padding-top: 20px">
                             <h3>Incorrect station Barcode</h3>
                         </div>
                         <div class="col-lg-4 text-right" style="padding-top:13px"><img id="EventImage" src="~/Content/FileNotSupported.png" style="width:100px; height:100px" /></div>
@@ -257,7 +247,10 @@
         </div>
     </div>
 
+    <input type="text" style="display:none" id="togleEnter" name="name" value="" />
+
     <SCRIPT type="text/javascript">
+
         function JavaBlink() {
             var blinks = document.getElementsByTagName('JavaBlink');
             for (var i = blinks.length - 1; i >= 0; i--) {
@@ -292,11 +285,23 @@
 
             if (acknowledgment == "IncorrectBarcode") {
                 $('#incorrect').modal();
+                $(document).on('keyup keypress', 'form input[type="text"]', function (e) {
+                    if (e.which == 13) {
+                        e.preventDefault();
+                        $('#loadingWheel').css("display", "none")
+                        $('#content').css("display", "block")
+                        $("#incorrect").modal('hide');
+                        $("#togleEnter").val('modelIsHidden');
+
+                        return false;
+                    }
+                });
             }
 
         });
 
         $('#close').click(function () {
+            $("#togleEnter").val('modelIsHidden');
             $('#textBox').focus();
         })
 
@@ -304,6 +309,29 @@
             $('#textBox').focus();
         })
 
+    </script>
+
+    <script type="text/javascript">
+        // Using jQuery.
+
+        $(function () {
+            $('form').each(function () {
+                $(this).find('input').keypress(function (e) {
+                    // Enter pressed?
+                    if (e.which == 10 || e.which == 13) {
+                        if ($('#togleEnter').val() == 'modelIsHidden') {
+                            this.form.submit();
+                        }
+                        else if ($('#togleEnter').val() == '') {
+                            $('#loadingWheel').css("display", "block")
+                            $('#content').css("display", "none")
+                        }
+                    }
+                });
+
+                $(this).find('input[type=submit]').hide();
+            });
+        });
     </script>
 
 </body>

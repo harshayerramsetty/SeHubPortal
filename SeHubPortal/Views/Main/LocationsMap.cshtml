@@ -182,13 +182,6 @@
                     <li class="breadcrumb-item"><a href="@Url.Action("Locationsmap", "Main")">Main</a></li>
                     <li class="breadcrumb-item " aria-current="page">Locations Map</li>
 
-                    @using (Html.BeginForm("DashboardChangeLocation", "Main", FormMethod.Post))
-                    {
-                        <label style="margin: 0px 3px 0px 1200px ">Location</label>
-                        @Html.DropDownListFor(m => m.SelectedLocationId, Model.LocationsList, new { @onChange = "this.form.submit()", @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
-
-                    }
-
                 </ol>
             </nav>
         </div>
@@ -199,89 +192,99 @@
     </div>
 
 
-    <div class="row" >
-        <div class="col-lg-2 text-center" style="padding-right:0px; padding-left:45px">
+    <div class="row">
+        <div class="col-lg-3 text-center" style="padding-right:0px; padding-left:45px">
             <div class="row" style="margin-bottom:10px">
-                <img src="https://s3-media0.fl.yelpcdn.com/bphoto/wsDhCW6-I8I43JRECAAXlA/l.jpg" style="width:100%" alt="Alternate Text" />
-            </div>
-            <div class="row" style="margin-bottom:20px">
-                <div class="col-md-12 text-center">
-                    <h2><b><u>@Model.SelectedLocationId</u></b></h2>
+                <div class="col-lg-12">
+                    @using (Html.BeginForm("DashboardChangeLocation", "Main", FormMethod.Post))
+                    {
+                        @Html.DropDownListFor(m => m.SelectedLocationId, Model.LocationsList, new { @onChange = "this.form.submit()", @class = "text-center", @style = "font-weight:bolder; font-size:30px; text-align-last: center; width:100%; height:60px;", @required = "required", @id = "Location" })
+                    }
                 </div>
             </div>
-            <div class="row" style="font-size:15px; margin-bottom:10px">
-                <b><u>Address</u></b>
+            <div class="row" style="margin-bottom:10px">
+                <div class="col-lg-12">
+
+                    @if (Model.SelectedLocationId == "001" || Model.SelectedLocationId == "AHO")
+                    {
+                        <img src="https://s3-media0.fl.yelpcdn.com/bphoto/wsDhCW6-I8I43JRECAAXlA/l.jpg" style="width:100%" alt="Alternate Text" />
+                    }
+                    else if (Model.SelectedLocationId == "003")
+                    {
+                        <img src="https://cdn.canada247.info/assets/uploads/0215058eedff72e63fd9e5f371d72df5_-newfoundland-and-labrador-division-no-1-st-johns-east-end-city-tire-auto-centre-ltd-709-754-5000html.jpg" style="width:100%" alt="Alternate Text" />
+                    }
+                    else if (Model.SelectedLocationId == "009")
+                    {
+                        <img src="https://pr0.nicelocal.ca/GHLkLtgZLvFxpYalSUZNLQ/630x384,q85/4px-BW84_n0QJGVPszge3NRBsKw-2VcOifrJIjPYFYkOtaCZxxXQ2W0c83jQlGNzqIMLc2J9YI_25a1jIe_JrETRJZL_MB5MxAs8ohz70K5kTSzYTrPBaQ" style="width:100%" alt="Alternate Text" />
+                    }
+                    else if (Model.SelectedLocationId == "010" || Model.SelectedLocationId == "011" || Model.SelectedLocationId == "347")
+                    {
+                        <img src="https://cdn.canada247.info/assets/uploads/1ee058112f68733273df30845376e544_-newfoundland-and-labrador-division-no-1-mount-pearl-city-tire-auto-centre-ltd-709-364-6809html.jpg" style="width:100%" alt="Alternate Text" />
+                    }
+                    else
+                    {
+                        <img src="https://s3-media0.fl.yelpcdn.com/bphoto/wsDhCW6-I8I43JRECAAXlA/l.jpg" style="width:100%" alt="Alternate Text" />
+                    }
+
+
+
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0px">
+                <div class="col-lg-12">
+                    <p>
+                        @Model.locdesc.cta_street1, @Model.locdesc.cta_street2, @Model.locdesc.cta_city, @Model.locdesc.cta_province, @Model.locdesc.cta_postal_code, @Model.locdesc.cta_country
+                    </p>
+                </div>
             </div>
             <div class="row" style="margin-bottom:10px">
-                @Model.locdesc.cta_street1
+                <div class="col-lg-12 text-left">
+                    <b><u>Phone:</u></b> @Model.locdesc.cta_phone
+                </div>
             </div>
             <div class="row" style="margin-bottom:10px">
-                @Model.locdesc.cta_street2
+                <div class="col-lg-12 text-left">
+                    <b><u>Fax:</u></b> @Model.locdesc.cta_fax
+                </div>
             </div>
             <div class="row" style="margin-bottom:10px">
-                @Model.locdesc.cta_city
+                <div class="col-lg-12 text-left">
+                    <b><u>Service Email:</u></b> @Model.locdesc.service_email
+                </div>
             </div>
-            <div class="row" style="margin-bottom:10px">
-                @Model.locdesc.cta_province @Model.locdesc.cta_postal_code
+            <div class="row">
+                <div class="col-lg-12 text-left">
+                    <b><u>Employees</u></b>
+                </div>
             </div>
-            <div class="row" style="margin-bottom:20px">
-                @Model.locdesc.cta_country
-            </div>
-            <div class="row" style="margin-bottom:10px">
-                <b><u>Phone</u></b>
-            </div>
-            <div class="row" style="margin-bottom:20px">
-                @Model.locdesc.cta_phone
-            </div>
-            <div class="row" style="margin-bottom:10px">
-                <b><u>Fax</u></b>
-            </div>
-            <div class="row" style="margin-bottom:10px">
-                @Model.locdesc.cta_fax
-            </div>
-            <div class="row" style="margin-bottom:10px">
-                <b><u>Service Email</u></b>
-            </div>
-            <div class="row" style="margin-bottom:10px">
-                @Model.locdesc.service_email
+            <div class="row" style="overflow-y:auto; overflow-x:hidden; max-height:260px">
+                <div class="col-lg-12 text-left">
+                    @foreach (var emp in Model.employees)
+                    {
+                        <div class="row" style="padding:0px; margin:0px; font-size:12px">
+                            <div class="col-lg-5 text-left" style="padding:0px; margin:0px">
+                                @emp.full_name:
+                            </div>
+                            <div class="col-lg-7 text-left" style="padding:0px; margin:0px">
+                                @emp.cta_position
+                            </div>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
-        <div class="col-lg-10">
-            @if (Model.SelectedLocationId == "001" || Model.SelectedLocationId == "AHO")
-            {
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2694.1246087774407!2d-52.82106968437227!3d47.52643697917947!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4b0cbca0a546f663%3A0xb67bfce65ca39fce!2sCity%20Tire%20%26%20Auto%20Centre%20Ltd!5e0!3m2!1sen!2sca!4v1629286129607!5m2!1sen!2sca" width="1370" height="740" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
-            }
-            else if (Model.SelectedLocationId == "002")
-            {
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2692.44323365289!2d-52.75284868437117!3d47.559163979181484!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4b0ca379fa79103f%3A0x9d31442b729c7382!2sCity%20Tire%20%26%20Auto%20Centre%20Ltd!5e0!3m2!1sen!2sca!4v1629285684850!5m2!1sen!2sca" width="1370" height="740" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
-            }
-            else if (Model.SelectedLocationId == "003")
-            {
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2689.9823856565636!2d-52.72313318436949!3d47.6070321791847!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4b0ca6a575bab7ed%3A0x9648f04b5a5bcc7!2sCity%20Tire%20%26%20Auto%20Centre%20Ltd!5e0!3m2!1sen!2sca!4v1629286344677!5m2!1sen!2sca" width="1370" height="740" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
-            }
-            else if (Model.SelectedLocationId == "004")
-            {
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2619.788053195263!2d-57.91717898432217!3d48.95752147929735!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4b7bb21916f02331%3A0x3f45bbbea9610231!2sCity%20Tire%20%26%20Auto%20Centre%20Ltd!5e0!3m2!1sen!2sca!4v1629287102826!5m2!1sen!2sca" width="1370" height="740" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
-            }
-            else if (Model.SelectedLocationId == "005")
-            {
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2619.9062436872837!2d-55.63095558432216!3d48.95527107929714!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4b773a53df656f59%3A0x9f30449025615614!2sCity%20Tire%20%26%20Auto%20Centre%20Ltd!5e0!3m2!1sen!2sca!4v1629286841532!5m2!1sen!2sca" width="1370" height="740" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
-            }
-            else if (Model.SelectedLocationId == "007")
-            {
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2619.9062436872837!2d-55.63095558432216!3d48.95527107929714!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4b773a53df656f59%3A0x9f30449025615614!2sCity%20Tire%20%26%20Auto%20Centre%20Ltd!5e0!3m2!1sen!2sca!4v1629286841532!5m2!1sen!2sca" width="1370" height="740" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
-            }
-            else if (Model.SelectedLocationId == "009")
-            {
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2661.189703312309!2d-53.99039068435014!3d48.16442497922557!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4b747873e6def649%3A0x159d322ac1244b49!2sCity%20Tire%20%26%20Auto%20Centre%20Ltd!5e0!3m2!1sen!2sca!4v1629287212796!5m2!1sen!2sca" width="1370" height="740" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
-            }
-            else if (Model.SelectedLocationId == "010" || Model.SelectedLocationId == "011" || Model.SelectedLocationId == "347")
-            {
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2694.1579735886667!2d-52.82108078437229!3d47.525787379179384!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4b0cbdda65c001e3%3A0x6c147fa98274ea66!2sCity%20Tire%20%26%20Auto%20Centre%20Ltd!5e0!3m2!1sen!2sca!4v1629287482584!5m2!1sen!2sca" width="1370" height="740" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
-            }
-
+        <div class="col-lg-9" style="padding-right:30px">
+            <iframe src="@Model.locdesc.googleMap" frameborder="0" style="border:0;width:100%; height:46em" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+    </script>
 
 </body>
 

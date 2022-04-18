@@ -27,5 +27,7 @@ namespace SeHubPortal.ViewModel
         public string full_name { get; set; }
         public string SelectedPayrollId { get; set; }
         public List<SelectListItem> PayrollIdList { get; set; }
-    }
+        public string csvData { get; set; }
+        public List<tbl_employee_payroll_dates> DataResources { get; set; }
+}
 }

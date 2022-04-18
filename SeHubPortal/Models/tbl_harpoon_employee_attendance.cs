@@ -12,9 +12,11 @@ namespace SeHubPortal.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class tbl_retread_tread
+    public partial class tbl_harpoon_employee_attendance
     {
-        public string tread_design { get; set; }
-        public Nullable<double> new_32nds { get; set; }
+        public string client_id { get; set; }
+        public bool at_work { get; set; }
+        public string at_work_location { get; set; }
+        public int auto_emp_id { get; set; }
     }
 }

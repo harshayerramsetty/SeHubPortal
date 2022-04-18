@@ -26,6 +26,110 @@ namespace SeHubPortal.Controllers
             return View();
         }
 
+        public void Update(int pr, int wr, string ac)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            if(ac == "up1" && pr != 1)
+            {
+                var current = db.tbl_production_schedule.Where(x => x.production_id == wr && x.priority == pr).FirstOrDefault();
+                var previous = db.tbl_production_schedule.Where(x => x.priority == (pr - 1)).FirstOrDefault();
+                current.priority = current.priority - 1;
+                previous.priority = previous.priority + 1;
+                db.SaveChanges();
+            }
+            else if (ac == "down1" && pr != db.tbl_production_schedule.Select(x => x.priority).Max())
+            {
+                var current = db.tbl_production_schedule.Where(x => x.production_id == wr && x.priority == pr).FirstOrDefault();
+                var Next = db.tbl_production_schedule.Where(x => x.priority == (pr + 1)).FirstOrDefault();
+                current.priority = current.priority + 1;
+                Next.priority = Next.priority - 1;
+                db.SaveChanges();
+            }
+            else if (ac == "top" && pr != 1)
+            {
+                var current = db.tbl_production_schedule.Where(x => x.production_id == wr && x.priority == pr).FirstOrDefault();
+                current.priority = 1;
+                string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+                using (SqlConnection connection = new SqlConnection(constr))
+                {
+                    connection.Open();
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append("UPDATE ");
+                    sb.Append("tbl_production_schedule ");
+                    sb.Append("SET priority = priority + 1");
+                    sb.Append("WHERE priority < @priority");
+
+                    string sql = sb.ToString();
+
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@priority", pr);
+
+                        command.ExecuteNonQuery();
+                        command.Parameters.Clear();
+                    }
+                    connection.Close();
+
+                }
+                db.SaveChanges();
+            }
+            else if (ac == "bottom" && pr != db.tbl_production_schedule.Select(x => x.priority).Max())
+            {
+                var current = db.tbl_production_schedule.Where(x => x.production_id == wr && x.priority == pr).FirstOrDefault();
+                current.priority = db.tbl_production_schedule.Select(x => x.priority).Max();
+                string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+                using (SqlConnection connection = new SqlConnection(constr))
+                {
+                    connection.Open();
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append("UPDATE ");
+                    sb.Append("tbl_production_schedule ");
+                    sb.Append("SET priority = priority - 1");
+                    sb.Append("WHERE priority > @priority");
+
+                    string sql = sb.ToString();
+
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@priority", pr);
+
+                        command.ExecuteNonQuery();
+                        command.Parameters.Clear();
+                    }
+                    connection.Close();
+
+                }
+                db.SaveChanges();
+            }
+            else if (ac == "delete")
+            {
+                var current = db.tbl_production_schedule.Where(x => x.production_id == wr && x.priority == pr).FirstOrDefault();
+                db.tbl_production_schedule.Remove(current);
+                string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+                using (SqlConnection connection = new SqlConnection(constr))
+                {
+                    connection.Open();
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append("UPDATE ");
+                    sb.Append("tbl_production_schedule ");
+                    sb.Append("SET priority = priority - 1");
+                    sb.Append("WHERE priority > @priority");
+
+                    string sql = sb.ToString();
+
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@priority", pr);
+
+                        command.ExecuteNonQuery();
+                        command.Parameters.Clear();
+                    }
+                    connection.Close();
+
+                }
+                db.SaveChanges();
+            }
+        }
 
         private static List<SelectListItem> populateCustomers()
         {
@@ -52,6 +156,58 @@ namespace SeHubPortal.Controllers
             return items;
         }
 
+        public ActionResult ProductionSchedule(ProductionScheduleViewModel model)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            model.ProductionItems = db.tbl_production_schedule.OrderBy(x => x.priority).ToList();
+
+            tbl_production_schedule newOrder = new tbl_production_schedule();
+
+            newOrder.production_id = db.tbl_production_schedule.OrderByDescending(x => x.production_id).Select(x => x.production_id).FirstOrDefault()+1;
+
+            model.NewOrder = newOrder;
+
+            model.ProductionItems = db.tbl_production_schedule.OrderBy(x => x.priority).ToList();
+            
+            return View(model);
+        }
+
+        public ActionResult ProductionCustomer(ProductionScheduleViewModel model)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            DateTime initialDate = new DateTime(2018, 01, 25);
+
+            var workorders = db.tbl_treadtracker_barcode.Where(x => (x.line_code == 1 || x.line_code == 5 || x.line_code == 10 || x.line_code == 11) && (x.preliminary_inspection_result == "GOOD" && (x.ndt_machine_result == "GOOD" || x.ndt_machine_result == null) && (x.buffer_builder_result == "GOOD" || x.buffer_builder_result == null) && x.final_inspection_result == null && x.preliminary_inspection_date > initialDate)).Select(x => new { x.retread_workorder, x.retread_design, x.casing_size, x.virgin, x.preliminary_inspection_date }).Distinct().ToList();
+
+            List<tbl_production_schedule> lineItems = new List<tbl_production_schedule>();
+
+            foreach (var work in workorders)
+            {
+                tbl_production_schedule lineItem = new tbl_production_schedule();
+                lineItem.production_id = Convert.ToInt32(work.retread_workorder);
+                lineItem.production_date = work.preliminary_inspection_date;
+                lineItem.size = work.casing_size;
+                lineItem.tread = work.retread_design;
+                lineItem.quantity = db.tbl_treadtracker_barcode.Where(x => x.retread_workorder == work.retread_workorder && (x.line_code == 1 || x.line_code == 5 || x.line_code == 10 || x.line_code == 11) && (x.preliminary_inspection_result == "GOOD" && (x.ndt_machine_result == "GOOD" || x.ndt_machine_result == null) && (x.buffer_builder_result == "GOOD" || x.buffer_builder_result == null) && x.final_inspection_result == null && x.preliminary_inspection_date > initialDate)).Count();
+                lineItem.quantity_complete = db.tbl_treadtracker_barcode.Where(x => x.retread_workorder == work.retread_workorder && x.final_inspection_result == "GOOD" && (x.line_code == 1 || x.line_code == 5 || x.line_code == 10 || x.line_code == 11) && (x.preliminary_inspection_result == "GOOD" && (x.ndt_machine_result == "GOOD" || x.ndt_machine_result == null) && (x.buffer_builder_result == "GOOD" || x.buffer_builder_result == null) && x.final_inspection_result == null && x.preliminary_inspection_date > initialDate)).Count();
+                if (work.virgin == 1)
+                {
+                    lineItem.virgin = true;
+                }
+                else
+                {
+                    lineItem.virgin = false;
+                }
+
+                lineItems.Add(lineItem);
+            }
+
+            model.LineItems = lineItems.OrderByDescending(x => x.production_date).ToList();
+
+            return View(model);
+        }
 
         [HttpPost]
         public ActionResult TReadTrackerSelectedCustomer(TreadTrackerCustomersViewModel model)
@@ -106,15 +262,18 @@ namespace SeHubPortal.Controllers
                 {
                     WorkOrderInfoViewModel woinfo = new WorkOrderInfoViewModel();
 
+                    int barcodes = db.tbl_treadtracker_barcode.Where(x => x.retread_workorder == WO.retread_workorder).Count();
+
                     woinfo.WorkOrderNumber = WO.retread_workorder;
                     woinfo.customer_number = WO.customer_number;
-                    woinfo.employee_Id = WO.employee_Id;
+                    woinfo.employee_Id = db.tbl_employee.Where(x => x.employee_id.ToString() == WO.employee_Id).Select(x => x.full_name).FirstOrDefault();
                     woinfo.loc_Id = WO.loc_Id;
                     woinfo.creation_date = WO.creation_date;
                     woinfo.comments = WO.comments;
-                    woinfo.openBarcodes = db.tbl_treadtracker_barcode.Where(x => x.retread_workorder == WO.retread_workorder && (x.preliminary_inspection_result == null || x.buffer_builder_result == null || x.ndt_machine_result == null || x.final_inspection_result == null)).Count();
                     woinfo.closedBarcodes = db.tbl_treadtracker_barcode.Where(x => x.retread_workorder == WO.retread_workorder && (x.preliminary_inspection_result == "GOOD" && x.buffer_builder_result == "GOOD" && x.ndt_machine_result == "GOOD" && x.final_inspection_result == "GOOD")).Count();
                     woinfo.failedBarcodes = db.tbl_treadtracker_barcode.Where(x => x.retread_workorder == WO.retread_workorder && ((x.preliminary_inspection_result != "GOOD" && x.preliminary_inspection_result != null) || (x.buffer_builder_result != "GOOD" && x.buffer_builder_result != null) || (x.ndt_machine_result != "GOOD" && x.ndt_machine_result != null) || (x.final_inspection_result != "GOOD" && x.final_inspection_result != null))).Count();
+                    woinfo.openBarcodes = barcodes - woinfo.closedBarcodes - woinfo.failedBarcodes;
+
 
                     WorkOrderInfoList.Add(woinfo);
                 }
@@ -275,7 +434,6 @@ namespace SeHubPortal.Controllers
             return units.cust_us1 + ";" + units.cust_add1 + ";" + units.cust_add2 + ";"+ units.cust_add3 + ";" + units.cust_city +";" + units.cust_state + ";" + units.cust_zip;
         }
 
-
         [HttpPost]
         public ActionResult PullBarcodesChangeWorkOrders(string value)
         {
@@ -302,7 +460,6 @@ namespace SeHubPortal.Controllers
             return status;
         }
 
-
         public JsonResult GetInspectionDates()
         {
             using (CityTireAndAutoEntities dc = new CityTireAndAutoEntities())
@@ -316,7 +473,6 @@ namespace SeHubPortal.Controllers
                 return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }
         }
-
 
         [HttpGet]
         public ActionResult Dashboard(TreadTrackerDashboard model)
@@ -373,59 +529,68 @@ namespace SeHubPortal.Controllers
         [HttpPost]
         public string MailImageOpenOrder(string imgBase64)
         {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             string actual = imgBase64.Substring(22, imgBase64.Length - 22);
 
 
             byte[] bytes = Convert.FromBase64String(actual);
 
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+            var empDetails = db.tbl_employee.Where(x => x.employee_id == empId).FirstOrDefault();
 
-
-            Image image;
-            using (MemoryStream ms = new MemoryStream(bytes))
+            if (empDetails.cta_email != null)
             {
-                image = Image.FromStream(ms);
+                Image image;
+                using (MemoryStream ms = new MemoryStream(bytes))
+                {
+                    image = Image.FromStream(ms);
+                }
+
+                string path1 = Path.Combine(Server.MapPath("~/Content/OpenOrder.png"));
+
+                //image.Save(path1, System.Drawing.Imaging.ImageFormat.Png);
+
+                //Trace.WriteLine(path1 + "   This is actual path");
+
+                image.Save(path1, System.Drawing.Imaging.ImageFormat.Png);
+
+                //Trace.WriteLine("Saved");
+
+                MailMessage msg = new MailMessage();
+                msg.To.Add(new MailAddress(empDetails.cta_email, "IT Team")); //payroll     harsha.yerramsetty
+                msg.From = new MailAddress("noreply@citytire.com", "Sehub");
+                msg.Subject = "Testing";
+                msg.Body = "Mail for tread tracker open order";
+                msg.IsBodyHtml = true;
+
+
+                msg.Attachments.Add(new Attachment(path1));
+
+                SmtpClient client = new SmtpClient();
+                client.UseDefaultCredentials = false;
+                client.Credentials = new System.Net.NetworkCredential("noreply@citytire.com", "U8LH>WpBdXg}");
+                client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
+                client.Host = "smtp.office365.com";
+                client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                client.EnableSsl = true;
+                try
+                {
+                    client.Send(msg);
+                    //Debug.WriteLine("Message Sent Succesfully");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                }
+
+                //Trace.WriteLine("Reached");
+
+                return imgBase64;
             }
-
-            string path1 = Path.Combine(Server.MapPath("~/Content/OpenOrder.png"));
-
-            //image.Save(path1, System.Drawing.Imaging.ImageFormat.Png);
-
-            //Trace.WriteLine(path1 + "   This is actual path");
-
-            image.Save(path1, System.Drawing.Imaging.ImageFormat.Png);
-
-            //Trace.WriteLine("Saved");
-
-            MailMessage msg = new MailMessage();
-            msg.To.Add(new MailAddress("jordan.blackwood@citytire.com", "IT Team")); //payroll     harsha.yerramsetty
-            msg.From = new MailAddress("noreply@citytire.com", "Sehub");
-            msg.Subject = "Testing";
-            msg.Body = "Mail for tread tracker open order";
-            msg.IsBodyHtml = true;
-
-
-            msg.Attachments.Add(new Attachment(path1));
-
-            SmtpClient client = new SmtpClient();
-            client.UseDefaultCredentials = false;
-            client.Credentials = new System.Net.NetworkCredential("noreply@citytire.com", "U8LH>WpBdXg}");
-            client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
-            client.Host = "smtp.office365.com";
-            client.DeliveryMethod = SmtpDeliveryMethod.Network;
-            client.EnableSsl = true;
-            try
+            else
             {
-                client.Send(msg);
-                //Debug.WriteLine("Message Sent Succesfully");
+                return imgBase64;
             }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.ToString());
-            }
-
-            //Trace.WriteLine("Reached");
-
-            return imgBase64;
         }
 
         [HttpPost]
@@ -466,7 +631,6 @@ namespace SeHubPortal.Controllers
 
         }
 
-
         [HttpPost]
         public string validateWorkOrderBarcode(string value)
         {
@@ -486,7 +650,6 @@ namespace SeHubPortal.Controllers
             }
 
         }
-
 
         private static List<SelectListItem> PopulateCustomers(string value)
         {
@@ -623,7 +786,6 @@ namespace SeHubPortal.Controllers
             return items;
         }
 
-
         public ActionResult FailureAnalysis(FailurAnalysisViewmodel model, string values)
         {
             int empIdUser = Convert.ToInt32(Session["userID"].ToString());
@@ -642,7 +804,6 @@ namespace SeHubPortal.Controllers
 
             return View(model);
         }
-
 
         public ActionResult ProductionReport(ProductionReportViewModel model, string values)
         {
@@ -689,7 +850,7 @@ namespace SeHubPortal.Controllers
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             List<string> treads = new List<string>();
 
-            var treadList = db.tbl_source_retread_tread.Select(x => x.tread_design).ToList();
+            var treadList = db.tbl_source_retread_tread.Where(x => x.tread_tracker == 1).Select(x => x.tread_design).ToList();
 
             foreach(var item in treadList)
             {
@@ -722,6 +883,7 @@ namespace SeHubPortal.Controllers
             }
             return items;
         }
+
         private static List<SelectListItem> populateLocationInfo()
         {
             List<SelectListItem> items = new List<SelectListItem>();
@@ -746,7 +908,6 @@ namespace SeHubPortal.Controllers
             return items;
         }
 
-
         private static List<SelectListItem> populateTreadTrackerCustomers()
         {
             List<SelectListItem> items = new List<SelectListItem>();
@@ -764,7 +925,6 @@ namespace SeHubPortal.Controllers
 
             return items.OrderBy(x => x.Text).ToList();
         }
-
 
         [HttpPost]
         public ActionResult SearchByName(CustomerListViewModel custList)
@@ -983,7 +1143,6 @@ namespace SeHubPortal.Controllers
         }
         //private OpenOrderModel openOrder = new OpenOrderModel();
 
-
         public ActionResult BackPlaceOrder(string parameters)
         {
 
@@ -1124,6 +1283,7 @@ namespace SeHubPortal.Controllers
 
                 var ViewOrderModel = new ViewWorkOrderModel
                 {
+
                     barcodeInformation = db.tbl_treadtracker_barcode.Where(x => x.retread_workorder == id).ToList(),
                     custInfo = db.tbl_customer_list.Where(x => x.cust_us1 == custNumber).FirstOrDefault(),
                     workOrderInfo = WorkOrderDetails,
@@ -1335,7 +1495,7 @@ namespace SeHubPortal.Controllers
             }
             else
             {
-                var casingTreadList = (from a in db.tbl_source_retread_tread.Where(x => x.tread_id == 1 || x.tread_id > 13) select a).ToList();
+                var casingTreadList = (from a in db.tbl_source_retread_tread.Where(x => x.tread_tracker == 1) select a).ToList();
                 ViewBag.CasingTreadList = casingTreadList;
             }
             
@@ -1387,7 +1547,7 @@ namespace SeHubPortal.Controllers
 
                 objcvm.final_inspection_date = item.final_inspection_date;
 
-                objcvm.ship_to_location = item.ship_to_location;
+                //objcvm.ship_to_location = item.ship_to_location;
 
                 if (item.virgin == 1)
                 {
@@ -1403,7 +1563,7 @@ namespace SeHubPortal.Controllers
 
                 objcvm.brand_id = db.tbl_treadtracker_casing_brands.Where(x => x.casing_brand == item.casing_brand).Select(x => x.brand_id).FirstOrDefault();
 
-                objcvm.tread_id = db.tbl_source_retread_tread.Where(x => x.tread_design == item.retread_design).Select(x => x.tread_id).FirstOrDefault();
+                //objcvm.tread_id = db.tbl_source_retread_tread.Where(x => x.tread_design == item.retread_design).Select(x => x.tread_id).FirstOrDefault();
 
                 BarcodeInfoVMlist.Add(objcvm);
 
@@ -1453,37 +1613,19 @@ namespace SeHubPortal.Controllers
 
             string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
-            using (SqlConnection con = new SqlConnection(constr))
+            var locDetails = db.tbl_cta_location_info.Where(x => x.loc_id == locId).FirstOrDefault();
+
+            if (locDetails != null)
             {
-                string query = "select * from tblLocation where locID = '" + locId + "'";
-                //Debug.WriteLine(query);
-                using (SqlCommand cmd = new SqlCommand(query))
-                {
-                    cmd.Connection = con;
-                    con.Open();
-                    using (SqlDataReader sdr = cmd.ExecuteReader())
-                    {
-
-                        while (sdr.Read())
-                        {
-
-                            ViewBag.locID = Convert.ToString(sdr["locID"]);
-                            ViewBag.addressSTREET1 = Convert.ToString(sdr["addressSTREET1"]);
-                            ViewBag.addressSTREET2 = Convert.ToString(sdr["addressSTREET2"]);
-                            ViewBag.addressCITY = Convert.ToString(sdr["addressCITY"]);
-                            ViewBag.addressPROVINCE = Convert.ToString(sdr["addressPROVINCE"]);
-                            ViewBag.addressPOSTAL = Convert.ToString(sdr["addressPOSTAL"]);
-                            ViewBag.locPHONE = Convert.ToString(sdr["locPHONE"]);
-                            ViewBag.locFAX = Convert.ToString(sdr["locFAX"]);
-                        }
-
-                    }
-                    con.Close();
-                }
+                ViewBag.locID = locDetails.loc_id;
+                ViewBag.addressSTREET1 = locDetails.cta_street1;
+                ViewBag.addressSTREET2 = locDetails.cta_street2;
+                ViewBag.addressCITY = locDetails.cta_city;
+                ViewBag.addressPROVINCE = locDetails.cta_province;
+                ViewBag.addressPOSTAL = locDetails.cta_postal_code;
+                ViewBag.locPHONE = locDetails.cta_phone;
+                ViewBag.locFAX = locDetails.cta_fax;
             }
-
-
-            
             
             var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
 
@@ -1572,7 +1714,7 @@ namespace SeHubPortal.Controllers
 
                 objcvm.brand_id = db.tbl_treadtracker_casing_brands.Where(x => x.casing_brand == item.casing_brand).Select(x => x.brand_id).FirstOrDefault();
 
-                objcvm.tread_id = db.tbl_source_retread_tread.Where(x => x.tread_design == item.retread_design).Select(x => x.tread_id).FirstOrDefault();
+                //objcvm.tread_id = db.tbl_source_retread_tread.Where(x => x.tread_design == item.retread_design).Select(x => x.tread_id).FirstOrDefault();
 
                 BarcodeInfoVMlist.Add(objcvm);
 
@@ -1683,13 +1825,8 @@ namespace SeHubPortal.Controllers
 
                     }
 
-                    var selectedTread = casingTreadList.Find(p => p.tread_id == Convert.ToInt32(items.retread_design));
+                    //var selectedTread = casingTreadList.Find(p => p.tread_id == Convert.ToInt32(items.retread_design));
                     string casingTread = "";
-                    if (selectedTread != null)
-                    {
-                        casingTread = selectedTread.tread_design;
-
-                    }
 
 
                     var result = db.tbl_treadtracker_barcode.Where(a => a.barcode.Equals(items.barcode)).FirstOrDefault();
@@ -1770,13 +1907,16 @@ namespace SeHubPortal.Controllers
 
                     }
 
-                    var selectedTread = casingTreadList.Find(p => p.tread_id == Convert.ToInt32(items.retread_design));
+                    //var selectedTread = casingTreadList.Find(p => p.tread_id == Convert.ToInt32(items.retread_design));
                     string casingTread = "";
-                    if (selectedTread != null)
+                    /*
+                     if (selectedTread != null)
                     {
                         casingTread = selectedTread.tread_design;
 
                     }
+                     */
+
 
 
                     if (changedBarcode != null && changedBarcode != "" && db.tbl_treadtracker_barcode.Where(a => a.barcode.Equals(changedBarcode)).FirstOrDefault() == null)
@@ -1825,5 +1965,40 @@ namespace SeHubPortal.Controllers
             
             return PartialView();
         }
+
+        [HttpPost]
+        public ActionResult AddProductionItem(ProductionScheduleViewModel model)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            tbl_production_schedule item = new tbl_production_schedule();
+            item = model.NewOrder;
+            item.priority = db.tbl_production_schedule.OrderByDescending(x => x.priority).Select(x => x.priority).FirstOrDefault()+1;
+            db.tbl_production_schedule.Add(item);
+            db.SaveChanges();
+
+            return RedirectToAction("ProductionSchedule");
+        }
+
+        [HttpPost]
+        public ActionResult EditProductionItem(ProductionScheduleViewModel model)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            var item = db.tbl_production_schedule.Where(x => x.production_id == model.EditOrder.production_id).FirstOrDefault();
+
+            item.production_date = model.EditOrder.production_date;
+            item.quantity = model.EditOrder.quantity;
+            item.quantity_complete = model.EditOrder.quantity_complete;
+            item.part_no = model.EditOrder.part_no;
+            item.casing_spec = model.EditOrder.casing_spec;
+            item.size = model.EditOrder.size;
+            item.tread = model.EditOrder.tread;
+
+            db.SaveChanges();
+
+            return RedirectToAction("ProductionSchedule");
+        }
+
     }
 }

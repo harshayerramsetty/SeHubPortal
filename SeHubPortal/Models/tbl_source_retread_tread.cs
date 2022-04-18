@@ -14,7 +14,7 @@ namespace SeHubPortal.Models
     
     public partial class tbl_source_retread_tread
     {
-        public int tread_id { get; set; }
         public string tread_design { get; set; }
+        public int tread_tracker { get; set; }
     }
 }

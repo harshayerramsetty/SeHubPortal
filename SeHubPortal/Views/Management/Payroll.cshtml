@@ -751,28 +751,27 @@
                         }
                     </div>
                     <div class="col-lg-1"></div>
-                    <div class="col-lg-1"></div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-4">
                         <div class="row" style="padding-top:12px;">
                             <div class="col-lg-2"></div>
-                            <div class="col-lg-10">
+                            <div class="col-lg-10 text-right">
                                 <div class="row">
-                                    <label style="margin: 0px 3px 0px 0px ">Payroll ID :</label>
+                                    <label style="margin: 0px 3px 0px 25px ">Payroll ID :</label>
                                     @using (Html.BeginForm("ChangePayrollID", "Management", FormMethod.Post))
                                     {
-                                        @Html.DropDownListFor(m => m.SelectedPayrollId, Model.PayrollIdList, new { @onChange = "this.form.submit()", @style = "margin-top: 0px; width:100px;height:23px;font-size:15px;margin-left:6px;" })
+                                        @Html.DropDownListFor(m => m.SelectedPayrollId, Model.PayrollIdList, new { @onChange = "this.form.submit()", @style = "text-align:left; margin-top: 0px; width:200px;height:23px;font-size:15px;margin-left:6px;" })
                                         @Html.HiddenFor(m => m.MatchedLocID, new { htmlAttributes = new { @style = "display:none" } })
                                     }
 
-                                    <label style=" margin: 0px 3px 0px 25px ">Location:</label>
+                                    <label style=" margin: 0px 3px 0px 20px ">Location:</label>
                                     @using (Html.BeginForm("PayrrollChangeLocation", "Management", FormMethod.Post))
                                     {
-                                <div>
+                                        <div>
 
-                                    @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, new { @class = "locationSection", @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:6px;" })
+                                            @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, new { @class = "locationSection", @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:6px;" })
 
-                                    <noscript> <input style="display:none" class="btn btn-success" type="submit" value="Search" /></noscript>
-                                </div>
+                                            <noscript> <input style="display:none" class="btn btn-success" type="submit" value="Search" /></noscript>
+                                        </div>
                                     }
                                 </div>
                             </div>
@@ -824,8 +823,6 @@
                                                 <div class="row" style="padding:0px; margin:0px">
                                                     <div id="donutChart" style="margin-left:auto; margin-right:auto"></div>
                                                 </div>
-
-
 
                                                 @using (Html.BeginForm("SubmitFromBranchToCorporate", "Management", new { locId = Model.MatchedLocID, pid = Model.SelectedPayrollId }, FormMethod.Post))
                                                 {
@@ -1652,7 +1649,7 @@
                                             <div class="col-lg-4" style="padding-right: 0px">
                                                 @if (Model.MatchedEmployeesChangeLoc.Count == 0)
                                                 {
-                                                    <input data-toggle="modal" data-target="#Remove" style="height:30px; width:110px" readonly class="btn btn-danger" name="name" value="Remove" />
+                                                    <input data-toggle="modal" data-target="#Remove" style="height:30px; width:110px; display:none" readonly class="btn btn-danger" name="name" value="Remove" />
                                                 }
                                                 else
                                                 {

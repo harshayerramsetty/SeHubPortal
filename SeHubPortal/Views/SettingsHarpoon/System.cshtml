@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Settings_Harpoon.cshtml";
 }
 
-@model SeHubPortal.ViewModel.MyStaffViewModel
+@model SeHubPortal.ViewModel.AccountHarpoonSettingsViewModel
 
 
 <html lang="en">
@@ -17,8 +17,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>*@
 
-
     <style>
+
+        #SettingsClicked {
+                display: block !important;
+            }
+
+            #ManagementClicked {
+                display: block !important;
+            }
 
         .example::-webkit-scrollbar {
             display: none;
@@ -111,15 +118,29 @@
 </head>
 
 <body>
+
+    @{
+        string base64ProfilePic = "";
+        if (Model.client.client_logo is null)
+        {
+            base64ProfilePic = "";
+        }
+        else
+        {
+            base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(Model.client.client_logo);
+        }
+    }
+
     <div class="row heading">
-        <div class="col">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
-                    <li class="breadcrumb-item"><a href="@Url.Action("System", "SettingsHarpoon")">Settings</a></li>
-                    <li class="breadcrumb-item " aria-current="page">System</li>
-                    <input id="AddEmployeeBtn" readonly type="text" class="btn btn-success EmpTransBtns " data-toggle="modal" data-target="#AddEmployeeModal" value="Add" style="height:23px; width:100px; margin-left:520px" />
-                </ol>
-            </nav>
+
+        <div class="col" style="margin:0px 5px 15px 15px; padding:10px; background-color:white">
+
+            <div style="display:flex; justify-content:space-between; align-items:center">
+                <div>
+                    <a href="@Url.Action("System", "SettingsHarpoon")">Settings </a>/ Account
+                </div>
+                
+            </div>
         </div>
         <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
             <i class="fa fa-bars" style="font-size:25px"></i>
@@ -127,11 +148,1247 @@
         </button>
     </div>
 
-    <div class="row" style="margin:0px 10px 20px 15px">
+    <div class="row" style="padding:0px 15px 0px 15px">
+        <div class="col-lg-3" style="padding-right:0px">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row" style="margin:0px 0px 10px 0px; padding:0px">
+                        <div class="col-lg-12 text-center" style="border:1px solid dimgray; padding:0px 20px 0px 20px">
+                            <div class="row">
+                                <img class="imageClass" style="border-radius:0px; width:90%; height:315px; margin-left:auto; margin-right:auto; padding:0px" alt="profilePic" src="@base64ProfilePic" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-bottom:10px">
+                        <div class="col-lg-4 text-right" style="font-size:12px; font-weight:bold; color:dimgray; padding-right:0px">
+                            Client ID
+                        </div>
+                        <div class="col-lg-8">
+                            <input readonly type="text" id="client_id" style="font-weight:bold; width:100%" name="name" value="@Model.client.client_id" />
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-bottom:10px">
+                        <div class="col-lg-4 text-right" style="font-size:12px; font-weight:bold; color:dimgray; font-size:12px; padding-right:0px">
+                            Name
+                        </div>
+                        <div class="col-lg-8">
+                            <input readonly type="text" style="font-weight:bold; width:100%" name="name" value="@Model.client.client_name" />
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-bottom:10px">
+                        <div class="col-lg-4 text-right" style="font-size:12px; font-weight:bold; color:dimgray; padding-right:0px">
+                            Address
+                        </div>
+                        <div class="col-lg-8" style="overflow-y:auto">
+                            <div style="font-weight:bold; padding-left:5px; height:130px; border:1px solid dimgray">
+                                @Model.client.client_address1
+                                <br />
+                                @Model.client.client_city
+                                <br />
+                                @Model.client.client_province @Model.client.client_postal @Model.client.client_country
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-bottom:10px">
+                        <div class="col-lg-4 text-right" style="font-size:12px; font-weight:bold; color:dimgray; padding-right:0px">
+                            Phone
+                        </div>
+                        <div class="col-lg-8">
+                            <input readonly type="text" style="font-weight:bold; width:100%" name="name" value="@Model.client.client_phone" />
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-bottom:10px">
+                        <div class="col-lg-4 text-right" style="font-size:12px; font-weight:bold; color:dimgray; padding-right:0px">
+                            Fax
+                        </div>
+                        <div class="col-lg-8">
+                            <input readonly type="text" style="font-weight:bold; width:100%" name="name" value="@Model.client.client_fax" />
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-bottom:10px">
+                        <div class="col-lg-4 text-right" style="font-size:12px; font-weight:bold; color:dimgray; padding-right:0px">
+                            Website
+                        </div>
+                        <div class="col-lg-8">
+                            <input readonly type="text" style="font-weight:bold; width:100%" name="name" value="@Model.client.client_website" />
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-bottom:0px;">
+                        <div class="col-lg-4">
+
+                        </div>
+                        <div class="col-lg-8">
+                            <span>
+                                <button type="button" value="@Model.client.client_id;@Model.client.client_name;@Model.client.client_address1;@Model.client.client_address2;@Model.client.client_phone;@Model.client.client_fax;@Model.client.client_website" onclick="edit(this.value)" data-toggle="modal" data-target="#EditClient" style="background-color: transparent;border: none;outline: none;">
+                                    <i class="fa fa-edit" style="font-size:25px;color:black;float:right"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9" style="padding:0px 30px 0px 30px">
+            <div class="row">
+                <div class="card">
+
+                    @using (Html.BeginForm("SaveAccountSettings", "SettingsHarpoon", FormMethod.Post))
+                    {
+                        <div class="card-body example" style="height:737px; overflow-y:auto; width:100%">
+
+                            @Html.HiddenFor(m => m.client.client_id)
+                            <div class="row" id="saveButton" style="display:none; padding:0px 15px 15px 15px">
+                                <div class="col-lg-12 text-center" style="background-color: #fdcf16; padding: 5px 0px 5px 0px">
+                                    <button type="submit" style="margin:5px; padding:3px 30px 3px 30px" class="btn btn-success">Save</button>
+                                    <button type="button" onclick="location.reload()" style="margin:5px; padding:3px 20px 3px 20px" class="btn btn-danger">Cancel</button>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-lg-6" style="padding-right:0px">
+                                    <div class="row" style="margin-bottom:10px">
+                                        <div class="col-lg-2" style="padding: 0px 0px 0px 30px">
+                                            <div class="row">
+                                                <label style="margin-right:10px">
+                                                    <b>OFF</b>
+                                                </label>
+                                                <div class="custom-control custom-switch">
+                                                    @Html.EditorFor(m => m.autoClockOut, new { htmlAttributes = new { @class = "custom-control-input", @id = "Toggle1", @type = "checkbox" } })
+
+                                                    <label class="custom-control-label" for="Toggle1">
+                                                        ON
+                                                    </label>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-10" style="padding-left:50px">
+                                            <h5><u><b>Custom Auto Clock-Out Procedure</b></u></h5>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-bottom:10px">
+                                        <div class="col-lg-2"></div>
+                                        <div class="col-lg-10 text-right" style="padding-left:50px; padding-right:12px">
+                                            <div class="row">
+                                                <div class="col-lg-3 text-left" style="padding-right:0px">
+                                                    <b>Adjustment</b>
+                                                </div>
+                                                <div class="col-lg-9 text-left">
+
+                                                    @if (Model.autoClockOut)
+                                                    {
+                                                        @Html.EditorFor(m => m.adjustment, new { htmlAttributes = new { @onfocusout = "MaxVal(this.value)", @onchange = "saveRowDisplay()", @style = "font-size:20px; font-weight:bold; text-align:center; width:110px; height:40px", @id = "appt-time", @type = "number", @name = "appt-time", @min = "0", @max = "30", @placeholder = "00" } })
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.EditorFor(m => m.adjustment, new { htmlAttributes = new { @onfocusout = "MaxVal(this.value)", @onchange = "saveRowDisplay()", @readonly = true, @style = "font-size:20px; font-weight:bold; text-align:center; width:110px; height:40px", @id = "appt-time", @type = "number", @name = "appt-time", @min = "0", @max = "30", @placeholder = "00" } })
+                                                    }
+
+                                                    <label style="font-weight:bold; color:dimgray">minutes</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row" style="margin-bottom:10px">
+                                        <div class="col-lg-2"></div>
+                                        <div class="col-lg-10 text-right" style="padding-left:50px; padding-right:0px">
+                                            <div class="row">
+                                                <div class="col-lg-3 text-left" style="padding-right:0px">
+                                                    <b>Default (OFF)</b>
+                                                </div>
+                                                <div class="col-lg-9 text-left" style="font-size:15px">
+                                                    Auto clock-out time set to closing time of the day
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row" style="margin-bottom:10px">
+                                        <div class="col-lg-2"></div>
+                                        <div class="col-lg-10 text-right" style="padding-left:50px; padding-right:0px">
+                                            <div class="row">
+                                                <div class="col-lg-3 text-left" style="padding-right:0px">
+                                                    <b>Custom (ON)</b>
+                                                </div>
+                                                <div class="col-lg-9 text-left" style="font-size:15px">
+                                                    Auto clock-out time set to closing time of the day minus specified value above. Strategy used to encourage clock-out via key fob or manual code
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row" style="margin-bottom:10px">
+                                        <div class="col-lg-2"></div>
+                                        <div class="col-lg-10 text-left" style="font-size:15px; padding-left:50px; padding-right:0px">
+                                            <b><i>Auto clock-out time for <u>non-operating days</u> set to clock-in time</i></b>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-6" style="padding: 0px 15px 15px 15px; font-size: 13px">
+                                    <div style="padding:0px 15px 0px 15px; border:2px solid dimgray; border-radius:15px">
+                                        <div class="row" style="margin-top:15px; margin-bottom:10px">
+                                            <div class="col-lg-1"></div>
+                                            <div class="col-lg-2">
+                                                <b><u>Schedule</u></b>
+                                            </div>
+                                            <div class="col-lg-2"></div>
+                                            <div class="col-lg-2"></div>
+                                            <div class="col-lg-2"></div>
+                                            <div class="col-lg-3 text-left" style="color:#007bff">
+                                                <b><u>Auto Clock-Out</u></b>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="col-lg-2 text-right" style="padding-right:0px">
+                                                <label style="margin-right:10px">
+                                                    <b>Sunday</b>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <div class="row">
+                                                    <div class="col-lg-12 text-left" style="padding-left:35px">
+                                                        <div class="custom-control custom-switch">
+                                                            @Html.EditorFor(m => m.sundayOpen, new { htmlAttributes = new { @checked = true, @class = "custom-control-input", @id = "ToggleSunday", @type = "checkbox" } })
+                                                            <label class="custom-control-label" for="ToggleSunday">
+                                                                <b class="ToggleSunday">
+                                                                    @if (Model.sundayOpen)
+                                                                    {
+                                                                        <span>
+                                                                            Open
+                                                                        </span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span>
+                                                                            Closed
+                                                                        </span>
+                                                                    }
+                                                                </b>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 text-center">
+                                                @Html.EditorFor(m => m.sundayStart, new { htmlAttributes = new { @class = "sundayTime", @onchange = "saveRowDisplay()", @style = "font-size:10px; font-weight:bold; text-align:center; width:80px", @type = "time", @id = "sunStart" } })
+                                            </div>
+                                            <div class="col-lg-2 text-center">
+                                                @Html.EditorFor(m => m.sundayEnd, new { htmlAttributes = new { @onfocusout = "sunen()", @class = "sundayTime", @onchange = "saveRowDisplay()", @style = "font-size:10px; font-weight:bold; text-align:center; width:80px", @type = "time", @id = "sunEnd" } })
+                                            </div>
+                                            <script>
+                                                function sunen() {
+                                                    timeCalculation($('#sunEnd').val(), $('#appt-time').val(), "sunAuto")
+                                                }
+                                            </script>
+                                            <div class="col-lg-3 text-center">
+                                                <input class="sundayTime" readonly id="sunAuto" style="color:#007bff; border:none; outline:none; margin-left:auto; margin-right:auto; font-size:14px; font-weight:bold; text-align:center; width:100px" type="time" name="name" value="" />
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-2 text-right" style="padding-right:0px">
+                                                <label style="margin-right:10px">
+                                                    <b>Monday</b>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-3 text-right">
+                                                <div class="row">
+                                                    <div class="col-lg-12 text-left" style="padding-left:35px">
+                                                        <div class="custom-control custom-switch">
+                                                            @Html.EditorFor(m => m.monOpen, new { htmlAttributes = new { @checked = true, @class = "custom-control-input", @id = "ToggleMonday", @type = "checkbox" } })
+                                                            <label class="custom-control-label" for="ToggleMonday">
+                                                                <b class="ToggleMonday">
+                                                                    @if (Model.monOpen)
+                                                                    {
+                                                                        <span>
+                                                                            Open
+                                                                        </span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span>
+                                                                            Closed
+                                                                        </span>
+                                                                    }
+                                                                </b>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 text-center">
+                                                @Html.EditorFor(m => m.monStart, new { htmlAttributes = new { @class = "mondayTime", @onchange = "saveRowDisplay()", @style = "font-size:10px; font-weight:bold; text-align:center; width:80px", @type = "time" } })
+                                            </div>
+                                            <div class="col-lg-2 text-center">
+                                                @Html.EditorFor(m => m.monEnd, new { htmlAttributes = new { @onfocusout = "monen()", @class = "mondayTime", @onchange = "saveRowDisplay()", @style = "font-size:10px; font-weight:bold; text-align:center; width:80px", @type = "time", @id = "monEnd" } })
+                                            </div>
+                                            <script>
+                                                function monen() {
+                                                    timeCalculation($('#monEnd').val(), $('#appt-time').val(), "monAuto")
+                                                }
+                                            </script>
+                                            <div class="col-lg-3 text-center">
+                                                <input class="mondayTime" readonly id="monAuto" style="color:#007bff; border:none; outline:none; margin-left:auto; margin-right:auto; font-size:14px; font-weight:bold; text-align:center; width:100px" type="time" name="name" value="" />
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-2 text-right" style="padding-right:0px">
+                                                <label style="margin-right:10px">
+                                                    <b>Tuesday</b>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <div class="row">
+                                                    <div class="col-lg-12 text-left" style="padding-left:35px">
+                                                        <div class="custom-control custom-switch">
+                                                            @Html.EditorFor(m => m.TueOpen, new { htmlAttributes = new { @checked = true, @class = "custom-control-input", @id = "ToggleTuesday", @type = "checkbox" } })
+
+                                                            <label class="custom-control-label" for="ToggleTuesday">
+                                                                <b class="ToggleTuesday">
+                                                                    @if (Model.TueOpen)
+                                                                    {
+                                                                        <span>
+                                                                            Open
+                                                                        </span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span>
+                                                                            Closed
+                                                                        </span>
+                                                                    }
+                                                                </b>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 text-center">
+                                                @Html.EditorFor(m => m.TueStart, new { htmlAttributes = new { @class = "tuesdayTime", @onchange = "saveRowDisplay()", @style = "font-size:10px; font-weight:bold; text-align:center; width:80px", @type = "time" } })
+                                            </div>
+                                            <div class="col-lg-2 text-center">
+                                                @Html.EditorFor(m => m.TueEnd, new { htmlAttributes = new { @onfocusout = "tueen()", @class = "tuesdayTime", @onchange = "saveRowDisplay()", @style = "font-size:10px; font-weight:bold; text-align:center; width:80px", @type = "time", @id = "tueEnd" } })
+                                            </div>
+                                            <script>
+                                                function tueen() {
+                                                    timeCalculation($('#tueEnd').val(), $('#appt-time').val(), "tueAuto")
+                                                }
+                                            </script>
+                                            <div class="col-lg-3 text-center">
+                                                <input class="tuesdayTime" readonly id="tueAuto" style="color:#007bff; border:none; outline:none; margin-left:auto; margin-right:auto; font-size:14px; font-weight:bold; text-align:center; width:100px" type="time" name="name" value="" />
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-2 text-right" style="padding-right:0px">
+                                                <label style="margin-right:10px">
+                                                    <b>Wednesday</b>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <div class="row">
+                                                    <div class="col-lg-12 text-left" style="padding-left:35px">
+                                                        <div class="custom-control custom-switch">
+                                                            @Html.EditorFor(m => m.WedOpen, new { htmlAttributes = new { @checked = true, @class = "custom-control-input", @id = "ToggleWednesday", @type = "checkbox" } })
+                                                            <label class="custom-control-label" for="ToggleWednesday">
+                                                                <b class="ToggleWednesday">
+                                                                    @if (Model.WedOpen)
+                                                                    {
+                                                                        <span>
+                                                                            Open
+                                                                        </span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span>
+                                                                            Closed
+                                                                        </span>
+                                                                    }
+                                                                </b>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 text-center">
+                                                @Html.EditorFor(m => m.WedStart, new { htmlAttributes = new { @class = "wednesdayTime", @onchange = "saveRowDisplay()", @style = "font-size:10px; font-weight:bold; text-align:center; width:80px", @type = "time" } })
+                                            </div>
+                                            <div class="col-lg-2 text-center">
+                                                @Html.EditorFor(m => m.WedEnd, new { htmlAttributes = new { @onfocusout = "weden()", @class = "wednesdayTime", @onchange = "saveRowDisplay()", @style = "font-size:10px; font-weight:bold; text-align:center; width:80px", @type = "time", @id = "wedEnd" } })
+                                            </div>
+                                            <script>
+                                                function weden() {
+                                                    timeCalculation($('#wedEnd').val(), $('#appt-time').val(), "wedAuto")
+                                                }
+                                            </script>
+                                            <div class="col-lg-3 text-center">
+                                                <input class="wednesdayTime" readonly id="wedAuto" style="color:#007bff; border:none; outline:none; margin-left:auto; margin-right:auto; font-size:14px; font-weight:bold; text-align:center; width:100px" type="time" name="name" value="" />
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-2 text-right" style="padding-right:0px">
+                                                <label style="margin-right:10px">
+                                                    <b>Thursday</b>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <div class="row">
+                                                    <div class="col-lg-12 text-left" style="padding-left:35px">
+                                                        <div class="custom-control custom-switch">
+                                                            @Html.EditorFor(m => m.ThuOpen, new { htmlAttributes = new { @checked = true, @class = "custom-control-input", @id = "ToggleThursday", @type = "checkbox" } })
+                                                            <label class="custom-control-label" for="ToggleThursday">
+                                                                <b class="ToggleThursday">
+                                                                    @if (Model.ThuOpen)
+                                                                    {
+                                                                        <span>
+                                                                            Open
+                                                                        </span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span>
+                                                                            Closed
+                                                                        </span>
+                                                                    }
+                                                                </b>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 text-center">
+                                                @Html.EditorFor(m => m.ThuStart, new { htmlAttributes = new { @class = "thursdayTime", @onchange = "saveRowDisplay()", @style = "font-size:10px; font-weight:bold; text-align:center; width:80px", @type = "time" } })
+                                            </div>
+                                            <div class="col-lg-2 text-center">
+                                                @Html.EditorFor(m => m.ThuEnd, new { htmlAttributes = new { @onfocusout = "thuen()", @class = "thursdayTime", @onchange = "saveRowDisplay()", @style = "font-size:10px; font-weight:bold; text-align:center; width:80px", @type = "time", @id = "thuEnd" } })
+                                            </div>
+                                            <script>
+                                                function thuen() {
+                                                    timeCalculation($('#thuEnd').val(), $('#appt-time').val(), "thuAuto")
+                                                }
+                                            </script>
+                                            <div class="col-lg-3 text-center">
+                                                <input class="thursdayTime" readonly id="thuAuto" style="color:#007bff; border:none; outline:none; margin-left:auto; margin-right:auto; font-size:14px; font-weight:bold; text-align:center; width:100px" type="time" name="name" value="" />
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-2 text-right" style="padding-right:0px">
+                                                <label style="margin-right:10px">
+                                                    <b>Friday</b>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <div class="row">
+                                                    <div class="col-lg-12 text-left" style="padding-left:35px">
+                                                        <div class="custom-control custom-switch">
+                                                            @Html.EditorFor(m => m.FriOpen, new { htmlAttributes = new { @checked = true, @class = "custom-control-input", @id = "ToggleFriday", @type = "checkbox" } })
+                                                            <label class="custom-control-label" for="ToggleFriday">
+                                                                <b class="ToggleFriday">
+                                                                    @if (Model.FriOpen)
+                                                                    {
+                                                                        <span>
+                                                                            Open
+                                                                        </span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span>
+                                                                            Closed
+                                                                        </span>
+                                                                    }
+                                                                </b>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 text-center">
+                                                @Html.EditorFor(m => m.FriStart, new { htmlAttributes = new { @class = "fridayTime", @onchange = "saveRowDisplay()", @style = "font-size:10px; font-weight:bold; text-align:center; width:80px", @type = "time" } })
+                                            </div>
+                                            <div class="col-lg-2 text-center">
+                                                @Html.EditorFor(m => m.FriEnd, new { htmlAttributes = new { @onfocusout = "frien()", @class = "fridayTime", @onchange = "saveRowDisplay()", @style = "font-size:10px; font-weight:bold; text-align:center; width:80px", @type = "time", @id = "friEnd" } })
+                                            </div>
+                                            <script>
+                                                function frien() {
+                                                    timeCalculation($('#friEnd').val(), $('#appt-time').val(), "friAuto")
+                                                }
+                                            </script>
+                                            <div class="col-lg-3 text-center">
+                                                <input class="fridayTime" readonly id="friAuto" style="color:#007bff; border:none; outline:none; margin-left:auto; margin-right:auto; font-size:14px; font-weight:bold; text-align:center; width:100px" type="time" name="name" value="" />
+                                            </div>
+                                        </div>
+
+                                        <div class="row" style="margin-bottom:15px">
+                                            <div class="col-lg-2 text-right" style="padding-right:0px">
+                                                <label style="margin-right:10px">
+                                                    <b>Saturday</b>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <div class="row">
+                                                    <div class="col-lg-12 text-left" style="padding-left:35px">
+                                                        <div class="custom-control custom-switch">
+                                                            @Html.EditorFor(m => m.SatOpen, new { htmlAttributes = new { @class = "custom-control-input", @id = "ToggleSaturday", @type = "checkbox" } })
+                                                            <label class="custom-control-label" for="ToggleSaturday">
+                                                                <b class="ToggleSaturday">
+                                                                    @if (Model.SatOpen)
+                                                                    {
+                                                                        <span>
+                                                                            Open
+                                                                        </span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span>
+                                                                            Closed
+                                                                        </span>
+                                                                    }
+                                                                </b>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 text-center">
+                                                @Html.EditorFor(m => m.SatStart, new { htmlAttributes = new { @class = "saturdayTime", @style = "font-size:10px; font-weight:bold; text-align:center; width:80px", @type = "time" } })
+                                            </div>
+                                            <div class="col-lg-2 text-center">
+                                                @Html.EditorFor(m => m.SatEnd, new { htmlAttributes = new { @onfocusout = "saten()", @class = "saturdayTime", @style = "font-size:10px; font-weight:bold; text-align:center; width:80px", @type = "time", @id = "satEnd" } })
+                                            </div>
+                                            <script>
+                                                function saten() {
+                                                    timeCalculation($('#satEnd').val(), $('#appt-time').val(), "satAuto")
+                                                }
+                                            </script>
+                                            <div class="col-lg-3 text-center">
+                                                <input class="saturdayTime" readonly id="satAuto" style="color:#007bff; border:none; outline:none; margin-left:auto; margin-right:auto; font-size:14px; font-weight:bold; text-align:center; width:100px" type="time" name="name" value="" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr style="height:5px" />
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-1" style="padding:0px 0px 0px 30px">
+                                    <div class="row">
+                                        <label style="margin-right:10px">
+                                            <b>OFF</b>
+                                        </label>
+                                        <div class="custom-control custom-switch">
+                                            @Html.EditorFor(m => m.master_loc_id, new { htmlAttributes = new { @class = "custom-control-input", @id = "Toggle2", @type = "checkbox" } })
+                                            <label class="custom-control-label" for="Toggle2">
+                                                ON
+                                            </label>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-11" style="padding-left:50px">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <h5><u><b>Use one master location</b></u></h5>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+
+                                            @if (Model.master_loc_id)
+                                            {
+                                                @Html.DropDownListFor(m => m.masterLocID, Model.Locations, "Select", new { @id = "locations", @type = "text", @style = "text-align-last: center;width:150px;height:40px;font-size:20px;" })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownListFor(m => m.masterLocID, Model.Locations, "Select", new { @id = "locations", @disabled = true, @type = "text", @style = "text-align-last: center;width:150px;height:40px;font-size:20px;" })
+                                            }
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-1" style="padding:0px 0px 0px 30px">
+                                    <div class="row">
+                                        <label style="margin-right:10px">
+                                            <b>OFF</b>
+                                        </label>
+                                        <div class="custom-control custom-switch">
+                                            @Html.EditorFor(m => m.useLocIdInList, new { htmlAttributes = new { @class = "custom-control-input", @id = "Toggle5", @type = "checkbox" } })
+                                            <label class="custom-control-label" for="Toggle5">
+                                                ON
+                                            </label>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-11" style="padding-left:50px">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <h5><u><b>Use Location ID in list box</b></u></h5>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <b>(Turn  off to use location names in list box)</b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-1" style="padding:0px 0px 0px 30px">
+                                    <div class="row">
+                                        <label style="margin-right:10px">
+                                            <b>OFF</b>
+                                        </label>
+                                        <div class="custom-control custom-switch">
+                                            @Html.EditorFor(m => m.manualCode, new { htmlAttributes = new { @checked = true, @class = "custom-control-input", @id = "Toggle3", @type = "checkbox" } })
+                                            <label class="custom-control-label" for="Toggle3">
+                                                ON
+                                            </label>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-11" style="padding-left:50px">
+                                    <h5><u><b>Manual Code Clock-IN & Clock-Out</b></u></h5>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-1" style="padding:0px 0px 0px 30px">
+
+                                </div>
+                                <div class="col-lg-11" style="padding-left:50px">
+                                    Manual code for each employee is set to their '2-digit' birth year, followed by their employee ID number. When turned "OFF", employee will only be able to use key fob for time clocking purpose
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-1" style="padding:0px 0px 0px 30px">
+
+                                </div>
+                                <div class="col-lg-11" style="padding-left:50px">
+                                    <u><b>Example:</b></u> Smith, John ; employee ID: <span style="border:1px solid blue">12345</span> ; Date of birth: January 1st 19<span style="border:1px solid red">90</span> ; Manual Entry: <b style="color:red">90</b><b style="color:blue">12345</b>
+                                </div>
+                            </div>
+                            <hr />
+
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-1" style="padding:0px 0px 0px 30px">
+                                    <div class="row">
+                                        <label style="margin-right:10px">
+                                            <b>OFF</b>
+                                        </label>
+                                        <div class="custom-control custom-switch">
+                                            @Html.EditorFor(m => m.custom_empID_len, new { htmlAttributes = new { @checked = true, @class = "custom-control-input", @id = "Toggle4", @type = "checkbox" } })
+                                            <label class="custom-control-label" for="Toggle4">
+                                                ON
+                                            </label>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-11" style="padding-left:50px">
+                                    <h5><u><b>Custom Employee ID Character Length (Digits)</b></u></h5>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-1" style="padding:0px 0px 0px 30px">
+
+                                </div>
+                                <div class="col-lg-11" style="padding-left:50px">
+
+                                    @if (Model.custom_empID_len)
+                                    {
+                                        @Html.EditorFor(m => m.custEmpIDLength, new { htmlAttributes = new { @min = "3", @max = "8", @id = "custEmpIDLength", @onchange = "checkEmpIdLength()", @style = "width:50px; height:40px; text-align:center", @type = "number" } })
+                                    }
+                                    else
+                                    {
+                                        @Html.EditorFor(m => m.custEmpIDLength, new { htmlAttributes = new { @readonly = true, @min = "3", @max = "8", @id = "custEmpIDLength", @onchange = "checkEmpIdLength()", @style = "width:50px; height:40px; text-align:center", @type = "number" } })
+                                    }
+
+                                    Character Length
+                                </div>
+
+                            </div>
+
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-1" style="padding:0px 0px 0px 30px">
+
+                                </div>
+                                <div class="col-lg-11" style="padding-left:50px">
+                                    <b>Default (OFF)</b> 5 Character length
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-1" style="padding:0px 0px 0px 30px">
+
+                                </div>
+                                <div class="col-lg-11" style="padding-left:50px">
+                                    <b>Custom (ON)</b> Minimum of 3 & maximum of 8 character length
+                                </div>
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
 
     </div>
 
+    <div class="modal" id="Acknowledgment" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:5px 3px 5px 15px">
+                    <h5 class="modal-title">Acknowledgment</h5>
+                </div>
+                <div class="modal-body">
+                    <input id="locationsList" style="display:none" type="text" name="name" value="@Model.listOfLocations" />
+                    <span>Client ID is associated with multiple locations.</span>
+                    <br />
+
+                    @if (Model.listOfLocations != null)
+                    {
+                        foreach (var loc in Model.listOfLocations.Split(';'))
+                        {
+                            if (loc != "")
+                            {
+                                <span>@loc</span>
+                                <br />
+                            }
+                        }
+                    }
+
+                    Pleas delete locations to proceed
+
+                </div>
+                <div class="modal-footer" style="padding:3px">
+                    <button type="button" style="padding:3px 20px 3px 20px" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="EmpExists" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content">
+                <div class="modal-header" style="padding:5px 5px 5px 15px">
+                    <h5 class="modal-title">Acknowledgement</h5>
+                </div>
+                <div class="modal-body" style="padding-right:0px; padding-bottom:0px">
+                    <h4>
+                        Employees exist with custome length greater than the provided value.
+                    </h4>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal" id="EditClient" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+
+            @using (Html.BeginForm("EditClientInfo", "SettingsHarpoon", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="modal-content">
+                    <div class="modal-header" style="padding:5px 5px 5px 15px">
+                        <h5 class="modal-title">Edit Client</h5>
+                    </div>
+                    <div class="modal-body">
+
+                        @{
+                            string Editbase64ProfilePic = "";
+                            string imag = "";
+                            if (Model.client.client_logo != null)
+                            {
+                                imag = "data:image/png;base64," + Convert.ToBase64String(Model.client.client_logo);
+                                Editbase64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(Model.client.client_logo);
+                            }
+                        }
+
+                        <div class="row">
+                            <div class="col-lg-12 text-center">
+                                <img src="@Editbase64ProfilePic" style="width:60%" alt="Alternate Text" />
+                            </div>
+                        </div>
+
+                        <div class="row" style="padding-bottom:10px; margin-top:30px">
+                            <div class="col-lg-4 text-right">
+                                Client ID
+                            </div>
+                            <div class="col-lg-8">
+                                @Html.EditorFor(m => m.editClient.client_id, new { htmlAttributes = new { @oninput = "checkRequired()", @id = "client_id_edit", @style = "width:100%", @required = "required" } })
+                            </div>
+                        </div>
+                        <div class="row" style="padding-bottom:10px">
+                            <div class="col-lg-4 text-right">
+                                Client Name
+                            </div>
+                            <div class="col-lg-8">
+                                @Html.EditorFor(m => m.editClient.client_name, new { htmlAttributes = new { @oninput = "checkRequired()", @id = "client_name", @style = "width:100%", @required = "required" } })
+                            </div>
+                        </div>
+                        <div class="row" style="padding-bottom:10px">
+                            <div class="col-lg-4 text-right">
+                                Address 1
+                            </div>
+                            <div class="col-lg-8">
+                                @Html.EditorFor(m => m.editClient.client_address1, new { htmlAttributes = new { @oninput = "checkRequired()", @id = "client_address1", @style = "width:100%", @required = "required" } })
+                            </div>
+                        </div>
+                        <div class="row" style="padding-bottom:10px">
+                            <div class="col-lg-4 text-right">
+                                Address 2
+                            </div>
+                            <div class="col-lg-8">
+                                @Html.EditorFor(m => m.editClient.client_address2, new { htmlAttributes = new { @oninput = "checkRequired()", @id = "client_address2", @style = "width:100%", @required = "required" } })
+                            </div>
+                        </div>
+                        <div class="row" style="padding-bottom:10px">
+                            <div class="col-lg-4 text-right">
+                                Phone
+                            </div>
+                            <div class="col-lg-8">
+                                @Html.EditorFor(m => m.editClient.client_phone, new { htmlAttributes = new { @oninput = "checkRequired()", @id = "client_phone", @style = "width:100%", @required = "required" } })
+                            </div>
+                        </div>
+                        <div class="row" style="padding-bottom:10px">
+                            <div class="col-lg-4 text-right">
+                                Fax
+                            </div>
+                            <div class="col-lg-8">
+                                @Html.EditorFor(m => m.editClient.client_fax, new { htmlAttributes = new { @oninput = "checkRequired()", @id = "client_fax", @style = "width:100%", @required = "required" } })
+                            </div>
+                        </div>
+                        <div class="row" style="padding-bottom:20px">
+                            <div class="col-lg-4 text-right">
+                                Website
+                            </div>
+                            <div class="col-lg-8">
+                                @Html.EditorFor(m => m.editClient.client_website, new { htmlAttributes = new { @oninput = "checkRequired()", @id = "client_website", @style = "width:100%", @required = "required" } })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4 text-right">
+                            </div>
+                            <div class="col-lg-8" style="padding-left:0px">
+                                <input style="float:right; margin-left:0px" type="file" name="clientImage" value="" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success" style="padding:2px 20px 2px 20px">Save</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+
+
+
     <script>
+
+        function edit(val) {
+            var edt = val.split(";")
+            $('#client_id_edit').val(edt[0]);
+            $('#client_name').val(edt[1]);
+            $('#client_address1').val(edt[2]);
+            $('#client_address2').val(edt[3]);
+            $('#client_phone').val(edt[4]);
+            $('#client_fax').val(edt[5]);
+            $('#client_website').val(edt[6]);
+        }
+
+        $(window).on('load', function () {
+            $('#AttendanceRightBody').css('display', 'block');
+            $('#divLoader').css('display', 'none');
+        });
+
+        $(document).ready(function () {
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+                $('#divLoader').css('display', 'block');
+            });
+
+        });
+
+        //function checkEmpIdLength() {
+
+        //        $.ajax({
+          //          url: '@Url.Action("checkEmpIdLength", "SettingsHarpoon")',
+            //        data: { value: $('#client_id').val() },
+              //      type: 'POST',
+                //    success: function (data) {
+                  //      if (parseInt(data) > parseInt($('#custEmpIDLength').val())) {
+                    //        $('#EmpExists').modal()
+                      //      $('#custEmpIDLength').val(parseInt($('#custEmpIDLength').val())+1)
+                        //}
+                        //else {
+                          //  saveRowDisplay();
+                        //}
+                    //}
+                //});
+            //}
+
+        function checkEmpIdLength() {
+            saveRowDisplay();
+        }
+
+
+        if ($('#ToggleMonday').prop("checked") == true) {
+            $('.mondayTime').css("display", "block")
+        }
+        else {
+            $('.mondayTime').css("display", "none")
+        }
+
+        if ($('#ToggleTuesday').prop("checked") == true) {
+            $('.tuesdayTime').css("display", "block")
+        }
+        else {
+            $('.tuesdayTime').css("display", "none")
+        }
+
+        if ($('#ToggleWednesday').prop("checked") == true) {
+            $('.wednesdayTime').css("display", "block")
+        }
+        else {
+            $('.wednesdayTime').css("display", "none")
+        }
+
+        if ($('#ToggleThursday').prop("checked") == true) {
+            $('.thursdayTime').css("display", "block")
+        }
+        else {
+            $('.thursdayTime').css("display", "none")
+        }
+
+        if ($('#ToggleFriday').prop("checked") == true) {
+            $('.fridayTime').css("display", "block")
+        }
+        else {
+            $('.fridayTime').css("display", "none")
+        }
+
+        if ($('#ToggleSaturday').prop("checked") == true) {
+            $('.saturdayTime').css("display", "block")
+        }
+        else {
+            $('.saturdayTime').css("display", "none")
+        }
+
+        if ($('#ToggleSunday').prop("checked") == true) {
+            $('.sundayTime').css("display", "block")
+        }
+        else {
+            $('.sundayTime').css("display", "none")
+        }
+
+
+        const adjust = $('#appt-time').val();
+
+        const sunEnd = $('#sunEnd').val();
+        const monEnd = $('#monEnd').val();
+        const tueEnd = $('#tueEnd').val();
+        const wedEnd = $('#wedEnd').val();
+        const thuEnd = $('#thuEnd').val();
+        const friEnd = $('#friEnd').val();
+        const satEnd = $('#satEnd').val();
+
+
+
+        function timeCalculation(day, adj, id) {
+            if (parseInt(day.substring(3, 5)) - parseInt(adj) >= 0) {
+
+                if (String(parseInt(day.substring(3, 5)) - parseInt(adj)).length <= 1) {
+                    $("#" + id).val(String(day.substring(0, 3)) + makeDouble(String(parseInt(day.substring(3, 5)) - parseInt(adj))));
+                }
+                else {
+                    $("#" + id).val(String(day.substring(0, 3)) + String(parseInt(day.substring(3, 5)) - parseInt(adj)));
+                }
+
+
+            }
+            else {
+                $("#" + id).val(String(parseInt(day.substring(0, 3)) - 1) + ":" + String(60 + parseInt(day.substring(3, 5)) - parseInt(adj)))
+            }
+        }
+
+        function makeDouble(num) {
+            var formattedNumber = ("0" + num).slice(-2);
+            return formattedNumber
+        }
+
+
+
+        if ($('#Toggle4').prop("checked") == true) {
+
+        }
+        else {
+            $('#custEmpIDLength').val("5")
+        }
+
+        if ($('#Toggle1').prop("checked") == true) {
+            timeCalculation(monEnd, adjust, "monAuto")
+            timeCalculation(tueEnd, adjust, "tueAuto")
+            timeCalculation(wedEnd, adjust, "wedAuto")
+            timeCalculation(thuEnd, adjust, "thuAuto")
+            timeCalculation(friEnd, adjust, "friAuto")
+            timeCalculation(satEnd, adjust, "satAuto")
+            timeCalculation(satEnd, adjust, "sunAuto")
+        }
+        else {
+            $('#sunAuto').val($('#sunEnd').val())
+            $('#monAuto').val($('#monEnd').val())
+            $('#tueAuto').val($('#tueEnd').val())
+            $('#wedAuto').val($('#wedEnd').val())
+            $('#thuAuto').val($('#thuEnd').val())
+            $('#friAuto').val($('#friEnd').val())
+            $('#satAuto').val($('#satEnd').val())
+        }
+
+
+
+
+
+        function MaxVal(val) {
+            if (parseInt(val) > 30) {
+                $('#appt-time').val(30)
+            }
+
+            const adjust = $('#appt-time').val();
+
+            const sunEnd = $('#sunEnd').val();
+            const monEnd = $('#monEnd').val();
+            const tueEnd = $('#tueEnd').val();
+            const wedEnd = $('#wedEnd').val();
+            const thuEnd = $('#thuEnd').val();
+            const friEnd = $('#friEnd').val();
+            const satEnd = $('#satEnd').val();
+
+            timeCalculation(monEnd, adjust, "monAuto")
+            timeCalculation(tueEnd, adjust, "tueAuto")
+            timeCalculation(wedEnd, adjust, "wedAuto")
+            timeCalculation(thuEnd, adjust, "thuAuto")
+            timeCalculation(friEnd, adjust, "friAuto")
+            timeCalculation(satEnd, adjust, "satAuto")
+            timeCalculation(satEnd, adjust, "sunAuto")
+
+        }
+
+
+        $("#ToggleSunday").on('change', function () {
+            saveRowDisplay()
+            if ($(this).is(':checked')) {
+                $('.ToggleSunday').html('Open')
+                $('.sundayTime').css("display", "block")
+            }
+            else {
+                $('.ToggleSunday').html('Closed')
+                $('.sundayTime').css("display", "none")
+                $('.sundayTime').val(null)
+            }
+        });
+
+        $("#ToggleMonday").on('change', function () {
+            saveRowDisplay()
+            if ($(this).is(':checked')) {
+                $('.ToggleMonday').html('Open')
+                $('.mondayTime').css("display", "block")
+            }
+            else {
+                $('.ToggleMonday').html('Closed')
+                $('.mondayTime').css("display", "none")
+                $('.mondayTime').val(null)
+            }
+        });
+
+        $("#ToggleTuesday").on('change', function () {
+            saveRowDisplay()
+            if ($(this).is(':checked')) {
+                $('.ToggleTuesday').html('Open')
+                $('.tuesdayTime').css("display", "block")
+            }
+            else {
+                $('.ToggleTuesday').html('Closed')
+                $('.tuesdayTime').css("display", "none")
+                $('.tuesdayTime').val(null)
+            }
+        });
+
+        $("#ToggleWednesday").on('change', function () {
+            saveRowDisplay()
+            if ($(this).is(':checked')) {
+                $('.ToggleWednesday').html('Open')
+                $('.wednesdayTime').css("display", "block")
+            }
+            else {
+                $('.ToggleWednesday').html('Closed')
+                $('.wednesdayTime').css("display", "none")
+                $('.wednesdayTime').val(null)
+            }
+        });
+
+        $("#ToggleThursday").on('change', function () {
+            saveRowDisplay()
+            if ($(this).is(':checked')) {
+                $('.ToggleThursday').html('Open')
+                $('.thursdayTime').css("display", "block")
+            }
+            else {
+                $('.ToggleThursday').html('Closed')
+                $('.thursdayTime').css("display", "none")
+                $('.thursdayTime').val(null)
+            }
+        });
+
+        $("#ToggleSaturday").on('change', function () {
+            saveRowDisplay()
+            if ($(this).is(':checked')) {
+                $('.ToggleSaturday').html('Open')
+                $('.saturdayTime').css("display", "block")
+            }
+            else {
+                $('.ToggleSaturday').html('Closed')
+                $('.saturdayTime').css("display", "none")
+                $('.saturdayTime').val(null)
+            }
+        });
+
+        $("#ToggleFriday").on('change', function () {
+            saveRowDisplay()
+            if ($(this).is(':checked')) {
+                $('.ToggleFriday').html('Open')
+                $('.fridayTime').css("display", "block")
+            }
+            else {
+                $('.ToggleFriday').html('Closed')
+                $('.fridayTime').css("display", "none")
+                $('.fridayTime').val(null)
+            }
+        });
+
+
+        $("#Toggle1").on('change', function () {
+            saveRowDisplay()
+            if ($(this).is(':checked')) {
+                $('#appt-time').prop("readonly", false);
+
+                const adjust = $('#appt-time').val();
+
+                const sunEnd = $('#sunEnd').val();
+                const monEnd = $('#monEnd').val();
+                const tueEnd = $('#tueEnd').val();
+                const wedEnd = $('#wedEnd').val();
+                const thuEnd = $('#thuEnd').val();
+                const friEnd = $('#friEnd').val();
+                const satEnd = $('#satEnd').val();
+
+                timeCalculation(monEnd, adjust, "monAuto")
+                timeCalculation(tueEnd, adjust, "tueAuto")
+                timeCalculation(wedEnd, adjust, "wedAuto")
+                timeCalculation(thuEnd, adjust, "thuAuto")
+                timeCalculation(friEnd, adjust, "friAuto")
+                timeCalculation(satEnd, adjust, "satAuto")
+                timeCalculation(satEnd, adjust, "sunAuto")
+
+            }
+            else {
+                $('#appt-time').prop("readonly", true);
+                $('#appt-time').val("0");
+                $('#sunAuto').val($('#sunEnd').val())
+                $('#monAuto').val($('#monEnd').val())
+                $('#tueAuto').val($('#tueEnd').val())
+                $('#wedAuto').val($('#wedEnd').val())
+                $('#thuAuto').val($('#thuEnd').val())
+                $('#friAuto').val($('#friEnd').val())
+                $('#satAuto').val($('#satEnd').val())
+            }
+        });
+
+        
+         
+        $("#Toggle2").on('change', function () {
+
+            if ($(this).is(':checked')) {
+                $("#Toggle2").prop('checked', true);
+                $("#locations").prop('disabled', false);
+                $("#locations").val("");
+                saveRowDisplay()
+            }
+            else {
+                $("#Toggle2").prop('checked', false);
+                $("#locations").prop('disabled', true);
+                $("#locations").val("");
+                saveRowDisplay()
+            }
+
+        });
+         
+        
+
+        $("#Toggle3").on('change', function () {
+            saveRowDisplay()
+        });
+
+        $("#Toggle4").on('change', function () {
+            saveRowDisplay()
+            if ($(this).is(':checked')) {
+                    $("#custEmpIDLength").prop("readonly", false);
+                }
+            else {
+                $("#custEmpIDLength").val(5);
+                $("#custEmpIDLength").prop("readonly", true);
+            }
+        });
+
+        $("#Toggle5").on('change', function () {
+            saveRowDisplay()
+        });
+
+
+        function saveRowDisplay() {
+            $('#saveButton').css("display", "block");
+        }
+
+        function saveRowHide() {
+            $('#saveButton').css("display", "none");
+            $('#lastRow').css("height", "105px");
+            $('#Auto').prop("disabled", false);
+            $('#Manual').prop("disabled", false);
+        }
+
 
     </script>
 </body>

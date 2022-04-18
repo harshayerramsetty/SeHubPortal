@@ -41,15 +41,6 @@
           <Property Name="start_date" Type="date" />
           <Property Name="end_date" Type="date" />
         </EntityType>
-        <EntityType Name="tbl_commercial_tire_manufacturers">
-          <Key>
-            <PropertyRef Name="manufacturers" />
-          </Key>
-          <Property Name="manufacturers" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="tread_tracker" Type="int" />
-          <Property Name="fleetTVT" Type="int" />
-          <Property Name="brand_image" Type="image" />
-        </EntityType>
         <EntityType Name="tbl_commercial_tire_sizes">
           <Key>
             <PropertyRef Name="sizes" />
@@ -78,6 +69,19 @@
           <Property Name="tread_tracker_access" Type="int" />
           <Property Name="service_email" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="management_email" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="googleMap" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="tbl_cta_location_survey">
+          <Key>
+            <PropertyRef Name="loc_id" />
+          </Key>
+          <Property Name="loc_id" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="employeeSurvey_link" Type="varchar" MaxLength="500" />
+          <Property Name="employeeSurvey_read" Type="varchar" MaxLength="500" />
+          <Property Name="customerSurvey_link" Type="varchar" MaxLength="500" />
+          <Property Name="customerSurvey_read" Type="varchar" MaxLength="500" />
+          <Property Name="commercialCustomerSurvey_link" Type="varchar" MaxLength="500" />
+          <Property Name="commercialCustomerSurvey_read" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="tbl_customer_list">
           <Key>
@@ -122,6 +126,20 @@
           <Property Name="attachments" Type="image" />
           <Property Name="final_outcome" Type="varchar" MaxLength="5000" />
           <Property Name="complete" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_Efficiancy_Technician_Commissions">
+          <Key>
+            <PropertyRef Name="employee_id" />
+            <PropertyRef Name="loc_id" />
+            <PropertyRef Name="payroll_id" />
+          </Key>
+          <Property Name="employee_id" Type="int" Nullable="false" />
+          <Property Name="loc_id" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="payroll_id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="door_rate" Type="float" Nullable="false" />
+          <Property Name="commissionable_sales_due" Type="float" />
+          <Property Name="commission_plan" Type="varchar" MaxLength="20" />
+          <Property Name="commissions" Type="varchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="tbl_employee">
           <Key>
@@ -566,6 +584,180 @@
           <Property Name="change_type" Type="varchar" MaxLength="50" />
           <Property Name="audit_status" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="tbl_harpoon_clients">
+          <Key>
+            <PropertyRef Name="client_id" />
+          </Key>
+          <Property Name="client_id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="client_name" Type="varchar" MaxLength="255" />
+          <Property Name="client_address1" Type="varchar" MaxLength="255" />
+          <Property Name="client_address2" Type="varchar" MaxLength="255" />
+          <Property Name="client_city" Type="varchar" MaxLength="255" />
+          <Property Name="client_province" Type="varchar" MaxLength="255" />
+          <Property Name="client_postal" Type="varchar" MaxLength="255" />
+          <Property Name="client_country" Type="varchar" MaxLength="255" />
+          <Property Name="client_phone" Type="varchar" MaxLength="255" />
+          <Property Name="client_fax" Type="varchar" MaxLength="255" />
+          <Property Name="client_email" Type="varchar" MaxLength="255" />
+          <Property Name="client_website" Type="varchar" MaxLength="255" />
+          <Property Name="client_logo" Type="image" />
+          <Property Name="status" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_departments">
+          <Key>
+            <PropertyRef Name="department_id" />
+          </Key>
+          <Property Name="department_id" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="available_to_all_loc" Type="bit" />
+          <Property Name="parent_location" Type="varchar" MaxLength="30" />
+          <Property Name="admin" Type="bit" />
+          <Property Name="clocking_comments" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_devices">
+          <Key>
+            <PropertyRef Name="serial_number" />
+          </Key>
+          <Property Name="serial_number" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="client_id" Type="varchar" MaxLength="20" />
+          <Property Name="location_zone" Type="varchar" MaxLength="255" />
+          <Property Name="display_color" Type="varchar" MaxLength="255" />
+          <Property Name="IP_address" Type="varchar" MaxLength="255" />
+          <Property Name="software_version" Type="varchar" MaxLength="255" />
+          <Property Name="auto_loc_id" Type="int" />
+          <Property Name="time_stamp" Type="datetime" />
+          <Property Name="board_id" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_employee">
+          <Key>
+            <PropertyRef Name="client_id" />
+            <PropertyRef Name="auto_emp_id" />
+          </Key>
+          <Property Name="employee_id" Type="varchar" MaxLength="20" />
+          <Property Name="first_name" Type="varchar" MaxLength="255" />
+          <Property Name="middle_initial" Type="varchar" MaxLength="255" />
+          <Property Name="last_name" Type="varchar" MaxLength="255" />
+          <Property Name="position" Type="varchar" MaxLength="255" />
+          <Property Name="Date_of_birth" Type="date" />
+          <Property Name="client_id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="status" Type="int" />
+          <Property Name="profile_pic" Type="image" />
+          <Property Name="auto_loc_id" Type="int" />
+          <Property Name="auto_emp_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_employee_attendance">
+          <Key>
+            <PropertyRef Name="auto_emp_id" />
+          </Key>
+          <Property Name="client_id" Type="varchar" MaxLength="50" />
+          <Property Name="at_work" Type="bit" Nullable="false" />
+          <Property Name="at_work_location" Type="varchar" MaxLength="3" />
+          <Property Name="auto_emp_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_employee_rfid">
+          <Key>
+            <PropertyRef Name="auto_emp_id" />
+          </Key>
+          <Property Name="client_id" Type="varchar" MaxLength="50" />
+          <Property Name="rfid_number" Type="varchar" MaxLength="50" />
+          <Property Name="auto_emp_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_jobclock">
+          <Key>
+            <PropertyRef Name="jobclock_id" />
+          </Key>
+          <Property Name="jobclock_id" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="100" />
+          <Property Name="available_to_all_locations" Type="bit" />
+          <Property Name="parent_location" Type="varchar" MaxLength="30" />
+          <Property Name="admin" Type="bit" />
+          <Property Name="clocking_comments" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_locations">
+          <Key>
+            <PropertyRef Name="client_id" />
+            <PropertyRef Name="auto_loc_id" />
+          </Key>
+          <Property Name="client_id" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="location_id" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="location_name" Type="varchar" MaxLength="255" />
+          <Property Name="address1" Type="varchar" MaxLength="255" />
+          <Property Name="address2" Type="varchar" MaxLength="255" />
+          <Property Name="city" Type="varchar" MaxLength="255" />
+          <Property Name="province" Type="varchar" MaxLength="255" />
+          <Property Name="postal_code" Type="varchar" MaxLength="255" />
+          <Property Name="country" Type="varchar" MaxLength="255" />
+          <Property Name="phone" Type="varchar" MaxLength="255" />
+          <Property Name="fax" Type="varchar" MaxLength="255" />
+          <Property Name="google_maps" Type="varchar" MaxLength="255" />
+          <Property Name="auto_loc_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="status" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_settings">
+          <Key>
+            <PropertyRef Name="client_id" />
+          </Key>
+          <Property Name="client_id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="AutoClockOut_OnOff" Type="int" />
+          <Property Name="AutoClockOut_Adjustment" Type="float" />
+          <Property Name="ManualCode_OnOff" Type="int" />
+          <Property Name="auto_generate_loc_id" Type="int" />
+          <Property Name="LocIDinListBox_OnOff" Type="int" />
+          <Property Name="DefaultEmpIDlength_OnOff" Type="int" />
+          <Property Name="EmpID_Length" Type="int" />
+          <Property Name="MasterLoc_OnOff" Type="int" />
+          <Property Name="MasterLoc_id" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_settings_schedule">
+          <Key>
+            <PropertyRef Name="client_id" />
+            <PropertyRef Name="monday_saturday" />
+          </Key>
+          <Property Name="client_id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="sunday_open" Type="int" />
+          <Property Name="sunday_start" Type="varchar" MaxLength="10" />
+          <Property Name="sunday_end" Type="varchar" MaxLength="10" />
+          <Property Name="monday_saturday" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_source_displayColors">
+          <Key>
+            <PropertyRef Name="color" />
+          </Key>
+          <Property Name="color" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="rgb_value" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_source_locationZone">
+          <Key>
+            <PropertyRef Name="zone" />
+          </Key>
+          <Property Name="zone" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_source_serialNumbers">
+          <Key>
+            <PropertyRef Name="serial_number" />
+          </Key>
+          <Property Name="serial_number" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="model" Type="varchar" MaxLength="100" />
+          <Property Name="color" Type="varchar" MaxLength="100" />
+          <Property Name="verification_code" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_source_userProfiles">
+          <Key>
+            <PropertyRef Name="profile" />
+          </Key>
+          <Property Name="profile" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="security_id" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_users">
+          <Key>
+            <PropertyRef Name="email" />
+          </Key>
+          <Property Name="email" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="100" />
+          <Property Name="client_id" Type="varchar" MaxLength="20" />
+          <Property Name="profile" Type="varchar" MaxLength="255" />
+          <Property Name="loc_id" Type="varchar" MaxLength="10" />
+        </EntityType>
         <EntityType Name="tbl_login_log">
           <Key>
             <PropertyRef Name="log_id" />
@@ -574,6 +766,26 @@
           <Property Name="employee_id" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="time_stamp" Type="datetime" />
           <Property Name="ip_address" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="tbl_management_training">
+          <Key>
+            <PropertyRef Name="emp_id" />
+          </Key>
+          <Property Name="emp_id" Type="int" Nullable="false" />
+          <Property Name="staff_member" Type="varchar" MaxLength="50" />
+          <Property Name="first_aid" Type="bit" />
+          <Property Name="ohs" Type="bit" />
+          <Property Name="tia" Type="int" />
+          <Property Name="good_year" Type="bit" />
+          <Property Name="other" Type="bit" />
+          <Property Name="fa_aspiration_date" Type="date" />
+          <Property Name="fa_certificate" Type="varchar" MaxLength="300" />
+          <Property Name="ohs_aspiration_date" Type="date" />
+          <Property Name="ohs_certificate" Type="varchar" MaxLength="300" />
+          <Property Name="gy_aspiration_date" Type="date" />
+          <Property Name="gy_certificate" Type="varchar" MaxLength="300" />
+          <Property Name="other_aspiration_date" Type="date" />
+          <Property Name="other_certificate" Type="varchar" MaxLength="300" />
         </EntityType>
         <EntityType Name="tbl_payroll_category_selection">
           <Key>
@@ -632,12 +844,27 @@
           <Property Name="PositionTitle" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="OverTimeEligible" Type="int" />
         </EntityType>
-        <EntityType Name="tbl_retread_tread">
+        <EntityType Name="tbl_pricelist">
           <Key>
-            <PropertyRef Name="tread_design" />
+            <PropertyRef Name="loc_id" />
           </Key>
-          <Property Name="tread_design" Type="varchar" MaxLength="30" Nullable="false" />
-          <Property Name="new_32nds" Type="float" />
+          <Property Name="loc_id" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="door_rate" Type="varchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="tbl_production_schedule">
+          <Key>
+            <PropertyRef Name="production_id" />
+          </Key>
+          <Property Name="production_id" Type="int" Nullable="false" />
+          <Property Name="priority" Type="int" />
+          <Property Name="size" Type="varchar" MaxLength="20" />
+          <Property Name="casing_spec" Type="varchar" MaxLength="20" />
+          <Property Name="virgin" Type="bit" />
+          <Property Name="tread" Type="varchar" MaxLength="20" />
+          <Property Name="production_date" Type="date" />
+          <Property Name="quantity" Type="int" />
+          <Property Name="part_no" Type="int" />
+          <Property Name="quantity_complete" Type="int" />
         </EntityType>
         <EntityType Name="tbl_sehub_access">
           <Key>
@@ -705,6 +932,15 @@
           <Property Name="loc_AHO" Type="int" />
           <Property Name="treadTracker_customers" Type="int" />
         </EntityType>
+        <EntityType Name="tbl_source_commercial_tire_manufacturers">
+          <Key>
+            <PropertyRef Name="manufacturers" />
+          </Key>
+          <Property Name="manufacturers" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tread_tracker" Type="int" />
+          <Property Name="fleetTVT" Type="int" />
+          <Property Name="brand_image" Type="image" />
+        </EntityType>
         <EntityType Name="tbl_source_DOT_plantcodes">
           <Key>
             <PropertyRef Name="code" />
@@ -726,18 +962,18 @@
           </Key>
           <Property Name="code" Type="varchar" MaxLength="3" Nullable="false" />
           <Property Name="description" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="prelim_inspection" Type="int" />
-          <Property Name="NDT" Type="int" />
-          <Property Name="Buffer" Type="int" />
-          <Property Name="Builder" Type="int" />
-          <Property Name="Final" Type="int" />
+          <Property Name="TT050" Type="int" />
+          <Property Name="TT100" Type="int" />
+          <Property Name="TT200" Type="int" />
+          <Property Name="TT400" Type="int" />
+          <Property Name="TT600" Type="int" />
         </EntityType>
         <EntityType Name="tbl_source_retread_tread">
           <Key>
-            <PropertyRef Name="tread_id" />
+            <PropertyRef Name="tread_design" />
           </Key>
-          <Property Name="tread_id" Type="int" Nullable="false" />
-          <Property Name="tread_design" Type="varchar" MaxLength="20" />
+          <Property Name="tread_design" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="tread_tracker" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="tbl_source_tire">
           <Key>
@@ -768,6 +1004,9 @@
           </Key>
           <Property Name="tire_size" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="retread" Type="int" />
+          <Property Name="casingCredit" Type="bit" Nullable="false" />
+          <Property Name="casingCredit_value" Type="int" />
+          <Property Name="casingCredit_ageLimit" Type="int" />
         </EntityType>
         <EntityType Name="tbl_source_valve">
           <Key>
@@ -896,6 +1135,21 @@
           <Property Name="final_inspection_date" Type="date" />
           <Property Name="ship_to_location" Type="varchar" MaxLength="3" />
           <Property Name="virgin" Type="int" />
+          <Property Name="comments" Type="varchar" MaxLength="500" />
+          <Property Name="TT050_result" Type="varchar" MaxLength="25" />
+          <Property Name="TT050_date" Type="date" />
+          <Property Name="TT100_result" Type="varchar" MaxLength="25" />
+          <Property Name="TT100_date" Type="date" />
+          <Property Name="TT200_result" Type="varchar" MaxLength="25" />
+          <Property Name="TT200_date" Type="date" />
+          <Property Name="TT300_result" Type="varchar" MaxLength="25" />
+          <Property Name="TT300_date" Type="date" />
+          <Property Name="TT400_result" Type="varchar" MaxLength="25" />
+          <Property Name="TT400_date" Type="date" />
+          <Property Name="TT500_result" Type="varchar" MaxLength="25" />
+          <Property Name="TT500_date" Type="date" />
+          <Property Name="TT600_result" Type="varchar" MaxLength="25" />
+          <Property Name="TT600_date" Type="date" />
         </EntityType>
         <EntityType Name="tbl_treadtracker_casing_brands">
           <Key>
@@ -941,6 +1195,15 @@
           <Property Name="active" Type="int" />
           <Property Name="barcode_scan_required" Type="int" />
           <Property Name="barcode_id" Type="varchar" MaxLength="10" />
+          <Property Name="allow_print" Type="int" />
+          <Property Name="icon" Type="image" />
+          <Property Name="status" Type="int" />
+          <Property Name="tread" Type="int" />
+          <Property Name="size" Type="int" />
+          <Property Name="brand" Type="int" />
+          <Property Name="ship_to" Type="int" />
+          <Property Name="consumables" Type="int" />
+          <Property Name="reprint" Type="int" />
         </EntityType>
         <EntityType Name="tbl_vacation_schedule">
           <Key>
@@ -1013,12 +1276,13 @@ warning 6002: The table/view 'CityTireAndAuto.sys.database_firewall_rules' does 
           <EntitySet Name="tbl_calculator_GM_tire" EntityType="Self.tbl_calculator_GM_tire" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_calculator_GP_fixed" EntityType="Self.tbl_calculator_GP_fixed" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Calendar_events" EntityType="Self.tbl_Calendar_events" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="tbl_commercial_tire_manufacturers" EntityType="Self.tbl_commercial_tire_manufacturers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_commercial_tire_sizes" EntityType="Self.tbl_commercial_tire_sizes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_cta_location_info" EntityType="Self.tbl_cta_location_info" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_cta_location_survey" EntityType="Self.tbl_cta_location_survey" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_customer_list" EntityType="Self.tbl_customer_list" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_customer_reporting_customers" EntityType="Self.tbl_customer_reporting_customers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_dispute_resolution" EntityType="Self.tbl_dispute_resolution" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_Efficiancy_Technician_Commissions" EntityType="Self.tbl_Efficiancy_Technician_Commissions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_employee" EntityType="Self.tbl_employee" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_employee_attendance" EntityType="Self.tbl_employee_attendance" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_employee_credentials" EntityType="Self.tbl_employee_credentials" Schema="dbo" store:Type="Tables" />
@@ -1039,15 +1303,33 @@ warning 6002: The table/view 'CityTireAndAuto.sys.database_firewall_rules' does 
           <EntitySet Name="tbl_fuel_log_fleet" EntityType="Self.tbl_fuel_log_fleet" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_fuel_log_invoiced" EntityType="Self.tbl_fuel_log_invoiced" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_fuel_log_shopSupplies" EntityType="Self.tbl_fuel_log_shopSupplies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_harpoon_clients" EntityType="Self.tbl_harpoon_clients" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_harpoon_departments" EntityType="Self.tbl_harpoon_departments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_harpoon_devices" EntityType="Self.tbl_harpoon_devices" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_harpoon_employee" EntityType="Self.tbl_harpoon_employee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_harpoon_employee_attendance" EntityType="Self.tbl_harpoon_employee_attendance" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_harpoon_employee_rfid" EntityType="Self.tbl_harpoon_employee_rfid" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_harpoon_jobclock" EntityType="Self.tbl_harpoon_jobclock" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_harpoon_locations" EntityType="Self.tbl_harpoon_locations" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_harpoon_settings" EntityType="Self.tbl_harpoon_settings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_harpoon_settings_schedule" EntityType="Self.tbl_harpoon_settings_schedule" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_harpoon_source_displayColors" EntityType="Self.tbl_harpoon_source_displayColors" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_harpoon_source_locationZone" EntityType="Self.tbl_harpoon_source_locationZone" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_harpoon_source_serialNumbers" EntityType="Self.tbl_harpoon_source_serialNumbers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_harpoon_source_userProfiles" EntityType="Self.tbl_harpoon_source_userProfiles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_harpoon_users" EntityType="Self.tbl_harpoon_users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_login_log" EntityType="Self.tbl_login_log" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_management_training" EntityType="Self.tbl_management_training" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_payroll_category_selection" EntityType="Self.tbl_payroll_category_selection" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_payroll_change_loction" EntityType="Self.tbl_payroll_change_loction" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_payroll_settings" EntityType="Self.tbl_payroll_settings" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_payroll_submission_branch" EntityType="Self.tbl_payroll_submission_branch" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_payroll_submission_corporate" EntityType="Self.tbl_payroll_submission_corporate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_position_info" EntityType="Self.tbl_position_info" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="tbl_retread_tread" EntityType="Self.tbl_retread_tread" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_pricelist" EntityType="Self.tbl_pricelist" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_production_schedule" EntityType="Self.tbl_production_schedule" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_sehub_access" EntityType="Self.tbl_sehub_access" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_source_commercial_tire_manufacturers" EntityType="Self.tbl_source_commercial_tire_manufacturers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_source_DOT_plantcodes" EntityType="Self.tbl_source_DOT_plantcodes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_source_DOT_sizecodes" EntityType="Self.tbl_source_DOT_sizecodes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_source_RARcodes" EntityType="Self.tbl_source_RARcodes" Schema="dbo" store:Type="Tables" />
@@ -1162,6 +1444,21 @@ warning 6002: The table/view 'CityTireAndAuto.sys.database_firewall_rules' does 
           <Property Name="final_inspection_date" Type="DateTime" Precision="0" />
           <Property Name="ship_to_location" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
           <Property Name="virgin" Type="Int32" />
+          <Property Name="comments" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="TT050_result" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="TT050_date" Type="DateTime" Precision="0" />
+          <Property Name="TT100_result" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="TT100_date" Type="DateTime" Precision="0" />
+          <Property Name="TT200_result" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="TT200_date" Type="DateTime" Precision="0" />
+          <Property Name="TT300_result" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="TT300_date" Type="DateTime" Precision="0" />
+          <Property Name="TT400_result" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="TT400_date" Type="DateTime" Precision="0" />
+          <Property Name="TT500_result" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="TT500_date" Type="DateTime" Precision="0" />
+          <Property Name="TT600_result" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="TT600_date" Type="DateTime" Precision="0" />
         </EntityType>
         <EntityType Name="tbl_treadtracker_workorder">
           <Key>
@@ -1197,7 +1494,6 @@ warning 6002: The table/view 'CityTireAndAuto.sys.database_firewall_rules' does 
           <EntitySet Name="tbl_calculator_GM_parts" EntityType="CityTireAndAutoModel.tbl_calculator_GM_parts" />
           <EntitySet Name="tbl_calculator_GM_tire" EntityType="CityTireAndAutoModel.tbl_calculator_GM_tire" />
           <EntitySet Name="tbl_fleettvt_Customer" EntityType="CityTireAndAutoModel.tbl_fleettvt_Customer" />
-          <EntitySet Name="tbl_commercial_tire_manufacturers" EntityType="CityTireAndAutoModel.tbl_commercial_tire_manufacturers" />
           <EntitySet Name="tbl_commercial_tire_sizes" EntityType="CityTireAndAutoModel.tbl_commercial_tire_sizes" />
           <EntitySet Name="tbl_fleettvt_configurations" EntityType="CityTireAndAutoModel.tbl_fleettvt_configurations" />
           <EntitySet Name="tbl_fleetTVT_fieldsurvey_tire" EntityType="CityTireAndAutoModel.tbl_fleetTVT_fieldsurvey_tire" />
@@ -1216,10 +1512,8 @@ warning 6002: The table/view 'CityTireAndAuto.sys.database_firewall_rules' does 
           <EntitySet Name="tbl_payroll_submission_branch" EntityType="CityTireAndAutoModel.tbl_payroll_submission_branch" />
           <EntitySet Name="tbl_employee_payroll_final" EntityType="CityTireAndAutoModel.tbl_employee_payroll_final" />
           <EntitySet Name="tbl_payroll_submission_corporate" EntityType="CityTireAndAutoModel.tbl_payroll_submission_corporate" />
-          <EntitySet Name="tbl_source_RARcodes" EntityType="CityTireAndAutoModel.tbl_source_RARcodes" />
           <EntitySet Name="tbl_cta_location_info" EntityType="CityTireAndAutoModel.tbl_cta_location_info" />
           <EntitySet Name="tbl_tread_tracker_customers" EntityType="CityTireAndAutoModel.tbl_tread_tracker_customers" />
-          <EntitySet Name="tbl_source_retread_tread" EntityType="CityTireAndAutoModel.tbl_source_retread_tread" />
           <EntitySet Name="tbl_employee_payroll_submission" EntityType="CityTireAndAutoModel.tbl_employee_payroll_submission" />
           <EntitySet Name="tbl_sehub_access" EntityType="CityTireAndAutoModel.tbl_sehub_access" />
           <EntitySet Name="tbl_fuel_log_invoiced" EntityType="CityTireAndAutoModel.tbl_fuel_log_invoiced" />
@@ -1228,7 +1522,6 @@ warning 6002: The table/view 'CityTireAndAuto.sys.database_firewall_rules' does 
           <EntitySet Name="tbl_source_tire" EntityType="CityTireAndAutoModel.tbl_source_tire" />
           <EntitySet Name="tbl_source_truckTire_sizes" EntityType="CityTireAndAutoModel.tbl_source_truckTire_sizes" />
           <EntitySet Name="tbl_customer_reporting_customers" EntityType="CityTireAndAutoModel.tbl_customer_reporting_customers" />
-          <EntitySet Name="tbl_retread_tread" EntityType="CityTireAndAutoModel.tbl_retread_tread" />
           <EntitySet Name="tbl_vacation_schedule" EntityType="CityTireAndAutoModel.tbl_vacation_schedule" />
           <EntitySet Name="tbl_expense_claim_account" EntityType="CityTireAndAutoModel.tbl_expense_claim_account" />
           <EntitySet Name="tbl_expense_claim" EntityType="CityTireAndAutoModel.tbl_expense_claim" />
@@ -1237,6 +1530,29 @@ warning 6002: The table/view 'CityTireAndAuto.sys.database_firewall_rules' does 
           <EntitySet Name="tbl_treadTracker_workStations" EntityType="CityTireAndAutoModel.tbl_treadTracker_workStations" />
           <EntitySet Name="tbl_source_DOT_plantcodes" EntityType="CityTireAndAutoModel.tbl_source_DOT_plantcodes" />
           <EntitySet Name="tbl_source_DOT_sizecodes" EntityType="CityTireAndAutoModel.tbl_source_DOT_sizecodes" />
+          <EntitySet Name="tbl_harpoon_clients" EntityType="CityTireAndAutoModel.tbl_harpoon_clients" />
+          <EntitySet Name="tbl_pricelist" EntityType="CityTireAndAutoModel.tbl_pricelist" />
+          <EntitySet Name="tbl_Efficiancy_Technician_Commissions" EntityType="CityTireAndAutoModel.tbl_Efficiancy_Technician_Commissions" />
+          <EntitySet Name="tbl_harpoon_users" EntityType="CityTireAndAutoModel.tbl_harpoon_users" />
+          <EntitySet Name="tbl_harpoon_source_locationZone" EntityType="CityTireAndAutoModel.tbl_harpoon_source_locationZone" />
+          <EntitySet Name="tbl_harpoon_source_serialNumbers" EntityType="CityTireAndAutoModel.tbl_harpoon_source_serialNumbers" />
+          <EntitySet Name="tbl_harpoon_source_displayColors" EntityType="CityTireAndAutoModel.tbl_harpoon_source_displayColors" />
+          <EntitySet Name="tbl_harpoon_settings_schedule" EntityType="CityTireAndAutoModel.tbl_harpoon_settings_schedule" />
+          <EntitySet Name="tbl_harpoon_source_userProfiles" EntityType="CityTireAndAutoModel.tbl_harpoon_source_userProfiles" />
+          <EntitySet Name="tbl_harpoon_employee_attendance" EntityType="CityTireAndAutoModel.tbl_harpoon_employee_attendance" />
+          <EntitySet Name="tbl_harpoon_locations" EntityType="CityTireAndAutoModel.tbl_harpoon_locations" />
+          <EntitySet Name="tbl_harpoon_devices" EntityType="CityTireAndAutoModel.tbl_harpoon_devices" />
+          <EntitySet Name="tbl_harpoon_settings" EntityType="CityTireAndAutoModel.tbl_harpoon_settings" />
+          <EntitySet Name="tbl_harpoon_employee_rfid" EntityType="CityTireAndAutoModel.tbl_harpoon_employee_rfid" />
+          <EntitySet Name="tbl_harpoon_employee" EntityType="CityTireAndAutoModel.tbl_harpoon_employee" />
+          <EntitySet Name="tbl_source_commercial_tire_manufacturers" EntityType="CityTireAndAutoModel.tbl_source_commercial_tire_manufacturers" />
+          <EntitySet Name="tbl_source_retread_tread" EntityType="CityTireAndAutoModel.tbl_source_retread_tread" />
+          <EntitySet Name="tbl_source_RARcodes" EntityType="CityTireAndAutoModel.tbl_source_RARcodes" />
+          <EntitySet Name="tbl_cta_location_survey" EntityType="CityTireAndAutoModel.tbl_cta_location_survey" />
+          <EntitySet Name="tbl_management_training" EntityType="CityTireAndAutoModel.tbl_management_training" />
+          <EntitySet Name="tbl_harpoon_departments" EntityType="CityTireAndAutoModel.tbl_harpoon_departments" />
+          <EntitySet Name="tbl_production_schedule" EntityType="CityTireAndAutoModel.tbl_production_schedule" />
+          <EntitySet Name="tbl_harpoon_jobclock" EntityType="CityTireAndAutoModel.tbl_harpoon_jobclock" />
         </EntityContainer>
         <EntityType Name="tbl_treadtracker_casing_brands">
           <Key>
@@ -1488,15 +1804,6 @@ warning 6002: The table/view 'CityTireAndAuto.sys.database_firewall_rules' does 
           <Property Name="pull_point_2" Type="Double" />
           <Property Name="pull_point_3" Type="Double" />
           <Property Name="exp_date_required" Type="Int32" />
-        </EntityType>
-        <EntityType Name="tbl_commercial_tire_manufacturers">
-          <Key>
-            <PropertyRef Name="manufacturers" />
-          </Key>
-          <Property Name="manufacturers" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tread_tracker" Type="Int32" />
-          <Property Name="fleetTVT" Type="Int32" />
-          <Property Name="brand_image" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <EntityType Name="tbl_commercial_tire_sizes">
           <Key>
@@ -1847,18 +2154,6 @@ warning 6002: The table/view 'CityTireAndAuto.sys.database_firewall_rules' does 
           <Property Name="submission_date" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="payroll_id" Type="Int32" Nullable="false" />
         </EntityType>
-        <EntityType Name="tbl_source_RARcodes">
-          <Key>
-            <PropertyRef Name="code" />
-          </Key>
-          <Property Name="code" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="description" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="prelim_inspection" Type="Int32" />
-          <Property Name="NDT" Type="Int32" />
-          <Property Name="Buffer" Type="Int32" />
-          <Property Name="Builder" Type="Int32" />
-          <Property Name="Final" Type="Int32" />
-        </EntityType>
         <EntityType Name="tbl_cta_location_info">
           <Key>
             <PropertyRef Name="loc_id" />
@@ -1879,6 +2174,7 @@ warning 6002: The table/view 'CityTireAndAuto.sys.database_firewall_rules' does 
           <Property Name="tread_tracker_access" Type="Int32" />
           <Property Name="service_email" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="management_email" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="googleMap" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="tbl_tread_tracker_customers">
           <Key>
@@ -1888,13 +2184,6 @@ warning 6002: The table/view 'CityTireAndAuto.sys.database_firewall_rules' does 
           <Property Name="reporting_contact" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="reporting_email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="default_retread" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="tbl_source_retread_tread">
-          <Key>
-            <PropertyRef Name="tread_id" />
-          </Key>
-          <Property Name="tread_id" Type="Int32" Nullable="false" />
-          <Property Name="tread_design" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="tbl_employee_payroll_submission">
           <Key>
@@ -2058,19 +2347,15 @@ warning 6002: The table/view 'CityTireAndAuto.sys.database_firewall_rules' does 
           </Key>
           <Property Name="tire_size" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="retread" Type="Int32" />
+          <Property Name="casingCredit" Type="Boolean" Nullable="false" />
+          <Property Name="casingCredit_value" Type="Int32" />
+          <Property Name="casingCredit_ageLimit" Type="Int32" />
         </EntityType>
         <EntityType Name="tbl_customer_reporting_customers">
           <Key>
             <PropertyRef Name="customer_number" />
           </Key>
           <Property Name="customer_number" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="tbl_retread_tread">
-          <Key>
-            <PropertyRef Name="tread_design" />
-          </Key>
-          <Property Name="tread_design" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="new_32nds" Type="Double" />
         </EntityType>
         <EntityType Name="tbl_vacation_schedule">
           <Key>
@@ -2134,6 +2419,15 @@ warning 6002: The table/view 'CityTireAndAuto.sys.database_firewall_rules' does 
           <Property Name="active" Type="Int32" />
           <Property Name="barcode_scan_required" Type="Int32" />
           <Property Name="barcode_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="allow_print" Type="Int32" />
+          <Property Name="icon" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="status" Type="Int32" />
+          <Property Name="tread" Type="Int32" />
+          <Property Name="size" Type="Int32" />
+          <Property Name="brand" Type="Int32" />
+          <Property Name="ship_to" Type="Int32" />
+          <Property Name="consumables" Type="Int32" />
+          <Property Name="reprint" Type="Int32" />
         </EntityType>
         <EntityType Name="tbl_source_DOT_plantcodes">
           <Key>
@@ -2149,6 +2443,276 @@ warning 6002: The table/view 'CityTireAndAuto.sys.database_firewall_rules' does 
           </Key>
           <Property Name="code" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="size" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_clients">
+          <Key>
+            <PropertyRef Name="client_id" />
+          </Key>
+          <Property Name="client_id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="client_name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="client_address1" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="client_address2" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="client_city" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="client_province" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="client_postal" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="client_country" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="client_phone" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="client_fax" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="client_email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="client_website" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="client_logo" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="status" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tbl_pricelist">
+          <Key>
+            <PropertyRef Name="loc_id" />
+          </Key>
+          <Property Name="loc_id" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="door_rate" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_Efficiancy_Technician_Commissions">
+          <Key>
+            <PropertyRef Name="employee_id" />
+            <PropertyRef Name="loc_id" />
+            <PropertyRef Name="payroll_id" />
+          </Key>
+          <Property Name="employee_id" Type="Int32" Nullable="false" />
+          <Property Name="loc_id" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="payroll_id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="door_rate" Type="Double" Nullable="false" />
+          <Property Name="commissionable_sales_due" Type="Double" />
+          <Property Name="commission_plan" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="commissions" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_users">
+          <Key>
+            <PropertyRef Name="email" />
+          </Key>
+          <Property Name="email" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="password" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="client_id" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="profile" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="loc_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_source_locationZone">
+          <Key>
+            <PropertyRef Name="zone" />
+          </Key>
+          <Property Name="zone" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_source_serialNumbers">
+          <Key>
+            <PropertyRef Name="serial_number" />
+          </Key>
+          <Property Name="serial_number" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="model" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="color" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="verification_code" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_source_displayColors">
+          <Key>
+            <PropertyRef Name="color" />
+          </Key>
+          <Property Name="color" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="rgb_value" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_settings_schedule">
+          <Key>
+            <PropertyRef Name="client_id" />
+            <PropertyRef Name="monday_saturday" />
+          </Key>
+          <Property Name="client_id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="sunday_open" Type="Int32" />
+          <Property Name="sunday_start" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="sunday_end" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="monday_saturday" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_source_userProfiles">
+          <Key>
+            <PropertyRef Name="profile" />
+          </Key>
+          <Property Name="profile" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="security_id" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_employee_attendance">
+          <Key>
+            <PropertyRef Name="auto_emp_id" />
+          </Key>
+          <Property Name="client_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="at_work" Type="Boolean" Nullable="false" />
+          <Property Name="at_work_location" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="auto_emp_id" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_locations">
+          <Key>
+            <PropertyRef Name="client_id" />
+            <PropertyRef Name="auto_loc_id" />
+          </Key>
+          <Property Name="client_id" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="location_id" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="location_name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="address1" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="address2" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="city" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="province" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="postal_code" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="country" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="phone" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="fax" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="google_maps" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="auto_loc_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="status" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_devices">
+          <Key>
+            <PropertyRef Name="serial_number" />
+          </Key>
+          <Property Name="serial_number" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="client_id" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="location_zone" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="display_color" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="IP_address" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="software_version" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="auto_loc_id" Type="Int32" />
+          <Property Name="time_stamp" Type="DateTime" Precision="3" />
+          <Property Name="board_id" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_settings">
+          <Key>
+            <PropertyRef Name="client_id" />
+          </Key>
+          <Property Name="client_id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AutoClockOut_OnOff" Type="Int32" />
+          <Property Name="AutoClockOut_Adjustment" Type="Double" />
+          <Property Name="ManualCode_OnOff" Type="Int32" />
+          <Property Name="auto_generate_loc_id" Type="Int32" />
+          <Property Name="LocIDinListBox_OnOff" Type="Int32" />
+          <Property Name="DefaultEmpIDlength_OnOff" Type="Int32" />
+          <Property Name="EmpID_Length" Type="Int32" />
+          <Property Name="MasterLoc_OnOff" Type="Int32" />
+          <Property Name="MasterLoc_id" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_employee_rfid">
+          <Key>
+            <PropertyRef Name="auto_emp_id" />
+          </Key>
+          <Property Name="client_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="rfid_number" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="auto_emp_id" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_employee">
+          <Key>
+            <PropertyRef Name="client_id" />
+            <PropertyRef Name="auto_emp_id" />
+          </Key>
+          <Property Name="employee_id" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="first_name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="middle_initial" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="last_name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="position" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Date_of_birth" Type="DateTime" Precision="0" />
+          <Property Name="client_id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="status" Type="Int32" />
+          <Property Name="profile_pic" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="auto_loc_id" Type="Int32" />
+          <Property Name="auto_emp_id" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_source_commercial_tire_manufacturers">
+          <Key>
+            <PropertyRef Name="manufacturers" />
+          </Key>
+          <Property Name="manufacturers" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tread_tracker" Type="Int32" />
+          <Property Name="fleetTVT" Type="Int32" />
+          <Property Name="brand_image" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="tbl_source_retread_tread">
+          <Key>
+            <PropertyRef Name="tread_design" />
+          </Key>
+          <Property Name="tread_design" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="tread_tracker" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_source_RARcodes">
+          <Key>
+            <PropertyRef Name="code" />
+          </Key>
+          <Property Name="code" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="description" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="TT050" Type="Int32" />
+          <Property Name="TT100" Type="Int32" />
+          <Property Name="TT200" Type="Int32" />
+          <Property Name="TT400" Type="Int32" />
+          <Property Name="TT600" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tbl_cta_location_survey">
+          <Key>
+            <PropertyRef Name="loc_id" />
+          </Key>
+          <Property Name="loc_id" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="employeeSurvey_link" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="employeeSurvey_read" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="customerSurvey_link" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="customerSurvey_read" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="commercialCustomerSurvey_link" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="commercialCustomerSurvey_read" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_management_training">
+          <Key>
+            <PropertyRef Name="emp_id" />
+          </Key>
+          <Property Name="emp_id" Type="Int32" Nullable="false" />
+          <Property Name="staff_member" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="first_aid" Type="Boolean" />
+          <Property Name="ohs" Type="Boolean" />
+          <Property Name="tia" Type="Int32" />
+          <Property Name="good_year" Type="Boolean" />
+          <Property Name="other" Type="Boolean" />
+          <Property Name="fa_aspiration_date" Type="DateTime" Precision="0" />
+          <Property Name="fa_certificate" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="ohs_aspiration_date" Type="DateTime" Precision="0" />
+          <Property Name="ohs_certificate" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="gy_aspiration_date" Type="DateTime" Precision="0" />
+          <Property Name="gy_certificate" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="other_aspiration_date" Type="DateTime" Precision="0" />
+          <Property Name="other_certificate" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_departments">
+          <Key>
+            <PropertyRef Name="department_id" />
+          </Key>
+          <Property Name="department_id" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="available_to_all_loc" Type="Boolean" />
+          <Property Name="parent_location" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="admin" Type="Boolean" />
+          <Property Name="clocking_comments" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_production_schedule">
+          <Key>
+            <PropertyRef Name="production_id" />
+          </Key>
+          <Property Name="production_id" Type="Int32" Nullable="false" />
+          <Property Name="priority" Type="Int32" />
+          <Property Name="size" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="casing_spec" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="virgin" Type="Boolean" />
+          <Property Name="tread" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="production_date" Type="DateTime" Precision="0" />
+          <Property Name="quantity" Type="Int32" />
+          <Property Name="part_no" Type="Int32" />
+          <Property Name="quantity_complete" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tbl_harpoon_jobclock">
+          <Key>
+            <PropertyRef Name="jobclock_id" />
+          </Key>
+          <Property Name="jobclock_id" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="available_to_all_locations" Type="Boolean" />
+          <Property Name="parent_location" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="admin" Type="Boolean" />
+          <Property Name="clocking_comments" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -2215,6 +2779,21 @@ warning 6002: The table/view 'CityTireAndAuto.sys.database_firewall_rules' does 
           <EntitySetMapping Name="tbl_treadtracker_barcode">
             <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_treadtracker_barcode">
               <MappingFragment StoreEntitySet="tbl_treadtracker_barcode">
+                <ScalarProperty Name="TT600_date" ColumnName="TT600_date" />
+                <ScalarProperty Name="TT600_result" ColumnName="TT600_result" />
+                <ScalarProperty Name="TT500_date" ColumnName="TT500_date" />
+                <ScalarProperty Name="TT500_result" ColumnName="TT500_result" />
+                <ScalarProperty Name="TT400_date" ColumnName="TT400_date" />
+                <ScalarProperty Name="TT400_result" ColumnName="TT400_result" />
+                <ScalarProperty Name="TT300_date" ColumnName="TT300_date" />
+                <ScalarProperty Name="TT300_result" ColumnName="TT300_result" />
+                <ScalarProperty Name="TT200_date" ColumnName="TT200_date" />
+                <ScalarProperty Name="TT200_result" ColumnName="TT200_result" />
+                <ScalarProperty Name="TT100_date" ColumnName="TT100_date" />
+                <ScalarProperty Name="TT100_result" ColumnName="TT100_result" />
+                <ScalarProperty Name="TT050_date" ColumnName="TT050_date" />
+                <ScalarProperty Name="TT050_result" ColumnName="TT050_result" />
+                <ScalarProperty Name="comments" ColumnName="comments" />
                 <ScalarProperty Name="virgin" ColumnName="virgin" />
                 <ScalarProperty Name="barcode" ColumnName="barcode" />
                 <ScalarProperty Name="retread_workorder" ColumnName="retread_workorder" />
@@ -2509,16 +3088,6 @@ warning 6002: The table/view 'CityTireAndAuto.sys.database_firewall_rules' does 
                 <ScalarProperty Name="reporting_email" ColumnName="reporting_email" />
                 <ScalarProperty Name="reporting_contact" ColumnName="reporting_contact" />
                 <ScalarProperty Name="customer_number" ColumnName="customer_number" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tbl_commercial_tire_manufacturers">
-            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_commercial_tire_manufacturers">
-              <MappingFragment StoreEntitySet="tbl_commercial_tire_manufacturers">
-                <ScalarProperty Name="brand_image" ColumnName="brand_image" />
-                <ScalarProperty Name="fleetTVT" ColumnName="fleetTVT" />
-                <ScalarProperty Name="tread_tracker" ColumnName="tread_tracker" />
-                <ScalarProperty Name="manufacturers" ColumnName="manufacturers" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2874,22 +3443,10 @@ warning 6002: The table/view 'CityTireAndAuto.sys.database_firewall_rules' does 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="tbl_source_RARcodes">
-            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_source_RARcodes">
-              <MappingFragment StoreEntitySet="tbl_source_RARcodes">
-                <ScalarProperty Name="Final" ColumnName="Final" />
-                <ScalarProperty Name="Builder" ColumnName="Builder" />
-                <ScalarProperty Name="Buffer" ColumnName="Buffer" />
-                <ScalarProperty Name="NDT" ColumnName="NDT" />
-                <ScalarProperty Name="prelim_inspection" ColumnName="prelim_inspection" />
-                <ScalarProperty Name="description" ColumnName="description" />
-                <ScalarProperty Name="code" ColumnName="code" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="tbl_cta_location_info">
             <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_cta_location_info">
               <MappingFragment StoreEntitySet="tbl_cta_location_info">
+                <ScalarProperty Name="googleMap" ColumnName="googleMap" />
                 <ScalarProperty Name="management_email" ColumnName="management_email" />
                 <ScalarProperty Name="service_email" ColumnName="service_email" />
                 <ScalarProperty Name="tread_tracker_access" ColumnName="tread_tracker_access" />
@@ -2916,14 +3473,6 @@ warning 6002: The table/view 'CityTireAndAuto.sys.database_firewall_rules' does 
                 <ScalarProperty Name="reporting_email" ColumnName="reporting_email" />
                 <ScalarProperty Name="reporting_contact" ColumnName="reporting_contact" />
                 <ScalarProperty Name="customer_number" ColumnName="customer_number" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tbl_source_retread_tread">
-            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_source_retread_tread">
-              <MappingFragment StoreEntitySet="tbl_source_retread_tread">
-                <ScalarProperty Name="tread_design" ColumnName="tread_design" />
-                <ScalarProperty Name="tread_id" ColumnName="tread_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3088,6 +3637,9 @@ warning 6002: The table/view 'CityTireAndAuto.sys.database_firewall_rules' does 
           <EntitySetMapping Name="tbl_source_truckTire_sizes">
             <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_source_truckTire_sizes">
               <MappingFragment StoreEntitySet="tbl_source_truckTire_sizes">
+                <ScalarProperty Name="casingCredit_ageLimit" ColumnName="casingCredit_ageLimit" />
+                <ScalarProperty Name="casingCredit_value" ColumnName="casingCredit_value" />
+                <ScalarProperty Name="casingCredit" ColumnName="casingCredit" />
                 <ScalarProperty Name="retread" ColumnName="retread" />
                 <ScalarProperty Name="tire_size" ColumnName="tire_size" />
               </MappingFragment>
@@ -3097,14 +3649,6 @@ warning 6002: The table/view 'CityTireAndAuto.sys.database_firewall_rules' does 
             <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_customer_reporting_customers">
               <MappingFragment StoreEntitySet="tbl_customer_reporting_customers">
                 <ScalarProperty Name="customer_number" ColumnName="customer_number" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tbl_retread_tread">
-            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_retread_tread">
-              <MappingFragment StoreEntitySet="tbl_retread_tread">
-                <ScalarProperty Name="new_32nds" ColumnName="new_32nds" />
-                <ScalarProperty Name="tread_design" ColumnName="tread_design" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3168,6 +3712,15 @@ warning 6002: The table/view 'CityTireAndAuto.sys.database_firewall_rules' does 
           <EntitySetMapping Name="tbl_treadTracker_workStations">
             <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_treadTracker_workStations">
               <MappingFragment StoreEntitySet="tbl_treadTracker_workStations">
+                <ScalarProperty Name="reprint" ColumnName="reprint" />
+                <ScalarProperty Name="consumables" ColumnName="consumables" />
+                <ScalarProperty Name="ship_to" ColumnName="ship_to" />
+                <ScalarProperty Name="brand" ColumnName="brand" />
+                <ScalarProperty Name="size" ColumnName="size" />
+                <ScalarProperty Name="tread" ColumnName="tread" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="icon" ColumnName="icon" />
+                <ScalarProperty Name="allow_print" ColumnName="allow_print" />
                 <ScalarProperty Name="barcode_id" ColumnName="barcode_id" />
                 <ScalarProperty Name="barcode_scan_required" ColumnName="barcode_scan_required" />
                 <ScalarProperty Name="active" ColumnName="active" />
@@ -3190,6 +3743,294 @@ warning 6002: The table/view 'CityTireAndAuto.sys.database_firewall_rules' does 
               <MappingFragment StoreEntitySet="tbl_source_DOT_sizecodes">
                 <ScalarProperty Name="size" ColumnName="size" />
                 <ScalarProperty Name="code" ColumnName="code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_harpoon_clients">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_harpoon_clients">
+              <MappingFragment StoreEntitySet="tbl_harpoon_clients">
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="client_logo" ColumnName="client_logo" />
+                <ScalarProperty Name="client_website" ColumnName="client_website" />
+                <ScalarProperty Name="client_email" ColumnName="client_email" />
+                <ScalarProperty Name="client_fax" ColumnName="client_fax" />
+                <ScalarProperty Name="client_phone" ColumnName="client_phone" />
+                <ScalarProperty Name="client_country" ColumnName="client_country" />
+                <ScalarProperty Name="client_postal" ColumnName="client_postal" />
+                <ScalarProperty Name="client_province" ColumnName="client_province" />
+                <ScalarProperty Name="client_city" ColumnName="client_city" />
+                <ScalarProperty Name="client_address2" ColumnName="client_address2" />
+                <ScalarProperty Name="client_address1" ColumnName="client_address1" />
+                <ScalarProperty Name="client_name" ColumnName="client_name" />
+                <ScalarProperty Name="client_id" ColumnName="client_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_pricelist">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_pricelist">
+              <MappingFragment StoreEntitySet="tbl_pricelist">
+                <ScalarProperty Name="door_rate" ColumnName="door_rate" />
+                <ScalarProperty Name="loc_id" ColumnName="loc_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_Efficiancy_Technician_Commissions">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_Efficiancy_Technician_Commissions">
+              <MappingFragment StoreEntitySet="tbl_Efficiancy_Technician_Commissions">
+                <ScalarProperty Name="commissions" ColumnName="commissions" />
+                <ScalarProperty Name="commission_plan" ColumnName="commission_plan" />
+                <ScalarProperty Name="commissionable_sales_due" ColumnName="commissionable_sales_due" />
+                <ScalarProperty Name="door_rate" ColumnName="door_rate" />
+                <ScalarProperty Name="payroll_id" ColumnName="payroll_id" />
+                <ScalarProperty Name="loc_id" ColumnName="loc_id" />
+                <ScalarProperty Name="employee_id" ColumnName="employee_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_harpoon_users">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_harpoon_users">
+              <MappingFragment StoreEntitySet="tbl_harpoon_users">
+                <ScalarProperty Name="loc_id" ColumnName="loc_id" />
+                <ScalarProperty Name="profile" ColumnName="profile" />
+                <ScalarProperty Name="client_id" ColumnName="client_id" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="email" ColumnName="email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_harpoon_source_locationZone">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_harpoon_source_locationZone">
+              <MappingFragment StoreEntitySet="tbl_harpoon_source_locationZone">
+                <ScalarProperty Name="zone" ColumnName="zone" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_harpoon_source_serialNumbers">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_harpoon_source_serialNumbers">
+              <MappingFragment StoreEntitySet="tbl_harpoon_source_serialNumbers">
+                <ScalarProperty Name="verification_code" ColumnName="verification_code" />
+                <ScalarProperty Name="color" ColumnName="color" />
+                <ScalarProperty Name="model" ColumnName="model" />
+                <ScalarProperty Name="serial_number" ColumnName="serial_number" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_harpoon_source_displayColors">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_harpoon_source_displayColors">
+              <MappingFragment StoreEntitySet="tbl_harpoon_source_displayColors">
+                <ScalarProperty Name="rgb_value" ColumnName="rgb_value" />
+                <ScalarProperty Name="color" ColumnName="color" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_harpoon_settings_schedule">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_harpoon_settings_schedule">
+              <MappingFragment StoreEntitySet="tbl_harpoon_settings_schedule">
+                <ScalarProperty Name="monday_saturday" ColumnName="monday_saturday" />
+                <ScalarProperty Name="sunday_end" ColumnName="sunday_end" />
+                <ScalarProperty Name="sunday_start" ColumnName="sunday_start" />
+                <ScalarProperty Name="sunday_open" ColumnName="sunday_open" />
+                <ScalarProperty Name="client_id" ColumnName="client_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_harpoon_source_userProfiles">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_harpoon_source_userProfiles">
+              <MappingFragment StoreEntitySet="tbl_harpoon_source_userProfiles">
+                <ScalarProperty Name="security_id" ColumnName="security_id" />
+                <ScalarProperty Name="profile" ColumnName="profile" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_harpoon_employee_attendance">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_harpoon_employee_attendance">
+              <MappingFragment StoreEntitySet="tbl_harpoon_employee_attendance">
+                <ScalarProperty Name="auto_emp_id" ColumnName="auto_emp_id" />
+                <ScalarProperty Name="at_work_location" ColumnName="at_work_location" />
+                <ScalarProperty Name="at_work" ColumnName="at_work" />
+                <ScalarProperty Name="client_id" ColumnName="client_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_harpoon_locations">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_harpoon_locations">
+              <MappingFragment StoreEntitySet="tbl_harpoon_locations">
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="auto_loc_id" ColumnName="auto_loc_id" />
+                <ScalarProperty Name="google_maps" ColumnName="google_maps" />
+                <ScalarProperty Name="fax" ColumnName="fax" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="country" ColumnName="country" />
+                <ScalarProperty Name="postal_code" ColumnName="postal_code" />
+                <ScalarProperty Name="province" ColumnName="province" />
+                <ScalarProperty Name="city" ColumnName="city" />
+                <ScalarProperty Name="address2" ColumnName="address2" />
+                <ScalarProperty Name="address1" ColumnName="address1" />
+                <ScalarProperty Name="location_name" ColumnName="location_name" />
+                <ScalarProperty Name="location_id" ColumnName="location_id" />
+                <ScalarProperty Name="client_id" ColumnName="client_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_harpoon_devices">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_harpoon_devices">
+              <MappingFragment StoreEntitySet="tbl_harpoon_devices">
+                <ScalarProperty Name="board_id" ColumnName="board_id" />
+                <ScalarProperty Name="time_stamp" ColumnName="time_stamp" />
+                <ScalarProperty Name="auto_loc_id" ColumnName="auto_loc_id" />
+                <ScalarProperty Name="software_version" ColumnName="software_version" />
+                <ScalarProperty Name="IP_address" ColumnName="IP_address" />
+                <ScalarProperty Name="display_color" ColumnName="display_color" />
+                <ScalarProperty Name="location_zone" ColumnName="location_zone" />
+                <ScalarProperty Name="client_id" ColumnName="client_id" />
+                <ScalarProperty Name="serial_number" ColumnName="serial_number" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_harpoon_settings">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_harpoon_settings">
+              <MappingFragment StoreEntitySet="tbl_harpoon_settings">
+                <ScalarProperty Name="MasterLoc_id" ColumnName="MasterLoc_id" />
+                <ScalarProperty Name="MasterLoc_OnOff" ColumnName="MasterLoc_OnOff" />
+                <ScalarProperty Name="EmpID_Length" ColumnName="EmpID_Length" />
+                <ScalarProperty Name="DefaultEmpIDlength_OnOff" ColumnName="DefaultEmpIDlength_OnOff" />
+                <ScalarProperty Name="LocIDinListBox_OnOff" ColumnName="LocIDinListBox_OnOff" />
+                <ScalarProperty Name="auto_generate_loc_id" ColumnName="auto_generate_loc_id" />
+                <ScalarProperty Name="ManualCode_OnOff" ColumnName="ManualCode_OnOff" />
+                <ScalarProperty Name="AutoClockOut_Adjustment" ColumnName="AutoClockOut_Adjustment" />
+                <ScalarProperty Name="AutoClockOut_OnOff" ColumnName="AutoClockOut_OnOff" />
+                <ScalarProperty Name="client_id" ColumnName="client_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_harpoon_employee_rfid">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_harpoon_employee_rfid">
+              <MappingFragment StoreEntitySet="tbl_harpoon_employee_rfid">
+                <ScalarProperty Name="auto_emp_id" ColumnName="auto_emp_id" />
+                <ScalarProperty Name="rfid_number" ColumnName="rfid_number" />
+                <ScalarProperty Name="client_id" ColumnName="client_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_harpoon_employee">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_harpoon_employee">
+              <MappingFragment StoreEntitySet="tbl_harpoon_employee">
+                <ScalarProperty Name="auto_emp_id" ColumnName="auto_emp_id" />
+                <ScalarProperty Name="auto_loc_id" ColumnName="auto_loc_id" />
+                <ScalarProperty Name="profile_pic" ColumnName="profile_pic" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="client_id" ColumnName="client_id" />
+                <ScalarProperty Name="Date_of_birth" ColumnName="Date_of_birth" />
+                <ScalarProperty Name="position" ColumnName="position" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="middle_initial" ColumnName="middle_initial" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="employee_id" ColumnName="employee_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_source_commercial_tire_manufacturers">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_source_commercial_tire_manufacturers">
+              <MappingFragment StoreEntitySet="tbl_source_commercial_tire_manufacturers">
+                <ScalarProperty Name="brand_image" ColumnName="brand_image" />
+                <ScalarProperty Name="fleetTVT" ColumnName="fleetTVT" />
+                <ScalarProperty Name="tread_tracker" ColumnName="tread_tracker" />
+                <ScalarProperty Name="manufacturers" ColumnName="manufacturers" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_source_retread_tread">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_source_retread_tread">
+              <MappingFragment StoreEntitySet="tbl_source_retread_tread">
+                <ScalarProperty Name="tread_tracker" ColumnName="tread_tracker" />
+                <ScalarProperty Name="tread_design" ColumnName="tread_design" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_source_RARcodes">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_source_RARcodes">
+              <MappingFragment StoreEntitySet="tbl_source_RARcodes">
+                <ScalarProperty Name="TT600" ColumnName="TT600" />
+                <ScalarProperty Name="TT400" ColumnName="TT400" />
+                <ScalarProperty Name="TT200" ColumnName="TT200" />
+                <ScalarProperty Name="TT100" ColumnName="TT100" />
+                <ScalarProperty Name="TT050" ColumnName="TT050" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="code" ColumnName="code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_cta_location_survey">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_cta_location_survey">
+              <MappingFragment StoreEntitySet="tbl_cta_location_survey">
+                <ScalarProperty Name="commercialCustomerSurvey_read" ColumnName="commercialCustomerSurvey_read" />
+                <ScalarProperty Name="commercialCustomerSurvey_link" ColumnName="commercialCustomerSurvey_link" />
+                <ScalarProperty Name="customerSurvey_read" ColumnName="customerSurvey_read" />
+                <ScalarProperty Name="customerSurvey_link" ColumnName="customerSurvey_link" />
+                <ScalarProperty Name="employeeSurvey_read" ColumnName="employeeSurvey_read" />
+                <ScalarProperty Name="employeeSurvey_link" ColumnName="employeeSurvey_link" />
+                <ScalarProperty Name="loc_id" ColumnName="loc_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_management_training">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_management_training">
+              <MappingFragment StoreEntitySet="tbl_management_training">
+                <ScalarProperty Name="other_certificate" ColumnName="other_certificate" />
+                <ScalarProperty Name="other_aspiration_date" ColumnName="other_aspiration_date" />
+                <ScalarProperty Name="gy_certificate" ColumnName="gy_certificate" />
+                <ScalarProperty Name="gy_aspiration_date" ColumnName="gy_aspiration_date" />
+                <ScalarProperty Name="ohs_certificate" ColumnName="ohs_certificate" />
+                <ScalarProperty Name="ohs_aspiration_date" ColumnName="ohs_aspiration_date" />
+                <ScalarProperty Name="fa_certificate" ColumnName="fa_certificate" />
+                <ScalarProperty Name="fa_aspiration_date" ColumnName="fa_aspiration_date" />
+                <ScalarProperty Name="other" ColumnName="other" />
+                <ScalarProperty Name="good_year" ColumnName="good_year" />
+                <ScalarProperty Name="tia" ColumnName="tia" />
+                <ScalarProperty Name="ohs" ColumnName="ohs" />
+                <ScalarProperty Name="first_aid" ColumnName="first_aid" />
+                <ScalarProperty Name="staff_member" ColumnName="staff_member" />
+                <ScalarProperty Name="emp_id" ColumnName="emp_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_harpoon_departments">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_harpoon_departments">
+              <MappingFragment StoreEntitySet="tbl_harpoon_departments">
+                <ScalarProperty Name="clocking_comments" ColumnName="clocking_comments" />
+                <ScalarProperty Name="admin" ColumnName="admin" />
+                <ScalarProperty Name="parent_location" ColumnName="parent_location" />
+                <ScalarProperty Name="available_to_all_loc" ColumnName="available_to_all_loc" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="department_id" ColumnName="department_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_production_schedule">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_production_schedule">
+              <MappingFragment StoreEntitySet="tbl_production_schedule">
+                <ScalarProperty Name="quantity_complete" ColumnName="quantity_complete" />
+                <ScalarProperty Name="part_no" ColumnName="part_no" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+                <ScalarProperty Name="production_date" ColumnName="production_date" />
+                <ScalarProperty Name="tread" ColumnName="tread" />
+                <ScalarProperty Name="virgin" ColumnName="virgin" />
+                <ScalarProperty Name="casing_spec" ColumnName="casing_spec" />
+                <ScalarProperty Name="size" ColumnName="size" />
+                <ScalarProperty Name="priority" ColumnName="priority" />
+                <ScalarProperty Name="production_id" ColumnName="production_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_harpoon_jobclock">
+            <EntityTypeMapping TypeName="CityTireAndAutoModel.tbl_harpoon_jobclock">
+              <MappingFragment StoreEntitySet="tbl_harpoon_jobclock">
+                <ScalarProperty Name="clocking_comments" ColumnName="clocking_comments" />
+                <ScalarProperty Name="admin" ColumnName="admin" />
+                <ScalarProperty Name="parent_location" ColumnName="parent_location" />
+                <ScalarProperty Name="available_to_all_locations" ColumnName="available_to_all_locations" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="jobclock_id" ColumnName="jobclock_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

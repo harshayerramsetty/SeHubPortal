@@ -34,11 +34,6 @@ namespace SeHubPortal.Controllers
 
         public ActionResult Dashboard(MainDashboard modal)
         {
-            //System.Diagnostics.Trace.WriteLine("whatever");                       
-
-            Debug.WriteLine("NotEver");
-
-            Console.WriteLine("Reached");
 
             if (CheckPermissions()!=null)
             {
@@ -86,7 +81,7 @@ namespace SeHubPortal.Controllers
             }
 
             modal.locdesc = db.tbl_cta_location_info.Where(x => x.loc_id == modal.SelectedLocationId).FirstOrDefault();
-
+            modal.employees = db.tbl_employee.Where(x => x.loc_ID == modal.SelectedLocationId && x.status == 1).OrderBy(x => x.full_name).ToList();
             //System.Diagnostics.Trace.WriteLine(" this is the permissions for dashboard main *******   " + modal.SehubAccess.mainDashboard + "      **********");
 
             return View(modal);
@@ -153,11 +148,22 @@ namespace SeHubPortal.Controllers
 
         public JsonResult GetBirthdayEvents()
         {
-            using (CityTireAndAutoEntities dc = new CityTireAndAutoEntities())
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            var employees = db.tbl_employee.Where(x => x.status == 1 && x.Date_of_birth != null).ToList();
+
+            List<tbl_employee> events = new List<tbl_employee>();
+
+            foreach (var emp in employees)
             {
-                var events = dc.tbl_employee.Where(x => (x.status == 1)).ToList();
-                return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+                tbl_employee eve = new tbl_employee();
+                eve.employee_id = emp.employee_id;
+                eve.full_name = emp.full_name;
+                eve.Date_of_birth = emp.Date_of_birth;
+
+                events.Add(eve);
             }
+
+            return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
 
         public ActionResult Calendar(FileURL model)
@@ -342,6 +348,8 @@ namespace SeHubPortal.Controllers
 
             employee = db.tbl_employee.Where(x => x.employee_id == empId).FirstOrDefault();
 
+            Trace.WriteLine("Reached till here " + employee.full_name);
+
             return PartialView(employee) ;
         }
 
@@ -373,10 +381,13 @@ namespace SeHubPortal.Controllers
             }
 
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
             var EmployeeInfo = db.tbl_employee.Where(a => a.employee_id == empId).FirstOrDefault();
+            //var img = db.tbl_treadTracker_workStations.Where(x => x.station == "Repair").FirstOrDefault();
 
             if (imageBytes != null)
             {
+                //img.icon = imageBytes;
                 EmployeeInfo.profile_pic = imageBytes;
             }
 

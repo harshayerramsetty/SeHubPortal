@@ -189,65 +189,56 @@
     </style>
 </head>
 <body>
-    <div class="row heading" style="margin-right:7px">
-        <div class="col">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
-                    <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Main")">Main</a></li>
-                    <li class="breadcrumb-item " aria-current="page">Callendar</li>
-                    <label style="margin: 0px 3px 0px 1264px ">Location</label>
+
+    <div class="row heading">
+        <div class="col" style="margin:0px 5px 15px 15px; padding:10px; background-color:white">
+
+            <div style="display: flex; justify-content: space-between; align-items: center">
+                <div>
+                    <a href="@Url.Action("Dashboard", "Main")">Main </a>/ Calendar
+                </div>
+                <div style="display:flex; justify-content:space-around; align-items:center">
+                    <label>Location</label>
                     <div>
-                        
-                        @Html.DropDownListFor(m => m.Location_ID, Model.LocationsList, new { @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
+                        @Html.DropDownListFor(m => m.Location_ID, Model.LocationsList, new { @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:10px", @required = "required", @id = "Location" })
                     </div>
-                </ol>
-            </nav>
+                </div>
+            </div>
         </div>
-        <button type="button" id="clickThis" class="btn" style="margin-bottom: 14px; ">
-            <i class="fa fa-bars" style="font-size: 25px "></i>
+        <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+            <i class="fa fa-bars" style="font-size:25px"></i>
             <span class="sr-only">Toggle Menu</span>
         </button>
     </div>
 
     
-    <div class="row" style="background-color: white; padding:15px 0px 0px 0px; margin:0px 15px 0px 15px">
-        <div class="col-lg-4">
+    <div style="display:flex; justify-content:space-between; background-color: white; padding:15px 15px 0px 15px; margin:0px 15px 0px 15px">
+        <div style="flex:5; display:flex; justify-content:space-between">
+            <input id="today" type="text" class="btn btn-primary" readonly value="Today" style="height:30px; width:100px" />
+            <div>
 
-            <div class="row">
-                <div class="col-md-3"><input id="today" type="text" class="btn btn-primary" readonly value="Today" style="height:30px; width:100px" /></div>
-                <div class="col-md-3 text-right" style="margin:0px; padding:0px">
-                    <label style="margin:0px; padding-bottom:0px"><strong>Vacations</strong></label>
-                </div>
-                <div class="col-md-6 text-left" >
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" style="width:60px; height:25px" class="custom-control-input" id="customSwitches">
-                        <label class="custom-control-label" for="customSwitches"><strong>Birthdays</strong></label>
-                    </div>
-                </div>                
-            </div>
+                <div class="custom-control custom-switch">
+                    <label style="margin-right:40px; padding-bottom:0px"><strong>Vacations</strong></label>
+                    <input type="checkbox" style="width:60px; height:25px" class="custom-control-input" id="customSwitches">
+                    <label class="custom-control-label" for="customSwitches"><strong>Birthdays</strong></label>
 
-            
-        </div>
-        <div class="col-lg-4">
-            <div class="row">
-                <div class="col-lg-2 text-left">
-                    <input id="prev" type="text" class="btn btn-primary" readonly value="<" style="height:30px; width:40px" />
-                </div>
-                <div class="col-lg-8 text-center">
-                    <h2 id="titleText" style="color:#2f88fc"></h2>
-                </div>
-                <div class="col-lg-2 text-right">
-                    <input id="next" type="text" class="btn btn-primary" readonly value=">" style="float:right; height:30px; width:40px;" />
                 </div>
             </div>
+            <input type="text" class="btn btn-primary" readonly value="Today" style="height:30px; width:20px; visibility:hidden" />
         </div>
-        <div class="col-lg-4 text-right">
-            <input id="month" type="text" class="btn" readonly value="Month" style="color:white; background-color:#24a0ed; height:30px; width:100px" />
-            <input id="basicWeek" type="text" class="btn" readonly value="Week" style="color:white; background-color:#24a0ed; height:30px; width:100px" />
-            <input id="basicDay" type="text" class="btn" readonly value="Day" style="color:white; background-color:#24a0ed; height:30px; width:100px" />
+        <div style="display:flex; justify-content:space-between; flex:4">
+            <input id="prev" type="text" class="btn btn-primary" readonly value="<" style="height:30px; width:40px" />
+            <h2 id="titleText" style="color:#2f88fc"></h2>
+            <input id="next" type="text" class="btn btn-primary" readonly value=">" style="height:30px; width:40px;" />
+        </div>
+        <div style="flex:5; display:flex; justify-content:flex-end">
+            <input id="month" type="text" class="btn" readonly value="Month" style="margin:0px 3px 0px 3px; color:white; background-color:#24a0ed; height:30px; width:100px" />
+            <input id="basicWeek" type="text" class="btn" readonly value="Week" style="margin:0px 3px 0px 3px; color:white; background-color:#24a0ed; height:30px; width:100px" />
+            <input id="basicDay" type="text" class="btn" readonly value="Day" style="margin:0px 0px 0px 3px; color:white; background-color:#24a0ed; height:30px; width:100px" />
         </div>
     </div>
-    <div class="row" style="padding:0px 15px 15px 15px;">
+
+    <div class="row" style="padding: 0px 15px 15px 15px;">
         <div class="row" style="padding:0px 15px 15px 15px; ">
             <div id="calender" style="background-color:white; height:680px; width:100%; margin:0px 15px 15px 15px; padding:0px 15px 15px 15px;"></div> @*padding:15px 15px 15px 15px; background-color:white*@
         </div>
@@ -265,7 +256,7 @@
                         <div class="col-lg-6"><p id="pDetails"></p></div>
                         <div class="col-lg-6 text-right"><img id="EventImage" src="" style="width:150px; height:150px" /></div>
                     </div>
-                    
+
                 </div>
                 <div class="modal-footer" style="padding:8px">
                     <input type="text" readonly class="btn btn-danger" data-dismiss="modal" name="name" value="Close" style="height:25px; width:100px" />
@@ -281,7 +272,7 @@
                 $('#sidebar').toggleClass('active');
                 $('.fc-month-button').style.display = 'none';
                 $('.fc-agendaWeek-button').hide();
-                $('.fc-agendaDay-button').hide();   
+                $('.fc-agendaDay-button').hide();
             });
 
             $("#month").css('background-color', 'white');
@@ -396,10 +387,10 @@
                                     end: moment(date1).format("YYYY-MM-DD"),
                                     color: '#d0e6bc',
                                     imageurl: '/Content/Vacation1.png',
-                                });                                
+                                });
                             }
                             else if (v.subject == 'Statutory') {
-                                          
+
                                 var date1 = moment(v.start_date).add(1, 'days');
                                 events.push({
                                     title: v.subject,
@@ -408,7 +399,7 @@
                                     end: moment(date1).format("YYYY-MM-DD"),
                                     color: '#a7d1fa',
                                     imageurl: '/Content/Vacation1.png',
-                                });     
+                                });
                             }
                             else if (v.subject == 'Holiday') {
                                 var d = new Date();
@@ -431,7 +422,7 @@
                         GenerateCalender(events);
                     },
                     error: function (error) {
-                        alert('failed');
+                        //alert('failed');
                     }
                 })
 
@@ -454,9 +445,9 @@
                         events: events,
 
 
-                        eventRender: function(event, eventElement) {
-                        if (event.imageurl) {
-                            eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl +"' width='32' height='30'>");
+                        eventRender: function (event, eventElement) {
+                            if (event.imageurl) {
+                                eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl + "' width='32' height='30'>");
                             }
                         },
 
@@ -470,7 +461,7 @@
                             }
                             $description.append($('<p/>').html('<b>Description: </b>' + calEvent.description));
                             $('#myModal #pDetails').empty().html($description);
-                            $('#myModal #EventImage').empty().attr("src",calEvent.imageurl);
+                            $('#myModal #EventImage').empty().attr("src", calEvent.imageurl);
                             $('#myModal').modal();
                         }
 
@@ -490,20 +481,20 @@
             })
 
 
-            $("#customSwitches").on('change', function() {
-                if ($(this).is(':checked')) {        
+            $("#customSwitches").on('change', function () {
+                if ($(this).is(':checked')) {
                     var events = [];
                     $.ajax({
                         type: "GET",
                         url: "/Main/GetBirthdayEvents",
                         success: function (data) {
-                            $.each(data, function (i, v) {    
+                            $.each(data, function (i, v) {
                                 //alert(moment(v.Date_of_birth));
                                 var d = new Date();
                                 var year = d.getFullYear();
                                 var date1 = moment(v.Date_of_birth).add(1, 'days').calendar();
                                 //alert(moment(date1).format("YYYY-MM-DD"));
-                                
+
                                 events.push({
                                     title: v.full_name,
                                     description: v.full_name + moment(date1).format("YYYY"),
@@ -513,13 +504,13 @@
                                     textColor: 'black',
                                     imageurl: '/Content/Birthday.png',
                                 });
-                            
+
                             })
 
                             GenerateCalender(events);
                         },
                         error: function (error) {
-                            alert('failed');
+                            //alert('failed');
                         }
                     })
 
@@ -529,7 +520,7 @@
                             contentHeight: 640,
                             defaultDate: new Date(),
                             timeFormat: 'h(:mm)a',
-                            displayEventTime : false,
+                            displayEventTime: false,
                             header: {
                                 left: 'prev,next today',
                                 center: 'title',
@@ -539,19 +530,20 @@
                             eventLimit: true,
                             eventColor: '#378006',
                             events: events,
-                        
 
-                            eventRender: function(event, eventElement) {
-                            if (event.imageurl) {
-                                eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl +"' width='32' height='30'>");
-                            }},
+
+                            eventRender: function (event, eventElement) {
+                                if (event.imageurl) {
+                                    eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl + "' width='32' height='30'>");
+                                }
+                            },
 
 
                             eventClick: function (calEvent, jsEvent, view) {
                                 var d = new Date();
                                 var year = d.getFullYear();
                                 var currentYear = parseInt(year);
-                                var birthYear = calEvent.description.slice(calEvent.description.length - 4);  
+                                var birthYear = calEvent.description.slice(calEvent.description.length - 4);
                                 var age = currentYear - birthYear;
                                 $('#myModal #eventTitle').text(calEvent.title);
                                 var $description = $('<div/>');
@@ -559,9 +551,9 @@
                                 if (calEvent.end != null) {
                                     $description.append($('<p/>').html('<b>End: </b>' + calEvent.end.format("DD-MMM-YYYY"))); // HH:mm (put it before after date)
                                 }
-                                $description.append($('<p/>').html('<b>Description: </b>Happy ' + age + ' Birthday '+ calEvent.title));
+                                $description.append($('<p/>').html('<b>Description: </b>Happy ' + age + ' Birthday ' + calEvent.title));
                                 $('#myModal #pDetails').empty().html($description);
-                                $('#myModal #EventImage').empty().attr("src",calEvent.imageurl);
+                                $('#myModal #EventImage').empty().attr("src", calEvent.imageurl);
                                 $('#myModal').modal();
                             }
                         })
@@ -570,9 +562,9 @@
                         $('.fc-today-button').css("display", "none");
                         $('.fc-next-button').css("display", "none");
                     }
-                    
+
                 }
-                else {        
+                else {
                     var events = [];
                     $.ajax({
                         type: "GET",
@@ -622,7 +614,7 @@
                                     });
                                 }
                                 else if (v.subject == 'Statutory') {
-                                          
+
                                     var date1 = moment(v.start_date).add(1, 'days');
                                     events.push({
                                         title: v.subject,
@@ -631,7 +623,7 @@
                                         end: moment(date1).format("YYYY-MM-DD"),
                                         color: '#a7d1fa',
                                         imageurl: '/Content/Vacation1.png',
-                                    });     
+                                    });
                                 }
                                 else if (v.subject == 'Holiday') {
 
@@ -655,7 +647,7 @@
                             GenerateCalender(events);
                         },
                         error: function (error) {
-                            alert('failed');
+                            //alert('failed');
                         }
                     })
 
@@ -665,7 +657,7 @@
                             contentHeight: 640,
                             defaultDate: new Date(),
                             timeFormat: 'h(:mm)a',
-                            displayEventTime : false,
+                            displayEventTime: false,
                             header: {
                                 left: 'prev,next today',
                                 center: 'title',
@@ -677,9 +669,9 @@
                             events: events,
 
 
-                            eventRender: function(event, eventElement) {
-                            if (event.imageurl) {
-                                eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl +"' width='32' height='30'>");
+                            eventRender: function (event, eventElement) {
+                                if (event.imageurl) {
+                                    eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl + "' width='32' height='30'>");
                                 }
                             },
 
@@ -693,7 +685,7 @@
                                 }
                                 $description.append($('<p/>').html('<b>Description:</b>' + calEvent.description));
                                 $('#myModal #pDetails').empty().html($description);
-                                $('#myModal #EventImage').empty().attr("src",calEvent.imageurl);
+                                $('#myModal #EventImage').empty().attr("src", calEvent.imageurl);
                                 $('#myModal').modal();
                             }
                         })
@@ -702,11 +694,11 @@
                         $('.fc-today-button').css("display", "none");
                         $('.fc-next-button').css("display", "none");
                     }
-                    
+
                 }
             });
 
-            
+
 
         </script>
 

@@ -310,58 +310,49 @@
     </style>
 </head>
 <body>
-    <div class="row heading">
-        <div class="col">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
-                    <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Tools")">Tools</a></li>
-                    <li class="breadcrumb-item " aria-current="page">Fuel Log</li>
 
-                </ol>
-            </nav>
+    <div class="row heading" style="margin-right:0px">
+        <div class="col" style="margin:0px 10px 10px 15px; padding:10px; background-color:white">
+
+            <div style="display:flex; justify-content:space-between; align-items:center">
+                <div>
+                    <a href="@Url.Action("FuelLogMainPage", "Tools")">Tools </a>/ FuelLogMainPage
+                </div>
+
+                <div></div>
+            </div>
         </div>
-        <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+        <button type="button" id="clickThis" class="btn">
             <i class="fa fa-bars" style="font-size:25px"></i>
             <span class="sr-only">Toggle Menu</span>
         </button>
     </div>
-    <div class="row" style="padding-left:15px">
+
+    
+    <div class="row" style="padding-left:15px; display:flex">
 
 
         @if (Model.SehubAccess.fuel_log >= 1)
         {
-            <div class="col-lg-2">
-                <a href="@Url.Action("FuelLog", "Tools", new { VIN = "", loc = ""})">
-                    <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#InspectionChecklist" style="width:260px; height:360px">
-                        <div class="card-body text-center" style="height:270px; padding-top:55px">
-                            <img src="~/Content/fuelLog.png" style="margin-top:0px; margin-bottom:35px; width:160px;">
-                            <h5 style="margin-left:0px"><b>Fleet Fuel Log</b></h5>
-                        </div>
-                    </div>
-                </a>
+            <div class="card shadow-lg " type="button" onclick="location.href='@Url.Action("FuelLog", "Tools", new { VIN = "", loc = ""})'" data-toggle="modal" data-target="#InspectionChecklist" style="margin-left:15px; margin-bottom:15px; width:260px; height:360px">
+                <div class="card-body text-center" style="height:270px; padding-top:55px">
+                    <img src="~/Content/fuelLog.png" style="margin-top:0px; margin-bottom:35px; width:160px;">
+                    <h5 style="margin-left:0px"><b>Fleet Fuel Log</b></h5>
+                </div>
             </div>
 
-            <div class="col-lg-2">
-                <a href="@Url.Action("FuelInvoice", "Tools")">
-                    <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#InspectionChecklist" style="width:260px; height:360px">
-                        <div class="card-body text-center" style="height:270px; padding-top:55px">
-                            <img src="~/Content/InvoiceCustomer.png" style="margin-top:0px; margin-bottom:35px; width:165px;">
-                            <h5 style="margin-left:0px"><b>Fuel Invoiced to Customer</b></h5>
-                        </div>
-                    </div>
-                </a>
-
+            <div class="card shadow-lg" onclick="location.href='@Url.Action("FuelInvoice", "Tools")'" type="button" data-toggle="modal" data-target="#InspectionChecklist" style="margin-left:15px; margin-bottom:15px; width:260px; height:360px">
+                <div class="card-body text-center" style="height:270px; padding-top:55px">
+                    <img src="~/Content/InvoiceCustomer.png" style="margin-top:0px; margin-bottom:35px; width:165px;">
+                    <h5 style="margin-left:0px"><b>Fuel Invoiced to Customer</b></h5>
+                </div>
             </div>
-            <div class="col-lg-2">
-                <a href="@Url.Action("ShopSupplies", "Tools")">
-                    <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#InspectionChecklist" style="width:260px; height:360px">
-                        <div class="card-body text-center" style="height:270px; padding-top:55px">
-                            <img src="~/Content/ShopSupplier.png" style="margin-top:0px; margin-bottom:35px; width:170px;">
-                            <h5 style="margin-left:0px"><b>Shop Supplies Fuel Log</b></h5>
-                        </div>
-                    </div>
-                </a>
 
+            <div class="card shadow-lg " onclick="location.href='@Url.Action("ShopSupplies", "Tools")'" type="button" data-toggle="modal" data-target="#InspectionChecklist" style="margin-left:15px; margin-bottom:15px; width:260px; height:360px">
+                <div class="card-body text-center" style="height:270px; padding-top:55px">
+                    <img src="~/Content/ShopSupplier.png" style="margin-top:0px; margin-bottom:35px; width:170px;">
+                    <h5 style="margin-left:0px"><b>Shop Supplies Fuel Log</b></h5>
+                </div>
             </div>
         }
 
@@ -373,6 +364,10 @@
 
 
         $(document).ready(function () {
+
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
 
              $('#audit-tab').css({ "font-weight": "normal", "color": "#24a0ed" });
              $('#history-tab').css({ "font-weight": "bold", "color": "black" });

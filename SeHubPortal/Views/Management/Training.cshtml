@@ -1,0 +1,347 @@
+﻿@model SeHubPortal.ViewModel.TrainingViewModel
+@{
+    ViewBag.Title = "Training";
+    Layout = "~/Views/Shared/_ManagementLayout.cshtml";
+}
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/NewOrder.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <style>
+
+        #PlantClicked {
+            display: block !important;
+        }
+
+        #PlantClicked {
+            display: block !important;
+        }
+
+        #toolsClicked {
+            display: block !important;
+        }
+
+        #PayrollClicked {
+            display: block !important;
+        }
+
+        #FleetTVTClicked {
+            display: block !important;
+        }
+
+        #EmployeeFilesLink {
+            display: block !important;
+        }
+
+        #AssetControlLink {
+            display: block !important;
+        }
+
+        #LeaveSchedulerLink {
+            display: block !important;
+        }
+
+        #AttendanceLink {
+            display: block !important;
+        }
+
+        #MyStaffLink {
+            display: block !important;
+        }
+
+        #SettingsClicked {
+            display: block !important;
+        }
+
+        #mainClicked {
+            display: block !important;
+        }
+
+        #treadTrackereClicked {
+            display: block !important;
+        }
+
+        #libraryClicked {
+            display: block !important;
+        }
+
+
+        #ManagementClicked {
+            display: block !important;
+        }
+
+        #DashboardLink {
+            display: block !important;
+        }
+
+        #ManagementClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #managementBtn {
+            color: black;
+            font-weight: 600;
+        }
+
+        #TrainingLink {
+            color: black;
+            font-weight: 700;
+            background-color: #f0f2f5;
+        }
+
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .heading {
+            margin: 10px 0px 0px 0px;
+        }
+
+            .heading h2 {
+                margin-top: 8px;
+            }
+
+        .card-header {
+            background-color: #cde8ca;
+        }
+
+            .card-header h6 {
+                color: black;
+            }
+
+        .example::-webkit-scrollbar {
+            display: none;
+        }
+
+        .example {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+    </style>
+</head>
+<body>
+    <div class="row heading" style="margin-right:0px">
+        <div class="col" style="margin:0px 10px 10px 10px; padding:10px; background-color:white">
+
+            <div style="display:flex; justify-content:space-between; align-items:center">
+                <div>
+                    <a href="@Url.Action("Training", "Management")">Management </a>/ Training
+                </div>
+                <input type="text" readonly style="height:23px; width:100px;" class="btn btn-success" name="name" value="Upload" data-toggle="modal" data-target="#AddDocuments" />
+                <div style="display:flex; justify-content:space-around; align-items:center">
+                    <label>Location</label>
+                    @using (Html.BeginForm("ChangeLocTraining", "Management", FormMethod.Post))
+                    {
+                        <div>
+                            @Html.DropDownListFor(m => m.location, Model.locationsList, "Select", new { @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:6px;" })
+                            <noscript><input style="display:none" class="btn btn-success" type="submit" value="Search" /></noscript>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <button type="button" id="clickThis" class="btn">
+            <i class="fa fa-bars" style="font-size:25px"></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+
+    <div class="row" style="padding:0px 15px 0px 15px">
+        <div class="col-lg-12">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th style="font-size:18px; padding:0px; text-align:center; border:none" scope="col"></th>
+                        <th style="font-size:18px; padding:0px; text-align:center; border:none" scope="col"><button style="border:3px solid #00a2e8; color:#00a2e8; border-radius:10px; font-size:18px; font-weight:bold; width:70%; margin-bottom:5px">First Aid</button></th>
+                        <th style="font-size:18px; padding:0px; text-align:center; border:none" scope="col"><button style="border:3px solid #00a2e8; color:#00a2e8; border-radius:10px; font-size:18px; font-weight:bold; width:70%; margin-bottom:5px">OH & S</button></th>
+                        <th style="font-size:18px; padding:0px; text-align:center; border:none" scope="col"><button style="border:3px solid #00a2e8; color:#00a2e8; border-radius:10px; font-size:18px; font-weight:bold; width:70%; margin-bottom:5px">TIA</button></th>
+                        <th style="font-size:18px; padding:0px; text-align:center; border:none" scope="col"><button style="border:3px solid #00a2e8; color:#00a2e8; border-radius:10px; font-size:18px; font-weight:bold; width:70%; margin-bottom:5px">Goodyear</button></th>
+                        <th style="font-size:18px; padding:0px; text-align:center; border:none" scope="col"><button style="border:3px solid #00a2e8; color:#00a2e8; border-radius:10px; font-size:18px; font-weight:bold; width:70%; margin-bottom:5px">Mental Health</button></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var train in Model.TrainingList)
+                    {
+                        <tr style="height:50px">
+                            <td style="padding:5px; text-align:left; vertical-align:middle; width:16.6%">@train.staff_member</td>
+                            <td style="padding: 5px;text-align: center;vertical-align: middle;width: 16.6%">
+                                @if (train.fa_aspiration_date.HasValue)
+                                {
+                                    @train.fa_aspiration_date.Value.ToString("MMM, yyyy")
+                                }
+                                @if (train.fa_certificate != null)
+                                {
+                                    <button data-toggle="modal" data-target="#CertificateModel" onclick="CertificateFunction(this.value)" value="@train.fa_certificate" style=" padding: 0px 5px 0px 5px; margin: 5px; border: none; outline: none; background-color: transparent">
+                                        <img src="~/Content/doc-icon.png" style="width: 30px;height: 30px"alt="Alternate Text" />
+                                    </button>
+                                }
+                            </td>
+                            <td style="padding: 5px;text-align: center;vertical-align: middle">
+                                @if (train.ohs_aspiration_date.HasValue)
+                                {
+                                    @train.ohs_aspiration_date.Value.ToString("MMM, yyyy")
+                                }
+                                @if (train.ohs_certificate != null)
+                                {
+                                    <button data-toggle="modal" data-target="#CertificateModel" onclick="CertificateFunction(this.value)" value="@train.ohs_certificate" style="padding: 0px 5px 0px 5px;margin: 5px;border: none;outline: none;background-color: transparent"><img src="~/Content/doc-icon.png" style="width: 30px;height: 30px" alt="Alternate Text" />
+                                    </button>
+                                }
+                            </td>
+                            <td style="padding:5px; text-align:center; vertical-align:middle; width:16.6%">
+                            </td>
+                            <td style="padding:5px; text-align:center; vertical-align:middle; width:16.6%">
+                                @if (train.gy_aspiration_date.HasValue)
+                                {
+                                    @train.gy_aspiration_date.Value.ToString("MMM, yyyy")
+                                }
+                                @if (train.gy_certificate != null)
+                                {
+                                    <button data-toggle="modal" data-target="#CertificateModel" onclick="CertificateFunction(this.value)" value="@train.gy_certificate" style="padding:0px 5px 0px 5px; margin:5px; border:none; outline:none; background-color:transparent"><img src="~/Content/doc-icon.png" style="width:30px; height:30px" alt="Alternate Text" /></button>
+                                }
+                            </td>
+                            <td style="padding:5px; text-align:center; vertical-align:middle; width:16.6%">
+                                @if (train.other_aspiration_date.HasValue)
+                                {
+                                    @train.other_aspiration_date.Value.ToString("MMM, yyyy")
+                                }
+                                @if (train.other_certificate != null)
+                                {
+                                    <button data-toggle="modal" data-target="#CertificateModel" onclick="CertificateFunction(this.value)" value="@train.other_certificate" style="padding:0px 5px 0px 5px; margin:5px; border:none; outline:none; background-color:transparent"><img src="~/Content/doc-icon.png" style="        width: 30px;
+        height: 30px" alt="Alternate Text" /></button>
+                                }
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="CertificateModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" style="height:800px; width:1000px">
+                <div class="modal-body" style="padding:0px">
+                    <div>
+                        <iframe id="modal_content" src="" style="width:100%;height:880px;"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="AddDocuments" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width:400px">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Certificate Request</h5>
+                </div>
+
+                @using (Html.BeginForm("AddDocumentRequest", "Management", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="modal-body" style="padding:12px">
+                        <div class="row" style="margin:3px">
+                            <div class="col-md-5 text-left" style="margin:0px; padding:0px"><label>Certificate Type</label></div>
+                            <div class="col-md-7  text-right" style="margin:0px; padding:0px">
+                                @{
+                                    List
+                                    <SelectListItem>
+                                    listItems = new List
+                                    <SelectListItem>
+                                    ();
+                                    listItems.Add(new SelectListItem
+                                    {
+                                        Text = "First Aid",
+                                        Value = "First Aid"
+                                    });
+                                    listItems.Add(new SelectListItem
+                                    {
+                                        Text = "OH & S",
+                                        Value = "OH & S"
+                                    });
+                                    listItems.Add(new SelectListItem
+                                    {
+                                        Text = "TIA",
+                                        Value = "TIA"
+                                    });
+                                    listItems.Add(new SelectListItem
+                                    {
+                                        Text = "Goodyear",
+                                        Value = "Goodyear"
+                                    });
+                                    listItems.Add(new SelectListItem
+                                    {
+                                        Text = "Mental Health",
+                                        Value = "Mental Health"
+                                    });
+                                }
+                                @Html.DropDownListFor(m => m.ResourceType, listItems, "Select Certificate Type", new { @class = "text-center", @style = "text-align-last: center; width:200px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
+                            </div>
+                        </div>
+                        <div class="row" style="margin:3px">
+                            <div class="col-md-5 text-left" style="margin:0px; padding:0px"><label>Document Name</label></div>
+                            <div class="col-md-7  text-right" style="margin:0px; padding:0px">
+                                @Html.DropDownListFor(m => m.employee, Model.employeesList, "Select Employee", new { @class = "text-center", @style = "text-align-last: center; width:200px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
+                            </div>
+                        </div>
+                        <div class="row" style="margin:3px">
+                            <div class="col-md-5 text-left" style="margin:0px; padding:0px"><label>Expiration Date</label></div>
+                            <div class="col-md-7  text-right" style="margin:0px; padding:0px">
+                                @Html.EditorFor(m => m.expirationDate, new { htmlAttributes = new { @required = "required", @type="date", @style="width:200px; height:23px;" } })
+                            </div>
+                        </div>
+                        <div class="row" style="margin:3px">
+                            <div class="col-md-5 text-left" style="margin:0px; padding:0px"><label>Description</label></div>
+                        </div>
+                        <div class="row" style="margin:3px">
+                            <div class="col-md-12  text-right" style="padding:0px">
+                                @Html.TextAreaFor(m => m.Description, 5, 60, new { @style="width:100%", htmlAttributes = new { @required = "required" } })
+                            </div>
+                        </div>
+                        <div class="row" style="margin:3px">
+                            <div class="col-md-5 text-left" style="margin:0px; padding:0px"><label>Upload Document</label></div>
+                        </div>
+                        <div class="row" style="margin:3px">
+                            <div class="col-md-6  text-center" style="margin:0px; padding:0px">
+                                <input type="file" name="Document" value="" required />
+                            </div>
+                            <div class="col-md-6  text-center" style="margin:0px; padding:0px">
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" style="padding:2px 20px 2px 20px" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                        <button type="submit" style="padding:2px 20px 2px 20px" class="btn btn-success">Submit</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+    </script>
+
+    <script>
+        function CertificateFunction(val) {
+            $('#modal_content').attr('src', val)
+        }
+    </script>
+
+</body>
+</html>

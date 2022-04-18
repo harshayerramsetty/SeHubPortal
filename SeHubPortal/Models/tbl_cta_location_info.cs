@@ -30,5 +30,6 @@ namespace SeHubPortal.Models
         public Nullable<int> tread_tracker_access { get; set; }
         public string service_email { get; set; }
         public string management_email { get; set; }
+        public string googleMap { get; set; }
     }
 }

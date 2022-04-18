@@ -3,7 +3,8 @@
     ViewBag.Title = "Locations";
     Layout = "~/Views/Shared/_Settings_Harpoon.cshtml";
 }
-@model SeHubPortal.ViewModel.MyStaffViewModel
+
+@model SeHubPortal.ViewModel.HarpoonLocationsViewModel
 
     <html lang="en">
     <head>
@@ -15,8 +16,15 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>*@
 
-
         <style>
+
+            #SettingsClicked {
+                display: block !important;
+            }
+
+            #ManagementClicked {
+                display: block !important;
+            }
 
             .example::-webkit-scrollbar {
                 display: none;
@@ -110,129 +118,1126 @@
 
     <body>
         <div class="row heading">
-            <div class="col">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
-                        <li class="breadcrumb-item"><a href="@Url.Action("Employees", "SettingsHarpoon")">Settings</a></li>
-                        <li class="breadcrumb-item " aria-current="page">Locations</li>
-                        <input id="AddEmployeeBtn" readonly type="text" class="btn btn-success EmpTransBtns " data-toggle="modal" data-target="#AddEmployeeModal" value="Add" style="height:23px; width:100px; margin-left:520px" />
 
-                    </ol>
-                </nav>
+            <div class="col" style="margin:0px 5px 15px 15px; padding:10px; background-color:white">
+
+                <div style="display:flex; justify-content:space-between; align-items:center">
+                    <div>
+                        <a href="@Url.Action("Locations", "SettingsHarpoon")">Settings </a>/ Locations
+                    </div>
+                    <input id="AddEmployeeBtn" onclick="checkOperatingHours()" readonly type="text" class="btn btn-success EmpTransBtns " value="Add" style="height:23px; width:100px" />
+                    <div style="display:flex; justify-content:space-around; align-items:center">
+                        <label style="visibility:hidden">Location</label>
+                    </div>
+                </div>
             </div>
+
             <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
                 <i class="fa fa-bars" style="font-size:25px"></i>
                 <span class="sr-only">Toggle Menu</span>
             </button>
+
         </div>
 
-        <div class="row" style="margin:0px 10px 20px 15px">
-            <div class="col-lg-6" style="padding:0px">
-                <div class="card">
-                    <div class="card-header" style="padding:8px 0px 0px 15px">
-                        <div class="row">
-                            <div class="col-lg-10">
-                                <h5>[Location Name]-[Location ID]</h5>
-                            </div>
-                            <div class="col-lg-2" style="padding-right:20px">
-                                <button style="background-color:transparent; border:none; outline:none; float:right"><i class="fa fa-edit" style="font-size:25px;color:black;float:right"></i></button>
+        <div class="row">
+            <div class="col-md-12" style="padding:0px 30px 0px 30px">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card shadow-md" data-toggle="modal" data-target="#Full" style="padding-top:10px; width:100%; border:4px solid #ffcc00; border-radius:5px; margin-right:15px">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <img src="~/Content/Location.png" style="margin:10px; height:100px" alt="Alternate Text" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="row" style="color:dimgray">
+                                        <div class="col-md-12 text-center">
+                                            <div class="row" style="margin-bottom:15px">
+                                                <div class="col-md-12">
+                                                    <h4 style="font-weight:bolder; color:#ffcc00"><u>Location</u></h4>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    Physical location with employees. Time clock can be assigned.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-lg-7">
-                                Address1
-                            </div>
-                            <div class="col-lg-5">
-                                Phone
-                            </div>
-                        </div>
-                        <div class="row" style="margin-bottom:10px">
-                            <div class="col-lg-7">
-                                <input style="width:100%" type="text" name="name" value="" />
-                            </div>
-                            <div class="col-lg-5">
-                                <input style="width:100%" type="text" name="name" value="" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-7">
-                                Address2
-                            </div>
-                            <div class="col-lg-5">
-                                Fax
-                            </div>
-                        </div>
-                        <div class="row" style="margin-bottom:10px">
-                            <div class="col-lg-7">
-                                <input style="width:100%" type="text" name="name" value="" />
-                            </div>
-                            <div class="col-lg-5">
-                                <input style="width:100%" type="text" name="name" value="" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-7">
-                                City/Town
-                            </div>
-                            <div class="col-lg-5">
-                                Email
-                            </div>
-                        </div>
-                        <div class="row" style="margin-bottom:10px">
-                            <div class="col-lg-7">
-                                <input style="width:100%" type="text" name="name" value="" />
-                            </div>
-                            <div class="col-lg-5">
-                                <input style="width:100%" type="text" name="name" value="" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-7">
-                                <div class="row">
-                                    <div class="col-lg-4">
-                                        Province
+                    <div class="col-md-4">
+                        <div class="card shadow-md" data-toggle="modal" data-target="#Full" style="padding-top:10px; width:100%; border:4px solid #ffcc00; border-radius:5px; margin-right:15px">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="row">
+                                        <div class="col-md-12 text-right">
+                                            <img src="~/Content/departments.png" style="margin:10px; height:100px" alt="Alternate Text" />
+                                        </div>
                                     </div>
-                                    <div class="col-lg-4">
-                                        Postal code
-                                    </div>
-                                    <div class="col-lg-4">
-                                        Country
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="row" style="color:dimgray">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-12 text-center">
+                                                    <h4 style="font-weight:bolder; color:#ffcc00"><u>Department</u></h4>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    Use to further devide employee time within a location. Timeclock can be assigned
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-5">
-                                Google Maps
-                            </div>
                         </div>
-                        <div class="row">
-                            <div class="col-lg-7">
-                                <div class="row">
-                                    <div class="col-lg-4">
-                                        <input style="width:100%" type="text" name="name" value="" />
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <input style="width:100%" type="text" name="name" value="" />
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <input style="width:100%" type="text" name="name" value="" />
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card shadow-md" data-toggle="modal" data-target="#Full" style="padding-top:10px; width:100%; border:4px solid #ffcc00; border-radius:5px; margin-right:15px">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <img src="~/Content/timeClock.jpg" style="margin:10px; height:100px" alt="Alternate Text" />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-5">
-                                <input style="width:100%" type="text" name="name" value="" />
+                                <div class="col-md-9">
+                                    <div class="row" style="color:dimgray">
+                                        <div class="col-md-12 ">
+                                            <div class="row">
+                                                <div class="col-md-12 text-center">
+                                                    <h4 style="font-weight:bolder; color:#ffcc00"><u>Job Clock</u></h4>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    Used to assign job number tracking to employee hours. Time clock cannot be assigned complete VIA Management portal <u>ONLY</u>.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6"></div>
         </div>
-        
+        <div class="example" style="height:570px; overflow-y:auto">
+            <div class="row">
+                <div class="col-md-12" style="padding:0px 30px 0px 30px">
+                    <div class="row">
+                        <div class="col-md-4">
+                            @foreach (var user in Model.Locations)
+                            {
+                                <div class="row">
+                                    <div class="col-md-12 text-center" style="display:flex; justify-content:center">
+                                        <div class="card shadow-lg " type="button" style="margin-right:15px; position:relative; width:250px; height:355px">
+                                            @if (user.status == 1)
+                                            {
+                                                <div class="card-body text-center" style="height:270px; font-size:11px; padding:10px 0px 0px 0px">
+
+                                                    <div class="row" style="margin:0px">
+                                                        <div class="col-lg-8 text-left" style="display:flex; padding-top:0px; align-items:normal">
+
+                                                        </div>
+                                                        <div class="col-lg-4 text-right" style="padding:0px">
+                                                            <span>
+                                                                <button value="@user.location_id;@user.location_name;@user.address1;@user.address2;@user.city;@user.province;@user.postal_code;@user.country;@user.phone;@user.fax;@user.google_maps;@user.auto_loc_id;@user.status" onclick="edit(this.value)" data-toggle="modal" data-target="#EditHarpoonLocation" style="background-color: transparent;border: none;outline: none;">
+                                                                    <i class="fa fa-edit" style="font-size:25px;color:black;float:right"></i>
+                                                                </button>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-lg-12 text-center">
+                                                            <img src="~/Content/Location.png" style="margin-bottom:10px;width:120px;">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row" style="margin-top:10px">
+                                                        <div class="col-lg-5 text-right" style="padding-left:5px; padding-right:0px">
+                                                            Location ID
+                                                        </div>
+                                                        <div class="col-lg-7 text-left" style="padding-left:10px;">
+                                                            <span><b>@user.location_id</b></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-lg-5 text-right" style="padding-left:5px; padding-right:0px">
+                                                            Location Name
+                                                        </div>
+                                                        <div class="col-lg-6 text-left" style="        padding-left: 10px;
+">
+                                                            <span><b>@user.location_name</b></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-lg-5 text-right" style="padding-left:5px; padding-right:0px">
+                                                            Address
+                                                        </div>
+                                                        <div class="col-lg-7 text-left" style="font-weight:bold; padding-left:10px; padding-right:20px">
+                                                            <span>
+                                                                @if (user.address1.Length > 19)
+                                                                {
+                                                                    @user.address1.Substring(0, 18)
+                                                                }
+                                                                else
+                                                                {
+                                                                    @user.address1
+                                                                }
+                                                            </span><br />
+                                                            @if (user.address2 != null)
+                                                            {
+                                                                <span>@user.address2</span><br />
+                                                            }
+                                                            <span>@user.city</span><br />
+                                                            <span>@user.province, @user.postal_code, @user.country</span>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-lg-5 text-right" style="padding-left:5px; padding-right:0px">
+                                                            Phone
+                                                        </div>
+                                                        <div class="col-lg-7 text-left" style="padding-left:10px;">
+                                                            <span><b>@user.phone</b></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-lg-5 text-right" style="padding-left:5px; padding-right:0px">
+                                                            FAX
+                                                        </div>
+                                                        <div class="col-lg-7 text-left" style="padding-left:10px;">
+                                                            <span><b>@user.fax</b></span>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="card-body text-center" style="opacity:0.2; height:270px; font-size:11px; padding:10px 0px 0px 0px">
+
+                                                    <div class="row" style="margin:0px">
+                                                        <div class="col-lg-8 text-left" style="display:flex; padding-top:0px; align-items:normal">
+
+                                                        </div>
+                                                        <div class="col-lg-4 text-right" style="padding:0px">
+                                                            <span>
+                                                                <button value="@user.location_id;@user.location_name;@user.address1;@user.address2;@user.city;@user.province;@user.postal_code;@user.country;@user.phone;@user.fax;@user.google_maps;@user.auto_loc_id;@user.status" onclick="edit(this.value)" data-toggle="modal" data-target="#EditHarpoonLocation" style="background-color: transparent;border: none;outline: none;">
+                                                                    <i class="fa fa-edit" style="font-size:25px;color:black;float:right"></i>
+                                                                </button>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-lg-12 text-center">
+                                                            <img src="~/Content/Location.png" style="margin-bottom:10px;width:120px;">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row" style="margin-top:10px">
+                                                        <div class="col-lg-5 text-right" style="padding-left:5px; padding-right:0px">
+                                                            Location ID
+                                                        </div>
+                                                        <div class="col-lg-7 text-left" style="padding-left:10px;">
+                                                            <span><b>@user.location_id</b></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-lg-5 text-right" style="padding-left:5px; padding-right:0px">
+                                                            Location Name
+                                                        </div>
+                                                        <div class="col-lg-7 text-left" style="padding-left:10px;">
+                                                            <span><b>@user.location_name</b></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-lg-5 text-right" style="padding-left:5px; padding-right:0px">
+                                                            Address
+                                                        </div>
+                                                        <div class="col-lg-7 text-left" style="font-weight:bold; padding-left:10px;">
+                                                            <span>@user.address1</span><br />
+                                                            @if (user.address2 != null)
+                                                            {
+                                                                <span>@user.address2</span><br />
+                                                            }
+                                                            <span>@user.city</span><br />
+                                                            <span>@user.province, @user.postal_code, @user.country</span>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-lg-5 text-right" style="padding-left:5px; padding-right:0px">
+                                                            Phone
+                                                        </div>
+                                                        <div class="col-lg-7 text-left" style="padding-left:10px;">
+                                                            <span><b>@user.phone</b></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-lg-5 text-right" style="padding-left:5px; padding-right:0px">
+                                                            FAX
+                                                        </div>
+                                                        <div class="col-lg-7 text-left" style="padding-left:10px;">
+                                                            <span><b>@user.fax</b></span>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                            }
+
+
+                                            @if (user.status == 1)
+                                            {
+                                            }
+                                            else
+                                            {
+                                                <img src="~/Content/inactive.png" style="transform: rotate(-45deg); width:200px; top:140px;left:30px;position:absolute" />
+                                            }
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+                        </div>
+                        <div class="col-md-4">
+                            @foreach (var dep in Model.Departments)
+                            {
+                                <div class="row">
+                                    <div class="col-md-12 text-center" style="display:flex; justify-content:center">
+                                        <div class="card shadow-lg " type="button" style="margin-right:15px; position:relative; width:250px; height:355px">
+                                            <div class="card-body text-center" style="height:270px; font-size:11px; padding:10px 15px 0px 15px">
+
+                                                <div class="row" style="margin-bottom:10px">
+                                                    <div class="col-lg-8 text-left" style="display:flex; padding-top:0px; align-items:normal">
+
+                                                    </div>
+                                                    <div class="col-lg-4 text-right" style="padding:0px">
+                                                        <span>
+                                                            <button value="" onclick="edit(this.value)" data-toggle="modal" data-target="#" style="background-color: transparent;border: none;outline: none;">
+                                                                <i class="fa fa-edit" style="font-size:25px;color:black;float:right"></i>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-lg-12 text-center">
+                                                        <img src="~/Content/departments.png" style="margin-bottom:10px;width:120px;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row" style="margin-top:10px">
+                                                    <div class="col-lg-6 text-right" style="padding-left:5px; padding-right:0px">
+                                                        Department ID
+                                                    </div>
+                                                    <div class="col-lg-6 text-left" style="padding-left:10px;">
+                                                        <span><b>@dep.department_id</b></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-lg-6 text-right" style="padding-left:5px; padding-right:0px">
+                                                        Department Name
+                                                    </div>
+                                                    <div class="col-lg-6 text-left" style="padding-left: 10px;">
+                                                        <span><b>@dep.name</b></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-lg-6 text-right" style="padding-left:5px; padding-right:0px">
+                                                        Available to all loc
+                                                    </div>
+                                                    <div class="col-lg-6 text-left" style="padding-left:10px;">
+                                                        <input type="checkbox" name="name" value="@dep.available_to_all_loc" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="row" style="margin-bottom:5px">
+                                                    <div class="col-lg-6 text-right" style="padding-left:5px; padding-right:0px">
+                                                        Parent Location
+                                                    </div>
+                                                    <div class="col-lg-6 text-left" style="padding-left:10px;">
+                                                        <input style="width:70%" type="text" name="name" value="@dep.parent_location" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-lg-6 text-right" style="padding-left:5px; padding-right:0px">
+                                                        Admin
+                                                    </div>
+                                                    <div class="col-lg-6 text-left" style="padding-left:10px;">
+                                                        <input type="checkbox" name="name" value="@dep.admin" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-lg-6 text-right" style="padding-left:5px; padding-right:0px">
+                                                        Clocking Comments
+                                                    </div>
+                                                    <div class="col-lg-6 text-left" style="padding-left:10px;">
+                                                        <input style="width:70%" type="text" name="name" value="@dep.clocking_comments" />
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+                        </div>
+                        <div class="col-md-4">
+                            @foreach (var job in Model.JobClocks)
+                            {
+                                <div class="row">
+                                    <div class="col-md-12 text-center" style="display:flex; justify-content:center">
+                                        <div class="card shadow-lg " type="button" style="margin-right:15px; position:relative; width:250px; height:355px">
+                                            <div class="card-body text-center" style="height:270px; font-size:11px; padding:10px 15px 0px 15px">
+
+                                                <div class="row" style="margin-bottom:10px">
+                                                    <div class="col-lg-8 text-left" style="display:flex; padding-top:0px; align-items:normal">
+
+                                                    </div>
+                                                    <div class="col-lg-4 text-right" style="padding:0px">
+                                                        <span>
+                                                            <button value="" onclick="edit(this.value)" data-toggle="modal" data-target="#" style="background-color: transparent;border: none;outline: none;">
+                                                                <i class="fa fa-edit" style="font-size:25px;color:black;float:right"></i>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-lg-12 text-center">
+                                                        <img src="~/Content/timeClock.jpg" style="margin-bottom:10px;width:120px;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row" style="margin-top:10px">
+                                                    <div class="col-lg-6 text-right" style="padding-left:5px; padding-right:0px">
+                                                        JobClock ID
+                                                    </div>
+                                                    <div class="col-lg-6 text-left" style="padding-left:10px;">
+                                                        <span><b>@job.jobclock_id</b></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-lg-6 text-right" style="padding-left:5px; padding-right:0px">
+                                                        JobClock Name
+                                                    </div>
+                                                    <div class="col-lg-6 text-left" style="padding-left: 10px;">
+                                                        <span><b>@job.name</b></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-lg-6 text-right" style="padding-left:5px; padding-right:0px">
+                                                        Available to all loc
+                                                    </div>
+                                                    <div class="col-lg-6 text-left" style="padding-left:10px;">
+                                                        <input type="checkbox" name="name" value="@job.available_to_all_locations" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="row" style="margin-bottom:5px">
+                                                    <div class="col-lg-6 text-right" style="padding-left:5px; padding-right:0px">
+                                                        Parent Location
+                                                    </div>
+                                                    <div class="col-lg-6 text-left" style="padding-left:10px;">
+                                                        <input style="width:70%" type="text" name="name" value="@job.parent_location" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-lg-6 text-right" style="padding-left:5px; padding-right:0px">
+                                                        Admin
+                                                    </div>
+                                                    <div class="col-lg-6 text-left" style="padding-left:10px;">
+                                                        <input type="checkbox" name="name" value="@job.admin" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-lg-6 text-right" style="padding-left:5px; padding-right:0px">
+                                                        Clocking Comments
+                                                    </div>
+                                                    <div class="col-lg-6 text-left" style="padding-left:10px;">
+                                                        <input style="width:70%" type="text" name="name" value="@job.clocking_comments" />
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="Add" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="padding:5px">
+                        <h5 style="margin-left:auto; margin-right:auto" class="modal-title">Add</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-4 text-center">
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <img style="width:100px" data-dismiss="modal" data-toggle="modal" data-target="#AddHarpoonLocation" class="btn" src="~/Content/Location.png" alt="Alternate Text" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <h5><u><b>Location</b></u></h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <img style="width:110px" data-dismiss="modal" data-toggle="modal" data-target="#AddHarpoonDepartment" class="btn" src="~/Content/departments.png" alt="Alternate Text" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <h5><u><b>Department</b></u></h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <img style="width:105px" data-dismiss="modal" data-toggle="modal" data-target="#AddHarpoonJobClock" class="btn" src="~/Content/timeClock.jpg" alt="Alternate Text" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <h5><u><b>JobClock</b></u></h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="AddHarpoonLocation" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+
+                @using (Html.BeginForm("AddLocation", "SettingsHarpoon", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Add Location</h5>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-12 text-center">
+                                    <img src="~/Content/Location.png" style="margin-bottom:10px;width:100px;">
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Location ID
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.newLocation.location_id, new { htmlAttributes = new { @oninput = "checkRequired()", @id = "new_location_id", @style = "width:100%; border:1px solid red", @required = "required" } })
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Location name
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.newLocation.location_name, new { htmlAttributes = new { @oninput = "checkRequired()", @id = "new_location_name", @style = "width:100%; border:1px solid red", @required = "required" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Address 1
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.newLocation.address1, new { htmlAttributes = new { @oninput = "checkRequired()", @id = "new_address1", @style = "width:100%; border:1px solid red", @required = "required" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Address 2
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.newLocation.address2, new { htmlAttributes = new { @id = "new_address2", @style = "width:100%" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    City
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.newLocation.city, new { htmlAttributes = new { @oninput = "checkRequired()", @id = "new_city", @style = "width:100%; border:1px solid red", @required = "required" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Province
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.newLocation.province, new { htmlAttributes = new { @oninput = "checkRequired()", @id = "new_province", @style = "width:100%; border:1px solid red", @required = "required" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Postal Code
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.newLocation.postal_code, new { htmlAttributes = new { @oninput = "checkRequired()", @id = "new_postal_code", @style = "width:100%; border:1px solid red", @required = "required" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Country
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.newLocation.country, new { htmlAttributes = new { @oninput = "checkRequired()", @id = "new_country", @style = "width:100%; border:1px solid red", @required = "required" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Phone
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.newLocation.phone, new { htmlAttributes = new { @type = "text", @onfocusout = "checkRequired()", @oninput = "phoneFormat(this.value, this.id)", @id = "new_phone", @style = "width:100%; border:1px solid red", @required = "required", @maxlength = "14" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Fax
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.newLocation.fax, new { htmlAttributes = new { @oninput = "phoneFormat(this.value, this.id)", @id = "new_fax", @style = "width:100%;", @maxlength = "14" } })
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row" style="padding:0px 20px 0px 20px">
+                                <div class="col-lg-5 text-left" style="padding-left:0px; color:red; padding-bottom:0px">
+                                </div>
+                                <div class="col-lg-7 text-right" style="padding-right:0px; padding-bottom:0px">
+                                    <button id="newSubmit" style="padding:2px 30px 2px 30px; visibility:hidden" type="submit" class="btn btn-success">Save</button>
+                                    <button style="padding:2px 20px 2px 20px" type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+
+            </div>
+        </div>
+
+        <div class="modal" id="AddHarpoonDepartment" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+
+                @using (Html.BeginForm("AddDepartment", "SettingsHarpoon", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Add Department</h5>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-12 text-center">
+                                    <img src="~/Content/departments.png" style="margin-bottom:10px;width:100px;">
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Detartment ID
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.newDepartment.department_id, new { htmlAttributes = new {@style = "width:100%;", @required = "required" } })
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Detartment name
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.newDepartment.name, new { htmlAttributes = new { @style = "width:100%", @required = "required" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Available to all locations
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.newDepartment.available_to_all_loc, new { htmlAttributes = new { @type = "checkbox", @style = "width:100%", @required = "required" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Parent location
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.newDepartment.parent_location, new { htmlAttributes = new { @style = "width:100%" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Admin
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.newDepartment.admin, new { htmlAttributes = new { @type = "checkbox", @style = "width:100%;", @required = "required" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Clocking comments
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.newDepartment.clocking_comments, new { htmlAttributes = new { @style = "width:100%;", @required = "required" } })
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row" style="padding:0px 20px 0px 20px">
+                                <div class="col-lg-5 text-left" style="padding-left:0px; color:red; padding-bottom:0px">
+                                </div>
+                                <div class="col-lg-7 text-right" style="padding-right:0px; padding-bottom:0px">
+                                    <button style="padding:2px 30px 2px 30px;" type="submit" class="btn btn-success">Save</button>
+                                    <button style="padding:2px 20px 2px 20px" type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+
+            </div>
+        </div>
+
+        <div class="modal" id="AddHarpoonJobClock" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+
+                @using (Html.BeginForm("AddJobClock", "SettingsHarpoon", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Add Job Clock</h5>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-12 text-center">
+                                    <img src="~/Content/timeClock.jpg" style="margin-bottom:10px;width:100px;">
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    JobClock ID
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.newJobClock.jobclock_id, new { htmlAttributes = new {@style = "width:100%;", @required = "required" } })
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    JobClock name
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.newJobClock.name, new { htmlAttributes = new { @style = "width:100%", @required = "required" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Available to all locations
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.newJobClock.available_to_all_locations, new { htmlAttributes = new { @type = "checkbox", @style = "width:100%", @required = "required" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Parent location
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.newJobClock.parent_location, new { htmlAttributes = new { @style = "width:100%" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Admin
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.newJobClock.admin, new { htmlAttributes = new { @type = "checkbox", @style = "width:100%;", @required = "required" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Clocking comments
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.newJobClock.clocking_comments, new { htmlAttributes = new { @style = "width:100%;", @required = "required" } })
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row" style="padding:0px 20px 0px 20px">
+                                <div class="col-lg-5 text-left" style="padding-left:0px; color:red; padding-bottom:0px">
+                                </div>
+                                <div class="col-lg-7 text-right" style="padding-right:0px; padding-bottom:0px">
+                                    <button style="padding:2px 30px 2px 30px;" type="submit" class="btn btn-success">Save</button>
+                                    <button style="padding:2px 20px 2px 20px" type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+
+            </div>
+        </div>
+
+        <div class="modal" id="EditHarpoonLocation" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+
+                @using (Html.BeginForm("EditLocation", "SettingsHarpoon", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="modal-content">
+                        <div class="modal-header" style="padding-right:120px">
+                            <h5 class="modal-title">Edit Location</h5>
+                            <div class="custom-control custom-switch">
+                                <label id="inactive" style="margin-right:40px">
+                                    In-Active
+                                </label>
+
+                                @Html.EditorFor(m => m.status, new { htmlAttributes = new { @style = "font-size:30px", @id = "status", @class = "custom-control-input", @type = "checkbox" } })
+
+                                <label id="active" class="custom-control-label" for="status">
+                                    Active
+                                </label>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-12 text-center">
+                                    <img src="~/Content/Location.png" style="margin-bottom:10px;width:100px;">
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Location ID
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.EditLocation.location_id, new { htmlAttributes = new { @id = "location_id", @style = "width:100%; border: 1px solid red", @required = "required" } })
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Location name
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.EditLocation.location_name, new { htmlAttributes = new { @id = "location_name", @style = "width:100%; border: 1px solid red", @required = "required" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Address 1
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.EditLocation.address1, new { htmlAttributes = new { @id = "address1", @style = "width:100%; border: 1px solid red", @required = "required" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Address 2
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.EditLocation.address2, new { htmlAttributes = new { @id = "address2", @style = "width:100%" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    City
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.EditLocation.city, new { htmlAttributes = new { @id = "city", @style = "width:100%; border: 1px solid red", @required = "required" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Province
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.EditLocation.province, new { htmlAttributes = new { @id = "province", @style = "width:100%; border: 1px solid red", @required = "required" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Postal Code
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.EditLocation.postal_code, new { htmlAttributes = new { @id = "postal_code", @style = "width:100%; border: 1px solid red", @required = "required" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Country
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.EditLocation.country, new { htmlAttributes = new { @id = "country", @style = "width:100%; border: 1px solid red", @required = "required" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Phone
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.EditLocation.phone, new { htmlAttributes = new { @id = "phone", @style = "width:100%; border: 1px solid red", @required = "required" } })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-5 text-right">
+                                    Fax
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.EditLocation.fax, new { htmlAttributes = new { @id = "fax", @style = "width:100%;" } })
+                                </div>
+                            </div>
+                            <div class="row" style="display:none">
+                                <div class="col-lg-5 text-right">
+                                    Auto ID
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.EditLocation.auto_loc_id, new { htmlAttributes = new { @id = "auto_id", @style = "width:100%;", @required = "required" } })
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row" style="padding:0px 20px 0px 20px">
+                                <div class="col-lg-5 text-left" style="padding-left:0px; color:red; padding-bottom:0px">
+                                </div>
+                                <div class="col-lg-7 text-right" style="padding-right:0px; padding-bottom:0px">
+                                    <button style="padding:2px 30px 2px 30px" type="submit" class="btn btn-success">Save</button>
+                                    <button style="padding:2px 20px 2px 20px" type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                }
+
+            </div>
+        </div>
+
+        <div class="modal" id="DeletePopup" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                @using (Html.BeginForm("DeleteLocation", "SettingsHarpoon", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="modal-content" style="width:400px">
+                        <div class="modal-header" style="padding:5px 5px 5px 15px">
+                            <h5 class="modal-title">Confirm to delete</h5>
+                        </div>
+                        <div class="modal-body" style="">
+
+                            <div class="row">
+                                <div class="col-lg-6" style="font-size:40px">
+                                    Location
+                                </div>
+                                <div class="col-lg-6">
+                                    @Html.EditorFor(m => m.deleteLocation, new { htmlAttributes = new { @readonly = true, @id = "deleteLoc", @style = "text-align:center; width:100%; font-size:40px", @required = "required" } })
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer" style="padding:5px">
+                            <button type="submit" style="padding:3px 20px 3px 20px" class="btn btn-success">Yes</button>
+                            <button type="button" data-dismiss="modal" style="padding:3px 25px 3px 25px" class="btn btn-danger">No</button>
+                        </div>
+                    </div>
+                }
+
+
+            </div>
+        </div>
+
+        <div class="modal" id="OperationsNotPresent" data-backdrop="static" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+
+                <div class="modal-content" style="width:600px">
+                    <div class="modal-header" style="padding:5px 5px 5px 15px">
+                        <h5 class="modal-title">Acknowledgement</h5>
+                    </div>
+                    <div class="modal-body" style="padding-bottom:0px">
+
+                        <div class="row" style="margin-bottom:15px">
+                            <div class="col-lg-12 text-center">
+                                <h6>
+                                    <b>
+                                        Please complete hours of operation via the Settings / Account page.
+                                    </b>
+                                </h6>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer" style="padding:5px">
+                        <button onclick="location.reload()" data-dismiss="modal" style="padding:3px 30px 3px 30px" class="btn btn-danger" type="button">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
         <script>
 
+            function checkOperatingHours() {
+                clearAddFields()
+                $.ajax({
+                    url: '@Url.Action("CheckOperatingHoursExist", "SettingsHarpoon")',
+                    type: 'POST',
+                    success: function (data) {
+                        if (data == "True") {
+                            $('#Add').modal()
+                            $('#AddHarpoonLocation input').val("")
+                        }
+                        else {
+                            $('#OperationsNotPresent').modal()
+                        }
+                    }
+                });
+            }
+
+            function phoneFormat(val, id) {
+                if (val.length > 0) {
+                    if (val.substring(0, 1) != "(") {
+                        $('#'+id).val("("+val)
+                    }
+                }
+
+                if (val.length > 3 && val.length < 5) {
+
+                    if (val.substring(4) != ")") {
+                        $('#'+id).val(val+") ")
+                    }
+
+                }
+
+                if (val.length > 8 && val.length < 10) {
+                    if (val.substring(9) != "-") {
+                        $('#'+id).val(val+"-")
+                    }
+                }
+            }
+
+            $(document).ready(function () {
+                $('#clickThis').on('click', function () {
+                    $('#sidebar').toggleClass('active');
+                    $('#divLoader').css('display', 'block');
+                });
+
+            });
+
+            $("#status").on('change', function () {
+                if ($(this).is(':checked')) {
+                    $('#active').css("font-weight", "bold")
+                    $('#inactive').css("font-weight", "normal")
+                }
+                else {
+                    $('#active').css("font-weight", "normal")
+                    $('#inactive').css("font-weight", "bold")
+                }
+            });
+
+            function clearAddFields() {
+                $('#AddHarpoonLocation input').val("")
+            }
+
+            function checkRequired() {
+                if ($('#new_location_id').val() != "" && $('#new_location_name').val() != "" && $('#new_address1').val() != "" && $('#new_city').val() != "" && $('#new_province').val() != "" && $('#new_postal_code').val() != "" && $('#new_country').val() != "" && $('#new_phone').val() != "")
+                {
+                    $('#newSubmit').css("visibility", "visible")
+                }
+                else {
+                    $('#newSubmit').css("visibility", "hidden")
+                }
+            }
+
+            function edit(val) {
+                var edt = val.split(";")
+                $('#deleteLoc').val(edt[0]);
+                $('#location_id').val(edt[0]);
+                $('#location_name').val(edt[1]);
+                $('#address1').val(edt[2]);
+                $('#address2').val(edt[3]);
+                $('#city').val(edt[4]);
+                $('#province').val(edt[5]);
+                $('#postal_code').val(edt[6]);
+                $('#country').val(edt[7]);
+                $('#phone').val(edt[8]);
+                $('#fax').val(edt[9]);
+                $('#auto_id').val(edt[11]);
+                if (edt[12] == 1) {
+                    $('#status').prop('checked', true);
+                    $('#active').css("font-weight", "bold")
+                    $('#inactive').css("font-weight", "normal")
+                }
+                else {
+                    $('#status').prop('checked', false);
+                    $('#active').css("font-weight", "normal")
+                    $('#inactive').css("font-weight", "bold")
+                }
+            }
         </script>
     </body>
 

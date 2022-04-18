@@ -19,5 +19,14 @@ namespace SeHubPortal.Models
         public Nullable<int> active { get; set; }
         public Nullable<int> barcode_scan_required { get; set; }
         public string barcode_id { get; set; }
+        public Nullable<int> allow_print { get; set; }
+        public byte[] icon { get; set; }
+        public Nullable<int> status { get; set; }
+        public Nullable<int> tread { get; set; }
+        public Nullable<int> size { get; set; }
+        public Nullable<int> brand { get; set; }
+        public Nullable<int> ship_to { get; set; }
+        public Nullable<int> consumables { get; set; }
+        public Nullable<int> reprint { get; set; }
     }
 }

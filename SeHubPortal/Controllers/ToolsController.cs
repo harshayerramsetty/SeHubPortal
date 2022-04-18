@@ -26,7 +26,6 @@ namespace SeHubPortal.Controllers
         int NewSequenceNum;
         public string locId;
 
-
         [HttpPost]
         public ActionResult DashboardChangeLocation(FileURL model)
         {
@@ -133,7 +132,15 @@ namespace SeHubPortal.Controllers
                             model.cta_employee_name = Convert.ToString(sdr["full_name"]);
                             model.location_id = Convert.ToString(sdr["loc_ID"]);
                             locId = model.location_id;
-                            model.Tire_Adjustment_id = "TA-" + locId + "XXXXX";
+
+                            if (loc != null)
+                            {
+                                model.Tire_Adjustment_id = "TA-" + loc + "XXXXX";
+                            }
+                            else
+                            {
+                                model.Tire_Adjustment_id = "TA-" + locId + "XXXXX";
+                            }
                             //Debug.WriteLine("test1");
                             //Debug.WriteLine(model.Tire_Adjustment_id);
                         }
@@ -143,65 +150,34 @@ namespace SeHubPortal.Controllers
                 }
 
             }
-            using (SqlConnection con = new SqlConnection(constr))
+
+            
+
+            if (loc != null)
             {
-                string query = "select top 1 * from tbl_tire_adjustment a, tblLocation b where a.location_id = b.locID";
-                Debug.WriteLine(query);
-                using (SqlCommand cmd = new SqlCommand(query))
-                {
-                    cmd.Connection = con;
-                    con.Open();
-                    using (SqlDataReader sdr = cmd.ExecuteReader())
-                    {
-
-                        while (sdr.Read())
-                        {
-
-                            model.non_sig_number = Convert.ToString(sdr["locNONSIG"]);
-                        }
-
-                    }
-                    con.Close();
-                }
+                model.location_id = loc;
             }
-            using (SqlConnection con = new SqlConnection(constr))
+            else
             {
-                string query = "select * from tblLocation where locID = '" + locId + "'";
-                //Debug.WriteLine(query);
-                using (SqlCommand cmd = new SqlCommand(query))
-                {
-                    cmd.Connection = con;
-                    con.Open();
-                    using (SqlDataReader sdr = cmd.ExecuteReader())
-                    {
-
-                        while (sdr.Read())
-                        {
-
-                            ViewBag.locID = Convert.ToString(sdr["locID"]);
-                            ViewBag.addressSTREET1 = Convert.ToString(sdr["addressSTREET1"]);
-                            ViewBag.addressSTREET2 = Convert.ToString(sdr["addressSTREET2"]);
-                            ViewBag.addressCITY = Convert.ToString(sdr["addressCITY"]);
-                            ViewBag.addressPROVINCE = Convert.ToString(sdr["addressPROVINCE"]);
-                            ViewBag.addressPOSTAL = Convert.ToString(sdr["addressPOSTAL"]);
-                            ViewBag.locPHONE = Convert.ToString(sdr["locPHONE"]);
-                            ViewBag.locFAX = Convert.ToString(sdr["locFAX"]);
-                        }
-
-                    }
-                    con.Close();
-                }
-
-                if (loc != null)
-                {
-                    model.location_id = loc;
-                }
-                else
-                {
-                    model.location_id = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
-                }
-
+                model.location_id = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
             }
+
+            var locDetatils = db.tbl_cta_location_info.Where(x => x.loc_id == model.location_id).FirstOrDefault();
+
+            if (locDetatils != null)
+            {
+                model.non_sig_number = db.tbl_cta_location_info.Where(x => x.loc_id == model.location_id).Select(x => x.nonsig_num).FirstOrDefault();
+
+                ViewBag.locID = locDetatils.loc_id;
+                ViewBag.addressSTREET1 = locDetatils.cta_street1;
+                ViewBag.addressSTREET2 = locDetatils.cta_street2;
+                ViewBag.addressCITY = locDetatils.cta_city;
+                ViewBag.addressPROVINCE = locDetatils.cta_province;
+                ViewBag.addressPOSTAL = locDetatils.cta_postal_code;
+                ViewBag.locPHONE = locDetatils.cta_phone;
+                ViewBag.locFAX = locDetatils.cta_fax;
+            }
+
             return View(model);
         }
 
@@ -330,9 +306,6 @@ namespace SeHubPortal.Controllers
 
             return (Math.Round(retail_price, 2), Math.Round(N_A_price, 2));
         }
-
-
-
 
         [HttpPost]
         public string LoadTAform(string value)
@@ -534,8 +507,6 @@ namespace SeHubPortal.Controllers
             return RedirectToAction("FuelLog", new { VIN = vin, loc = loc });
         }
 
-        // GET: Tools
-
         [HttpPost]
         public ActionResult Upload(IEnumerable<HttpPostedFileBase> files)
         {
@@ -568,7 +539,7 @@ namespace SeHubPortal.Controllers
 
                 using (SqlConnection con = new SqlConnection(constr))
                 {
-                    string query = "select top 1 * from tbl_tire_adjustment where location_id = '" + locId + "' order by date desc";
+                    string query = "select top 1 * from tbl_tire_adjustment where location_id = '" + locId + "' order by Tire_Adjustment_id desc";
                     //Debug.WriteLine(query);
                     using (SqlCommand cmd = new SqlCommand(query))
                     {
@@ -607,6 +578,8 @@ namespace SeHubPortal.Controllers
                 tbl_tire_adjustment data = new tbl_tire_adjustment();
 
                 data.Tire_Adjustment_id = "TA-" + locId + NewSequenceNum.ToString("D5");
+
+                Trace.WriteLine(data.Tire_Adjustment_id);
 
                 data.date = System.DateTime.Today.Date;
                 data.cta_employee_name = empDetails.full_name;
@@ -686,6 +659,38 @@ namespace SeHubPortal.Controllers
 
                 db.tbl_tire_adjustment.Add(data);
                 db.SaveChanges();
+
+                MailMessage msg = new MailMessage();
+                msg.To.Add(new MailAddress("service" + locId + "@citytire", "IT Team")); //jordan.blackwood      harsha.yerramsetty      payroll
+                msg.From = new MailAddress("noreply@citytire.com", "Sehub");
+                msg.Subject = "Tire Adjustment : " + data.Tire_Adjustment_id;
+                msg.Body = "<i><u><b>Tire Adjustment Submission</b></u></i>" +
+                    "<br /><br />" +
+                    "Tire Adjustment Number: &nbsp &nbsp &nbsp" + "<font color='black'>" + data.Tire_Adjustment_id + "</font>" + "<br />" +
+                    "Customer Name: &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp " + "<font color='black'>" + data.name + "</font>" + " <br />" +
+                    "Invoice Number: &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp " + "<font color='black'>" + data.replacement_invoice + "</font>" + " <br />" +
+                    "<i><b><font size=1>SEHUB Automated Email Notifications</font></b></i>";
+
+                //"There is a branch to corporate payroll submission from " + locId + " for the pay period " + "20" + payrollId.ToString().Substring(0, 2) + "-" + payrollId.ToString().Substring(payrollId.ToString().Length - 2) + "<br /> Location IDs which have submitted  till now from branch to corporate are : " + locationNumber + " for payroll ID : " + "20" + payrollId.ToString().Substring(0, 2) + "-" + payrollId.ToString().Substring(payrollId.ToString().Length - 2);
+                msg.IsBodyHtml = true;
+
+                SmtpClient client = new SmtpClient();
+                client.UseDefaultCredentials = false;
+                client.Credentials = new System.Net.NetworkCredential("noreply@citytire.com", "U8LH>WpBdXg}");
+                client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
+                client.Host = "smtp.office365.com";
+                client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                client.EnableSsl = true;
+                try
+                {
+                    client.Send(msg);
+                    //Debug.WriteLine("Message Sent Succesfully");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                }
+
 
             }
             catch (SqlException e)
@@ -967,7 +972,6 @@ namespace SeHubPortal.Controllers
             
         }
 
-
         [HttpPost]
         public string getDropdownOptions(string value)
         {
@@ -989,7 +993,6 @@ namespace SeHubPortal.Controllers
 
         }
 
-
         [HttpPost]
         public string CheckSizeCodes(string value)
         {
@@ -1009,9 +1012,7 @@ namespace SeHubPortal.Controllers
             
         }
 
-
-
-        public ActionResult ExpenseClaim ()
+        public ActionResult ExpenseClaim()
         {
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             int empId = Convert.ToInt32(Session["userID"].ToString());
@@ -1570,6 +1571,8 @@ namespace SeHubPortal.Controllers
             }
             int permissions = CheckPermissions().user_management.Value;
 
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             EmployeePermissionsViewModel model = new EmployeePermissionsViewModel();
             model.userManagementAccessLevel = permissions;
@@ -1577,7 +1580,8 @@ namespace SeHubPortal.Controllers
 
             if (locId is null || locId == "")
             {
-
+                location = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
+                model.MatchedLocID = location;
             }
             else
             {
@@ -1626,7 +1630,6 @@ namespace SeHubPortal.Controllers
             //}
             var employeeList = db.tbl_employee.Where(x => (x.loc_ID.Contains(location) && x.status == 1) || x.status == null ).OrderBy(x => x.employee_id).ToList();
             model.EmployeesList = employeeList;
-            int empId = Convert.ToInt32(Session["userID"].ToString());
             model.MatchedLocs = populateLocationsPermissions(empId);
             
             var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
@@ -1639,8 +1642,8 @@ namespace SeHubPortal.Controllers
 
             return View(model);
         }
-        [HttpPost]
 
+        [HttpPost]
         public ActionResult EmployeePermissionsChangelocation(EmployeePermissionsViewModel model)
         {
             return RedirectToAction("EmployeePermissions", new { locId = model.MatchedLocID });
@@ -2168,7 +2171,7 @@ namespace SeHubPortal.Controllers
 
                 if (targetAccountTable != null)
                 {
-                    modal.targetAccountDetails = targetAccountTable;
+                    modal.targetAccountDetails = targetAccountTable.OrderByDescending(x => x.visit_date).ToList();
                 }
 
                 if (targetAccountTable != null)
@@ -2818,6 +2821,26 @@ namespace SeHubPortal.Controllers
                 return "Proceed";
             }
 
+        }
+
+        public ActionResult PopulateTireAdjustment(string loc)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            List<KeyValuePair<string, string>> keyValuePair = new List<KeyValuePair<string, string>>();
+
+            var tADetails = db.tbl_tire_adjustment.Where(x => x.location_id == loc).ToList();
+
+            foreach (var TA in tADetails)
+            {
+                keyValuePair.Add(new KeyValuePair<string, string>(TA.date.Value.ToString("yyyy-MM-dd"), TA.Tire_Adjustment_id));
+            }
+
+            return Json(keyValuePair.Select(x => new
+            {
+                value = x.Key,
+                text = x.Value
+            }).ToList(), JsonRequestBehavior.AllowGet);
         }
 
     }

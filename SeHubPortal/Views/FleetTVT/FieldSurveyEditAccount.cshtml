@@ -5183,9 +5183,7 @@
             var actualCount = 4;
             var count = 0;
 
-            $('#UnitReqDiv :input').each(function(){
-                if(this.value.length > 0){ count++; };
-            });
+
 
             if ($('#mileageInput').is(':disabled')) {
 
@@ -5270,33 +5268,72 @@
 
 
 
-            if ($("#EmpsDropdown option:selected").text() == "Select Technician") {
-                count--;
-            }
-
-
-            var unitPercentage = (count / actualCount) * 100;
 
             if ($('#mileageInput').is(':disabled')) {
                 if ($('#fullDateEquipmentSurvey').is(':disabled')) {
-                    var unitPercentage = (count / actualCount) * 100 + 50;
+                    if ($('#surveyLocationUnit').val() != "" && $('#EmpsDropdown').val() != -1) {
+                        unitPercentage = 100;
+                    }
+                    else if ($('#surveyLocationUnit').val() != "" && $('#EmpsDropdown').val() == -1) {
+                        unitPercentage = 50;
+                    }
                 }
                 else {
-                    var unitPercentage = (count / actualCount) * 100 - 25;
+
+                    actualCount = 3
+                    count = 0
+
+                    if ($('#surveyLocationUnit').val() != "") {
+                        count = count + 1;
+                    }
+                    if ($('#EmpsDropdown').val() != -1) {
+                        count = count + 1;
+                    }
+                    if ($('#fullDateEquipmentSurvey').val() != "") {
+                        count = count + 1;
+                    }
+
+                    unitPercentage = (count / actualCount) * 100
                 }
             }
             else {
+                
+
                 if ($('#fullDateEquipmentSurvey').is(':disabled')) {
-                    var unitPercentage = (count / actualCount) * 100 + 25;
+                    actualCount = 3
+                    count = 0
+
+                    if ($('#surveyLocationUnit').val() != "") {
+                        count = count + 1;
+                    }
+                    if ($('#EmpsDropdown').val() != -1) {
+                        count = count + 1;
+                    }
+                    if ($('#mileageInput').val() != "") {
+                        count = count + 1;
+                    }
+
+                    unitPercentage = (count / actualCount) * 100
                 }
                 else {
-                    var unitPercentage = (count / actualCount) * 100 - 25;
+                    actualCount = 4
+                    count = 0
+
+                    if ($('#surveyLocationUnit').val() != "") {
+                    count = count + 1;
+                    }
+                    if ($('#EmpsDropdown').val() != -1) {
+                        count = count + 1;
+                    }
+                    if ($('#fullDateEquipmentSurvey').val() != "") {
+                        count = count + 1;
+                    }
+                    if ($('#mileageInput').val() != "") {
+                        count = count + 1;
+                    }
+                    unitPercentage = (count / actualCount) * 100
                 }
             }
-
-            
-
-
 
             var percentageStr = unitPercentage.toString();
 
@@ -5728,6 +5765,13 @@
         });
 
         function InitiateStep3(value1) {
+            $('.unitProgress').css('width', '0').text('0%');
+
+            $('#mileageInput').val("");
+            $('#dateExpiredUnitSurvey').val(null);
+            $('#fullDateEquipmentSurvey').val(null);
+            $('#surveyLocationUnit').val("");
+            $('#EmpsDropdown').val("-1");
 
             $('.tireProgress').css('width', "0%").text("");
 
