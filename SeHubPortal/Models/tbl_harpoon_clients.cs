@@ -28,5 +28,8 @@ namespace SeHubPortal.Models
         public string client_website { get; set; }
         public byte[] client_logo { get; set; }
         public Nullable<int> status { get; set; }
+        public Nullable<bool> employees_page { get; set; }
+        public Nullable<bool> fleet_page { get; set; }
+        public Nullable<System.DateTime> start_date { get; set; }
     }
 }

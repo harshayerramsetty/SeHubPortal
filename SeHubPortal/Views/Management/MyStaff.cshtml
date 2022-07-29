@@ -139,7 +139,9 @@
 
         <style>
 
-
+            .breadCrumb{
+        background-color:white;
+    }
             #ManagementClicked {
                 display: block !important;
             }
@@ -187,10 +189,6 @@
                     margin-top: 8px;
                 }
 
-            .card-header {
-                background-color: #cde8ca;
-            }
-
                 .card-header h6 {
                     color: black;
                 }
@@ -236,7 +234,7 @@
         <div class="row heading">
             <div class="col">
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
+                    <ol class="breadcrumb breadCrumb" style="background-color:white;height:100%;margin-top:0px;">
                         <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Management")">Management</a></li>
                         <li class="breadcrumb-item " aria-current="page">My Staff</li>
                         <input id="AddEmployeeBtn" readonly type="text" class="btn btn-success EmpTransBtns " data-toggle="modal" data-target="#AddEmployeeModal" value="Add" style="height:23px; width:100px; margin-left:490px" />
@@ -432,7 +430,7 @@
                             <a class="nav-link " id="profile-tab" style="color:black;width:200px;text-align:center;" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">In-Active</a>
                         </li>
                     </ul>
-                    <div class="tab-content" id="myTabContent">
+                    <div class="tab-content" id="myTabContent" style="height:43.5em; background-color:white">
                         <div class="tab-pane fade  show bg-white active" id="home" role="tabpanel" aria-labelledby="home-tab">
                             <div class="card-body example" style="max-height:705px; overflow-y:auto">
 
@@ -464,11 +462,11 @@
 
                                                                         @if (base64ProfilePic == "")
                                                                         {
-                                                                            <img class="imageClass" src="~/Content/profilepic.jpg" alt="ProfilePic" />
+                                                                            <img style="object-fit:contain" class="imageClass" src="~/Content/profilepic.jpg" alt="ProfilePic" />
                                                                         }
                                                                         else
                                                                         {
-                                                                            <img style="object-fit:cover; width:135px; height:135px" class="imageClass" alt="profilePic" src="@base64ProfilePic" />
+                                                                            <img style="object-fit:contain; width:135px; height:135px" class="imageClass" alt="profilePic" src="@base64ProfilePic" />
                                                                         }
 
                                                                     </div>
@@ -573,11 +571,11 @@
 
                                                                         @if (base64ProfilePic == "")
                                                                         {
-                                                                            <img style="object-fit:cover; width:135px; height:135px" class="imageClass" src="~/Content/profilepic.jpg" alt="ProfilePic" />
+                                                                            <img style="object-fit:contain; width:135px; height:135px" class="imageClass" src="~/Content/profilepic.jpg" alt="ProfilePic" />
                                                                         }
                                                                         else
                                                                         {
-                                                                            <img class="imageClass" alt="profilePic" src="@base64ProfilePic" />
+                                                                            <img style="object-fit:contain" class="imageClass" alt="profilePic" src="@base64ProfilePic" />
                                                                         }
 
                                                                     </div>
@@ -643,12 +641,12 @@
 
                      var id = $(this).data('id');
                      $.ajax({
-                                 url: '@Url.Action("EditEmployeeInfo", "Management")',
-                                 data: { value: id },
-                                 type: 'GET',
-                                 success: function (data) {
-                                     $("#EditEmployeeModalDiv").html(data);
-                                 }
+                         url: '@Url.Action("EditEmployeeInfo", "Management")',
+                         data: { value: id },
+                         type: 'GET',
+                         success: function (data) {
+                             $("#EditEmployeeModalDiv").html(data);
+                         }
                      });
                  });
 
@@ -656,12 +654,12 @@
 
                      var id = $(this).data('id');
                      $.ajax({
-                                 url: '@Url.Action("EditEmployeeInfo", "Management")',
-                                 data: { value: id },
-                                 type: 'GET',
-                                 success: function (data) {
-                                     $("#EditEmployeeModalInActiveDiv").html(data);
-                                 }
+                         url: '@Url.Action("EditEmployeeInfo", "Management")',
+                         data: { value: id },
+                         type: 'GET',
+                         success: function (data) {
+                             $("#EditEmployeeModalInActiveDiv").html(data);
+                         }
                      });
                  });
 

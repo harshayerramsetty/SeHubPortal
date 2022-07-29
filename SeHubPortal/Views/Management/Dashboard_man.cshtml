@@ -1,0 +1,609 @@
+﻿@model SeHubPortal.ViewModel.FileURL
+@{
+    ViewBag.Title = "Dashboard_man";
+    Layout = "~/Views/Shared/_DevelopmentLayout.cshtml";
+}
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
+    <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
+
+
+    <style>
+
+        #DashboardLink {
+            display: block !important;
+        }
+
+        #DevelopmentClicked {
+            display: block !important;
+        }
+
+        #mainClicked {
+            display: block !important;
+        }
+
+        #libraryClicked {
+            display: block !important;
+        }
+
+        #toolsClicked {
+            display: block !important;
+        }
+
+        #treadTrackereClicked {
+            display: block !important;
+        }
+
+        #FleetTVTClicked {
+            display: block !important;
+        }
+
+        #ManagementClicked {
+            display: block !important;
+        }
+
+        #PayrollClicked {
+            display: block !important;
+        }
+
+        #PlantClicked {
+            display: block !important;
+        }
+
+        #DevelopmentClicked {
+            display: block !important;
+        }
+
+        #SettingsClicked {
+            display: block !important;
+        }
+
+
+
+
+        #developmentBtn {
+            font-weight: bold;
+        }
+
+        #DevelopmentClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #DashboardLink {
+            color: black;
+            font-weight: 700;
+            background-color: #f0f2f5;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            padding: 0px !important;
+            margin: 0px !important;
+        }
+
+        .card-header h6 {
+            color: black;
+        }
+    </style>
+</head>
+<body style="overflow-y: hidden; overflow-x: hidden">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row" style="padding:10px 30px 10px 30px">
+                <div class="col-md-4" style="padding:10px 10px 10px 20px; background-color:white; vertical-align:middle">
+                    <a href="@Url.Action("Plant", "Retread")">Management</a> / Dashboart
+                </div>
+                <div class="col-md-4" style="background-color:white; vertical-align:middle">
+                </div>
+                <div class="col-md-4 text-right" style="background-color:white; vertical-align:middle; display:flex; align-items:center; justify-content:space-between">
+                    <div></div>
+                    @using (Html.BeginForm("Dashboard_manChangeLocation", "Management", FormMethod.Post))
+                    {
+                        @Html.DropDownListFor(m => m.Location_ID, Model.LocationsList, new { @onChange = "this.form.submit()", @class = "text-center", @style = "font-weight:bold; text-align-last: center; width:200px; height:100%;", @required = "required", @id = "Location" }) @*, @onchange = "salesPerformance()"*@
+                    }
+                </div>
+            </div>
+
+            <div class="row" style="margin-bottom:0px">
+                <div class="col-md-12" style="display:flex; justify-content:space-between; padding:15px 300px 15px 300px">
+
+                    <div style="display:flex; justify-content:center; align-items:center">
+                        <div class="custom-control custom-switch">
+                            <label style="margin-right:40px; margin-left:0px; font-weight:bold" id="techText">
+                                Tech Efficiency
+                            </label>
+                            <input type="checkbox" style="width:60px; height:25px" class="custom-control-input" id="ToggleFromTechToSales">
+                            <label class="custom-control-label" for="ToggleFromTechToSales" id="salesText">
+                                Sales Performance
+                            </label>
+                        </div>
+                    </div>
+
+                    @Html.DropDownListFor(m => m.Year, Model.Positions, new { @onChange = "techEfficiency()", @class = "text-center", @style = "width:200px; text-align-last: center; font-weight:bold", @id = "year" })
+
+
+
+                    <select name="techType" id="techType" style="width:200px; text-align-last: center; font-weight:bold" onchange="techEfficiency()">
+                        <option value="auto">Auto Technician</option>
+                        <option value="tire">Tire Technician</option>
+                    </select>
+
+                    @Html.DropDownListFor(m => m.Payroll_ID, Model.PayrollIdList, new { @class = "text-center", @style = "display:none; font-weight:bold; text-align-last: center; width:200px;", @required = "required", @id = "employees", @onchange = "techEfficiency()" })
+
+                </div>
+            </div>
+
+
+            <div class="row" style="margin-top:40px; padding:0px 40px 10px 40px; height:60vh">
+                <div class="col-lg-12" style="padding: 30px ;border: 2px solid dimgray;border-radius: 15px;background-color: white">
+                    <div id="chart-container">
+
+                    </div>               
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            techEfficiency();
+        });
+
+        $("#ToggleFromTechToSales").on('change', function() {
+            if ($(this).is(':checked')) {
+                salesPerformance()
+                $('#salesText').css("font-weight", "bold")
+                $('#techText').css("font-weight", "normal")
+                $('#techType').css("display", "none")
+            }
+            else {
+                techEfficiency();
+                $('#techText').css("font-weight", "bold")
+                $('#salesText').css("font-weight", "normal")
+                $('#techType').css("display", "block")
+            }
+        });
+
+        function techEfficiency() {
+            var emp_id = $('#employees').val();
+            var year = $('#year').val();
+            var loc_id = $('#Location').val();
+            var techType = $('#techType').val();
+
+            var effInfo = "";
+
+            if (emp_id == "All") {
+                $.ajax({
+                    url: '@Url.Action("TechnicianEfficiencyPerPayrollAll", "Management")',
+                    data: { loc: loc_id, year: year, tech: techType },
+                    async: false,
+                    success: function (data) {
+                        effInfo = data;
+                    }
+                });
+
+                var payIDs = effInfo.split('~')[0].split(';');
+                var effPerc = effInfo.split('~')[1].split(',');
+
+
+                var payrollIDData = [
+                ];
+
+                for (i = 0; i < payIDs.length; i++) {
+                    payrollIDData.push({label: payIDs[i].substring(2, 4)})
+                }
+
+                var percentData = [
+                ];
+
+                var jsn = JSON.parse(effPerc);
+
+                var items = [];
+
+                for (i = 0; i < jsn.length; i++) {
+                    items.push({ seriesname: jsn[i].component, data: calculatePercentages(jsn[i].color)})                    
+                }
+
+
+                $('#tech').css("background-color", "#3088fc").css("color", "white")
+                $('#sales').css("background-color", "white").css("color", "black")
+
+            
+                var percent = "";
+                $.ajax({
+                    url: '@Url.Action("TechnicianEfficiency", "Management")',
+                    data: { emp: emp_id, year: year },
+                    async: false,
+                    success: function (data) {
+                        percent = data;
+                    }
+                });
+
+                const dataSource = {
+                    chart: {
+                        yaxisname: "Efficiency %",
+                        showhovereffect: "1",
+                        numbersuffix: "",
+                        drawcrossline: "1",
+                        plottooltext: "<b>$dataValue</b>",
+                        theme: "fusion",
+                        "legendIconSides": "5",
+                        "legendIconStartAngle": "60",
+                    },
+                    categories: [
+                        {
+                            category: [
+                            {
+                              label: ""
+                            },
+                            {
+                              label: "Jan"
+                            },
+                            {
+                              label: ""
+                            },
+                            {
+                                label: "Feb"
+                            },
+                            {
+                              label: ""
+                            },
+                            {
+                              label: "Mar"
+                            },
+                            {
+                              label: ""
+                            },
+                            {
+                              label: "Apr"
+                            },
+                            {
+                              label: ""
+                            },
+                            {
+                              label: "May"
+                            },
+                            {
+                              label: ""
+                            },
+                            {
+                              label: "Jun"
+                            },
+                            {
+                              label: ""
+                            },
+                            {
+                              label: "Jul"
+                            },
+                            {
+                              label: ""
+                            },
+                            {
+                              label: "Aug"
+                            },
+                            {
+                              label: ""
+                            },
+                            {
+                              label: "Sept"
+                            },
+                            {
+                              label: ""
+                            },
+                            {
+                              label: "Oct"
+                            },
+                            {
+                              label: ""
+                            },
+                            {
+                              label: "Nov"
+                            },
+                            {
+                              label: ""
+                            },
+                            {
+                              label: "Dec"
+                            }
+                          ]
+                        }
+                    ],
+                    dataset: items
+                };
+
+                FusionCharts.ready(function () {
+                    var myChart = new FusionCharts({
+                        type: "msline",
+                        renderAt: "chart-container",
+                        width: "100%",
+                        height: "100%",
+                        dataFormat: "json",
+                        dataSource
+                    }).render();
+                });
+
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("TechnicianEfficiencyPerPayroll", "Management")',
+                    data: { emp: emp_id, year: year },
+                    async: false,
+                    success: function (data) {
+                        effInfo = data;
+                    }
+                });
+
+                var payIDs = effInfo.split('~')[0].split(';');
+                var effPerc = effInfo.split('~')[1].split(';');
+
+                var payrollIDData = [
+                ];
+
+                for (i = 0; i < payIDs.length; i++) {
+                    payrollIDData.push({label: payIDs[i].substring(2, 4)})
+                }
+
+                var percentData = [
+                ];
+
+                for (i = 0; i < effPerc.length; i++) {
+                    percentData.push({value: effPerc[i]})
+                }
+
+                //alert(percentData);
+
+                $('#tech').css("background-color", "#3088fc").css("color", "white")
+                $('#sales').css("background-color", "white").css("color", "black")
+
+            
+                var percent = "";
+                $.ajax({
+                    url: '@Url.Action("TechnicianEfficiency", "Management")',
+                    data: { emp: emp_id, year: year },
+                    async: false,
+                    success: function (data) {
+                        percent = data;
+                    }
+                });
+
+                const dataSource = {
+                    chart: {
+                        yaxisname: "Efficiency %",
+                        showhovereffect: "1",
+                        numbersuffix: "",
+                        drawcrossline: "1",
+                        plottooltext: "<b>$dataValue</b>",
+                        theme: "fusion"
+                    },
+                    categories: [
+                        {
+                            category: payrollIDData
+                        }
+                    ],
+                    dataset: [
+                        {
+                            seriesname: "Technician Efficiency",
+                            data: percentData
+                        }
+                    ]
+                };
+
+                FusionCharts.ready(function () {
+                    var myChart = new FusionCharts({
+                        type: "msline",
+                        renderAt: "chart-container",
+                        width: "100%",
+                        height: "100%",
+                        dataFormat: "json",
+                        dataSource
+                    }).render();
+                });
+            }
+            
+
+            
+        }
+
+        function calculatePercentages(effInfo) { 
+            var percentData = [];
+            effInfo.split(';').forEach(function (data) {
+                percentData.push({value: data})
+            })
+            return percentData;
+        }
+
+        function salesPerformance() {
+
+            var loc_id = $('#Location').val();
+            var year = $('#year').val();
+            var sales = "";
+            $.ajax({
+                url: '@Url.Action("getSalesOfLocation", "Management")',
+                data: { loc: loc_id, yar: year },
+                async: false,
+                success: function (data) {
+                    sales = data;
+                }
+            });
+            var arr = sales.split('~')[0].split(';');
+            var arrp = sales.split('~')[1].split(';');
+            $('#sales').css("background-color", "#3088fc").css("color", "white")
+            $('#tech').css("background-color", "white").css("color", "black")
+            const dataSource = {
+                chart: {
+                    caption: "Sales Summary",
+                    xaxisname: "Months",
+                    yaxisname: "Sales ($ k)",
+                    formatnumberscale: "1",
+                        /*
+                         plottooltext:
+                          "<b>$dataValue</b> apps were available on <b>$seriesName</b> in $label",
+                         */
+                    theme: "fusion",
+                    drawcrossline: "1"
+                },
+                categories: [
+                    {
+                        category: [
+                            {
+                              label: "January"
+                            },
+                            {
+                              label: "February"
+                            },
+                            {
+                              label: "March"
+                            },
+                            {
+                              label: "April"
+                            },
+                            {
+                              label: "May"
+                            },
+                            {
+                              label: "June"
+                            },
+                            {
+                              label: "July"
+                            },
+                            {
+                              label: "August"
+                            },
+                            {
+                              label: "September"
+                            },
+                            {
+                              label: "October"
+                            },
+                            {
+                              label: "November"
+                            },
+                            {
+                              label: "December"
+                            }
+                        ]
+                    }
+                ],
+                dataset: [
+                    {
+                        seriesname: String(parseInt(year)-1),
+                        data: [
+                            {
+                                value: arrp[0]
+                            },
+                            {
+                                value: arrp[1]
+                            },
+                            {
+                                value: arrp[2]
+                            },
+                            {
+                                value: arrp[3]
+                            },
+                            {
+                                value: arrp[4]
+                            },
+                            {
+                                value: arrp[5]
+                            },
+                            {
+                                value: arrp[6]
+                            },
+                            {
+                                value: arrp[7]
+                            },
+                            {
+                                value: arrp[8]
+                            },
+                            {
+                                value: arrp[9]
+                            },
+                            {
+                                value: arrp[10]
+                            },
+                            {
+                                value: arrp[11]
+                            }
+                        ]
+                    },
+                    {
+                        seriesname: year,
+                        data: [
+                            {
+                                value: arr[0]
+                            },
+                            {
+                                value: arr[1]
+                            },
+                            {
+                                value: arr[2]
+                            },
+                            {
+                                value: arr[3]
+                            },
+                            {
+                                value: arr[4]
+                            },
+                            {
+                                value: arr[5]
+                            },
+                            {
+                                value: arr[6]
+                            },
+                            {
+                                value: arr[7]
+                            },
+                            {
+                                value: arr[8]
+                            },
+                            {
+                                value: arr[9]
+                            },
+                            {
+                                value: arr[10]
+                            },
+                            {
+                                value: arr[11]
+                            }
+                        ]
+                    }
+                    
+                ]
+            };
+
+                FusionCharts.ready(function() {
+                  var myChart = new FusionCharts({
+                    type: "mscolumn2d",
+                    renderAt: "chart-container",
+                    width: "100%",
+                    height: "100%",
+                    dataFormat: "json",
+                    dataSource
+                  }).render();
+                });
+            }
+
+    </script>
+
+</body>
+</html>
+
+

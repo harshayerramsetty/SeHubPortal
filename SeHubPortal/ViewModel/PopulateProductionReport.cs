@@ -10,7 +10,7 @@ namespace SeHubPortal.ViewModel
     {
         public List<tbl_treadtracker_barcode> barcodeInfo { get; set; }
         public List<tbl_treadtracker_workorder> workOrderInfo { get; set; }
-        public List<tbl_customer_list> customerInfo { get; set; }
+        public List<tbl_cta_customers> customerInfo { get; set; }
         
     }
 }

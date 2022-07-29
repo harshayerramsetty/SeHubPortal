@@ -1,0 +1,544 @@
+﻿@model SeHubPortal.ViewModel.CustomerReportingViewModel
+@{
+    ViewBag.Title = "TargetAccount";
+    Layout = "~/Views/Shared/_ToolsLayout.cshtml";
+}
+
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+
+        @if (Model.SehubAccess.plant > 0)
+        {
+            <style>
+                #PlantClicked {
+                    display: block !important;
+                }
+            </style>
+        }
+
+        @if (Model.SehubAccess.payroll > 0)
+        {
+            <style>
+                #PayrollClicked {
+                    display: block !important;
+                }
+            </style>
+        }
+
+        @if (Model.SehubAccess.fleetTVT > 0)
+        {
+            <style>
+                #FleetTVTClicked {
+                    display: block !important;
+                }
+            </style>
+        }
+
+        @if (Model.SehubAccess.treadTracker > 0)
+        {
+            <style>
+                #treadTrackereClicked {
+                    display: block !important;
+                }
+            </style>
+        }
+
+        @if (Model.SehubAccess.library_access > 0)
+        {
+            <style>
+                #libraryClicked {
+                    display: block !important;
+                }
+            </style>
+        }
+
+        @if (Model.SehubAccess.main > 0)
+        {
+            <style>
+                #mainClicked {
+                    display: block !important;
+                }
+            </style>
+        }
+
+        @if (Model.SehubAccess.settings == 3)
+        {
+            <style>
+                #SettingsClicked {
+                    display: block !important;
+                }
+            </style>
+        }
+
+        @if (Model.SehubAccess.management == 3)
+        {
+            <style>
+                #ManagementClicked {
+                    display: block !important;
+                }
+            </style>
+        }
+
+
+        @if (Model.SehubAccess.tools_dashboard > 0)
+        {
+            <style>
+                #DashboardLink {
+                    display: block !important;
+                }
+            </style>
+        }
+
+        @if (Model.SehubAccess.fuel_log > 0)
+        {
+            <style>
+                #FuelLogLink {
+                    display: block !important;
+                }
+            </style>
+        }
+
+        @if (Model.SehubAccess.employee_id == 10577 || Model.SehubAccess.employee_id == 10901)
+        {
+            <style>
+                #ExpnseClaimLink {
+                    display: block !important;
+                }
+            </style>
+        }
+
+        <style>
+
+            #CRMLink {
+                display: block !important;
+            }
+
+            #TALink {
+                display: block !important;
+            }
+
+            #toolsClicked {
+                display: block !important;
+            }
+
+            #toolsClicked {
+                background-color: #f0f2f5;
+            }
+
+            #toolsBtn {
+                font-weight: bold;
+            }
+
+            #dropArea {
+                background: #b5b5b5;
+                border: black dashed 1px;
+                height: 50px;
+                text-align: center;
+                color: #fff;
+                padding-top: 12px;
+            }
+
+            .active-drop {
+                background: #77bafa !important;
+                border: solid 2px blue !important;
+                opacity: .5;
+                color: black !important;
+            }
+
+            .modal {
+                padding-right: 15%;
+                overflow: hidden;
+                margin-right: 0px;
+            }
+
+            ul#navigation .active {
+                font-weight: bold;
+            }
+
+            #dropZone {
+                border: 1px dotted red;
+                text-align: center;
+            }
+
+
+
+            #TALink {
+                color: black;
+                font-weight: 700;
+                background-color: #f0f2f5;
+            }
+
+
+            body {
+                background-color: #f0f2f5;
+                padding-right: 0 !important;
+            }
+
+            .heading {
+                margin: 10px 0px 0px 0px;
+            }
+
+                .heading h2 {
+                    margin-top: 8px;
+                }
+
+            .card-header {
+                background-color: #c0c2c4;
+            }
+
+                .card-header h6 {
+                    color: black;
+                }
+
+            .breadCrumb {
+                background-color: white;
+            }
+
+            label {
+                display: inline-flex;
+                margin-top: 0px;
+                margin-bottom: 0px;
+            }
+
+            /* Hide scrollbar for Chrome, Safari and Opera */
+            .example::-webkit-scrollbar {
+                display: none;
+            }
+
+            /* Hide scrollbar for IE, Edge and Firefox */
+            .example {
+                -ms-overflow-style: none; /* IE and Edge */
+                scrollbar-width: none; /* Firefox */
+            }
+
+
+            .dataTables_length {
+                display: none
+            }
+
+        </style>
+    </head>
+    <body>
+
+        <div class="row heading">
+            <div class="col" style="margin:0px 5px 15px 15px; padding:10px; background-color:white">
+
+                <div style="display:flex; justify-content:space-between; align-items:center">
+                    <div>
+                        <a href="@Url.Action("TargetAccount", "Tools")">Tools </a>/ Target Account
+                    </div>
+
+                    @using (Html.BeginForm("ChangeLocTargetAccount", "Tools", FormMethod.Post))
+                    {
+                        <div style="display:flex; justify-content:space-between">
+                            <label >Location</label>
+                            @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, new { @id = "MatchedLocID", @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:6px;" })
+
+                            <noscript> <input style="display:none" class="btn btn-success" type="submit" value="Search" /></noscript>
+                        </div>
+                    }
+                </div>
+            </div>
+            <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+                <i class="fa fa-bars" style="font-size:25px"></i>
+                <span class="sr-only">Toggle Menu</span>
+            </button>
+        </div>
+
+        <div class="row" style="padding:0px 30px 0px 15px">
+            <div class="col-lg-12">
+
+                <div class="row" style="margin-bottom:10px">
+                    <div class="col-lg-12 text-right" id="searchField" style="display:flex; justify-content:space-between">
+                        <button class="btn btn-primary" data-target="#AddTA" data-toggle="modal" style="padding:2px 20px 2px 20px">ADD RECORD</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <table id="CRMtable" class="table table-striped table-bordered">
+                            <thead style="background-color:#a6a8ab; color:white" class="text-center">
+                                <tr>
+                                    <th style="font-size:10px; padding:0px">Date</th>
+                                    <th style="font-size:10px; padding:0px">Company</th>
+                                    <th style="font-size:10px; padding:0px">Visit</th>
+                                    <th style="font-size:10px; padding:0px">Contact</th>
+                                    <th style="font-size:10px; padding:0px">Employee</th>
+                                    <th style="font-size:10px; padding:0px">Discussion Details</th>
+                                    <th style="font-size:10px; padding:0px">Info</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var items in Model.targetAccountDetails)
+                                {
+                                    <tr>
+                                        <td style="font-size:12px; font-weight:bold; text-align:center; padding:0px; vertical-align:middle">@items.visit_date.ToString("yyyy-MM-dd")</td>
+                                        <td style="font-size:12px; font-weight:bold; text-align:left; padding:0px 0px 0px 15px; vertical-align:middle">
+                                            @if (items.customer_name.Length > 21)
+                                            {
+                                                @items.customer_name.Substring(0, 20)
+                                            }
+                                            else
+                                            {
+                                                @items.customer_name
+                                            }
+                                        </td>
+                                        <td style="font-size: 12px; font-weight: bold; text-align: left; padding:0px 0px 0px 15px; vertical-align: middle">
+                                            @items.visit_type
+                                        </td>
+                                        <td style="font-size:12px; font-weight:bold; text-align:left; padding:0px 0px 0px 15px; vertical-align:middle">
+                                            @if (items.customer_contact.Length > 16)
+                                            {
+                                                @items.customer_contact.Substring(0, 15)
+                                            }
+                                            else
+                                            {
+                                                @items.customer_contact
+                                            }
+                                        </td>
+                                        <td style="font-size:12px; font-weight:bold; text-align:left; padding:0px 0px 0px 15px; vertical-align:middle">
+                                            @if (items.full_name.Length > 16)
+                                            {
+                                                @items.full_name.Substring(0, 15)
+                                            }
+                                            else
+                                            {
+                                                @items.full_name
+                                            }
+                                        </td>
+                                        <td style="font-size: 12px; font-weight: bold; text-align: left; padding:0px 0px 0px 15px; vertical-align: middle">
+                                            @if (items.discusssion_details.Length > 80)
+                                            {
+                                                @items.discusssion_details.Substring(0, 80)
+                                            }
+                                            else
+                                            {
+                                                @items.discusssion_details
+                                            }
+                                        </td>
+                                        <td style="font-size:12px; font-weight:bold; text-align:center; padding:0px; vertical-align:middle">
+                                            <button value="@items.visit_type~@items.visit_date~@items.customer_contact~@items.discusssion_details~@items.remainder~@items.full_name" onclick="ViewTA(this.value)" style="margin:5px; background-color:transparent; color:dodgerblue; border:none; outline:none; font-size:15px" class="fa fa-info" data-toggle="modal" data-target="#targetAccountModal"></button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="modal fade" id="targetAccountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="width:700px">
+                    <div class="modal-header" style="padding:3px 3px 3px 15px">
+                        <h5 class="modal-title" id="exampleModalLabel">Target Account Details</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="clo-lg-2" style="margin-left:20px; margin-right:auto; margin-top: 0px;">
+                                <p>Visit type </p>
+                            </div>
+                            <div class="col-lg-4 text-right" style="margin-right:auto;">
+                                <input class="text-center" type="text" id="append_Visit_type1" style="text-align:right;" /><br />
+                            </div>
+                            <div class="clo-lg-2" style="margin-left: 10px; margin-top: 0px;">
+                                <p>Date </p>
+                            </div>
+                            <div class="col-lg-4 text-right" style="margin-left: 20px;">
+                                <input class="text-center " type="text" id="append_Date1" /><br />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="clo-lg-2" style="margin-left: 20px; margin-right:auto;margin-top: 0px;">
+                                <p>Employee </p>
+                            </div>
+                            <div class="col-sm-4 text-right" style="margin-right: auto;">
+                                <input class="text-center" type="text" id="append_empId1" /><br />
+                            </div>
+                            <div class="clo-lg-2" style="margin-left: 10px;margin-top: 0px;">
+                                <p>Contact </p>
+                            </div>
+                            <div class="col-sm-4 text-right">
+                                <input class="text-center " type="text" id="appendc_Contact1" /><br />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="clo-lg-12" style="margin-left: 20px">
+                                <p>Comments </p>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-left:auto; margin-right:auto;">
+                            <textarea class="col-lg-12" style="margin-left:auto; margin-right:auto;" id="append_Comments1" rows="9"></textarea>
+                        </div>
+                        <div class="row" style="margin-top:10px">
+                            <div class="clo-lg-12" style="margin-left: 20px">
+                                <p>Remainders </p>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-left:auto; margin-right:auto;">
+                            <textarea class="col-lg-12" id="append_Remainders1" rows="6"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="padding:3px">
+                        <button type="button" class="btn btn-danger" style="padding:3px 20px 3px 20px" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="AddTA" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="width:700px">
+
+                    @using (Html.BeginForm("AddNewTADetails", "Tools", FormMethod.Post))
+                    {
+                        <div class="modal-header text-center" style="padding:5px 0px 5px 15px;">
+                            <h5 class="modal-title" id="exampleModalLabel"><b>Submit New Target Account Report</b></h5>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row" style="margin-bottom:20px">
+                                <div class="col-lg-2">
+                                    Company
+                                </div>
+                                <div class="col-lg-10">
+                                    @Html.EditorFor(m => m.AddTA.customer_name, new { htmlAttributes = new { @class = "text-left", @required = "required", @style = "width:100%; height:30px" } })
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-bottom:15px">
+                                <div class="col-lg-6">
+                                    <div class="row" style="margin-bottom:20px">
+                                        <div class="col-lg-4">
+                                            Employee *
+                                        </div>
+                                        <div class="col-lg-8">
+                                            @Html.DropDownListFor(m => m.AddTA.cta_employee_number, Model.EmployeesList, "Select" , new { @class = "text", @style = "width:100%; height:30px", @required="required" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            Visit Type *
+                                        </div>
+                                        <div class="col-lg-8">
+                                            @{
+                                                List
+                                                <SelectListItem>
+                                                listItems = new List
+                                                <SelectListItem>
+                                                ();
+                                                listItems.Add(new SelectListItem
+                                                {
+                                                    Text = "Phone",
+                                                    Value = "Phone"
+                                                });
+                                                listItems.Add(new SelectListItem
+                                                {
+                                                    Text = "Face-To-Face",
+                                                    Value = "Face-To-Face"
+                                                });
+                                            }
+                                            @Html.DropDownListFor(m => m.AddTA.visit_type, listItems, new { @class = "text", @style = "width:100%; height:30px", @required="required" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            Address
+                                        </div>
+                                        <div class="col-lg-9">
+                                            <textarea style="width:100%" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:20px">
+                                <div class="col-lg-6">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            Date
+                                        </div>
+                                        <div class="col-lg-8">
+                                            @Html.EditorFor(m => m.AddTA.visit_date, new { htmlAttributes = new { @class = "text-left", @type = "date", @style = "width:100%; height:30px", @required = "required", @max = System.DateTime.Today.ToString("yyyy-MM-dd") } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            Contact
+                                        </div>
+                                        <div class="col-lg-9">
+                                            @Html.EditorFor(m => m.AddTA.customer_contact, new { htmlAttributes = new { @class = "text-left", @required = "required", @style = "width:100%; height:30px" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="padding:0px 15px 0px 15px; margin-bottom:20px; margin-top:35px">
+                                @*<textarea class="col-lg-12" rows="7"></textarea>*@
+                                @Html.TextAreaFor(m => m.AddTA.discusssion_details, 7, 120, new { @placeholder = " Comments", htmlAttributes = new { @required = "required" } })
+                            </div>
+                            <div class="row" style="margin-top:0px; padding:0px 15px 0px 15px">
+                                @*<textarea class="col-lg-12" rows="5"></textarea>*@
+                                @Html.TextAreaFor(m => m.AddTA.remainder, 4, 120, new { @placeholder = " Reminders (Optional)", htmlAttributes = new { @required = "required" } })
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="padding:3px">
+                            <button type="button" style="margin-right:10px; padding:0px 20px 0px 20px" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                            <input type="submit" class="btn btn-success" style="padding:0px 30px 0px 30px" value="Save" />
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+        <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+
+        <script>
+            function ViewTA(val) {
+                var array = val.split("~");
+                $('#append_Visit_type1').val(array[0]);
+                $('#append_Date1').val(array[1].split("").slice(0, 11).join(""))
+                $('#append_empId1').val(array[5])
+                $('#appendc_Contact1').val(array[2])
+                document.getElementById("append_Comments1").value = array[3];
+                document.getElementById("append_Remainders1").value = array[4];
+            }
+        </script>
+
+        <script type="text/javascript">
+            $("#CRMtable").DataTable(
+                {
+                    bLengthChange: true,
+                    lengthMenu: [22],
+                    bFilter: true,
+                    bSort: false,
+                    bPaginate: true,
+                });
+        </script>
+
+        <script>
+            $(document).ready(function () {
+                $("#CRMtable_filter").appendTo("#searchField");
+                $("#CRMtable_filter :input").css("margin", "0px 0px 0px 10px");
+            });
+        </script>
+
+    </body>
+    </html>

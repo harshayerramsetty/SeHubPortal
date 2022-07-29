@@ -21,5 +21,7 @@ namespace SeHubPortal.ViewModel
         public int newSeqNum { get; set; }
         public string deleteLocation { get; set; }
         public bool status { get; set; }
+        public tbl_harpoon_clients client_info { get; set; }
+        public List<SelectListItem> LocationsList { get; set; }
     }
 }

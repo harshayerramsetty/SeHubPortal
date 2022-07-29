@@ -12,14 +12,14 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard</title>
+    <meta charset="utf-8">
+    @*<link rel="shortcut icon" type="image/x-icon" href="~/Content/title_logo64.png">*@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 
     @if (Model.SehubAccess.plant > 0)
     {
@@ -221,6 +221,10 @@
             display: none;
         }
 
+        .breadCrumb {
+            background-color: white;
+        }
+
         #historyTable2_filter {
             float: right;
             margin: 0px 0px 25px 0px;
@@ -273,508 +277,200 @@
             -ms-overflow-style: none; /* IE and Edge */
             scrollbar-width: none; /* Firefox */
         }
+
+        .dataTables_length {
+            display: none
+        }
+
+        #CRMtable_filter{
+            display:none
+        }
+
+        .hide {
+            display: none;
+        }
+
     </style>
 </head>
 <body>
     <div class="row heading">
-        <div class="col">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
-                    <li class="breadcrumb-item"><a href="@Url.Action("CRM", "Tools")">Management</a></li>
-                    <li class="breadcrumb-item " aria-current="page">Customer Reporting</li>
-                </ol>
-            </nav>
+        <div class="col" style="margin:0px 5px 15px 15px; padding:10px; background-color:white">
+            <div style="display: flex; justify-content: space-between; align-items: center">
+                <div style="flex:3">
+                    <a href="@Url.Action("CRM", "Tools")">Tools </a>/ CRM
+                </div>
+                <div style="flex:3; display:flex; justify-content:space-around">
+                    <input id="searchInput" onkeyup="filterOnClass('box', this.value)" style="width:200px;border-radius:4px; float:right " type="text" placeholder="Search with name" title="Type in a name">
+                </div>
+                <div style="flex:3; display:flex; justify-content:space-between; align-items:center">
+                </div>
+            </div>
+
         </div>
-        <button type="button" id="clickThis" class="btn" style="margin-bottom: 14px;">
-            <i class="fa fa-bars" style="font-size: 25px "></i>
+        <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+            <i class="fa fa-bars" style="font-size:25px"></i>
             <span class="sr-only">Toggle Menu</span>
         </button>
     </div>
 
-    
-
-
-    <div class="row" style="padding:0px 20px 0px 20px; margin-right:2px">
-        <div class="col-lg-12" style="padding:0px !important;">
-            <ul class="nav nav-tabs text-center" id="navigation" role="tablist" style="margin-left: 15px; border-top-left-radius: 10px;border-top-right-radius: 10px;">
-                <li class="nav-item" onclick="CR()" style="width:250px">
-                    <a class="nav-link active" data-toggle="tab" href="#home">Call Reporting</a>
-                </li>
-                <li class="nav-item" onclick="TA()" style="width:250px">
-                    <a class="nav-link" data-toggle="tab" href="#menu1">Target Accounts</a>
-                </li>
-
-                @if (Model.SehubAccess.customer_reporting >= 3)
-                {
-                    <li class="nav-item" onclick="DR()" style="width:250px">
-                        <a class="nav-link" data-toggle="tab" href="#menu2">Dispute Resolution</a>
-                    </li>
-                }
-
-            </ul>
-            <div class="tab-content" style="margin:0px 0px 0px 15px">
-                <div id="home" class=" tab-pane active shadow-sm" style="height:700px; background-color:white; padding-top:15px; margin-bottom:15px">
-                    <div class="row" style="padding:0px 15px 0px 30px">
-                        <div class="col-lg-4">
-                            <div class="row" style="height:50%; margin-bottom:10px">
-                                <div class="col-lg-12" style="padding:0px">
-                                    <div class="card" style="height:100%; border:2px solid #aeafb0">
-                                        <div class="card-header text-center" style="background-color: #c0c2c4 !important; padding:7px 0px 1px 0px">
-                                            <h4 style="font-weight:bold; color:white">Select Customer</h4>
-                                        </div>
-
-                                        <div class="card-body" style="padding:0px">
-
-                                            <div class="row" style="margin:10px">
-                                                <div class="col-lg-12">
-                                                    <div class="row" style="margin-bottom:5px;">
-                                                        <div class="col-lg-12">
-
-                                                            @using (Html.BeginForm("CRMSelectedCustomer", "Tools", FormMethod.Post))
-                                                            {
-                                                                @Html.DropDownListFor(m => m.Custname, Model.Customers, "Please select", new { @style = "text-align-last: center; width:100%; height:30px", @onChange = "this.form.submit()" })
-
-                                                            }
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-
-                                            @if (Model.Custname != null)
-                                            {
-
-                                                <div class="row" style="margin:10px">
-                                                    <div class="col-lg-12">
-                                                        <div class="row" style="margin-bottom:10px">
-                                                            <div class="col-lg-5">
-                                                                Account Number
-                                                            </div>
-                                                            <div class="col-lg-7" style="padding-left:0px">
-                                                                @Model.customerDetails.cust_us1
-                                                            </div>
-                                                        </div>
-                                                        <div class="row" style="margin-bottom:10px">
-                                                            <div class="col-lg-5">
-                                                                Phone Number
-                                                            </div>
-                                                            <div class="col-lg-7" style="padding-left:0px">
-                                                                @Model.customerDetails.cust_phone
-                                                            </div>
-                                                        </div>
-                                                        <div class="row" style="margin-bottom:10px">
-                                                            <div class="col-lg-5">
-                                                                Address
-                                                            </div>
-                                                            <div class="col-lg-7">
-                                                                <div class="row"style="margin-bottom:10px">
-                                                                    @Model.customerDetails.cust_add1
-                                                                </div>
-                                                                <div class="row"style="margin-bottom:10px">
-                                                                    @Model.customerDetails.cust_add2
-                                                                </div>
-                                                                <div class="row"style="margin-bottom:10px">
-                                                                    @Model.customerDetails.cust_add3
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
+    <div class="row" style="padding: 0px 30px 0px 30px">
+        <div class="col-md-2">
+            <div class="row">
+                <div class="col-md-12" style="padding-left:0px">
+                    @if (Model.customerDetails != null)
+                    {
+                        <div class="row empButton active @Model.customerDetails.CustomerName @Model.customerDetails.CustomerCode" style="margin-left: 0px;cursor: pointer;font-weight: bold;padding: 15px;background-color: white" onclick="location.href='@Url.Action("CRM", "Tools", new { custID = @Model.customerDetails.CustomerCode})';">
+                            <div style="display:flex; flex-direction:column">
+                                @if (Model.customerDetails.CustomerName.Length > 24)
+                                {
+                                    <p style="padding:0px; margin:0px">@Model.customerDetails.CustomerName.Substring(0, 24)</p>
+                                }
+                                else
+                                {
+                                    <p style="padding:0px; margin:0px">@Model.customerDetails.CustomerName</p>
+                                }
+                                <p style="padding:0px; margin:0px">@Model.customerDetails.CustomerCode</p>
                             </div>
-                            @if (Model.Custname != null)
-                            {
-                                <div class="row" style="padding:0px">
-                                    <div class="col-lg-6" style="padding:0px">
-                                        <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#AddCRM" style="width:240px; height:320px">
-                                            <div class="card-body text-center" style="height:210px; padding-top:60px">
-                                                <img src="~/Content/new_document.png" style="margin-top:0px; margin-bottom:35px; width:140px;">
-                                                <h5 style="margin-left:0px"><b>New Report</b></h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-
-                                    </div>
-                                </div>
-                            }
                         </div>
-
-                        <div class="col-lg-8">
-                            @if (Model.Custname != null)
-                            {
-                                <input id="custNum" style="display:none" type="text" name="name" value="@Model.customerDetails.cust_us1" />
-
-                                <div id="Step5">
-                                    <div class="row" style="padding:0px 15px 0px 15px; margin-bottom:10px;">
-                                        <div class="col-lg-12" style="padding:0px">
-                                            <div class="card " style="border:2px solid #aeafb0; height:673px;">
-                                                <div class="card-header" style="background-color: #c0c2c4 !important; padding:0px 2px 2px 15px">
-                                                    <div class="row">
-                                                        <div class="col-lg-6" style="font-size:20px; padding-top:7px">
-                                                            <h4 style="font-weight:bold; color:white">Reporting History</h4>
-                                                        </div>
-                                                        <div class="col-lg-6 text-right" style="padding-top:6px">
-                                                            <button id="searchCR" class="btn btn-primary" style="margin-right:10px; float:right; padding:3px 20px 3px 20px">Search</button>
-                                                            <input style="margin-right:10px;height:32px; width:200px;border-radius:4px; float:right " type="text" id="myInput" placeholder=" Search By Text" title="Type in a name">
-
-                                                        </div>
-
-
-                                                    </div>
-                                                </div>
-
-                                                <div class="card-body " style="padding:15px">
-
-                                                    <div class="row example" style="padding:0px 15px 0px 15px; height:590px; overflow-y:auto; overflow-x:hidden;">
-                                                        <table class="table table-striped table-bordered display compact" cellspacing="0" style="border-color:white; width:100%; height:100%;padding-right:0px !important; display:block">
-                                                            <thead class="thead-dark" style="text-align: center">
-                                                                <tr>
-                                                                    <th scope="col" style="width:250px; padding:0px; margin:0px; font-size:8px">Date</th>
-                                                                    <th scope="col" style="width:300px;padding:0px; margin:0px; font-size:8px">Employee</th>
-                                                                    <th scope="col" style="width:200px; padding:0px; margin:0px; font-size:8px">visit</th>
-                                                                    <th scope="col" style="width:420px; padding:0px; margin:0px; font-size:8px">Contact</th>
-                                                                    <th style="width:120px; padding:0px; margin:0px; font-size:8px">Info</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody style="text-align:left;" id="callReport">
-                                                                @if (Model.Custname != null)
-                                                                {
-                                                                    for (int i = 0; i < Model.customerReportingDetails.Count; i++)
-                                                                    {
-                                                                        <tr id="@i">
-                                                                            <td style="overflow:hidden; padding:0px 0px 0px 10px; margin:0px;width:200px;">@Model.customerReportingDetails[i].visit_date.ToString("yyyy-MM-dd")</td>
-                                                                            <td style="overflow:hidden; padding:0px 0px 0px 10px; margin:0px;width:210px;">@Model.customerReportingDetails[i].EmployeeName</td>
-                                                                            <td style="overflow:hidden; padding:0px 0px 0px 10px; margin:0px;width:300px;">@Model.customerReportingDetails[i].visit_type</td>
-                                                                            <td style="overflow:hidden; padding:0px 0px 0px 10px; margin:0px;width:200px;">@Model.customerReportingDetails[i].customer_contact</td>
-                                                                            <td style="display:none; overflow:hidden; padding:0px 0px 0px 10px; margin:0px;width:200px;">@Model.customerReportingDetails[i].discusssion_details</td>
-                                                                            <td style="display:none; overflow:hidden; padding:0px 0px 0px 10px; margin:0px;width:200px;">@Model.customerReportingDetails[i].remainder</td>
-                                                                            <td style="overflow:hidden; padding:0px 0px 0px 0px; margin:0px;width:100px;text-align:center">
-                                                                                <a href="#" class="btn"><span style="display:none">@Model.customerReportingDetails[i].visit_type;@Model.customerReportingDetails[i].visit_date;@Model.customerReportingDetails[i].cta_employee_number;@Model.customerReportingDetails[i].customer_contact;@Model.customerReportingDetails[i].discusssion_details;@Model.customerReportingDetails[i].remainder;@Model.customerReportingDetails[i].EmployeeName;@Model.customerDetails.cust_phone;@i;@Model.customerReportingDetails.Count</span> <i class="fa fa-info" style="font-size:20px;opacity:0.8; color:dodgerblue;float:right"></i></a>
-                                                                            </td>
-                                                                        </tr>
-                                                                    }
-
-                                                                    foreach (var items in Model.customerReportingDetails)
-                                                                    {
-                                                                        <tr style="display:none">
-                                                                            <td style="overflow:hidden; padding:0px 0px 0px 10px; margin:0px;width:200px;">@items.visit_date.ToString("yyyy-MM-dd")</td>
-                                                                            <td style="overflow:hidden; padding:0px 0px 0px 10px; margin:0px;width:210px;">@items.EmployeeName</td>
-                                                                            <td style="overflow:hidden; padding:0px 0px 0px 10px; margin:0px;width:300px;">@items.visit_type</td>
-                                                                            <td style="overflow:hidden; padding:0px 0px 0px 10px; margin:0px;width:200px;">@items.customer_contact</td>
-                                                                            <td style="overflow:hidden; padding:0px 0px 0px 0px; margin:0px;width:100px;text-align:center">
-                                                                                <a href="#" class="btn"><span style="display:none">@items.visit_type;@items.visit_date;@items.cta_employee_number;@items.customer_contact;@items.discusssion_details;@items.remainder;@items.EmployeeName;@Model.customerDetails.cust_phone</span> <i class="fa fa-info" style="font-size:20px;opacity:0.8; color:dodgerblue;float:right"></i></a>
-                                                                            </td>
-                                                                        </tr>
-                                                                    }
-                                                                }
-                                                            </tbody>
-
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-
-                        </div>
-
-                    </div>
+                    }
                 </div>
-                <div id="menu1" class="tab-pane fade" style="background-color:white; padding-top:10px; padding-left:0px">
-
-                    <div class="row" style="margin:0px 0px 0px 0px;padding-top:13px; padding-bottom:15px; background-color:white;">
-
-                        <div class="col-lg-6">
-                            @using (Html.BeginForm("AddNewTADetails", "Tools", FormMethod.Post))
+            </div>
+            <div class="row">
+                <div class="col-md-12 example" style="height:70vh; overflow-y:auto; padding-right:0px; padding-left:0px; ">
+                    @foreach (var items in Model.Customers)
+                    {
+                        if (items.Value != "Please Select Customer" && items.Value != Model.customerDetails.CustomerCode.ToString())
+                        {
+                            if (Model.customerDetails != null)
                             {
-                                <div class="card shadow-sm" style="border:2px solid #aeafb0">
-                                    <div class="card-header text-center" style="background-color:#c0c2c4; padding:7px 0px 7px 0px; color:white">
-                                        <h4 class="modal-title" style="color:white" id="exampleModalLabel"><b>Submit New Target Account Report</b></h4>
-                                    </div>
-                                    <div class="card-body">
-
-                                        <div class="row" style="margin-bottom:20px">
-                                            <div class="col-lg-2">
-                                                Company
-                                            </div>
-                                            <div class="col-lg-10">
-                                                @Html.EditorFor(m => m.AddTA.customer_name, new { htmlAttributes = new { @class = "text-left", @required = "required", @style = "width:100%; height:30px" } })
-                                            </div>
-                                        </div>
-
-                                        <div class="row" style="margin-bottom:15px">
-                                            <div class="col-lg-6">
-                                                <div class="row" style="margin-bottom:20px">
-                                                    <div class="col-lg-4">
-                                                        Phone *
-                                                    </div>
-                                                    <div class="col-lg-8">
-                                                        <input type="text" name="name" value="" />
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-lg-4">
-                                                        Visit Type *
-                                                    </div>
-                                                    <div class="col-lg-8">
-                                                        @{
-                                                            List
-                                                            <SelectListItem>
-                                                            listItems = new List
-                                                            <SelectListItem>
-                                                            ();
-                                                            listItems.Add(new SelectListItem
-                                                            {
-                                                                Text = "Phone",
-                                                                Value = "Phone"
-                                                            });
-                                                            listItems.Add(new SelectListItem
-                                                            {
-                                                                Text = "Face-To-Face",
-                                                                Value = "Face-To-Face"
-                                                            });
-                                                        }
-                                                        @Html.DropDownListFor(m => m.AddTA.visit_type, listItems, new { @class = "text", @style = "width:182px; height:30px" })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="row">
-                                                    <div class="col-lg-3">
-                                                        Address
-                                                    </div>
-                                                    <div class="col-lg-9">
-                                                        <textarea style="width:100%" rows="3"></textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row" style="margin-bottom:20px">
-                                            <div class="col-lg-6">
-                                                <div class="row">
-                                                    <div class="col-lg-4">
-                                                        Date
-                                                    </div>
-                                                    <div class="col-lg-8">
-                                                        @Html.EditorFor(m => m.AddTA.visit_date, new { htmlAttributes = new { @class = "text-left", @type = "date", @style = "width:182px; height:30px", @required = "required" } })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="row">
-                                                    <div class="col-lg-3">
-                                                        Contact
-                                                    </div>
-                                                    <div class="col-lg-9">
-                                                        @Html.EditorFor(m => m.AddTA.customer_contact, new { htmlAttributes = new { @class = "text-left", @required = "required", @style = "width:100%; height:30px" } })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row" style="padding:0px 15px 0px 15px; margin-bottom:20px; margin-top:35px">
-                                            @*<textarea class="col-lg-12" rows="7"></textarea>*@
-                                            @Html.TextAreaFor(m => m.AddTA.discusssion_details, 7, 120, new {@placeholder = " Comments", htmlAttributes = new { @required = "required" } })
-                                        </div>
-                                        <div class="row" style="margin-top:0px; padding:0px 15px 0px 15px">
-                                            @*<textarea class="col-lg-12" rows="5"></textarea>*@
-                                            @Html.TextAreaFor(m => m.AddTA.remainder, 4, 120, new {@placeholder = " Reminders (Optional)", htmlAttributes = new { @required = "required" } })
+                                if (Model.customerDetails.CustomerCode.ToString() == items.Value)
+                                {
+                                    <div class="box row empButton active @items.Text.Split('(')[0] @items.Value" style="margin-left:0px; cursor: pointer; font-weight: bold; padding: 15px; background-color: white" onclick="location.href='@Url.Action("CRM", "Tools", new { custID = items.Value})';">
+                                        <div style="display:flex; flex-direction:column">
+                                            @if (items.Text.Split('(')[0].Length > 24)
+                                            {
+                                                <p style="padding:0px; margin:0px">@items.Text.Split('(')[0].Substring(0, 24)</p>
+                                            }
+                                            else
+                                            {
+                                                <p style="padding:0px; margin:0px">@items.Text.Split('(')[0]</p>
+                                            }
+                                            <p style="padding:0px; margin:0px">@items.Value</p>
                                         </div>
                                     </div>
-                                    <div class="card-footer text-right" style="border:none">
-                                        <button type="button" style="margin-right:10px; padding:3px 20px 3px 20px" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                                        <input type="submit" class="btn btn-success" style="padding:3px 30px 3px 30px" value="Save" />
+                                }
+                                else
+                                {
+                                    <div class="box row empButton active @items.Text.Split('(')[0] @items.Value" style="margin-left:0px; cursor:pointer; padding:15px; " onclick="location.href='@Url.Action("CRM", "Tools", new { custID = items.Value})';">
+                                        <div style="display: flex; flex-direction: column">
+                                            @if (items.Text.Split('(')[0].Length > 24)
+                                            {
+                                                <p style="padding:0px; margin:0px">@items.Text.Split('(')[0].Substring(0, 24)</p>
+                                            }
+                                            else
+                                            {
+                                                <p style="padding:0px; margin:0px">@items.Text.Split('(')[0]</p>
+                                            }
+                                            <p style="padding:0px; margin:0px">@items.Value</p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="box row empButton active @items.Text.Split('(')[0] @items.Value" style="margin-left:0px; cursor:pointer; padding:15px; " onclick="location.href='@Url.Action("CRM", "Tools", new { custID = items.Value})';">
+                                    <div style="display:flex; flex-direction:column">
+                                        @if (items.Text.Split('(')[0].Length > 24)
+                                        {
+                                            <p style="padding:0px; margin:0px">@items.Text.Split('(')[0].Substring(0, 24)</p>
+                                        }
+                                        else
+                                        {
+                                            <p style="padding:0px; margin:0px">@items.Text.Split('(')[0]</p>
+                                        }
+                                        <p style="padding:0px; margin:0px">@items.Value</p>
                                     </div>
                                 </div>
                             }
+                        }
+
+                    }
+                </div>
+            </div>
+
+        </div>
+        @if (Model.Custname != null)
+        {
+            <div class="col-md-10" id="load" style="display:none">
+                <div class="row" style="background-color:white; display:flex; justify-content:center; align-items:center; height:100%">
+                    <img src="~/Content/giphy.gif" style="width:150px" alt="Alternate Text" />
+                </div>
+            </div>
+            <div class="col-md-10" id="payRollMainBody" style="background-color:white; padding:15px;">
+                <div id="report">
+                    <div class="row" style="margin-bottom:10px">
+                        <div class="col-md-12 text-left">
+                            <button class="btn btn-primary" data-target="#AddCRM" data-toggle="modal" style="padding:2px 20px 2px 20px">ADD RECORD</button>
                         </div>
+                    </div>
+                    <div class="example" style="height:70vh; overflow-y:auto;">
+                        <div class="row">
+                            <div class="col-md-12">
 
-                        <div class="col-lg-6" >
-
-                            <div class="row" style="margin-bottom:10px">
-                                <div class="col-lg-6" style="font-size:20px;">
-                                    <b><u>Reporting History</u></b>
-                                </div>
-                                <div class="col-lg-6 text-right">
-                                    <button id="searchTA" class="btn btn-primary" style="float:right; padding:3px 20px 3px 20px">Search</button>
-                                    <input style="margin-right:10px;height:32px; width:200px;border-radius:4px; float:right " type="text" id="myInputTA" placeholder=" Search By Text" title="Type in a name">
-                                </div>
-                            </div>
-
-                            <div class="row" style="height:600px; overflow-y:auto; padding-right:15px; padding-left:15px">
-                                <table class="table table-striped table-bordered display compact" cellspacing="0" style="display:block; width:100%; height:500px;border-color:white">
-                                    <thead class="thead-dark" style="text-align: center">
+                                <table id="CRMtable" class="table table-striped table-bordered">
+                                    <thead style="background-color:#a6a8ab; color:white" class="text-center">
                                         <tr>
-                                            <th scope="col" style="width:150px; padding:0px; margin:0px; font-size:8px">Date</th>
-                                            <th scope="col" style="width: 300px;padding: 0px;margin: 0px;font-size: 8px">Company</th>
-                                            <th scope="col" style="width:200px; padding:0px; margin:0px; font-size:8px">visit</th>
-                                            <th scope="col" style="width:200px; padding:0px; margin:0px; font-size:8px">Contact</th>
-                                            <th style="width:70px; padding:0px; margin:0px; font-size:8px;">Info</th>
+                                            <th style="font-size:10px; padding:0px">Date</th>
+                                            <th style="font-size:10px; padding:0px">Employee</th>
+                                            <th style="font-size:10px; padding:0px">Visit</th>
+                                            <th style="font-size:10px; padding:0px">Contact</th>
+                                            <th style="font-size:10px; padding:0px">Comments</th>
+                                            <th style="font-size:10px; padding:0px">Reminders</th>
+                                            <th style="font-size:10px; padding:0px">Info</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="targetAccount" style="width:100%; text-align:left">
-                                        @foreach (var items in Model.targetAccountDetails)
+                                    <tbody>
+                                        @if (Model.Custname != null)
                                         {
-                                            <tr>
-                                                <td style="padding:0px 0px 0px 10px; margin:0px;width:150px;">@items.visit_date.ToString("yyyy-MM-dd")</td>
-                                                <td style="padding:0px 0px 0px 10px; margin:0px;">
-                                                    @if (items.customer_name.Length > 21)
-                                                    {
-                                                        @items.customer_name.Substring(0, 20)
-                                                    }
+                                            for (int i = 0; i < Model.customerReportingDetails.Count; i++)
+                                            {
+                                                <tr id="@i">
+                                                    <td style="font-size:12px; font-weight:bold; text-align:center; padding:0px; vertical-align:middle">@Model.customerReportingDetails[i].visit_date.ToString("yyyy-MM-dd")</td>
+                                                    <td style="font-size:12px; font-weight:bold; text-align:center; padding:0px; vertical-align:middle">@Model.customerReportingDetails[i].EmployeeName</td>
+                                                    <td style="font-size:12px; font-weight:bold; text-align:center; padding:0px; vertical-align:middle">@Model.customerReportingDetails[i].visit_type</td>
+                                                    <td style="font-size:12px; font-weight:bold; text-align:center; padding:0px; vertical-align:middle">@Model.customerReportingDetails[i].customer_contact</td>
+                                                    <td style="font-size:12px; font-weight:bold; text-align:center; padding:0px; vertical-align:middle">
+                                                        @if (Model.customerReportingDetails[i].discusssion_details.Length > 30)
+                                                        {<span>@Model.customerReportingDetails[i].discusssion_details.Substring(0, 30)</span> }
                                                     else
-                                                    {
-                                                        @items.customer_name
-                                                    }
-                                                </td>
-                                                <td style="padding:0px 0px 0px 10px; margin:0px;width:170px;">@items.visit_type</td>
-                                                <td style="padding:0px 0px 0px 10px; margin:0px;">
-                                                    @if (items.customer_contact.Length > 16)
-                                                    {
-                                                        @items.customer_contact.Substring(0, 15)
-                                                    }
+                                                    { <span>@Model.customerReportingDetails[i].discusssion_details</span>}
+                                                    </td>
+                                                    <td style="font-size:12px; font-weight:bold; text-align:center; padding:0px; vertical-align:middle">
+                                                        @if (Model.customerReportingDetails[i].remainder.Length > 30)
+                                                        {<span>@Model.customerReportingDetails[i].remainder.Substring(0, 30)</span> }
                                                     else
-                                                    {
-                                                        @items.customer_contact
-                                                    }
-                                                </td>
-                                                <td style="padding:0px 0px 0px 0px;margin: 0px;width: 60px;  text-align:center">
-                                                    <a href="#" class="btn"><span style="display:none">@items.customer_name; @items.visit_type; @items.visit_date; @Model.emp_tbl.Where(x => x.employee_id == @items.cta_employee_number).Select(x => x.full_name).FirstOrDefault(); @items.customer_contact; @items.discusssion_details; @items.remainder </span> <i class="fa fa-info" style="font-size:20px;opacity:0.8; color:dodgerblue;float:right"></i></a>
-                                                </td>
-                                            </tr>
+                                                    { <span>@Model.customerReportingDetails[i].remainder</span>}
+                                                    </td>
+                                                    <td style="font-size:12px; font-weight:bold; text-align:center; padding:0px; vertical-align:middle">
+                                                        <button value="@Model.customerReportingDetails[i].visit_type;@Model.customerReportingDetails[i].visit_date;@Model.customerReportingDetails[i].cta_employee_number;@Model.customerReportingDetails[i].customer_contact;@Model.customerReportingDetails[i].discusssion_details;@Model.customerReportingDetails[i].remainder;@Model.customerReportingDetails[i].EmployeeName;@Model.customerDetails.Telephone;@i;@Model.customerReportingDetails.Count" onclick="ViewCRM(this.value)" style="margin:5px; background-color:transparent; color:dodgerblue; border:none; outline:none; font-size:15px" class="fa fa-info" data-toggle="modal" data-target="#CallReportingModal"></button>
+                                                    </td>
+                                                </tr>
+                                            }
                                         }
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-
                     </div>
-                </div>
-                <div id="menu2" class="tab-pane fade" style="background-color:white; padding-top:10px;">
-                    <div class="row" style="padding:7px 15px 15px 15px">
-                        <div class="col-lg-6">
-                            @using (Html.BeginForm("AddNewDRDetails", "Tools", FormMethod.Post))
-                            {
-                                <div class="card shadow-sm" style="border:2px solid #aeafb0">
-                                    <div class="card-header text-center" style="background-color:#c0c2c4; padding:7px 0px 7px 0px">
-                                        <h4 class="modal-title" id="exampleModalLabel" style="color:white"><b>Add New Dispute Resolution Details</b></h4>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="clo-lg-2" style="margin-left: 15px; margin-right:auto;margin-top: 0px;">
-                                                <p>CTA Invoice #</p>
-                                            </div>
-                                            <div class="col-sm-4 text-center" style="margin-right: auto;">@Html.EditorFor(m => m.AddDR.invoice_number, new { htmlAttributes = new { @class = "text-center", @required = "required" } })<br /></div>
-                                            <div class="clo-lg-2 text-left" style="margin-top: 0px;">
-                                                <p>Employee</p>
-                                            </div>
-                                            <div class="col-sm-4 text-right"><input type="text" readonly name="name" value="@Model.username" /><br /></div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="clo-lg-1" style="margin-left: 15px; margin-right:auto;margin-top: 0px;">
-                                                <p>Date of Dispute</p>
-                                            </div>
-                                            <div class="col-sm-3 text-center" style="margin-right: auto; margin-left:4px">@Html.EditorFor(m => m.AddDR.date_dispute, new { htmlAttributes = new { @class = "text-center", @type = "date", @style = "width:184px", @required = "required" } })<br /></div>
-                                            <div class="clo-lg-2 text-left" style="margin-top: 0px;">
-                                                <p>Date of service</p>
-                                            </div>
-                                            <div class="col-sm-4 text-right">@Html.EditorFor(m => m.AddDR.date_service, new { htmlAttributes = new { @class = "text-center", @type = "date", @style = "width:184px", @required = "required" } })<br /></div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="clo-lg-1" style="margin-left: 15px; margin-right:auto;margin-top: 0px;">
-                                                <p>Mileage at dispute</p>
-                                            </div>
-                                            <div class="col-sm-3 text-center" style="margin-right: auto;margin-left:5px">@Html.EditorFor(m => m.AddDR.mileage_dispute, new { htmlAttributes = new { @class = "text-center", @required = "required" } })<br /></div>
-                                            <div class="clo-lg-2 text-left" style="margin-top: 0px;">
-                                                <p>Mileage at service</p>
-                                            </div>
-                                            <div class="col-sm-4 text-right">@Html.EditorFor(m => m.AddDR.mileage_service, new { htmlAttributes = new { @class = "text-center", @required = "required" } })<br /></div>
-                                        </div>
-                                        <div class="row" style="margin-top:20px">
-                                            <div class="col-md-3">Customer:</div>
-                                            <div class="col-md-3"><input type="radio" style="margin-left:10px" id="Account_number_Post" /> Account Number</div>
-                                            <div class="col-md-3">@Html.EditorFor(m => m.AddDR.customer_number, new { htmlAttributes = new { @class = "text-center", @required = "required" } })</div>
-                                            <div class="col-md-3"></div>
-                                        </div>
-                                        <div class="row" style="margin-top:10px">
-                                            <div class="col-md-3"></div>
-                                            <div class="col-md-3"><input type="radio" style="margin-left: 10px;display: none" /><input type="radio" style="margin-left:10px" id="Customer_name_noAccountNumber_Post" /> Name(No Account)</div>
-                                            <div class="col-md-3">@Html.EditorFor(m => m.AddDR.customer_name_NoAccount, new { htmlAttributes = new { @class = "text-center", @required = "required" } })</div>
-                                            <div class="col-md-3"></div>
-                                        </div>
-                                        <div class="row" style="margin-left:auto; margin-right:auto; margin-top:15px">
-                                            @Html.TextAreaFor(m => m.AddDR.details, 3, 120, new { @placeholder = " Details", htmlAttributes = new { @required = "required" } })
-                                        </div>
-                                        <div class="row" style="margin-left:auto; margin-right:auto; margin-top:15px">
-                                            @Html.TextAreaFor(m => m.AddDR.recommandation, 3, 120, new { @placeholder = " Recommendation", htmlAttributes = new { @required = "required" } })
-                                        </div>
-                                        <div class="row" style="display:none; margin-bottom:3px; margin-top:10px">
-                                            <div style="margin-left:15px">Attachments</div>
-                                            @*@Html.EditorFor(m => m.AddDR.customer_name_NoAccount, new { htmlAttributes = new { @class = "text-center", @id = "Attachments" } })*@
-                                        </div>
-                                        <div class="row" style="display:none; margin-left:auto; margin-right:auto;">
-
-                                            <div id="dropArea" style="width:800px; height:100px">
-                                                Drop your files here
-                                            </div>
-                                        </div>
-                                        <div class="row" style="margin-left:auto; margin-right:auto; margin-top:15px">
-                                            @Html.TextAreaFor(m => m.AddDR.final_outcome, 3, 120, new { @placeholder = " Final Outcome", htmlAttributes = new { @required = "required" } })
-                                        </div>
-                                        <div class="row">
-                                            <div class="custom-control custom-switch" style="margin-top:20px; margin-left:15px">
-                                                <input type="checkbox" class="custom-control-input" id="Complete_status_Switch_Post">
-                                                <label class="custom-control-label" for="customSwitch1">(Completed status)</label>
-                                                <input type="text" style="display:none" id="Complete_status_Post" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer text-right" style="border:none; padding-top:0px">
-                                        <button type="button" style="padding:3px 20px 3px 20px; margin-right:10px" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                                        <input type="submit" style="padding:3px 30px 3px 30px" class="btn btn-success" value="Save" />
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                        <div class="col-lg-6">
-                            <table id="disputeResolution" class="table table-striped table-bordered display compact" cellspacing="0" style="width:100%; height:500px; display:none; border-color:white">
-                                <thead class="thead-dark" style="text-align: center">
-                                    <tr>
-                                        <th scope="col" style="padding:0px; margin:0px; font-size:8px">Date</th>
-                                        <th scope="col" style="padding:0px; margin:0px; font-size:8px">Employee</th>
-                                        <th scope="col" style="padding:0px; margin:0px; font-size:8px">Invoice#</th>
-                                        <th scope="col" style="padding:0px; margin:0px; font-size:8px">Customer</th>
-                                        <th style="width:60px; padding:0px; margin:0px; font-size:8px">Info</th>
-                                    </tr>
-                                </thead>
-                                <tbody style="text-align:center">
-                                    @foreach (var items in Model.DisputeResolutionDetails)
-                                    {
-                                        <tr>
-                                            <td style="padding:0px; margin:0px;width:300px; ">@items.date_dispute.Value.ToString("yyyy-MM-dd")</td>
-                                            <td style="padding:0px; margin:0px;width:150px; ">@items.employee_id</td>
-                                            <td style="padding:0px; margin:0px;width:150px; ">@items.invoice_number</td>
-                                            <td style="padding:0px; margin:0px;width:150px; ">@items.customer_number</td>
-                                            <td style="padding:0px; margin:0px;width:150px; ">
-                                                <a href="#" class="btn"><span style="display:none">@items.customer_name_NoAccount; @items.details; @items.invoice_number;@items.employee_id;@items.date_dispute;@items.date_service;@items.mileage_dispute;@items.mileage_service; @items.complete; @items.customer_number; @items.customer_name_NoAccount; @items.recommandation; @items.final_outcome; @items.customer_name_NoAccount</span> <i class="fa fa-info" style="font-size:20px;opacity:0.8; color:dodgerblue;float:right"></i></a>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
                 </div>
             </div>
-        </div>
+        }
+        else
+        {
+            <div class="col-md-9" id="loadDiv" style="background-color:#f0f2f5; padding:15px;">
+
+            </div>
+        }
     </div>
 
     <div class="modal fade" id="AddCRM" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -782,8 +478,8 @@
             <div class="modal-content" style="width:700px">
                 @using (Html.BeginForm("AddNewCRMDetails", "Tools", FormMethod.Post))
                 {
-                    @Html.HiddenFor(m => m.customerDetails.cust_us1)
-                    @Html.HiddenFor(m => m.customerDetails.cust_name)
+                    @Html.HiddenFor(m => m.customerDetails.CustomerCode)
+                    @Html.HiddenFor(m => m.customerDetails.CustomerName)
                     <div class="modal-header" style="padding: 3px 3px 3px 15px">
                         <h5 class="modal-title" id="exampleModalLabel">
                             <b>
@@ -823,7 +519,7 @@
                                                         Value = "Face-To-Face"
                                                     });
                                                 }
-                                                @Html.DropDownListFor(m => m.AddCRM.visit_type, listItems, new {@id = "CRMVisitType" ,@class = "text", @style = "width:100%; height:30px", @required = "required", @onchange = "checkRequiredCRM()" })
+                                                @Html.DropDownListFor(m => m.AddCRM.visit_type, listItems, new { @id = "CRMVisitType", @class = "text", @style = "width:100%; height:30px", @required = "required", @onchange = "checkRequiredCRM()" })
                                             </div>
                                         </div>
                                     </div>
@@ -845,7 +541,7 @@
                                                 Visit Date
                                             </div>
                                             <div class="col-lg-8">
-                                                @Html.EditorFor(m => m.AddCRM.visit_date, new { htmlAttributes = new {@max = System.DateTime.Today.ToString("yyyy-MM-dd"), @id = "CRMVisitDate", @class = "text-left", @type = "date", @style = "width:100%", @required = "required", @onchange = "checkRequiredCRM()" } })
+                                                @Html.EditorFor(m => m.AddCRM.visit_date, new { htmlAttributes = new { @max = System.DateTime.Today.ToString("yyyy-MM-dd"), @id = "CRMVisitDate", @class = "text-left", @type = "date", @style = "width:100%", @required = "required", @onchange = "checkRequiredCRM()" } })
 
                                             </div>
                                         </div>
@@ -857,14 +553,14 @@
                                                 Contact
                                             </div>
                                             <div class="col-lg-8 text-right">
-                                                @Html.EditorFor(m => m.AddCRM.customer_contact, new { htmlAttributes = new {@id = "CRMContact", @class = "text-left", @required = "required", @style = "width:91%", @onkeyup = "checkRequiredCRM()"} })
+                                                @Html.EditorFor(m => m.AddCRM.customer_contact, new { htmlAttributes = new { @id = "CRMContact", @class = "text-left", @required = "required", @style = "width:91%", @onkeyup = "checkRequiredCRM()" } })
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row" style="padding:20px 15px 0px 15px">
                                     @*<textarea class="col-lg-12" rows="7"></textarea>*@
-                                    @Html.TextAreaFor(m => m.AddCRM.discusssion_details, 5, 121, new {@id = "CRMComments", @placeholder = " Comments",  @required = "required", @onkeyup = "checkRequiredCRM()" })
+                                    @Html.TextAreaFor(m => m.AddCRM.discusssion_details, 5, 121, new { @id = "CRMComments", @placeholder = " Comments", @required = "required", @onkeyup = "checkRequiredCRM()" })
                                 </div>
                                 <div class="row" style="padding:20px 15px 0px 15px">
                                     @*<textarea class="col-lg-12" rows="5"></textarea>*@
@@ -906,7 +602,7 @@
                         <div class="clo-lg-2" style="margin-left: 10px; margin-top: 0px;">
                             <p>Date :</p>
                         </div>
-                        <div class="col-lg-4 text-right" style="margin-left: 20px;"><input class="text-center "  type="text" id="append_Date" /><br /></div>
+                        <div class="col-lg-4 text-right" style="margin-left: 20px;"><input class="text-center " type="text" id="append_Date" /><br /></div>
                     </div>
                     <div class="row">
                         <div class="clo-lg-2" style="margin-left: 20px; margin-right:auto;margin-top: 0px;">
@@ -944,131 +640,71 @@
         </div>
     </div>
 
-    <div class="modal fade" id="targetAccountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content" style="width:700px">
-                <div class="modal-header" style="padding:3px 3px 3px 15px">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="clo-lg-2" style="margin-left:20px; margin-right:auto; margin-top: 0px;">
-                            <p>Visit type </p>
-                        </div>
-                        <div class="col-lg-4 text-right" style="margin-right:auto;">
-                            <input class="text-center" type="text" id="append_Visit_type1" style="text-align:right;" /><br />
-                        </div>
-                        <div class="clo-lg-2" style="margin-left: 10px; margin-top: 0px;">
-                            <p>Date </p>
-                        </div>
-                        <div class="col-lg-4 text-right" style="margin-left: 20px;">
-                            <input class="text-center " type="text" id="append_Date1" /><br />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="clo-lg-2" style="margin-left: 20px; margin-right:auto;margin-top: 0px;">
-                            <p>Employee </p>
-                        </div>
-                        <div class="col-sm-4 text-right" style="margin-right: auto;">
-                            <input class="text-center" type="text" id="append_empId1" /><br />
-                        </div>
-                        <div class="clo-lg-2" style="margin-left: 10px;margin-top: 0px;">
-                            <p>Contact </p>
-                        </div>
-                        <div class="col-sm-4 text-right">
-                            <input class="text-center " type="text" id="appendc_Contact1" /><br />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="clo-lg-12" style="margin-left: 20px">
-                            <p>Comments </p>
-                        </div>
-                    </div>
-                    <div class="row" style="margin-left:auto; margin-right:auto;">
-                        <textarea class="col-lg-12" style="margin-left:auto; margin-right:auto;" id="append_Comments1" rows="9"></textarea>
-                    </div>
-                    <div class="row" style="margin-top:10px">
-                        <div class="clo-lg-12" style="margin-left: 20px">
-                            <p>Remainders </p>
-                        </div>
-                    </div>
-                    <div class="row" style="margin-left:auto; margin-right:auto;">
-                        <textarea class="col-lg-12" id="append_Remainders1" rows="6"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer" style="padding:3px">
-                    <button type="button" class="btn btn-danger" style="padding:3px 20px 3px 20px" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="disputeResolutionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content" style="width:700px">
-                <div class="modal-header" style="padding:3px 3px 3px 15px">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="clo-lg-2" style="margin-left: 15px; margin-right:auto;margin-top: 0px;">
-                            <p>CTA Invoice #</p>
-                        </div>
-                        <div class="col-sm-4 text-center" style="margin-right: auto;"><input class="text-center" type="text" id="Invoice" /><br /></div>
-                        <div class="clo-lg-2 text-left" style="margin-top: 0px;">
-                            <p>Employee</p>
-                        </div>
-                        <div class="col-sm-4 text-right"><input class="text-center " type="text" id="Employee_id" /><br /></div>
-                    </div>
-                    <div class="row">
-                        <div class="clo-lg-1" style="margin-left: 15px; margin-right:auto;margin-top: 0px;">
-                            <p>Date of Dispute</p>
-                        </div>
-                        <div class="col-sm-3 text-center" style="margin-right: auto; margin-left:4px"><input class="text-center" type="text" id="DateDispute" /><br /></div>
-                        <div class="clo-lg-2 text-left" style="margin-top: 0px;">
-                            <p>Date of service</p>
-                        </div>
-                        <div class="col-sm-4 text-right"><input class="text-center " type="text" id="DateService" /><br /></div>
-                    </div>
-                    <div class="row">
-                        <div class="clo-lg-1" style="margin-left: 15px; margin-right:auto;margin-top: 0px;">
-                            <p>Mileage at dispute</p>
-                        </div>
-                        <div class="col-sm-3 text-center" style="margin-right: auto;margin-left:5px"><input class="text-center" type="text" id="MileageDispute" /><br /></div>
-                        <div class="clo-lg-2 text-left" style="margin-top: 0px;">
-                            <p>Mileage at service</p>
-                        </div>
-                        <div class="col-sm-4 text-right"><input class="text-center " type="text" id="MileageService" /><br /></div>
-                    </div>
-                    <div class="row" style="margin-top:20px">
-                        <div class="col-md-3">Customer:</div>
-                        <div class="col-md-3">Account Number</div>
-                        <div class="col-md-3"><input type="text" style="margin-left:0px" id="Customer_Account_Number" /></div>
-                        <div class="col-md-3"></div>
-                    </div>
-                    <div class="row" style="margin-top:10px">
-                        <div class="col-md-3"></div>
-                        <div class="col-md-3">Name(No Account)</div>
-                        <div class="col-md-3"><input type="text" style="margin-left:0px" id="Customer_Name_NoAccount" /></div>
-                        <div class="col-md-3"></div>
-                    </div>
-                    <div class="row" style="margin-bottom:10px">
-                        <div style="margin-left:15px">Details</div>
-                    </div>
-                    <div class="row" style="margin-left:auto; margin-right:auto;">
-                        <textarea class="col-lg-12" style="margin-left:auto; margin-right:auto;" id="Details" rows="10"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer" style="padding:3px">
-                    <button type="button" class="btn btn-danger" style="padding:3px 20px 3px 20px" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 
     <script>
+        function filterOnClass(baseClass, s) {
+            let re = new RegExp(s.trim(), 'i');
+            document.querySelectorAll('.' + baseClass).forEach(node => {
+                let cNames = Array.from(node.classList);
+                // Show all if search string is blank
+                if (s.trim() == '') {
+                    node.classList.remove('hide');
+                    // Otherwise, filter
+                } else if (cNames.some(cName => re.test(cName))) {
+                    node.classList.remove('hide');
+                } else {
+                    node.classList.add('hide');
+                }
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+        $("#CRMtable").DataTable(
+            {
+                bLengthChange: true,
+                lengthMenu: [19],
+                bFilter: true,
+                bSort: false,
+                bPaginate: true,
+            });
+
+
+    </script>
+
+    <script>
+
+        function ViewCRM(val) {
+            var array = val.split(";");
+            $('#append_Visit_type').val(array[0]);
+            $('#append_Date').val(array[1].split("").slice(0, 10).join(""));
+            $('#append_empId').val(array[6])
+            $('#appendc_Contact').val(array[3])
+            document.getElementById("append_Comments").value = array[4];
+            document.getElementById("append_Remainders").value = array[5];
+
+            $('#apped_AddButton_empname').val(array[6])
+            $('#index').val(array[8])
+            $('#count').val(array[9])
+
+            if (parseInt($('#index').val()) < 1) {
+                $('#backwordButton').prop('disabled', true);
+            }
+            else {
+                $('#backwordButton').prop('disabled', false);
+            }
+
+            if (parseInt($('#index').val()) >= parseInt($('#count').val()) - 1) {
+                $('#forwardButton').prop('disabled', true);
+            }
+            else {
+                $('#forwardButton').prop('disabled', false);
+            }
+        }
+
         $(document).ready(function () {
 
             $('#searchCR').click(function () {
@@ -1089,14 +725,13 @@
         });
     </script>
 
-    
+
 
     <script>
 
-        
 
-        function checkRequiredCRM()
-        {
+
+        function checkRequiredCRM() {
             if ($('#CRMVisitType option:selected').text() != 'Select' && $('#CRMVisitDate').val() != "" && $('#CRMContact').val() != "" && $('#CRMComments').val() != "") {
                 $('#crmSubmit').css("display", "block")
             }
@@ -1138,9 +773,9 @@
             }
 
 
-            
 
-            
+
+
         }
 
         function backward() {
@@ -1180,45 +815,9 @@
 
         $(document).ready(function () {
 
-            
-
-            $('#callReport a').click(function (e) {
-
-                e.preventDefault()
-                $that = $(this);
-                $that.parent().find('a');
-
-                var seleccionado = $(this).children("span").html();
-
-                $('#CallReportingModal').modal();
-                var array = seleccionado.split(";");
-                $('#append_Visit_type').val(array[0]);
-                $('#append_Date').val(array[1].split("").slice(0, 10).join(""));
-                $('#append_empId').val(array[6])
-                $('#appendc_Contact').val(array[3])
-                document.getElementById("append_Comments").value = array[4];
-                document.getElementById("append_Remainders").value = array[5];
-
-                $('#apped_AddButton_empname').val(array[6])
-                $('#index').val(array[8])
-                $('#count').val(array[9])
-
-                if (parseInt($('#index').val()) < 1) {
-                    $('#backwordButton').prop('disabled', true);
-                }
-                else {
-                    $('#backwordButton').prop('disabled', false);
-                }
-
-                if (parseInt($('#index').val()) >= parseInt($('#count').val()) - 1) {
-                    $('#forwardButton').prop('disabled', true);
-                }
-                else {
-                    $('#forwardButton').prop('disabled', false);
-                }
 
 
-            });
+
 
             $('#targetAccount a').click(function (e) {
 
@@ -1272,6 +871,11 @@
 
 
 
+        });
+
+        $(".box").click(function () {
+            $('#load').css('display', 'block')
+            $('#payRollMainBody').css('display', 'none')
         });
 
     </script>

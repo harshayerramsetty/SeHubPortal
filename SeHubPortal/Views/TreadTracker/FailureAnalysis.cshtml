@@ -147,6 +147,10 @@
             margin: 10px 0px 0px 0px;
         }
 
+        .breadCrumb{
+        background-color:white;
+    }
+
             .heading h2 {
                 margin-top: 8px;
             }
@@ -285,10 +289,6 @@
 
 
         @@media screen {
-            #printSection {
-                display: none;
-            }
-
             #dontshow {
                 display: none;
             }
@@ -296,13 +296,12 @@
 
         @@media print {
 
+            body{
+                background-color:white
+            }
 
             .dontShowInPrint {
                 display: none;
-            }
-
-            #printSection, #printSection * {
-                visibility: visible;
             }
         }
     </style>
@@ -313,7 +312,7 @@
             <div class="row heading">
                 <div class="col">
                     <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
+                        <ol class="breadcrumb breadCrumb" style="background-color:white;height:100%;margin-top:0px;">
                             <li class="breadcrumb-item"><a href="@Url.Action("FailureAnalysis", "TreadTracker")">Tread Tracker</a></li>
                             <li class="breadcrumb-item " aria-current="page">Failure Analysis</li>
                         </ol>
@@ -370,7 +369,7 @@
                         </div>
                     </div>
 
-                    <div class="row" style="margin-bottom:10px;">
+                    <div class="row" style="        margin-bottom: 10px;">
                         <div class="col-lg-12" style="padding:0px">
                             <div class="card" style="border:2px solid #aeafb0">
                                 <div class="card-header" style="height:35px; background-color: #c0c2c4 !important; padding:1px 0px 1px 15px;">
@@ -441,7 +440,11 @@
                                                     <h6>Start</h6>
                                                 </div>
                                                 <div class="col-lg-9">
-                                                    <input disabled id="startDateSelection" style="width:195px; height:25px" type="date" name="name" value="" />
+                                                    <div style="display:flex; justify-content:space-around; align-items:center; border:1px solid dimgray; border-radius:3px">
+                                                        <input readonly style="text-align:center; height:25px; width:350px; border:none; outline:none" type="text" name="name" value="" id="startDate" />
+                                                        <input disabled id="startDateSelection" style="width:22px; height:22px; border:none; outline:none" type="date" name="name" value="" />
+                                                    </div>
+                                                    
                                                 </div>
                                             </div>
                                             <div class="row" style="margin-top:10px;">
@@ -449,7 +452,10 @@
                                                     <h6>End</h6>
                                                 </div>
                                                 <div class="col-lg-9">
-                                                    <input disabled id="endDateSelection" style="width:195px; height:25px" type="date" name="name" value="" />
+                                                    <div style="display:flex; justify-content:space-around; align-items:center; border:1px solid dimgray; border-radius:3px">
+                                                        <input readonly style="text-align:center; height:25px; width:350px; border:none; outline:none" type="text" name="name" value="" id="endDate" />
+                                                        <input disabled id="endDateSelection" style="width:22px; height:22px; border:none; outline:none" type="date" name="name" value="" />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -481,7 +487,7 @@
                                             <div class="col-lg-6" style="padding-right:0px;">
                                                 <div class="row" style="padding:0px 10px 0px 10px">
                                                     <div class="col-lg-12">
-                                                        <input id="PR" type="checkbox" checked name="name" value="" />
+                                                        <input onchange="if($(this).prop('checked') == true) { $('#prelimPrint').prop('checked', true) }else { $('#prelimPrint').prop('checked', false)}" id="PR" type="checkbox" checked name="name" value="" />
                                                         <label style="margin-left:15px; padding-top:0px; font-size:11px">
                                                             Preliminary Inspection
                                                         </label>
@@ -491,7 +497,7 @@
                                             <div class="col-lg-6">
                                                 <div class="row" style="padding:0px 10px 0px 10px">
                                                     <div class="col-lg-12">
-                                                        <input id="NR" type="checkbox" checked name="name" value="" />
+                                                        <input id="NR" onchange="if($(this).prop('checked') == true) { $('#ndtPrint').prop('checked', true) }else { $('#ndtPrint').prop('checked', false)}"  type="checkbox" checked name="name" value="" />
                                                         <label style="margin-left:15px; font-size:11px">
                                                             NDT Station
                                                         </label>
@@ -504,7 +510,7 @@
                                             <div class="col-lg-6">
                                                 <div class="row" style="padding:0px 10px 0px 10px">
                                                     <div class="col-lg-12">
-                                                        <input id="BR" type="checkbox" checked name="name" value="" />
+                                                        <input id="BR" onchange="if($(this).prop('checked') == true) { $('#bufferPrint').prop('checked', true) }else { $('#bufferPrint').prop('checked', false)}" type="checkbox" checked name="name" value="" />
                                                         <label style="margin-left:15px; font-size:11px">
                                                             Buffer-Builder
                                                         </label>
@@ -514,7 +520,7 @@
                                             <div class="col-lg-6">
                                                 <div class="row" style="padding:0px 10px 0px 10px">
                                                     <div class="col-lg-12">
-                                                        <input id="FR" type="checkbox" checked name="name" value="" />
+                                                        <input id="FR" onchange="if($(this).prop('checked') == true) { $('#finalPrint').prop('checked', true) }else { $('#finalPrint').prop('checked', false)}" type="checkbox" checked name="name" value="" />
                                                         <label style="margin-left:15px; font-size:11px">
                                                             Final Inspection
                                                         </label>
@@ -610,20 +616,9 @@
             <img style="width:150px" src="~/Content/giphy.gif" alt="Alternate Text" />
         </div>
         <div class="col-lg-8" id="RightPane" style="display:none; padding-right:30px">
-            <div class="row text-center" id="dontshow">
-                <div class="col-md-4"></div>
-                <div class="col-md-4 text-center"><img src="~/Content/LoginLogo.png" style="margin-left: auto;margin-right: auto; width:300px;"></div>
-                <div class="col-md-4 text-right" style="padding-right:15px; padding-top:40px">
-                    <p style="margin: 0px; padding: 0px; line-height : 10px"><u><b>HEAD OFFICE</b></u></p>
-                    <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">1123 Topsail Road, P.O. Box 549</font></p>
-                    <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Mount Pearl, NL A1N 2W4</font></p>
-                    <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Tel: (709) 364-6808 • Fax: (709) 364-0074</font></p>
-                    <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">24 Hour: (709) 368-5971</font></p>
-                    <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Email: cta@citytire.com • www.citytire.com</font></p>
-                </div>
-            </div>
-            <div class="card" style="height:100%">
-                <div class="card-header dontShowInPrint" style="padding-bottom:5px; background-color:white">
+            
+            <div class="card" style="height:100%;">
+                <div class="card-header dontShowInPrint" style="padding-bottom:5px;">
                     <div class="row">
                         <div class="col-lg-6">
                             <h5>Failure Analysis</h5>
@@ -633,9 +628,19 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-body" id="printThis" style="padding:0px 15px 15px 15px">
-
-
+                <div class="card-body" id="printThis" style="padding:20px">
+                    <div class="row text-center" id="dontshow" style="border:none; outline:none">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4 text-center"><img src="~/Content/LoginLogo.png" style="margin-left: auto;margin-right: auto; width:300px;"></div>
+                        <div class="col-md-4 text-right" style="padding-right:15px; padding-top:40px">
+                            <p style="margin: 0px; padding: 0px; line-height : 10px"><u><b>HEAD OFFICE</b></u></p>
+                            <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">1123 Topsail Road, P.O. Box 549</font></p>
+                            <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Mount Pearl, NL A1N 2W4</font></p>
+                            <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Tel: (709) 364-6808 • Fax: (709) 364-0074</font></p>
+                            <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">24 Hour: (709) 368-5971</font></p>
+                            <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Email: cta@citytire.com • www.citytire.com</font></p>
+                        </div>
+                    </div>
                     <table style="margin:10px 0px 10px 0px; width:100%; border:1px solid #dee0e3">
                         <tr id="title">
                             <td style="padding:10px; width:5%; text-align:center">
@@ -673,59 +678,62 @@
 
                     <div class="row" style="padding:0px 15px 10px 15px">
                         <div class="card" style="width:100%">
-                            <div class="card-header text-center" style="padding:3px 0px 0px 0px; background-color:#84888c;">
+                            <div class="card-header text-center" style="padding:3px 0px 0px 0px;">
                                 <h6 style="color:white">
                                     Failure Codes
                                 </h6>
                             </div>
-                            <div class="card-body" style="padding:0px">
-                                <table style="width:100%; border:1px solid #dee0e3">
-                                    <tr id="title">
-                                        <td style="padding:10px; width:15%">
-                                            <div class="row" >
-                                                <div class="col-lg-7">
-                                                    Location
-                                                </div>
-                                                <div class="col-lg-5 location" style="font-weight:bold">
+                            <div class="card-body" style="padding:10px; display:flex;">
+                                <div style="flex:1; justify-content:space-between">
+                                    <div>
+                                        Location
+                                    </div>
+                                    <div class="location" style="font-weight:bold">
+                                        ALL
+                                    </div>
+                                </div>
+                                <div style="flex:4; justify-content:center">
+                                    <div style="display:flex; justify-content:space-evenly; align-items:center">
+                                        <div>
+                                            Prelim <input checked type="checkbox" id="prelimPrint"/>
+                                        </div>
+                                        <div>
+                                            NDT <input checked type="checkbox" id="ndtPrint" />
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; justify-content:space-evenly; align-items:center">
+                                        <div>
+                                            Buffer <input checked type="checkbox" id="bufferPrint" />
+                                        </div>
+                                        <div>
+                                            Final <input checked type="checkbox" id="finalPrint" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="flex:5; justify-content:space-between">
+                                    <div>
+                                        Customer
+                                    </div>
+                                    <div class="customer" style="font-weight:bold">
+                                        All
+                                    </div>
+                                </div>
+                                <div style="flex:3; justify-content:space-between">
+                                    <div>
+                                        Start Date
+                                    </div>
+                                    <div class="startDate" style="font-weight:bold">
 
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td style="padding:10px; width:30%">
-                                            <div class="row">
-                                                <div class="col-lg-4">
-                                                    Customer
-                                                </div>
-                                                <div class="col-lg-8 customer" style="font-weight:bold">
+                                    </div>
+                                </div>
+                                <div style="flex:3; justify-content:space-between">
+                                    <div>
+                                        End Date
+                                    </div>
+                                    <div class="endDate" style="font-weight:bold">
 
-                                                </div>
-                                            </div>
-
-                                        </td>
-
-                                        <td style="padding:10px; width:25%">
-                                            <div class="row">
-                                                <div class="col-lg-5">
-                                                    Start Date
-                                                </div>
-                                                <div class="col-lg-7 startDate" style="font-weight:bold">
-
-                                                </div>
-                                            </div>
-
-                                        </td>
-                                        <td style="padding:10px; width:25%">
-                                            <div class="row" style="margin-top:10px">
-                                                <div class="col-lg-4">
-                                                    End Date
-                                                </div>
-                                                <div class="col-lg-8 endDate" style="font-weight:bold">
-
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -735,7 +743,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="card">
-                                <div class="card-header" style="padding:0px; background-color:#84888c;">
+                                <div class="card-header" style="padding:0px;">
                                     <div class="row">
                                         <div class="col-lg-2"></div>
                                         <div class="col-lg-8 text-center">
@@ -749,11 +757,11 @@
 
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                                 <div class="card-body example" id="failure_codes_card" style="padding-top:10px; height:110px; overflow:auto">
 
-                                    
+
                                     <div class="row" id="failureCodesRw" style="font-size:8px; padding:0px 15px 0px 15px">
 
                                     </div>
@@ -765,7 +773,7 @@
                     <div class="row" style="margin-top:10px">
                         <div class="col-lg-12">
                             <div class="card">
-                                <div class="card-header text-center" style="padding:3px 0px 0px 0px; background-color:#84888c;">
+                                <div class="card-header text-center" style="padding:3px 0px 0px 0px;">
                                     <div class="row">
                                         <div class="col-lg-2"></div>
                                         <div class="col-lg-8 text-center">
@@ -1148,93 +1156,31 @@
         };
 
         $('#startDateSelection').change(function () {
+            var d1 = new Date($('#startDateSelection').val());
+            d1 = addDays(d1, 1);
+            $(".startDate").html(moment(d1).format("yyy-MMM-DD"));
+            $("#startDate").val(moment(d1).format("yyy-MMM-DD"));
 
             $('#dateCheckBox').prop('checked', true);
-
-            var d = new Date($('#startDateSelection').val());
-
-            date = d.toString();
-
-            var shortDay = date.substring(0, 3);
-            var longDay = "";
-
-            if (shortDay == "Mon") {
-                longDay = "Monday"
-            }
-            else if (shortDay == "Tue") {
-                longDay = "Tuesday"
-            }
-            else if (shortDay == "Wed") {
-                longDay = "Wednesday"
-            }
-            else if (shortDay == "Thu") {
-                longDay = "Thursday"
-            }
-            else if (shortDay == "Fri") {
-                longDay = "Friday"
-            }
-            else if (shortDay == "Sat") {
-                longDay = "Saturday"
-            }
-            else if (shortDay == "Sun") {
-                longDay = "Sunday"
-            }
-
-            var month = date.substring(4, 7);
-
-            var dateNum = date.substring(8, 10);
-
-            var yearNum = date.substring(11, 15);
-
-
-            $(".startDate").html(longDay + " - " + month + " " + dateNum + ", " + yearNum);
 
         });
 
         $('#endDateSelection').change(function () {
+            var d1 = new Date($('#endDateSelection').val());
+            d1 = addDays(d1, 1);
+            $(".endDate").html(moment(d1).format("yyy-MMM-DD"));
+            $("#endDate").val(moment(d1).format("yyy-MMM-DD"));
 
             $('#dateCheckBox').prop('checked', true);
 
-            var d = new Date($('#endDateSelection').val());
-
-            date = d.toString();
-
-            var shortDay = date.substring(0, 3);
-            var longDay = "";
-
-            if (shortDay == "Mon") {
-                longDay = "Monday"
-            }
-            else if (shortDay == "Tue") {
-                longDay = "Tuesday"
-            }
-            else if (shortDay == "Wed") {
-                longDay = "Wednesday"
-            }
-            else if (shortDay == "Thu") {
-                longDay = "Thursday"
-            }
-            else if (shortDay == "Fri") {
-                longDay = "Friday"
-            }
-            else if (shortDay == "Sat") {
-                longDay = "Saturday"
-            }
-            else if (shortDay == "Sun") {
-                longDay = "Sunday"
-            }
-
-            var month = date.substring(4, 7);
-
-            var dateNum = date.substring(8, 10);
-
-            var yearNum = date.substring(11, 15);
-
-
-            $(".endDate").html(longDay + " - " + month + " " + dateNum + ", " + yearNum);
-
         });
 
+
+        function addDays(date, days) {
+          var result = new Date(date);
+          result.setDate(result.getDate() + days);
+          return result;
+        }
 
     </script>
 </body>

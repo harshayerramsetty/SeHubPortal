@@ -19,5 +19,8 @@ namespace SeHubPortal.ViewModel
         public double wheelNA { get; set; }
         public double freightRetail { get; set; }
         public double freightNA { get; set; }
+
+        public string topBar_left { get; set; }
+        public string topBar_right { get; set; }
     }
 }

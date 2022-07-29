@@ -13,8 +13,10 @@ namespace SeHubPortal.ViewModel
 
         public List<tbl_fuel_log_invoiced> fuelLogInvoicedList { get; set; }
         public tbl_fuel_log_invoiced fuelLogInvoiceTableValues { get; set; }
+        public tbl_fuel_log_invoiced EditfuelLogInvoiceTableValues { get; set; }
         public List<SelectListItem> LocationsList { get; set; }
         public string MatchedLocation { get; set; }
+        public string deleteTransactionNumber { get; set; }
 
     }
 }

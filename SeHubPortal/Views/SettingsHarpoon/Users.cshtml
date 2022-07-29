@@ -17,16 +17,26 @@
     @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>*@
 
 
-    <style>
-
-        #SettingsClicked {
-                display: block !important;
-            }
-
+    @if (Model.client_info.employees_page.Value)
+    {
+        <style>
             #ManagementClicked {
                 display: block !important;
             }
+        </style>
+    }
+    @if (Model.client_info.fleet_page.Value)
+    {
+        <style>
+            #VehicleClicked {
+                display: block !important;
+            }
+        </style>
+    }
 
+
+
+    <style>
         .example::-webkit-scrollbar {
             display: none;
         }
@@ -141,91 +151,95 @@
     <div class="row">
         <div class="col-md-12" style="padding:0px 30px 0px 30px">
             <div class="row">
-                <div class="col-md-4">
-                    <div class="card shadow-md" data-toggle="modal" data-target="#Full" style="padding-top:10px; width:100%; border:4px solid #ffcc00; border-radius:5px; margin-right:15px">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="row">
-                                    <div class="col-md-12 text-center">
-                                        <img src="~/Content/admin Access.png" style="margin:0px; height:120px" alt="Alternate Text" />
-                                    </div>
+                <div class="col-md-3">
+                    <div class="card shadow-md" data-toggle="modal" data-target="#Full" style="padding:5px; width:100%; border:4px solid #ffcc00; border-radius:5px; margin-right:15px">
+                        <div style="display:flex">
+
+                            <div style="flex:3; display:flex; flex-direction:column; justify-content:center; align-items:center">
+                                <img src="~/Content/admin Access.png" style="height:70px" alt="Alternate Text" />
+                                <div>
+                                    <h6 style="font-weight:bolder; color:#ffcc00"><u>Unlimited</u></h6>
                                 </div>
+
                             </div>
-                            <div class="col-md-8">
-                                <div class="row" style="color:dimgray">
-                                    <div class="col-md-12 text-center">
-                                        <div class="row" style="margin-bottom:15px">
-                                            <div class="col-md-12">
-                                                <h4 style="font-weight:bolder; color:#ffcc00"><u>Full Access</u></h4>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <i><b>Administrators</b></i>
-                                                have unlimited access.
-                                            </div>
-                                        </div>
-                                    </div>
+                            <div style="flex:8; padding:10px 10px 0px 10px; display:flex; flex-direction:column;">
+                                <h4 style="margin:0px; margin-left:auto; margin-right:auto; font-weight:bolder; color:#8c8c8c"><u>ADMINISTRATOR</u></h4>
+                                <div style="font-size:12px; padding:0px 0px 0px 0px">
+                                    <i><b>Administrator</b></i>
+                                    has unlimited access to the entire web portal.
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card shadow-md" data-toggle="modal" data-target="#Full" style="padding-top:10px; width:100%; border:4px solid #ffcc00; border-radius:5px; margin-right:15px">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="row">
-                                    <div class="col-md-12 text-center">
-                                        <img src="~/Content/global mgr Access.png" style="margin:0px; height:120px" alt="Alternate Text" />
-                                    </div>
+                <div class="col-md-3">
+                    <div class="card shadow-md" data-toggle="modal" data-target="#Full" style="padding:5px; width:100%; border:4px solid #ffcc00; border-radius:5px; margin-right:15px">
+                        <div style="display:flex">
+
+                            <div style="flex:3; display:flex; flex-direction:column; justify-content:center; align-items:center">
+                                <img src="~/Content/global mgr Access.png" style="height:70px" alt="Alternate Text" />
+                                <div>
+                                    <h6 style="font-weight:bolder; color:#ffcc00"><u>Partial</u></h6>
                                 </div>
+
                             </div>
-                            <div class="col-md-8">
-                                <div class="row" style="color:dimgray">
-                                    <div class="col-md-12">
-                                        <div class="row">
-                                            <div class="col-md-12 text-center">
-                                                <h4 style="font-weight:bolder; color:#ffcc00"><u>Partial Access</u></h4>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <i><b>Global Managers</b></i>
-                                                are granted access o thr management portal <u>ONLY</u>, and access to <u>ALL locations</u>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <div style="flex:8; padding:10px 10px 0px 10px; display:flex; flex-direction:column;">
+                                <h4 style="margin:0px; margin-left:auto; margin-right:auto; font-weight:bolder; color:#8c8c8c"><u>GLOBAL MANAGER</u></h4>
+                                <div style="font-size:12px; padding:0px 0px 0px 0px">
+                                    <i><b>Global Manager</b></i>
+                                    has access to All pages other than Setings.
                                 </div>
                             </div>
                         </div>
                     </div>
+                    
                 </div>
-                <div class="col-md-4">
-                    <div class="card shadow-md" data-toggle="modal" data-target="#Full" style="padding-top:10px; width:100%; border:4px solid #ffcc00; border-radius:5px; margin-right:15px">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="row">
-                                    <div class="col-md-12 text-center">
-                                        <img src="~/Content/mgr Access.png" style="margin:0px; height:120px" alt="Alternate Text" />
-                                    </div>
+                <div class="col-md-3">
+                    <div class="card shadow-md" data-toggle="modal" data-target="#Full" style="padding:5px; width: 100%;
+        border: 4px solid #ffcc00;
+        border-radius: 5px;
+        margin-right: 15px
+">
+                        <div style="display:flex">
+
+                            <div style="flex:3; display:flex; flex-direction:column; justify-content:center; align-items:center">
+                                <img src="~/Content/limited.png" style="height:70px" alt="Alternate Text" />
+                                <div>
+                                    <h6 style="font-weight:bolder; color:#ffcc00"><u>Limited</u></h6>
+                                </div>
+
+                            </div>
+                            <div style="        flex: 8;
+        padding: 10px 10px 0px 10px;
+        display: flex;
+        flex-direction: column;
+">
+                                <h4 style="margin:0px; margin-left:auto; margin-right:auto; font-weight:bolder; color:#8c8c8c"><u>MANAGER</u></h4>
+                                <div style="font-size:12px; padding:0px 0px 0px 0px">
+                                    <i><b>Manager</b></i>
+                                    has access to All pages other than Setings. With restricted access to <u>ONLY</u> their location.
                                 </div>
                             </div>
-                            <div class="col-md-8">
-                                <div class="row" style="color:dimgray">
-                                    <div class="col-md-12 ">
-                                        <div class="row">
-                                            <div class="col-md-12 text-center">
-                                                <h4 style="font-weight:bolder; color:#ffcc00"><u>Limited Access</u></h4>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <i><b>Managers</b></i>
-                                                are granted access to Management portal <u>ONLY</u>, and restricted access to <u>ONLY</u> their location.
-                                            </div>
-                                        </div>
-                                    </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="col-md-3">
+                    <div class="card shadow-md" data-toggle="modal" data-target="#Full" style="padding: 5px;width: 100%;border: 4px solid #ffcc00;border-radius: 5px;margin-right: 15px">
+                        <div style="display:flex">
+
+                            <div style="flex:3; display:flex; flex-direction:column; justify-content:center; align-items:center">
+                                <img src="~/Content/Restricted.png" style="height:70px" alt="Alternate Text" />
+                                <div>
+                                    <h6 style="font-weight:bolder; color:#ffcc00"><u>Restricted</u></h6>
+                                </div>
+
+                            </div>
+                            <div style="flex:8; padding:10px 10px 0px 10px; display:flex; flex-direction:column;">
+                                <h4 style="margin:0px; margin-left:auto; margin-right:auto; font-weight:bolder; color:#8c8c8c"><u>SHOP FOREMAN</u></h4>
+                                <div style="font-size:12px; padding:0px 0px 0px 0px">
+                                    <i><b>Shop foreman</b></i>
+                                    has acess to the Employees > Attendance page and Fleet > Fuel  Reporting page <u>ONLY</u>.
                                 </div>
                             </div>
                         </div>
@@ -240,34 +254,43 @@
             <table style="width:100%" class="table-sortable table-bordered">
                 <thead style="background-color:#bdbdbd; color:white">
                     <tr>
-                        <th data-sort-type="text" style="vertical-align:middle">
-                            <div style="display:flex; justify-content:center; align-items:center">
+                        <th class="commonThClass" data-sort-type="text" style="vertical-align:middle">
+                            <div style="display:flex; justify-content:space-between; align-items:center">
+                                <div></div>
                                 <span style="margin:0px 15px 0px 15px">Email</span>
-                                <img style="margin:0px 20px 0px 20px; width:15px;height:15px; cursor:pointer" src="https://cpng.pikpng.com/pngl/s/178-1787481_up-arrow-comments-arrow-up-vector-clipart.png" alt="Alternate Text" />
-                                <img style="margin:0px 20px 0px 20px; width:15px;height:15px; transform:rotate(180deg); cursor:pointer" src="https://cpng.pikpng.com/pngl/s/178-1787481_up-arrow-comments-arrow-up-vector-clipart.png" alt="Alternate Text" />
+                                <img class="ascending commonsort" style="margin:0px 20px 0px 20px; width:15px;height:15px; cursor:pointer" src="~/Content/ascending.png" alt="Alternate Text" />
+                                <img class="descending commonsort" style="display:none; margin:0px 20px 0px 20px; width:15px;height:15px; transform:rotate(180deg); cursor:pointer" src="~/Content/descending.png" alt="Alternate Text" />
                             </div>
                         </th>
-                        <th data-sort-type="text">
-                            <div style="display:flex; justify-content:center; align-items:center">
+                        <th class="commonThClass" data-sort-type="text">
+                            <div style="display:flex; justify-content:space-between; align-items:center">
+                                <div></div>
                                 <span style="margin:0px 15px 0px 15px">Profile</span>
-                                <img style="margin:0px 20px 0px 20px; width:15px;height:15px; cursor:pointer" src="https://cpng.pikpng.com/pngl/s/178-1787481_up-arrow-comments-arrow-up-vector-clipart.png" alt="Alternate Text" />
-                                <img style="margin:0px 20px 0px 20px; width:15px;height:15px; transform:rotate(180deg); cursor:pointer" src="https://cpng.pikpng.com/pngl/s/178-1787481_up-arrow-comments-arrow-up-vector-clipart.png" alt="Alternate Text" />
+                                <img class="ascending commonsort" style="margin:0px 20px 0px 20px; width:15px;height:15px; cursor:pointer" src="~/Content/ascending.png" alt="Alternate Text" />
+                                <img class="descending commonsort" style="display:none; margin: 0px 20px 0px 20px; width: 15px; height: 15px; transform: rotate(180deg); cursor: pointer" src="~/Content/descending.png" alt="Alternate Text" />
                             </div>
                         </th>
-                        <th data-sort-type="text">
-                            <div style="display:flex; justify-content:center; align-items:center">
+                        <th class="commonThClass" data-sort-type="text">
+                            <div style="display:flex; justify-content:space-between; align-items:center">
+                                <div></div>
                                 <span style="margin:0px 15px 0px 15px">Location</span>
-                                <img style="margin:0px 20px 0px 20px; width:15px;height:15px; cursor:pointer" src="https://cpng.pikpng.com/pngl/s/178-1787481_up-arrow-comments-arrow-up-vector-clipart.png" alt="Alternate Text" />
-                                <img style="margin:0px 20px 0px 20px; width:15px;height:15px; transform:rotate(180deg); cursor:pointer" src="https://cpng.pikpng.com/pngl/s/178-1787481_up-arrow-comments-arrow-up-vector-clipart.png" alt="Alternate Text" />
+                                <img class="ascending commonsort" style="margin:0px 20px 0px 20px; width:15px;height:15px; cursor:pointer" src="~/Content/ascending.png" alt="Alternate Text" />
+                                <img class="descending commonsort" style="display:none; margin:0px 20px 0px 20px; width:15px;height:15px; transform:rotate(180deg); cursor:pointer" src="~/Content/descending.png" alt="Alternate Text" />
                             </div>
                         </th>
-                        <th style="text-align:center">
+                        <th class="commonThClass" style="text-align:center">
                             Admin Clocking
                         </th>
-                        <th style="text-align:center">
-                            Link to employee
+                        <th class="commonThClass" style="text-align:center">
+                            Admin Clocking- Edit Time
                         </th>
-                        <th style="text-align:center">
+                        <th class="commonThClass" style="text-align:center">
+                            Job ID Clocking
+                        </th>
+                        <th class="commonThClass" style="text-align:center">
+                            Job ID Clocking- Edit Time
+                        </th>
+                        <th class="commonThClass" style="text-align:center">
                             Action
                         </th>
                     </tr>
@@ -280,10 +303,48 @@
                             <td style="padding:0px; text-align:center">@user.email</td>
                             <td style="padding:0px; text-align:center">@user.profile</td>
                             <td style="padding:0px; text-align:center">@user.loc_id</td>
-                            <td style="padding:0px; text-align:center"><input type="checkbox" checked name="name" value="" /></td>
-                            <td style="padding:0px; text-align:center"></td>
                             <td style="padding:0px; text-align:center">
-                                <button onclick="EditData(this.value)" data-toggle="modal" data-target="#EditHarpoonDevice" style="background-color: transparent;border: none;outline: none;" value="@user.email;@user.client_id;@user.password;@user.profile">
+                                @if (user.adminClocking)
+                                {
+                                    <input type="checkbox" disabled checked name="name" value="" style="width:20px; height:20px; margin:0px" />
+                                }
+                                else
+                                {
+                                    <input type="checkbox" disabled name="name" value="" style="width:20px; height:20px; margin:0px" />
+                                }
+                            </td>
+                            <td style="padding:0px; text-align:center">
+                                @if (user.adminClocking_editTime)
+                                {
+                                    <input type="checkbox" disabled checked name="name" value="" style="width:20px; height:20px; margin:0px" />
+                                }
+                                else
+                                {
+                                    <input type="checkbox" disabled name="name" value="" style="width:20px; height:20px; margin:0px" />
+                                }
+                            </td>
+                            <td style="padding:0px; text-align:center">
+                                @if (user.jobIDClocking)
+                                {
+                                    <input type="checkbox" disabled checked name="name" value="" style="width:20px; height:20px; margin:0px" />
+                                }
+                                else
+                                {
+                                    <input type="checkbox" disabled name="name" value="" style="width:20px; height:20px; margin:0px" />
+                                }
+                            </td>
+                            <td style="padding:0px; text-align:center; vertical-align:middle">
+                                @if (user.jobIDClocking_editTime)
+                                {
+                                    <input type="checkbox" disabled checked name="name" value="" style="width:20px; height:20px; margin:0px" />
+                                }
+                                else
+                                {
+                                    <input type="checkbox" disabled name="name" value="" style="width:20px; height:20px; margin:0px" />
+                                }
+                            </td>
+                            <td style="padding:0px; text-align:center">
+                                <button onclick="EditData(this.value)" data-toggle="modal" data-target="#EditHarpoonDevice" style="background-color: transparent;border: none;outline: none;" value="@user.email;@user.client_id;@user.password;@user.profile;@user.adminClocking.ToString();@user.adminClocking_editTime.ToString();@user.jobIDClocking.ToString();@user.jobIDClocking_editTime.ToString()">
                                     <i class="fa fa-edit" style="font-size:25px;color:black;float:right"></i>
                                 </button>
                             </td>
@@ -307,7 +368,7 @@
                     <div class="modal-header" style="padding:5px 5px 5px 15px">
                         <h5 class="modal-title">Add User</h5>
                     </div>
-                    <div class="modal-body" style="padding-right:0px; padding-bottom:0px">
+                    <div class="modal-body" style="padding-right: 0px; padding-bottom: 0px ">
 
                         <div class="row" style="margin-bottom:10px">
                             <div class="col-lg-12 text-center">
@@ -335,17 +396,10 @@
                         </div>
 
 
-                        <div class="row" style="margin-bottom:10px;">
+                        <div class="row" style="margin-bottom:30px;">
                             <div class="col-lg-3 text-right" style="padding-right:0px; font-weight:bold; color:dimgray">
                                 <span class="locations">
-                                    @if (Model.locIDorName)
-                                    {
-                                        <span>Location ID</span>
-                                    }
-                                    else
-                                    {
-                                        <span>Location Name</span>
-                                    }
+                                    Location
                                 </span>
                             </div>
                             <div class="col-lg-9" style="padding-right:0px">
@@ -354,6 +408,38 @@
                             </div>
                         </div>
 
+                        <div class="row" style="margin-bottom:5px;">
+                            <div class="col-lg-10 text-right" style="padding-right:0px; font-weight:bold; color:dimgray">
+                                Admin Clocking
+                            </div>
+                            <div class="col-lg-2" style="padding-right:0px">
+                                @Html.CheckBoxFor(m => m.newUser.adminClocking, new { @style = "width:20px; height:20px" })
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom:20px;">
+                            <div class="col-lg-10 text-right" style="padding-right:0px; font-weight:bold; color:dimgray">
+                                Admin Clocking - Edit Time
+                            </div>
+                            <div class="col-lg-2" style="padding-right:0px">
+                                @Html.CheckBoxFor(m => m.newUser.adminClocking_editTime, new { @style = "width:20px; height:20px" })
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom:5px;">
+                            <div class="col-lg-10 text-right" style="padding-right:0px; font-weight:bold; color:dimgray">
+                                Job ID Clocking
+                            </div>
+                            <div class="col-lg-2" style="padding-right:0px">
+                                @Html.CheckBoxFor(m => m.newUser.jobIDClocking, new { @style = "width:20px; height:20px" })
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom:10px;">
+                            <div class="col-lg-10 text-right" style="padding-right:0px; font-weight:bold; color:dimgray">
+                                Job ID Clocking - Edit Time
+                            </div>
+                            <div class="col-lg-2" style="padding-right:0px">
+                                @Html.CheckBoxFor(m => m.newUser.jobIDClocking_editTime, new { @style = "width:20px; height:20px" })
+                            </div>
+                        </div>
 
                     </div>
                     <div class="modal-footer" style="padding:5px 15px 5px 5px">
@@ -372,8 +458,8 @@
             $('#addLoc').prop("disabled", false);
         }
     </script>
-    <div class="modal" id="EditHarpoonDevice" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
+    <div class="modal" id="EditHarpoonDevice" data-backdrop="static" tabindex="-1" role="dialog">
+        <div class="modal-dialog"  role="document">
 
             @using (Html.BeginForm("EditUser", "SettingsHarpoon", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
@@ -385,13 +471,15 @@
                     <div class="modal-body" style="padding-right:0px; padding-bottom:0px">
 
                         <div class="row" style="margin-bottom:10px">
-                            <div class="col-lg-1 text-left" style="padding-left:0px; padding-top:0px">
-                                <button type="button" onclick="DeleteEdit()" class="btn" style="border: none;outline: none; background-color: transparent"><img style="width:30px" src="~/Content/Trash Can.png" alt="Alternate Text" /></button>
-                            </div>
-                            <div class="col-lg-10 text-center">
+                            <div class="col-lg-2"></div>
+                            <div class="col-lg-8 text-center">
                                 <img src="~/Content/mgr_icon.png" style="margin-bottom:10px;width:200px;">
                             </div>
-                            <div class="col-lg-1"></div>
+                            <div class="col-lg-2 text-left" style="padding-left:0px; padding-top:0px">
+                                <button type="button" onclick="DeleteEdit()" class="btn" style="border: none; outline: none; background-color: transparent">
+                                    <img style="width:30px" src="~/Content/Trash Can.png" alt="Alternate Text" />
+                                </button>
+                            </div>
                         </div>
 
                         <div class="row" style="margin-bottom:10px;">
@@ -408,31 +496,64 @@
                             <div class="col-lg-3 text-right " style="font-weight: bold; color: dimgray; padding-right:0px">
                                 Profile
                             </div>
-                            <div class="col-lg-9 " style="padding-right:35px">
+                            <div class="col-lg-9" style="padding-right:35px">
                                 @Html.DropDownListFor(m => m.editUser.profile, Model.Profiles, new { @id = "Profile", @style = "text-align:center; font-weight:bold; width:100%;", @required = "required" })
                             </div>
                         </div>
 
-                        <div class="row" style="margin-bottom: 10px">
+                        <div class="row" style="margin-bottom: 30px">
                             <div class="col-lg-3 text-right " style="font-weight: bold; color: dimgray; padding-right:0px">
-                                Location ID
+                                Location
                             </div>
-                            <div class="col-lg-9 " style="padding-right:35px">
+                            <div class="col-lg-9" style="padding-right:35px">
                                 @Html.DropDownListFor(m => m.editUser.loc_id, Model.Locations, new { @id = "LocationsDrop", @style = "text-align:center; font-weight:bold; width:100%;", @required = "required" })
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom: 5px">
+                            <div class="col-lg-10 text-right " style="font-weight: bold; color: dimgray; padding-right:0px">
+                                Enable Time Clocking VIA Web App 
+                            </div>
+                            <div class="col-lg-2" style="padding-right:35px">
+                                @Html.CheckBoxFor(m => m.editUser.adminClocking, new { @id = "user_admin_clocking", @style = "width:20px; height:20px" })
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom: 20px">
+                            <div class="col-lg-10 text-right " style="font-style: italic; color: dimgray; padding-right:0px">
+                                Admin clocking - Edit time
+                            </div>
+                            <div class="col-lg-2" style="padding-right:35px">
+                                @Html.CheckBoxFor(m => m.editUser.adminClocking_editTime, new { @id = "user_admin_clocking_edit_time", @style = "width:20px; height:20px" })
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom: 5px">
+                            <div class="col-lg-10 text-right " style="font-weight: bold; color: dimgray; padding-right:0px">
+                                Enable Job ID Clocking VIA Web app
+                            </div>
+                            <div class="col-lg-2" style="padding-right:35px">
+                                @Html.CheckBoxFor(m => m.editUser.jobIDClocking, new { @id = "user_jobID_clocking", @style = "width:20px; height:20px" })
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom: 10px">
+                            <div class="col-lg-10 text-right " style="font-style: italic; color: dimgray; padding-right:0px">
+                                Job ID clocking - Edit time
+                            </div>
+                            <div class="col-lg-2" style="padding-right:35px">
+                                @Html.CheckBoxFor(m => m.editUser.jobIDClocking_editTime, new { @id = "user_jobID_clocking_editTime", @style = "width:20px; height:20px" })
                             </div>
                         </div>
 
                     </div>
                     <div class="modal-footer" style="padding:5px 15px 5px 5px">
-                        <button style="padding:2px 30px 2px 30px" type="submit" class="btn btn-success">Save</button>
+                        <button onclick="$('#LocationsDrop').prop('disabled', false);" style="padding:2px 30px 2px 30px" type="submit" class="btn btn-success">Save</button>
                         <button style="padding:2px 20px 2px 20px" type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>
 
             }
-
-
-
 
         </div>
     </div>
@@ -468,7 +589,7 @@
         <div class="modal-dialog" role="document">
 
             <div class="modal-content">
-                <div class="modal-header" style="padding:5px 5px 5px 15px">
+                <div class="modal-header" style="        padding: 5px 5px 5px 15px">
                     <h5 class="modal-title">Acknowledgement</h5>
                 </div>
                 <div class="modal-body" style="padding-right:0px; padding-bottom:0px">
@@ -493,8 +614,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
 
-        $('table.table-sortable th').on('click', function(e) {
-          sortTableByColumn(this)
+        $('table.table-sortable th').on('click', function (e) {
+            $('.commonThClass').css('background-color', '#bdbdbd')
+            $(this).attr('style', 'background-color: #949494 !important');
+            sortTableByColumn(this)
         })
 
         function sortTableByColumn(tableHeader) {
@@ -503,6 +626,15 @@
           let index = tableHeader.cellIndex
           let sortType = tableHeader.dataset.sortType
           let sortDirection = tableHeader.dataset.sortDir || 'asc' // default sort to ascending
+
+            if (sortDirection == "asc") {
+                $(tableHeader).find(".descending").css('display', 'none')
+                $(tableHeader).find(".ascending").css('display', 'block')
+            }
+            else {
+                $(tableHeader).find(".ascending").css('display', 'none')
+                $(tableHeader).find(".descending").css('display', 'block')
+            }
 
           // sort the table rows
           let items = Array.prototype.slice.call(table.rows);
@@ -592,14 +724,69 @@
             $('#sidebar').toggleClass('active');
         });
 
-            function EditData(val) {
-                var data = val.split(";");
-                $('#user_email').val(data[0]);
-                $('#client_id').val(data[1]);
-                $('#Password').val(data[2]);
-                $('#Profile').val(data[3]);
+        $('#user_admin_clocking').on('click', function () {
+            if ($(this).is(':checked')) {
 
             }
+            else {
+                $('#user_admin_clocking_edit_time').prop('checked', false);
+            }
+        });
+
+        $('#user_jobID_clocking').on('click', function () {
+            if ($(this).is(':checked')) {
+
+            }
+            else {
+                $('#user_jobID_clocking_editTime').prop('checked', false);
+            }
+        });
+        
+
+        function EditData(val) {
+            var data = val.split(";");
+            $('#user_email').val(data[0]);
+            $('#client_id').val(data[1]);
+            $('#Password').val(data[2]);
+            $('#Profile').val(data[3]);
+
+            if (data[3] == "Administrator") {
+                $("#LocationsDrop").prop("disabled", true);
+            }
+            else {
+                $("#LocationsDrop").prop("disabled", false);  
+            }
+
+            if (data[4] == "True") {
+                $('#user_admin_clocking').prop('checked', true);
+            }
+            else {
+                $('#user_admin_clocking').prop('checked', false);
+            }
+
+            if (data[5] == "True") {
+                $('#user_admin_clocking_edit_time').prop('checked', true);
+            }
+            else {
+                $('#user_admin_clocking_edit_time').prop('checked', false);
+            }
+
+            if (data[6] == "True") {
+                $('#user_jobID_clocking').prop('checked', true);
+            }
+            else {
+                $('#user_jobID_clocking').prop('checked', false);
+            }
+
+            if (data[7] == "True") {
+                $('#user_jobID_clocking_editTime').prop('checked', true);
+            }
+            else {
+                $('#user_jobID_clocking_editTime').prop('checked', false);
+            }
+
+        }
+
             function checkMaxLength(val) {
                 checkAddReq()
                 if (val.length == 6) {

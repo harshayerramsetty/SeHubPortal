@@ -1,7 +1,7 @@
 ﻿@model SeHubPortal.ViewModel.FileURL
 @{
     ViewBag.Title = "LeaveScheduler";
-    Layout = "~/Views/Shared/_ManagementLayout.cshtml";
+    Layout = "~/Views/Shared/_DevelopmentLayout.cshtml";
 }
 
 <!DOCTYPE html>
@@ -13,6 +13,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" rel="stylesheet" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.css" rel="stylesheet" media="print" />
+    <link href="~/Content/fullcalendar.css" rel="stylesheet" />
 
     @if (Model.SehubAccess.plant > 0)
     {
@@ -133,8 +136,11 @@
 
 
     <style>
+        .breadCrumb {
+            background-color: white;
+        }
 
-        #ManagementClicked {
+        #DevelopmentClicked {
             display: block !important;
         }
 
@@ -142,13 +148,13 @@
             display: block !important;
         }
 
-        #ManagementClicked {
+        #DevelopmentClicked {
             background-color: #f0f2f5;
             color: black;
             font-weight: 600;
         }
 
-        #managementBtn {
+        #developmentBtn {
             color: black;
             font-weight: 600;
         }
@@ -178,20 +184,51 @@
             .card-header h6 {
                 color: black;
             }
+
+            .fc-title {
+            color: black;
+        }
+
+        .fc-widget-header {
+            background-color: #343a40;
+            color: white;
+            font-size: 12px;
+        }
+
+        .fc-month-button {
+            display:none;
+        }
+
+        .fc-agendaWeek-button {
+            display:none;
+        }
+
+        .fc-agendaDay-button {
+            display: none;
+        }
+
+        .example::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .example {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+
     </style>
 </head>
 <body>
     <div class="row heading">
         <div class="col">
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb" style="        background-color: white;
-        height: 100%;
-        margin-top: 0px;">
+                <ol class="breadcrumb breadCrumb" style=" background-color: white; height: 100%; margin-top: 0px;">
                     <li class="breadcrumb-item"><a href="@Url.Action("LeaveScheduler", "Management")">Management</a></li>
                     <li class="breadcrumb-item " aria-current="page">Vacation Scheduler</li>
                     <label style="margin: 0px 3px 0px 1127px ">Location</label>
                     <div>
-                        
+
                         @Html.DropDownListFor(m => m.Location_ID, Model.LocationsList, new { @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
 
                     </div>
@@ -204,13 +241,12 @@
         </button>
     </div>
 
-    <div class="row" style="padding:0px 15px 0px 15px">
-        <div class="col-lg-4 text-left">
-            <div class="row">
-                <div class="col-lg-2">
-                    <b>Sort By</b>
-                </div>
-                <div class="col-lg-10">
+
+    <div class="row" style="padding:0px 30px 0px 30px">
+        <div class="col-md-12" style="background-color:white">
+            <div class="row" style="margin:15px 0px 0px 0px; display:flex; justify-content:space-between; align-items:center">
+                <div style="display:flex">
+                    <b style="margin-right:10px">Sort By</b>
                     @using (Html.BeginForm("SortBy", "Management", FormMethod.Post))
                     {
                         List
@@ -239,16 +275,8 @@
                         @Html.DropDownListFor(m => m.SortBy, sortByItems, new { @onChange = "this.form.submit()", @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
                     }
                 </div>
-            </div>
-            
-
-        </div>
-        <div class="col-lg-4 text-center">
-            <div class="row">
-                <div class="col-lg-6 text-right">
-                    <b>Callender Year</b>
-                </div>
-                <div class="col-lg-6 text-left">
+                <div style="display:flex">
+                    <b style="margin-right:10px">Callender Year</b>
                     @{
                         List
                         <SelectListItem>
@@ -267,107 +295,116 @@
                     @Html.DropDownListFor(m => m.Year, YearList, new { @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
 
                 </div>
+                <div style="display:flex">
+                    <button class="btn btn-primary" style="padding:2px 20px 2px 20px" data-target="#NewLeave" data-toggle="modal">New Entry</button>
+                </div>
+
             </div>
+            <div id="calender" style="background-color:white; width:100%;"></div>
+            <div class="row" style="margin:15px 0px 0px 0px; ">
+                <table style="width:100%">
+                    <thead style="text-align:center; background-color: #343a40; color:white" class="thead-dark">
+                        <tr>
+                            <th style="padding:0px; font-size:12px; margin:0px; width:8%" scope="col">Employee</th>
+                            <th style="padding:0px; font-size:12px; margin:0px; width:8%" scope="col">Employee ID</th>
+                            <th style="padding:0px; font-size:12px; margin:0px; width:20%" scope="col">Name</th>
+                            <th style="padding:0px; font-size:12px; margin:0px; width:20%" scope="col">Start Date</th>
+                            <th style="padding:0px; font-size:12px; margin:0px; width:20%" scope="col">End Date</th>
+                            <th style="padding:0px; font-size:12px; margin:0px; width:8%" scope="col"># of Days</th>
+                            <th style="padding:0px; font-size:12px; margin:0px; width:8%" scope="col">Edit</th>
+                            <th style="padding:0px; font-size:12px; margin:0px; width:8%" scope="col">Delete</th>
+                        </tr>
+                    </thead>
+                    
+                </table>
+            </div>
+            <div class="row example" style="margin:0px; height:340px; overflow-y:auto">
 
-        </div>
-        <div class="col-lg-4 text-right">
-            <button class="btn btn-primary" style="padding:2px 20px 2px 20px" data-target="#NewLeave" data-toggle="modal">New Entry</button>
-        </div>
-    </div>
-
-    <div class="row" style="margin:10px 15px 0px 15px;">
-        <table class="table ">
-            <thead style="text-align:center" class="thead-dark">
-                <tr>
-                    <th style="padding:0px; font-size:12px; margin:0px;" scope="col">Employee</th>
-                    <th style="padding:0px; font-size:12px; margin:0px;" scope="col">Employee ID</th>
-                    <th style="padding:0px; font-size:12px; margin:0px;" scope="col">Name</th>
-                    <th style="padding:0px; font-size:12px; margin:0px;" scope="col">Start Date</th>
-                    <th style="padding:0px; font-size:12px; margin:0px;" scope="col">End Date</th>
-                    <th style="padding:0px; font-size:12px; margin:0px;" scope="col"># of Days</th>
-                    <th style="padding:0px; font-size:12px; margin:0px;" scope="col">Edit</th>
-                    <th style="padding:0px; font-size:12px; margin:0px;" scope="col">Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.vacations)
-                {
-                    string base64ProfilePic = "";
-                    if (Model.employeeVacList.Where(x => x.employee_id == item.empid).Select(x => x.profile_pic).FirstOrDefault() is null)
-                    {
-                        base64ProfilePic = "";
-                    }
-                    else
-                    {
-                        base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(Model.employeeVacList.Where(x => x.employee_id == item.empid).Select(x => x.profile_pic).FirstOrDefault());
-                    }
-                    <tr>
-                        <td style="width:130px;text-align:center">
-                            @if (base64ProfilePic == "")
+                <table class="table ">
+                    <tbody>
+                        @foreach (var item in Model.vacations)
+                        {
+                            string base64ProfilePic = "";
+                            if (Model.employeeVacList.Where(x => x.employee_id == item.empid).Select(x => x.profile_pic).FirstOrDefault() is null)
                             {
-                                <img src="~/Content/profilepic.jpg" style="width:30%; height:30px;" />
+                                base64ProfilePic = "";
                             }
                             else
                             {
-                                <img alt="profilePic" src="@base64ProfilePic" style="width:30%; height:30px;border-radius:50%" />
+                                base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(Model.employeeVacList.Where(x => x.employee_id == item.empid).Select(x => x.profile_pic).FirstOrDefault());
                             }
-
-                        </td>
-                        <td style="text-align:center">@item.empid</td>
-                        <td style="text-align:center">@Model.employeeVacList.Where(x => x.employee_id == item.empid).Select(x => x.full_name).FirstOrDefault()</td>
-                        <td style="text-align:center">@item.start_date.ToString("dd, MMM yyyy (dddd)")</td>
-                        <td style="text-align:center">
-                            @if (@item.end_date.HasValue)
-                            {
-                                @item.end_date.Value.ToString("dd, MMM yyyy (dddd)")
-                            }
-                        </td>
-                        <td style="text-align:center">
-                            @{
-
-                                DateTime tempDate = item.start_date;
-                                int count = 0;
-
-
-
-
-                                while (tempDate != item.end_date)
-                                {
-
-                                    if (tempDate.ToString("dddd") == "Sunday" || tempDate.ToString("dddd") == "Saturday")
+                            <tr>
+                                <td style="width:8%;text-align:center">
+                                    @if (base64ProfilePic == "")
                                     {
-
+                                        <img src="~/Content/profilepic.jpg" style="width:30%; height:30px;" />
                                     }
                                     else
                                     {
-                                        count = count + 1;
+                                        <img alt="profilePic" src="@base64ProfilePic" style="width:30%; height:30px;border-radius:50%" />
                                     }
 
-                                    tempDate = tempDate.AddDays(1);
+                                </td>
+                                <td style="width:8%; text-align:center">@item.empid</td>
+                                <td style="width:20%; text-align:center">@Model.employeeVacList.Where(x => x.employee_id == item.empid).Select(x => x.full_name).FirstOrDefault()</td>
+                                <td style="width:20%; text-align:center">@item.start_date.ToString("dd, MMM yyyy (dddd)")</td>
+                                <td style="width:20%; text-align:center">
+                                    @if (@item.end_date.HasValue)
+                                    {
+                                        @item.end_date.Value.ToString("dd, MMM yyyy (dddd)")
+                                    }
+                                </td>
+                                <td style="width:8%; text-align:center">
+                                    @{
 
-                                }
+                                        DateTime tempDate = item.start_date;
+                                        int count = 0;
 
-                                count = count + 1;
 
-                                <span>
-                                    @count
-                                </span>
-                            }
-                        </td>
-                        <td style="text-align: center">
-                            <button data-id="@item.empid" onclick="EditVacation(this.value)" value="@item.empid;@item.start_date.ToString("yyyy-MM-dd");@item.end_date.Value.ToString("yyyy-MM-dd");@item.leave_type;@item.comments " class="managePermissionsBtn" data-toggle="modal" data-target="#EditLeave" style="background-color: transparent;border: 1px solid transparent;text-align: center"><i class="fa fa-edit" style="font-size:20px;color:dodgerblue;float:right"></i></button>
 
-                        </td>
-                        <td style="text-align: center">
-                            <button data-id="@item.empid" onclick="DeletVacation(this.value)" value="@item.empid;@item.start_date.ToString("yyyy-MM-dd");@item.end_date.Value.ToString("yyyy-MM-dd");" class="managePermissionsBtn" data-toggle="modal" data-target="#DeleteLeave" style="background-color: transparent;border: 1px solid transparent;text-align: center"><img style="padding:0x; margin:0px; width:15px" src="~/Content/trash.png" alt="Alternate Text" /></button>
 
-                        </td>
-                    </tr>
-                }
+                                        while (tempDate != item.end_date)
+                                        {
 
-            </tbody>
-        </table>
+                                            if (tempDate.ToString("dddd") == "Sunday" || tempDate.ToString("dddd") == "Saturday")
+                                            {
+
+                                            }
+                                            else
+                                            {
+                                                count = count + 1;
+                                            }
+
+                                            tempDate = tempDate.AddDays(1);
+
+                                        }
+
+                                        count = count + 1;
+
+                                        <span>
+                                            @count
+                                        </span>
+                                    }
+                                </td>
+                                <td style="width:8%; text-align: center">
+                                    <button data-id="@item.empid" onclick="EditVacation(this.value)" value="@item.empid;@item.start_date.ToString("yyyy-MM-dd");@item.end_date.Value.ToString("yyyy-MM-dd");@item.leave_type;@item.comments " class="managePermissionsBtn" data-toggle="modal" data-target="#EditLeave" style="background-color: transparent;border: 1px solid transparent;text-align: center"><i class="fa fa-edit" style="font-size:20px;color:dodgerblue;float:right"></i></button>
+
+                                </td>
+                                <td style="width:8%; text-align: center">
+                                    <button data-id="@item.empid" onclick="DeletVacation(this.value)" value="@item.empid;@item.start_date.ToString("yyyy-MM-dd");@item.end_date.Value.ToString("yyyy-MM-dd");" class="managePermissionsBtn" data-toggle="modal" data-target="#DeleteLeave" style="background-color: transparent;border: 1px solid transparent;text-align: center"><img style="padding:0x; margin:0px; width:15px" src="~/Content/trash.png" alt="Alternate Text" /></button>
+
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
+
+    
 
     <div class="modal fade" id="NewLeave" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -552,7 +589,7 @@
 
                         <div class="row">
                             <div class="col-md-6 text-center">
-                                @Html.EditorFor(m => m.EditLeave.start_date, new { htmlAttributes = new {@readonly = true, @id = "DeleteEmployeeStart", @required = "required", @type = "date", @style = " text-align: center; font-size:15px;" } })
+                                @Html.EditorFor(m => m.EditLeave.start_date, new { htmlAttributes = new { @readonly = true, @id = "DeleteEmployeeStart", @required = "required", @type = "date", @style = " text-align: center; font-size:15px;" } })
                             </div>
                             <div class="col-md-6 text-center">
                                 @Html.EditorFor(m => m.EditLeave.end_date, new { htmlAttributes = new { @readonly = true, @id = "DeleteEmployeeEnd", @required = "required", @type = "date", @style = "text-align: center; font-size:15px;" } })
@@ -665,6 +702,167 @@
 
 
     </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+                $('.fc-month-button').style.display = 'none';
+                $('.fc-agendaWeek-button').hide();
+                $('.fc-agendaDay-button').hide();
+            });
+
+            $("#month").css('background-color', 'white');
+            $("#month").css('color', '#008ce3');
+            $("#month").css('border', '2px solid #008ce3');
+        });
+
+        $("#next").click(function () {
+            $('.fc-next-button').click();
+            $('#titleText').html($('.fc-center h2').html())
+        });
+
+        $("#prev").click(function () {
+            $('.fc-prev-button').click();
+            $('#titleText').html($('.fc-center h2').html())
+        });
+
+        $("#today").click(function () {
+            $('.fc-today-button').click();
+            $('#titleText').html($('.fc-center h2').html())
+        });
+
+        $("#month").click(function () {
+            //alert($('.fc-event-title').html());
+            $('.fc-month-button').click();
+            $("#month").css('background-color', 'white');
+            $("#month").css('color', '#008ce3');
+            $("#month").css('border', '2px solid #008ce3');
+            $("#basicWeek").css('background-color', '#008ce3');
+            $("#basicWeek").css('color', 'white');
+            $("#basicDay").css('background-color', '#008ce3');
+            $("#basicDay").css('color', 'white');
+            $('#titleText').html($('.fc-center h2').html())
+        });
+
+        $("#basicWeek").click(function () {
+            $('.fc-agendaWeek-button').click();
+            $("#basicWeek").css('border', '2px solid #008ce3');
+            $("#basicWeek").css('background-color', 'white');
+            $("#basicWeek").css('color', '#008ce3');
+            $("#month").css('background-color', '#008ce3');
+            $("#month").css('color', 'white');
+            $("#basicDay").css('background-color', '#008ce3');
+            $("#basicDay").css('color', 'white');
+            $('#titleText').html($('.fc-center h2').html())
+        });
+
+        $("#basicDay").click(function () {
+            $('.fc-agendaDay-button').click();
+            $("#basicDay").css('border', '2px solid #008ce3');
+            $("#basicDay").css('background-color', 'white');
+            $("#basicDay").css('color', '#008ce3');
+            $("#month").css('background-color', '#008ce3');
+            $("#month").css('color', 'white');
+            $("#basicWeek").css('background-color', '#008ce3');
+            $("#basicWeek").css('color', 'white');
+            $('#titleText').html($('.fc-center h2').html())
+        });
+
+
+    </script>
+    @section Scripts{
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                var events = [];
+                $.ajax({
+                    type: "GET",
+                    url: "/Management/GetVacationEvents",
+                    success: function (data) {
+                        $.each(data, function (i, v) {
+
+                            if (v.subject == 'Vacation') {
+                                events.push({
+                                    title: v.Description,
+                                    description: v.subject,
+                                    start: moment(v.start_date),
+                                    end: moment(v.end_date),
+                                    color: '#c9eaff',
+                                    imageurl: '/Content/Vacation1.png',
+                                });
+                            }
+
+                        })
+
+                        GenerateCalender(events);
+                    },
+                    error: function (error) {
+                        //alert('failed');
+                    }
+                })
+
+                function GenerateCalender(events) {
+                    $('#calender').fullCalendar('destroy');
+
+                    $('#calender').fullCalendar({
+                        contentHeight: 300,
+                        defaultDate: new Date(),
+                        timeFormat: 'h(:mm)a',
+                        displayEventTime: false,
+                        header: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: 'month,agendaWeek,agendaDay'
+                        },
+                        defaultView: 'basicWeek',
+                        eventLimit: true,
+                        eventColor: '#378006',
+                        events: events,
+
+
+                        eventRender: function (event, eventElement) {
+                            if (event.imageurl) {
+                                eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl + "' width='32' height='30'>");
+                            }
+                        },
+
+
+                        eventClick: function (calEvent, jsEvent, view) {
+                            $('#myModal #eventTitle').text(calEvent.title);
+                            var $description = $('<div/>');
+                            $description.append($('<p/>').html('<b>Start: </b>' + calEvent.start.format("DD-MMM-YYYY")));
+                            if (calEvent.end != null) {
+                                $description.append($('<p/>').html('<b>End: </b>' + calEvent.end.format("DD-MMM-YYYY")));
+                            }
+                            $description.append($('<p/>').html('<b>Description: </b>' + calEvent.description));
+                            $('#myModal #pDetails').empty().html($description);
+                            $('#myModal #EventImage').empty().attr("src", calEvent.imageurl);
+                            $('#myModal').modal();
+                        }
+
+
+
+                    })
+
+                    $('#titleText').html($('.fc-center h2').html())
+
+                    $('.fc-center').css("display", "none");
+                    $('.fc-prev-button').css("display", "none");
+                    $('.fc-today-button').css("display", "none");
+                    $('.fc-next-button').css("display", "none");
+
+                }
+                //$('h2').css("background-color", "red")
+            })
+
+
+        </script>
+
+    }
+
 </body>
 
 </html>

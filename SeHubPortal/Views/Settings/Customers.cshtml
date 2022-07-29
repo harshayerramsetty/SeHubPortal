@@ -126,7 +126,9 @@
     }
 
     <style>
-
+        .breadCrumb{
+        background-color:white;
+    }
         #CustomersLink {
             display: block !important;
         }
@@ -151,7 +153,6 @@
         }
 
         .card-header {
-            background-color: #cde8ca;
             padding: 5px;
         }
 
@@ -176,7 +177,10 @@
     <div class="row heading" style="padding:10px 20px 0px 15px">
         <div class="col">
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb" style="background-color: white; height: 100%; margin-top: 0px;">
+                <ol class="breadcrumb breadCrumb" style="        background-color: white;
+        height: 100%;
+        margin-top: 0px;
+">
                     <li class="breadcrumb-item"><a href="@Url.Action("Customers", "Settings")">Settings</a></li>
                     <li class="breadcrumb-item " aria-current="page">Customers</li>
                 </ol>
@@ -214,7 +218,6 @@
                                     <th style="width:250px; font-size:10px; padding:0px" scope="col"> Address 1</th>
                                     <th style="width:250px; font-size:10px; padding:0px" scope="col"> Address 2</th>
                                     <th style="width:200px; font-size:10px; padding:0px" scope="col"> City</th>
-                                    <th style="width:100px; font-size:10px; padding:0px" scope="col"> Province</th>
                                     <th style="width:100px; font-size:10px; padding:0px" scope="col"> Zip</th>
                                     <th style="width:150px; font-size:10px; padding:0px" scope="col"> CRM Enrolled</th>
                                     <th style="width:150px; font-size:10px; padding:0px" scope="col"> FleetTVT Enrolled</th>
@@ -236,60 +239,69 @@
                                         int crm = 0;
 
                                         <tr>
-                                            <th style="width:100px;text-align:left; font-size:13px; padding:5px; width:100px; text-align:center" scope="row">@item.cust_us1</th>
+                                            <th style="width:100px;text-align:left; font-size:13px; padding:5px; width:100px; text-align:center" scope="row">@item.CustomerCode</th>
                                             <td style="width:300px;font-size:13px; padding:5px; text-align:left">
-                                                @if (item.cust_name != null && @item.cust_name.Length > 40)
+                                                @if (item.CustomerName != null && @item.CustomerName.Length > 40)
                                                 {
-                                                    @item.cust_name.Substring(0, 40)
+                                                    @item.CustomerName.Substring(0, 40)
                                                 }
                                                 else
                                                 {
-                                                    @item.cust_name
+                                                    @item.CustomerName
                                                 }
                                             </td>
-                                            <td style="width:250px;font-size:13px; padding:5px; width:250px">@item.cust_add1</td>
-                                            <td style="width:250px;font-size:13px; padding:5px; width:250px">@item.cust_add2</td>
-                                            <td style="width:200px;font-size:13px; padding:5px">@item.cust_city</td>
-                                            <td style="width:100px;font-size:13px; padding:5px">@item.cust_state</td>
-                                            <td style="width:100px;font-size:13px; padding:5px">@item.cust_zip</td>
+                                            <td style="width:250px;font-size:13px; padding:5px; width:250px">@item.Address1</td>
+                                            <td style="width:250px;font-size:13px; padding:5px; width:250px">@item.Address2</td>
+                                            <td style="width:200px;font-size:13px; padding:5px">@item.Address3</td>
+                                            <td style="width:100px;font-size:13px; padding:5px">@item.Postcode</td>
                                             <td style="width:150px;font-size:13px; padding:5px">
-                                                @if (Model.CustomerListCRM.Where(x => x.customer_number == item.cust_us1).Count() > 0)
+                                                @if (item.call_reporting.HasValue)
                                                 {
-                                                    crm = 1;
-                                                    <input id="crmct" onclick="return false;" type="checkbox" name="name" checked />
+                                                    if (item.call_reporting.Value)
+                                                    {
+                                                        crm = 1;
+                                                        <input id="crmct" onclick="return false;" type="checkbox" name="name" checked />
+                                                    }
+                                                    else
+                                                    {
+                                                        crm = 0;
+                                                        <input id="crmct" onclick="return false;" type="checkbox" name="name" />
+                                                    }
                                                 }
-                                                else
+
+                                            </td>
+                                            <td style="width:150px;font-size:13px; padding:5px">
+                                                @if (item.fleet_tvt.HasValue)
                                                 {
-                                                    crm = 0;
-                                                    <input id="crmct" onclick="return false;" type="checkbox" name="name" />
+                                                    if (item.fleet_tvt.Value)
+                                                    {
+                                                        ftvt = 1;
+                                                        <input id="ftvtct" onclick="return false;" type="checkbox" name="name" checked />
+                                                    }
+                                                    else
+                                                    {
+                                                        ftvt = 0;
+                                                        <input id="ftvtct" onclick="return false;" type="checkbox" name="name" />
+                                                    }
                                                 }
                                             </td>
                                             <td style="width:150px;font-size:13px; padding:5px">
-                                                @if (Model.CustomerListFleetTVT.Where(x => x.customer_number == item.cust_us1).Count() > 0)
+                                                @if (item.tread_tracker.HasValue)
                                                 {
-                                                    ftvt = 1;
-                                                    <input id="ftvtct" onclick="return false;" type="checkbox" name="name" checked />
-                                                }
-                                                else
-                                                {
-                                                    ftvt = 0;
-                                                    <input id="ftvtct" onclick="return false;" type="checkbox" name="name" />
-                                                }
-                                            </td>
-                                            <td style="width:150px;font-size:13px; padding:5px">
-                                                @if (item.cscttc == "True")
-                                                {
-                                                    tc = 1;
-                                                    <input id="ttcct" type="checkbox" onclick="return false;" checked />
-                                                }
-                                                else
-                                                {
-                                                    tc = 0;
-                                                    <input id="ttcct" type="checkbox" onclick="return false;" />
+                                                    if (item.tread_tracker.Value)
+                                                    {
+                                                        tc = 1;
+                                                        <input id="ttcct" onclick="return false;" type="checkbox" name="name" checked />
+                                                    }
+                                                    else
+                                                    {
+                                                        tc = 0;
+                                                        <input id="ttcct" onclick="return false;" type="checkbox" name="name" />
+                                                    }
                                                 }
                                             </td>
                                             <td style="width:50px;font-size:13px; padding:5px; text-align:center">
-                                                <a href="#"><span style="display:none">@item.cust_us1;@tc;@ftvt;@crm</span> <i class="fa fa-info" style="font-size:20px;opacity:0.8; color:dodgerblue"></i></a>
+                                                <a href="#"><span style="display:none">@item.CustomerCode;@tc;@ftvt;@crm</span> <i class="fa fa-info" style="font-size:20px;opacity:0.8; color:dodgerblue"></i></a>
                                             </td>
                                         </tr>
                                     }

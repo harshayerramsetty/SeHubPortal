@@ -11,9 +11,6 @@ using System.Web;
 using System.Web.Mvc;
 using System.IO;
 using Newtonsoft.Json.Linq;
-using Microsoft.Azure.Storage.Blob;
-using Microsoft.Azure.Storage;
-using System.Net.Mime;
 using System.Net.Mail;
 
 
@@ -484,7 +481,10 @@ namespace SeHubPortal.Controllers
 
         public ActionResult ExpnseClaim(ExpenseClaimViewModel model)
         {
-
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
 
             int empId = Convert.ToInt32(Session["userID"].ToString());
@@ -1052,38 +1052,25 @@ namespace SeHubPortal.Controllers
             return RedirectToAction("Dashboard", "Tools");
         }
 
-        [HttpGet]
-        public ActionResult FuelLog(string VIN, string loc)
-        {            
-
+        public ActionResult FuelLog(FuelLogViewModel model, string loc, string VIN)
+        {
             if (Session["userID"] == null)
             {
                 return RedirectToAction("SignIn", "Login");
             }
-            
+
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             int empId = Convert.ToInt32(Session["userID"].ToString());
+
+            var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
+            model.SehubAccess = empDetails;
 
             if (loc == null || loc == "")
             {
                 loc = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
             }
 
-            if (VIN == null || VIN == ""){
-                VIN = db.tbl_vehicle_info.Where(x => x.loc_id == loc && x.vehicle_status == 1).Select(x => x.VIN).FirstOrDefault();
-            }
-
-            //Trace.WriteLine("This is the Vin Number" + VIN + "and this is the location" + loc);
-
-            //Debug.WriteLine("empId:" + empId);
             var result = db.tbl_employee.Where(a => a.employee_id.Equals(empId)).FirstOrDefault();
-            var acccess_level = db.tbl_sehub_access.Where(a => a.employee_id.Equals(empId)).FirstOrDefault();
-            int permission_level = 0;
-            if (acccess_level != null)
-            {
-                permission_level = acccess_level.fuel_log.Value;
-
-            }
             string locationid = "";
             if (result != null)
             {
@@ -1094,184 +1081,43 @@ namespace SeHubPortal.Controllers
                 locationid = "";
             }
 
-            IOrderedQueryable<tbl_vehicle_info> VehicleDetails = null;
-            if (permission_level == 1)
+            if (VIN == null || VIN == "")
             {
-                VehicleDetails = db.tbl_vehicle_info.Where(x => x.assigned_to == empId).OrderBy(x => x.vehicle_short_id);
-            }
-            else if (permission_level > 1)
-            {
-                if (loc != null && loc != "")
-                {
-                    VehicleDetails = db.tbl_vehicle_info.Where(x => x.loc_id == loc).OrderBy(x => x.vehicle_short_id);
-                }
-                else
-                {
-                    VehicleDetails = db.tbl_vehicle_info.Where(x => x.loc_id == locationid).OrderBy(x => x.vehicle_short_id);
-                }
+                VIN = db.tbl_vehicle_info.Where(x => x.loc_id == loc && x.vehicle_status == 1).Select(x => x.VIN).FirstOrDefault();
+                
             }
 
-            if (VIN is null || VIN == "")
+            model.selectedVIN = VIN;
+            model.SelectedVehicleInfo = db.tbl_vehicle_info.Where(x => x.VIN == VIN).FirstOrDefault();
+            model.fuelLogList = db.tbl_fuel_log_fleet.Where(x => x.VIN == model.selectedVIN).OrderByDescending(x => x.date_of_purchase).ToList();
+
+            List<tbl_vehicle_info> VehicleDetails = new List<tbl_vehicle_info>();
+            if (loc != null && loc != "")
             {
-                FuelLogViewModel fuelLogModel = new FuelLogViewModel();
-
-                fuelLogModel.MatchedLocs = populateLocationsPermissions(empId);
-                var empDetail = db.tbl_employee.Where(x => x.employee_id == empId).FirstOrDefault();
-
-                if (loc != null && loc != "")
-                {
-                    fuelLogModel.MatchedLocID = loc;
-                    //Debug.WriteLine("This is the chosen location id" + loc);
-                }
-                else
-                {
-                    fuelLogModel.MatchedLocID = empDetail.loc_ID;
-                    //Debug.WriteLine("Current location is reaching");
-                }
-
-                var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
-                fuelLogModel.SehubAccess = empDetails;
-
-                if (fuelLogModel.SehubAccess.fuel_log == 0)
-                {
-                    return RedirectToAction("CRM", "Tools");
-                }
-
-                fuelLogModel.fuel_log_access = permission_level;
-                if (VehicleDetails != null)
-                {
-                    //Debug.WriteLine("Vehicle info there are details");
-                    fuelLogModel.vehicleInfoList = VehicleDetails.ToList();
-
-                    return View(fuelLogModel);
-                }
-                else
-                {
-                    //Debug.WriteLine("Vehicle info empty");
-
-                    return View(fuelLogModel);
-                }
-
-            }
-            else if (VIN == "NoSelectedVehicle")
-            {
-
-                tbl_vehicle_info selectVehicleInfo = new tbl_vehicle_info();
-                List<tbl_fuel_log_fleet> fuelList = new List<tbl_fuel_log_fleet>();
-
-                selectVehicleInfo.VIN = "";
-                selectVehicleInfo.vehicle_short_id = "";
-                selectVehicleInfo.vehicle_long_id = "";
-                selectVehicleInfo.vehicle_plate = "";
-                selectVehicleInfo.vehicle_manufacturer = "";
-                selectVehicleInfo.vehicle_model = "";
-                selectVehicleInfo.current_milage = 0;
-                selectVehicleInfo.efficiency_price = 0;
-                selectVehicleInfo.efficiency_liter = 0;
-
-
-                FuelLogViewModel fuelLogModel = new FuelLogViewModel();
-
-                fuelLogModel.MatchedLocs = populateLocationsPermissions(empId);
-                fuelLogModel.MatchedVehicle = "101-20003";//selectVehicleInfo.vehicle_short_id;
-
-                var empDetail = db.tbl_employee.Where(x => x.employee_id == empId).FirstOrDefault();
-
-                if (loc != null && loc != "")
-                {
-                    fuelLogModel.MatchedLocID = loc;
-                    //Debug.WriteLine("This is the chosen location id" + loc);
-                }
-                else
-                {
-                    fuelLogModel.MatchedLocID = empDetail.loc_ID;
-                    //Debug.WriteLine("Current location is reaching");
-                }
-
-                var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
-                fuelLogModel.SehubAccess = empDetails;
-
-                if (fuelLogModel.SehubAccess.fuel_log == 0)
-                {
-                    return RedirectToAction("CRM", "Tools");
-                }
-
-                if (VehicleDetails != null)
-                {
-                    //Debug.WriteLine("Vehicle info there are details");
-                    fuelLogModel.vehicleInfoList = VehicleDetails.ToList();
-                    fuelLogModel.fuelLogList = fuelList.ToList();
-                    fuelLogModel.selectedVIN = VIN;
-                    fuelLogModel.SelectedVehicleInfo = selectVehicleInfo;
-                    fuelLogModel.fuel_log_access = permission_level;
-                    fuelLogModel.MatchedVehicals = populateVehicles(loc, selectVehicleInfo.vehicle_short_id);
-                    fuelLogModel.MatchedVehicle = selectVehicleInfo.vehicle_short_id;
-                    return View(fuelLogModel);
-                }
-                else
-                {
-                    //Debug.WriteLine("Vehicle info empty");
-                    fuelLogModel.fuel_log_access = permission_level;
-                    return View(fuelLogModel);
-                }
+                VehicleDetails = db.tbl_vehicle_info.Where(x => x.loc_id == loc && x.vehicle_status == 1).OrderBy(x => x.vehicle_short_id).ToList();
             }
             else
             {
-                
-                var fuelList = db.tbl_fuel_log_fleet.Where(x => x.VIN == VIN).OrderByDescending(x => x.odometer);
-                var selectVehicleInfo = db.tbl_vehicle_info.Where(x => x.VIN == VIN).FirstOrDefault();
+                VehicleDetails = db.tbl_vehicle_info.Where(x => x.loc_id == locationid && x.vehicle_status == 1).OrderBy(x => x.vehicle_short_id).ToList();
+            }
 
-                FuelLogViewModel fuelLogModel = new FuelLogViewModel();
-
-
+            if(VIN != null)
+            {
+                model.MatchedLocs = populateLocationsPermissions(empId);
                 var empDetail = db.tbl_employee.Where(x => x.employee_id == empId).FirstOrDefault();
-
-
-                
 
                 if (loc != null && loc != "")
                 {
-                    fuelLogModel.MatchedLocID = loc;
-                    //Debug.WriteLine("This is the chosen location id" + loc);
+                    model.MatchedLocID = loc;
                 }
                 else
                 {
-                    fuelLogModel.MatchedLocID = empDetail.loc_ID;
-                    //Debug.WriteLine("Current location is reaching");
-                }
-
-                var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
-                fuelLogModel.SehubAccess = empDetails;
-
-                if (fuelLogModel.SehubAccess.fuel_log == 0)
-                {
-                    return RedirectToAction("CRM", "Tools");
-                }
-
-                if (VehicleDetails != null)
-                {
-                    //Debug.WriteLine("Vehicle info there are details");
-                    fuelLogModel.vehicleInfoList = VehicleDetails.ToList();
-                    fuelLogModel.fuelLogList = fuelList.ToList();
-                    fuelLogModel.selectedVIN = VIN;
-                    fuelLogModel.SelectedVehicleInfo = selectVehicleInfo;
-                    fuelLogModel.fuel_log_access = permission_level;
-                    fuelLogModel.MatchedLocs = populateLocationsPermissions(empId);
-                    fuelLogModel.MatchedVehicals = populateVehicles(loc, selectVehicleInfo.vehicle_short_id);
-                    fuelLogModel.MatchedVehicle = selectVehicleInfo.vehicle_short_id;
-
-                    //Trace.WriteLine("Reached");
-
-                    return View(fuelLogModel);
-                }
-                else
-                {
-                    //Debug.WriteLine("Vehicle info empty");
-                    fuelLogModel.fuel_log_access = permission_level;
-                    return View(fuelLogModel);
+                    model.MatchedLocID = empDetail.loc_ID;
                 }
             }
 
+            model.vehicleInfoList = VehicleDetails.ToList();
+            return View(model);
         }
 
         [HttpGet]
@@ -1298,6 +1144,10 @@ namespace SeHubPortal.Controllers
         [HttpGet]
         public ActionResult FuelInvoice(FuelInvoiceViewModel modal)
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             int empId = Convert.ToInt32(Session["userID"].ToString());
             var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
@@ -1317,12 +1167,18 @@ namespace SeHubPortal.Controllers
 
             
 
-            return View(modal);
+            return PartialView(modal);
         }
 
         [HttpGet]
         public ActionResult ShopSupplies(ShopSuppliesViewModel modal)
         {
+
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
+
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             int empId = Convert.ToInt32(Session["userID"].ToString());
             var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
@@ -1342,7 +1198,7 @@ namespace SeHubPortal.Controllers
             
             
 
-            return View(modal);
+            return PartialView(modal);
         }
 
         [HttpPost]
@@ -1377,10 +1233,10 @@ namespace SeHubPortal.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteFuelTransaction(tbl_fuel_log_fleet model)
+        public ActionResult DeleteFuelTransaction(FuelLogViewModel model)
         {
-            string transcationNumber = model.transaction_number;
-            string VinNumber = model.transaction_number.ToString().Split('-')[0];
+            string transcationNumber = model.deleteTransactionNumber;
+            string VinNumber = model.deleteTransactionNumber.ToString().Split('-')[0];
 
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             var fuelInfo = db.tbl_fuel_log_fleet.Where(x => x.transaction_number == transcationNumber).FirstOrDefault();
@@ -1392,6 +1248,44 @@ namespace SeHubPortal.Controllers
             db.SaveChanges();
             //Debug.WriteLine("Vin Number:" + VinNumber);
             return RedirectToAction("FuelLog", new { VIN = VinNumber });
+
+        }
+
+        [HttpPost]
+        public ActionResult DeleteFuelTransactionInvoice(FuelInvoiceViewModel model)
+        {
+            string transcationNumber = model.deleteTransactionNumber;
+            string VinNumber = model.deleteTransactionNumber.ToString().Split('-')[0];
+
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            var fuelInfo = db.tbl_fuel_log_invoiced.Where(x => x.transaction_number == transcationNumber).FirstOrDefault();
+
+            if (fuelInfo != null)
+            {
+                db.tbl_fuel_log_invoiced.Remove(fuelInfo);
+            }
+            db.SaveChanges();
+            //Debug.WriteLine("Vin Number:" + VinNumber);
+            return RedirectToAction("FuelLog", new { ac = "Invoice" });
+
+        }
+
+        [HttpPost]
+        public ActionResult DeleteFuelTransactionShop(ShopSuppliesViewModel model)
+        {
+            string transcationNumber = model.deleteTransactionNumber;
+            string VinNumber = model.deleteTransactionNumber.ToString().Split('-')[0];
+
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            var fuelInfo = db.tbl_fuel_log_shopSupplies.Where(x => x.transaction_number == transcationNumber).FirstOrDefault();
+
+            if (fuelInfo != null)
+            {
+                db.tbl_fuel_log_shopSupplies.Remove(fuelInfo);
+            }
+            db.SaveChanges();
+            //Debug.WriteLine("Vin Number:" + VinNumber);
+            return RedirectToAction("FuelLog", new { ac = "Shop" });
 
         }
 
@@ -1431,6 +1325,65 @@ namespace SeHubPortal.Controllers
         }
 
         [HttpPost]
+        public ActionResult EditFuelReceipt(FuelLogViewModel model)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+            var reciept = db.tbl_fuel_log_fleet.Where(x => x.VIN == model.selectedVIN && x.transaction_number == model.editFuelLogTableValues.transaction_number).FirstOrDefault();
+            if (reciept != null)
+            {
+                Trace.WriteLine("Reached Edit recipt");
+                reciept.employee_id = empId;
+                reciept.odometer = model.editFuelLogTableValues.odometer;
+                reciept.no_of_liters = model.editFuelLogTableValues.no_of_liters;
+                reciept.price_per_liter = model.editFuelLogTableValues.price_per_liter;
+                reciept.change_type = model.editFuelLogTableValues.change_type;
+                reciept.comments = model.editFuelLogTableValues.comments;
+                db.SaveChanges();
+            }
+            return RedirectToAction("FuelLog", new { VIN = model.selectedVIN });
+        }
+
+        [HttpPost]
+        public ActionResult EditFuelReceiptInvoice(FuelInvoiceViewModel model)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+            var reciept = db.tbl_fuel_log_invoiced.Where(x => x.transaction_number == model.EditfuelLogInvoiceTableValues.transaction_number).FirstOrDefault();
+            if (reciept != null)
+            {
+                Trace.WriteLine("Reached Edit recipt");
+                reciept.employee_id = empId;
+                reciept.invoice_number = model.EditfuelLogInvoiceTableValues.invoice_number;
+                reciept.no_of_liters = model.EditfuelLogInvoiceTableValues.no_of_liters;
+                reciept.price_per_liter = model.EditfuelLogInvoiceTableValues.price_per_liter;
+                reciept.change_type = model.EditfuelLogInvoiceTableValues.change_type;
+                reciept.comments = model.EditfuelLogInvoiceTableValues.comments;
+                db.SaveChanges();
+            }
+            return RedirectToAction("FuelLog", new { ac = "Invoice" });
+        }
+
+        [HttpPost]
+        public ActionResult EditFuelReceiptShop(ShopSuppliesViewModel model)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+            var reciept = db.tbl_fuel_log_shopSupplies.Where(x => x.transaction_number == model.editFuelLogShopSuppliesTableValues.transaction_number).FirstOrDefault();
+            if (reciept != null)
+            {
+                Trace.WriteLine("Reached Edit recipt");
+                reciept.employee_id = empId;
+                reciept.no_of_liters = model.editFuelLogShopSuppliesTableValues.no_of_liters;
+                reciept.price_per_liter = model.editFuelLogShopSuppliesTableValues.price_per_liter;
+                reciept.change_type = model.editFuelLogShopSuppliesTableValues.change_type;
+                reciept.comments = model.editFuelLogShopSuppliesTableValues.comments;
+                db.SaveChanges();
+            }
+            return RedirectToAction("FuelLog", new { ac = "Shop" });
+        }
+
+        [HttpPost]
         public ActionResult SaveFuelInvoiceReceipt(FuelInvoiceViewModel model)
         {
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
@@ -1460,7 +1413,7 @@ namespace SeHubPortal.Controllers
 
             db.SaveChanges();
 
-            return RedirectToAction("FuelInvoice");
+            return RedirectToAction("FuelLog");
         }
 
         [HttpPost]
@@ -1495,7 +1448,7 @@ namespace SeHubPortal.Controllers
 
             db.SaveChanges();
 
-            return RedirectToAction("ShopSupplies");
+            return RedirectToAction("FuelLog");
         }
 
         public ActionResult DeleteTransaction(string id)
@@ -2021,13 +1974,17 @@ namespace SeHubPortal.Controllers
         [HttpGet]
         public ActionResult CRM(string CustId)
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
 
             //Debug.WriteLine("In CustomerReporting:" + CustId);
             CustomerReportingViewModel modal = new CustomerReportingViewModel();
 
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
 
-            modal.emp_tbl = db.tbl_employee.ToList();
+            //modal.emp_tbl = db.tbl_employee.ToList();
 
             int empId = Convert.ToInt32(Session["userID"].ToString());
 
@@ -2040,11 +1997,20 @@ namespace SeHubPortal.Controllers
             {
                 return RedirectToAction("Dashboard", "TreadTracker");
             }
-             
+
+            modal.Customers = PopulateCustomers("Nothing");
+            
+
+            if (CustId == null)
+            {
+                CustId = modal.Customers.OrderBy(x => x.Text).Select(x => x.Value).FirstOrDefault();
+            }
+
+
             if (CustId == "")
             {
                 //Debug.WriteLine("Null");
-                modal.Customers = PopulateCustomers("Nothing");
+                
             }
             else
             {
@@ -2052,18 +2018,16 @@ namespace SeHubPortal.Controllers
                 //Debug.WriteLine("Custoomer details:" + CustId);
                 modal.Customers = PopulateCustomers(CustId);
 
-                var result = db.tbl_customer_list.Where(a => a.cust_us1.Equals(CustId) && (a.cust_us2 == "0" || a.cust_us2 == "000")).FirstOrDefault();
+                var result = db.tbl_cta_customers.Where(a => a.CustomerCode.ToString() == CustId).FirstOrDefault();
                 if (result != null)
                 {
                     modal.customerDetails = result;
                 }
-
-
                 List<tbl_customer_reporting_viewmodel> customerReportingTable = new List<tbl_customer_reporting_viewmodel>();
                 string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
                 using (SqlConnection con = new SqlConnection(constr))
                 {
-                    string query = "select * from tbl_customer_reporting a, tbl_employee b where a.cta_employee_number= b.employee_id and customer_number='" + CustId + "' order by visit_date";
+                    string query = "select * from tbl_customer_reporting a, tbl_employee b where a.cta_employee_number= b.employee_id and customer_number='" + CustId + "' order by visit_date DESC";
                     //Debug.WriteLine(query);
                     using (SqlCommand cmd = new SqlCommand(query))
                     {
@@ -2094,92 +2058,165 @@ namespace SeHubPortal.Controllers
                     }
                 }
 
-                List<tbl_dispute_resolution> disputeResolutionTable = new List<tbl_dispute_resolution>();
-                string constr1 = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-                using (SqlConnection con = new SqlConnection(constr))
-                {
-                    string query = "select * from tbl_dispute_resolution";
-                    //Debug.WriteLine(query);
-                    using (SqlCommand cmd = new SqlCommand(query))
-                    {
-                        cmd.Connection = con;
-                        con.Open();
-                        using (SqlDataReader sdr = cmd.ExecuteReader())
-                        {
-
-                            while (sdr.Read())
-                            {
-                                tbl_dispute_resolution dispute_resolution_tbl = new tbl_dispute_resolution();
-                                dispute_resolution_tbl.invoice_number = Convert.ToInt32(sdr["invoice_number"]);
-                                dispute_resolution_tbl.date_dispute = Convert.ToDateTime(sdr["date_dispute"]);
-                                dispute_resolution_tbl.mileage_dispute = Convert.ToInt32(sdr["mileage_dispute"]);
-                                dispute_resolution_tbl.date_service = Convert.ToDateTime(sdr["date_service"]);
-                                dispute_resolution_tbl.mileage_service = Convert.ToInt32(sdr["mileage_service"]);
-                                dispute_resolution_tbl.customer_number = Convert.ToInt32(sdr["customer_number"]);
-                                dispute_resolution_tbl.customer_name_NoAccount = Convert.ToString(sdr["customer_name_NoAccount"]);
-                                dispute_resolution_tbl.employee_id = Convert.ToInt32(sdr["employee_id"]);
-                                dispute_resolution_tbl.details = Convert.ToString(sdr["details"]);
-                                dispute_resolution_tbl.recommandation = Convert.ToString(sdr["recommandation"]);
-                                dispute_resolution_tbl.final_outcome = Convert.ToString(sdr["final_outcome"]);
-                                dispute_resolution_tbl.complete = Convert.ToInt32(sdr["complete"]);
-
-                                disputeResolutionTable.Add(dispute_resolution_tbl);
-                            }
-
-                        }
-                        con.Close();
-                    }
-                }
-
-                List<tbl_target_accounts> targetAccountTable = new List<tbl_target_accounts>();
-                string constr2 = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-                using (SqlConnection con = new SqlConnection(constr))
-                {
-                    string query = "select * from tbl_target_accounts";
-                    //Debug.WriteLine(query);
-                    using (SqlCommand cmd = new SqlCommand(query))
-                    {
-                        cmd.Connection = con;
-                        con.Open();
-                        using (SqlDataReader sdr = cmd.ExecuteReader())
-                        {
-
-                            while (sdr.Read())
-                            {
-                                tbl_target_accounts target_account_tbl = new tbl_target_accounts();
-                                target_account_tbl.cta_employee_number = Convert.ToInt32(sdr["cta_employee_number"]);
-                                target_account_tbl.visit_type = sdr["visit_type"].ToString();
-                                target_account_tbl.customer_contact = sdr["customer_contact"].ToString();
-                                target_account_tbl.visit_date = Convert.ToDateTime(sdr["visit_date"]);
-                                target_account_tbl.discusssion_details = sdr["discussion_details"].ToString();
-                                target_account_tbl.remainder = sdr["reminders"].ToString();
-                                target_account_tbl.submission_date = Convert.ToDateTime(sdr["submission_date"]);
-                                target_account_tbl.customer_name = sdr["customer_name"].ToString();
-
-                                targetAccountTable.Add(target_account_tbl);
-                            }
-
-                        }
-                        con.Close();
-                    }
-                }
-
                 if (customerReportingTable != null)
                 {
                     modal.customerReportingDetails = customerReportingTable;
                 }
 
-                if (targetAccountTable != null)
+            }
+
+            return View(modal);
+        }
+
+        [HttpPost]
+        public ActionResult ChangeLocTargetAccount(CustomerReportingViewModel model)
+        {
+            return RedirectToAction("TargetAccount", new { loc_id = model.MatchedLocID });
+        }
+
+        private static List<SelectListItem> populateEmployees(string loc_id)
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            if (loc_id == "All" || loc_id == null)
+            {
+                var emp = db.tbl_employee.Where(x => x.status == 1).ToList();
+                foreach (var val in emp)
                 {
-                    modal.targetAccountDetails = targetAccountTable.OrderByDescending(x => x.visit_date).ToList();
+                    items.Add(new SelectListItem
+                    {
+                        Text = val.full_name,
+                        Value = Convert.ToString(val.employee_id)
+                    });
                 }
-
-                if (targetAccountTable != null)
+                return items;
+            }
+            else
+            {
+                var emp = db.tbl_employee.Where(x => x.status == 1 && x.loc_ID == loc_id).ToList();
+                foreach (var val in emp)
                 {
-                    modal.DisputeResolutionDetails = disputeResolutionTable;
+                    items.Add(new SelectListItem
+                    {
+                        Text = val.full_name,
+                        Value = Convert.ToString(val.employee_id)
+                    });
                 }
+                return items;
+            } 
+        }
 
+        [HttpGet]
+        public ActionResult TargetAccount(string loc_id)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            CustomerReportingViewModel modal = new CustomerReportingViewModel();
 
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+
+            modal.MatchedLocs = populateLocations();
+
+            modal.username = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.full_name).FirstOrDefault();
+
+            var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
+            modal.SehubAccess = empDetails;
+
+            if (modal.SehubAccess.customer_reporting >=3)
+            {
+                modal.MatchedLocs.Add(new SelectListItem
+                 {
+                     Text = "All",
+                     Value = "All"
+                 });
+            }
+
+            string location = "";
+
+            if (loc_id == "All")
+            {
+                modal.MatchedLocID = "All";
+            }
+            else
+            {
+                if (loc_id != null)
+                {
+                    location = "and a.location_id = '" + loc_id + "'";
+                    modal.MatchedLocID = loc_id;
+                }
+                else
+                {
+                    location = "and a.location_id = '" + db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault() + "'";
+                    modal.MatchedLocID = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
+                }
+            }
+
+            
+
+            modal.EmployeesList = populateEmployees(loc_id);
+
+            string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            List<targetAcountViewModel> targetAccountTable = new List<targetAcountViewModel>();
+            string constr2 = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                string query = "select full_name, visit_type, customer_name, customer_contact, visit_date, discussion_details, reminders, submission_date from tbl_target_accounts a, tbl_employee b where a.cta_employee_number = b.employee_id "+location;
+                //Debug.WriteLine(query);
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    cmd.Connection = con;
+                    con.Open();
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+
+                        while (sdr.Read())
+                        {
+                            targetAcountViewModel target_account_tbl = new targetAcountViewModel();
+                            target_account_tbl.full_name = sdr["full_name"].ToString();
+                            target_account_tbl.visit_type = sdr["visit_type"].ToString();
+                            target_account_tbl.customer_contact = sdr["customer_contact"].ToString();
+                            target_account_tbl.visit_date = Convert.ToDateTime(sdr["visit_date"]);
+                            target_account_tbl.discusssion_details = sdr["discussion_details"].ToString();
+                            target_account_tbl.remainder = sdr["reminders"].ToString();
+                            target_account_tbl.submission_date = Convert.ToDateTime(sdr["submission_date"]);
+                            target_account_tbl.customer_name = sdr["customer_name"].ToString();
+
+                            targetAccountTable.Add(target_account_tbl);
+                        }
+
+                    }
+                    con.Close();
+                }
+            }
+
+            if (targetAccountTable != null)
+            {
+                modal.targetAccountDetails = targetAccountTable.OrderByDescending(x => x.visit_date).ToList();
+            }
+
+            return View(modal);
+        }
+
+        [HttpGet]
+        public ActionResult DisputeResolution()
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            CustomerReportingViewModel modal = new CustomerReportingViewModel();
+
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+
+            modal.username = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.full_name).FirstOrDefault();
+
+            var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
+            modal.SehubAccess = empDetails;
+
+            List<tbl_dispute_resolution> disputeResolutionTable = new List<tbl_dispute_resolution>();
+
+            disputeResolutionTable = db.tbl_dispute_resolution.ToList();
+
+            if (disputeResolutionTable != null)
+            {
+                modal.DisputeResolutionDetails = disputeResolutionTable;
             }
 
             return View(modal);
@@ -2252,7 +2289,7 @@ namespace SeHubPortal.Controllers
             msg.From = new MailAddress(db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.cta_email).FirstOrDefault(), "Sehub");
             msg.CC.Add(new MailAddress(db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.cta_email).FirstOrDefault()));
 
-            msg.Subject = "SE-HUB: Customer Reporting - " + model.customerDetails.cust_name + ", " + DateTime.Today.ToString().Substring(0, 10);
+            msg.Subject = "SE-HUB: Customer Reporting - " + model.customerDetails.CustomerName + ", " + DateTime.Today.ToString().Substring(0, 10);
             msg.Body =
                 "Hello," +
                 "<br /><br />" +
@@ -2260,7 +2297,7 @@ namespace SeHubPortal.Controllers
                 "<br /><br />" +
                 "<i><b><font size=3>Call Report - " + model.AddCRM.visit_type + " Visit</font></b></i>" +
                 "<br /><br />" +
-                "<u><b>Customer</b></u>: " + model.customerDetails.cust_name +
+                "<u><b>Customer</b></u>: " + model.customerDetails.CustomerName +
                 "<br /><br />" +
                 "<u><b>Contact</b></u>: " + model.AddCRM.customer_contact +
                 "<br /><br />" +
@@ -2309,8 +2346,8 @@ namespace SeHubPortal.Controllers
                 {
                     command.Parameters.AddWithValue("@empId", empId);
                     command.Parameters.AddWithValue("@visittype", model.AddCRM.visit_type);
-                    command.Parameters.AddWithValue("@custId", model.customerDetails.cust_us1);
-                    command.Parameters.AddWithValue("@custName", model.customerDetails.cust_name);
+                    command.Parameters.AddWithValue("@custId", model.customerDetails.CustomerCode);
+                    command.Parameters.AddWithValue("@custName", model.customerDetails.CustomerName);
                     command.Parameters.AddWithValue("@Comments", model.AddCRM.discusssion_details);
 
                     if(model.AddCRM.remainder != null)
@@ -2334,51 +2371,27 @@ namespace SeHubPortal.Controllers
                 connection.Close();
             }
 
-            return RedirectToAction("CRM", new { CustId = model.customerDetails.cust_us1 });
+            return RedirectToAction("CRM", new { CustId = model.customerDetails.CustomerCode });
         }
 
         private static List<SelectListItem> PopulateCustomers(string value)
         {
-
+            List<SelectListItem> items = new List<SelectListItem>();
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
 
-            //Debug.WriteLine("Inside PopulateCustomers with value:" + value);
-            List<SelectListItem> items = new List<SelectListItem>();
-            string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            using (SqlConnection con = new SqlConnection(constr))
+            var custList = db.tbl_cta_customers.Where(x => x.call_reporting == true).OrderBy(x => x.CustomerName).ToList();
+
+            foreach (var cust in custList)
             {
-                string query = "select distinct a.customer_number from tbl_customer_reporting_customers a, tbl_customer_reporting b, tbl_customer_list c where a.customer_number = b.customer_number and a.customer_number = c.cust_us1 and b.report_type = 'Call Report'";
-                using (SqlCommand cmd = new SqlCommand(query))
+                items.Add(new SelectListItem
                 {
-                    cmd.Connection = con;
-                    con.Open();
-                    using (SqlDataReader sdr = cmd.ExecuteReader())
-                    {
-                        while (sdr.Read())
-                        {
-                            string custNum = sdr["customer_number"].ToString();
-
-                            if(custNum != null)
-                            {
-                                items.Add(new SelectListItem
-                                {
-
-                                    Value = sdr["customer_number"].ToString(),
-                                    Text = db.tbl_customer_list.Where(x => x.cust_us1 == custNum).Select(x => x.cust_name).FirstOrDefault()
-                                });
-                            }
-                        }
-
-                    }
-                    con.Close();
-                }
+                    Text = cust.CustomerName,
+                    Value = cust.CustomerCode.ToString()
+                });
             }
 
-            List<SelectListItem> items1 = new List<SelectListItem>();
 
-            items1 = items.OrderBy(x => x.Text).ToList();
-
-            return items1;
+            return items;
         }
 
         [HttpPost]
@@ -2433,14 +2446,15 @@ namespace SeHubPortal.Controllers
                 client.Send(msg);
                 //Debug.WriteLine("Message Sent Succesfully");
             }
-            catch (Exception ex)
+            catch (Exception ex).
+            +
             {
                 Debug.WriteLine(ex.ToString());
             }
 
             */
 
-
+            Trace.WriteLine("Reached till here 1");
 
             string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             try
@@ -2450,10 +2464,10 @@ namespace SeHubPortal.Controllers
                 {
                     connection.Open();
                     StringBuilder sb = new StringBuilder();
-                    sb.Append("INSERT INTO tbl_target_accounts VALUES (@cta_employee_number, @visittype, 'customer_name', @customer_contact, @visit_date, @discussion_details,@reminders,@submission_date)");
+                    sb.Append("INSERT INTO tbl_target_accounts VALUES (@cta_employee_number, @visittype, 'customer_name', @customer_contact, @visit_date, @discussion_details,@reminders,@submission_date,@location_id)");
 
                     string sql = sb.ToString();
-                    //Debug.WriteLine(sql);
+                    Trace.WriteLine(sql);
                     using (SqlCommand command = new SqlCommand(sql, connection))
                     {
                         command.Parameters.AddWithValue("@cta_employee_number", empId);
@@ -2463,7 +2477,9 @@ namespace SeHubPortal.Controllers
                         command.Parameters.AddWithValue("@discussion_details", model.AddTA.discusssion_details);
                         command.Parameters.AddWithValue("@reminders", model.AddTA.remainder);
                         command.Parameters.AddWithValue("@submission_date", System.DateTime.Today.Date);
+                        command.Parameters.AddWithValue("@location_id", model.MatchedLocID);
 
+                        Trace.WriteLine("Reached till here 2");
 
                         command.ExecuteNonQuery();
                         command.Parameters.Clear();
@@ -2476,7 +2492,9 @@ namespace SeHubPortal.Controllers
                 System.Diagnostics.Debug.WriteLine(e.ToString());
             }
 
-            return RedirectToAction("CRM", new { CustId = "" });
+            Trace.WriteLine("Reached till here 3");
+
+            return RedirectToAction("TargetAccount", new { CustId = "" });
         }
 
         [HttpPost]
@@ -2841,6 +2859,28 @@ namespace SeHubPortal.Controllers
                 value = x.Key,
                 text = x.Value
             }).ToList(), JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult PopulateTreadTracker(string loc)
+        {
+
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            var customers = db.tbl_cta_customers.ToList();
+            foreach (var cust in customers)
+            {
+                var custm = db.tbl_cta_customers.Where(x => x.CustomerCode == cust.CustomerCode).FirstOrDefault();
+                if(db.tbl_cta_customers.Where(x => x.CustomerCode.ToString() == cust.CustomerName).Count() > 0)
+                {
+                    custm.call_reporting = true;
+                }
+                if (db.tbl_treadtracker_workorder.Where(x => x.customer_number == cust.CustomerCode.ToString()).Count() > 0)
+                {
+                    custm.tread_tracker = true;
+                }
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("ProductionReport", "TreadTracker");
         }
 
     }

@@ -12,7 +12,9 @@ namespace SeHubPortal.ViewModel
         public tbl_sehub_access SehubAccess { get; set; }
         public List<tbl_fuel_log_shopSupplies> fuelLogShopSuppliesList { get; set; }
         public tbl_fuel_log_shopSupplies fuelLogShopSuppliesTableValues { get; set; }
+        public tbl_fuel_log_shopSupplies editFuelLogShopSuppliesTableValues { get; set; }
         public List<SelectListItem> LocationsList { get; set; }
         public string MatchedLocation { get; set; }
+        public string deleteTransactionNumber { get; set; }
     }
 }

@@ -4,172 +4,343 @@
 }
 
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" type="image/x-icon" href="~/Content/title_logo_2.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <style>
+        #EmailAddress, #password {
+            border: 0;
+            background: none;
+            display: block;
+            text-align: left;
+            border: 2px solid lightgray;
+            outline: none;
+            color: black;
+            border-radius: 5px;
+            transition: 0.25s;
+            height: 50px;
+            width: 100%;
+            text-align: center;
+        }
 
-<html>
-    <head>
-        <meta name="viewport" content="width=device-width" />
-        <title>Login</title>
-        <meta charset="utf-8">
-        <link rel="shortcut icon" type="image/x-icon" href="~/Content/title_logo_2.png">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-        <style>
-            #EmailAddress, #password {
-                border: 0;
-                background: none;
-                display: block;
-                text-align: left;
-                border: 2px solid lightgray;
-                outline: none;
-                color: black;
-                border-radius: 5px;
-                transition: 0.25s;
-                height: 50px;
-                width: 100%;
-                text-align: center;
+
+        #sbumitBtn:hover {
+            background: White;
+            color: Black;
+        }
+
+        #sbumitBtn {
+            border: 0;
+            background: none;
+            display: block;
+            text-align: center;
+            border: 2px solid gray;
+            padding: 7px 60px;
+            outline: none;
+            color: White;
+            background-color: gray;
+            border-radius: 5px;
+            transition: 0.25s;
+            cursor: pointer;
+            height: 40px;
+            font-size: 16px;
+            height: 45px;
+        }
+    </style>
+
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        main {
+            font-family: "Heebo", sans-serif;
+        }
+
+        .landing {
+            min-height: 100vh;
+            background-size: cover;
+            padding: 0rem 5rem;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 10vh;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+            .nav-links li {
+                padding-left: 10rem;
+                font-size: 1.5rem;
             }
 
+        #logo {
+            font-family: "Lobster", cursive;
+            font-weight: lighter;
+            font-size: 2rem;
+        }
 
-            #sbumitBtn:hover {
-                background: White;
-                color: Black;
+
+        #usr_name {
+            font-family: "Lobster", cursive;
+            font-weight: lighter;
+        }
+
+        .big-text {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -30%);
+            font-size: 5rem;
+            font-family: "Lobster", cursive;
+            color: rgb(61, 61, 61);
+        }
+
+        .intro {
+            background: black;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slider {
+            background: rgb(97, 105, 109);
+            background: #d4d4d4;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translateY(200%);
+            width: 100%;
+            height: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .intro-text {
+            color: rgb(233, 233, 233);
+            font-family: "Heebo", sans-serif;
+            font-size: 3rem;
+        }
+
+        .hide {
+            background: black;
+            overflow: hidden;
+        }
+
+            .hide span {
+                transform: translateY(100%);
+                display: inline-block;
             }
 
-            #sbumitBtn {
-                border: 0;
-                background: none;
-                display: block;
-                text-align: center;
-                border: 2px solid gray;
-                padding: 7px 60px;
-                outline: none;
-                color: White;
-                background-color: gray;
-                border-radius: 5px;
-                transition: 0.25s;
-                cursor: pointer;
-                height: 40px;
-                font-size: 16px;
-                height: 45px;
-            }
-        </style>
-    </head>
-    <body style="overflow-x:hidden">
-        <div style="display:none">
-            <div class="row">
-                <div class="col-lg-12 text-right" style="padding:20px 40px 20px 40px">
-                    <a style="visibility:hidden" class="text-primary" onclick="location.href='@Url.Action("HarpoonLogin", "Login")';"><u>Harpoon Login</u></a>
-                </div>
-            </div>
-            <div class="row" style="visibility:hidden">
-                <div class="col-lg-12 text-right">
-                    <label>IP Address </label>
-                    <input type="text" style="height:25px; outline:none; margin:15px 15px 0px 15px" readonly name="name" value="@Model.ip" />
-                </div>
-            </div>
-        </div>
+        ::-ms-input-placeholder { /* Microsoft Edge */
+            color: red;
+        }
 
-        <div class="row" style="display:flex; height:100vh; justify-content:center; align-items:center">
-            <div class="col-lg-3 col-sm-12">
 
-            </div>
-            <div class="col-lg-6 col-sm-12">
+        input:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0 30px white inset;
+        }
+
+        input[type="text"],
+        input[type="search"],
+        input[type="password"],
+        input[type="email"],
+        input[type="file"],
+        input[type="number"],
+        input[type="tel"],
+        textarea,
+        select {
+            background-color: white !important;
+        }
+
+    </style>
+
+
+</head>
+<body>
+    <main>
+        <section class="landing">
+            <div style="display:none">
                 <div class="row">
-                    <div class="col-lg-12 text-center">
-                        <img src='~/Content/LoginLogo.png' style="width:63%" />
+                    <div class="col-lg-12 text-right" style="padding:20px 40px 20px 40px">
+                        <a style="visibility:hidden" class="text-primary" onclick="location.href='@Url.Action("HarpoonLogin", "Login")';"><u>Harpoon Login</u></a>
                     </div>
                 </div>
-                @using (Html.BeginForm("Login", "Login", FormMethod.Post))
-                {
-                    <div class="row" style="margin-left:15%;margin-right:15%;margin-top:20px;">
-                        <div class="form-group col-md-12">
+                <div class="row" style="visibility:hidden">
+                    <div class="col-lg-12 text-right">
+                        <label>IP Address </label>
+                        <input type="text" style="height:25px; outline:none; margin:15px 15px 0px 15px" readonly name="name" value="@Model.ip" />
+                    </div>
+                </div>
+            </div>
 
-                            @*<input type="email" class="form-control input-lg" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">*@
-                            @Html.TextBoxFor(model => model.EmailAddress, new { htmlAttributes = new { @class = "form-control input-lg ", @required = "required", @placeholder = "Enter Email", @type = "email", @style = "font-size: 50px;" } })
+            <div class="row" style="display:flex; height:100vh; justify-content:center; align-items:center; ">
+                <div class="col-lg-3 col-sm-12">
 
-                        </div>
-                        <div class="form-group col-md-12">
-
-                            @*<input type="password" class="form-control input-lg" id="exampleInputPassword1" placeholder="Password">*@
-                            @Html.PasswordFor(model => model.password, new { htmlAttributes = new { @class = "form-control input-lg ", @required = "required", @placeholder = "Enter Password", @type = "password", @style = "font-size: 50px;" } })
+                </div>
+                <div class="col-lg-6 col-sm-12">
+                    <div class="row">
+                        <div class="col-lg-12 text-center">
+                            <img src='~/Content/LoginLogo.png' style="width: 63% " />
                         </div>
                     </div>
+                    @using (Html.BeginForm("Login", "Login", FormMethod.Post))
+                    {
+                        <div class="row" style="margin-left: 15%; margin-right: 15%; margin-top: 20px; ">
+                            <div class="form-group col-md-12">
+
+                                @*<input type="email" class="form-control input-lg" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">*@
+                                @Html.TextBoxFor(model => model.EmailAddress, new { htmlAttributes = new { @class = "form-control input-lg signupText", @required = "required", @placeholder = "Enter Email", @type = "email", @style = "font-size: 50px;" } })
+
+                            </div>
+                            <div class="form-group col-md-12">
+
+                                @*<input type="password" class="form-control input-lg" id="exampleInputPassword1" placeholder="Password">*@
+                                @Html.PasswordFor(model => model.password, new { htmlAttributes = new { @class = "form-control input-lg signupText", @required = "required", @placeholder = "Enter Password", @type = "password", @style = "font-size: 50px; " } })
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-left:15%;margin-right:15%">
+
+                            <div class="col-md-12 col-sm-12" style="padding-right:0px">
+                                <input id="sbumitBtn" type="submit" value="Sign in" class="btn btn-secondary" style="float:left" />
+                                <a id="forgetPwdBtn" style="float:right;margin-top:10px;margin-right:15px;font-size:16px;" href="#" data-toggle="modal" onclick="forgot()" data-target="#forgotPassword">Forgot Password?</a>
+                            </div>
+
+                        </div>
+
+
+                    }
+                    <hr style="border: 0.5px solid lightgray;margin-left:15%;margin-right:15%" />
 
                     <div class="row" style="margin-left:15%;margin-right:15%">
 
-                        <div class="col-md-12 col-sm-12" style="padding-right:0px">
-                            <input id="sbumitBtn" type="submit" value="Sign in" class="btn btn-secondary" style="float:left" />
-                            <a id="forgetPwdBtn" style="float:right;margin-top:10px;margin-right:15px;font-size:16px;" href="#" data-toggle="modal" onclick="forgot()" data-target="#forgotPassword">Forgot Password?</a>
+                        <div class="col-md-12 col-sm-12" style="display:flex; justify-content: space-between">
+                            <button onclick="location.href='@Url.Action("GeneralAccess", "Login")';" style="padding: 8px 31px 9px 31px;" class="btn btn-primary">General Access</button>
+                            <div>
+                                <text style="font-size: 16px; text-align: right; margin-right: 5px">Don't have an account?</text>
+                                <a id="SignUpBtn" class="signup" style="font-size:16px;text-align:center;" href="#" data-toggle="modal" data-target="#signupModal">Sign up</a>
+                            </div>
                         </div>
 
                     </div>
 
+                </div>
+                <div class="col-lg-3 col-sm-12">
 
-                }
-                <hr style="border: 0.5px solid lightgray;margin-left:15%;margin-right:15%" />
-                <div class="row" style="margin-left:17%;margin-right:17%; display:flex; justify-content:space-between">
+                </div>
+            </div>
 
-                    <button onclick="location.href='@Url.Action("GeneralAccess", "Login")';" style="padding: 8px 31px 9px 31px;" class="btn btn-primary">General Access</button>
-                    <div style="display:flex; justify-content:flex-end">
-                        <text style="font-size:16px;text-align:right;margin-right:5px">Don't have an account?</text>
-                        <a id="SignUpBtn" class="signup" style="font-size:16px;text-align:center;" href="#" data-toggle="modal" data-target="#signupModal">Sign up</a>
+            <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div id="SignUpDiv">
+
                     </div>
 
                 </div>
             </div>
-            <div class="col-lg-3 col-sm-12">
 
-            </div>
-        </div>
+            <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div id="ForgetPasswordDiv">
 
-        <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div id="SignUpDiv">
+                    </div>
 
                 </div>
-
             </div>
-        </div>
 
-        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div id="ForgetPasswordDiv">
-
-                </div>
-
-            </div>
-        </div>
-
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header" style="padding:7px 3px 3px 15px">
-                        <h5>Acknowledgment</h5>
-                    </div>
-                    <div class="modal-body text-center">
-                        <h3>Access Denied</h3>
-                    </div>
-                    <div class="modal-footer" style="padding:3px">
-                        <button type="button" style="padding:2px 30px 2px 30px" class="btn btn-danger" data-dismiss="modal">Close</button>
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="padding:7px 3px 3px 15px">
+                            <h5>Acknowledgment</h5>
+                        </div>
+                        <div class="modal-body text-center">
+                            <h3>Access Denied</h3>
+                        </div>
+                        <div class="modal-footer" style="padding:3px">
+                            <button type="button" style="padding:2px 30px 2px 30px" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
                     </div>
                 </div>
             </div>
+
+        </section>
+    </main>
+    <div class="intro">
+        <div class="intro-text">
+            <h1 class="hide">
+                <span class="text" style="font-size:70px">Exceptional Auto Service  </span>
+            </h1>
+            <h1 class="hide">
+                <span class="text" style="font-size:70px">And Tire Sales</span>
+            </h1>
+            <h1 class="hide">
+                <span class="text" style="font-size:70px">Since 1977</span>
+            </h1>
         </div>
+    </div>
+    <div class="slider">
+        <img src="~/Content/slider.png" style="width:90%" alt="Alternate Text" />
+    </div>
 
 
 
-        <script type="text/javascript" src="Scripts/jquery-1.6.2.js"></script>
-        <script type="text/javascript">
-            $.getJSON("http://jsonip.appspot.com?callback=?",
-                function (data) {
-                    alert("Your ip: " + data.ip);
-                });
-        </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js"
+            integrity="sha512-IQLehpLoVS4fNzl7IfH8Iowfm5+RiMGtHykgZJl9AWMgqx0AmJ6cRWcB+GaGVtIsnC4voMfm8f2vwtY+6oPjpQ=="
+            crossorigin="anonymous"></script>
 
-        <script>
+    <script type="text/javascript">
+        function login_function() {
+            if ($('#email').val() == "hyerramsetty@mun.ca" && $('#password').val() == "sweety") {
+                window.location.href = 'file:///C:/Users/sriha/OneDrive/Desktop/Project-Z/Discussion_page.html';
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        const tl = gsap.timeline({ defaults: { ease: "power1.out" } });
+
+        tl.to(".text", { y: "0%", duration: 1, stagger: 0.25 });
+        tl.to(".slider", { y: "-100%", duration: 8 });
+        tl.to(".intro", { y: "-100%", duration: 6.1 }, "-=5.9");
+        
+        tl.fromTo("nav", { opacity: 0 }, { opacity: 1, duration: 1 });
+        tl.fromTo(".big-text", { opacity: 0 }, { opacity: 1, duration: 1 }, "-=1");
+    </script>
+
+    <script type="text/javascript" src="Scripts/jquery-1.6.2.js"></script>
+    <script type="text/javascript">
+        $.getJSON("http://jsonip.appspot.com?callback=?",
+            function (data) {
+                alert("Your ip: " + data.ip);
+            });
+    </script>
+
+    <script>
 
             $(document).ready(function () {
                 function getUrlVars() {
@@ -215,8 +386,7 @@
              });
 
            });
-        </script>
-    </body>
- 
+    </script>
 
+</body>
 </html>

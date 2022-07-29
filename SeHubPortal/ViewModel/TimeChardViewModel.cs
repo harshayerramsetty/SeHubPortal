@@ -10,6 +10,7 @@ namespace SeHubPortal.ViewModel
         public string eventID { get; set; }
         public DateTime timeStamp { get; set; }
         public string clientID { get; set; }
-        public string comments { get; set; }
+        public string locationID { get; set; }
+        public string job_id { get; set; }
     }
 }

@@ -15,11 +15,13 @@ namespace SeHubPortal.ViewModel
         public string selectedVIN { get; set; }
         public tbl_vehicle_info SelectedVehicleInfo { get; set; }
         public tbl_fuel_log_fleet fuelLogTableValues { get; set; }
+        public tbl_fuel_log_fleet editFuelLogTableValues { get; set; }
         public int fuel_log_access { get; set; }
         public tbl_sehub_access SehubAccess { get; set; }
         public List<SelectListItem> MatchedLocs { get; set; }
         public string MatchedLocID { get; set; }
         public List<SelectListItem> MatchedVehicals { get; set; }
         public string MatchedVehicle { get; set; }
+        public string deleteTransactionNumber { get; set; }
     }
 }

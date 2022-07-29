@@ -9,7 +9,7 @@
         var workorders = Model.barcodeInfo.OrderBy(x => x.retread_workorder).Select(x => x.retread_workorder).Distinct().ToList();
         var barcodes = Model.barcodeInfo.Select(x => x.barcode).Distinct().ToList();
     }
-
+       
     <div class="row" style="padding:0px 15px 0px 15px; ">
         <div class="col-lg-12">
                        
@@ -18,7 +18,7 @@
             {
 
                 string custNum = Model.workOrderInfo.Where(x => x.retread_workorder == item).Select(x => x.customer_number).FirstOrDefault();
-                string custName = Model.customerInfo.Where(x => x.cust_us1 == custNum).Select(x => x.cust_name).FirstOrDefault();
+                string custName = Model.customerInfo.Where(x => x.CustomerCode.ToString() == custNum).Select(x => x.CustomerName).FirstOrDefault().ToString();
 
                 <div class="row" style="padding:20px 15px 0px 15px">
                     <table class="table table-bordered" style="border-radius: 5px; margin-bottom:0px">

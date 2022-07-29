@@ -190,15 +190,15 @@ namespace SeHubPortal.Controllers
 
             //Debug.WriteLine("Inside PopulateCustomers with value:" + value);
             List<SelectListItem> items = new List<SelectListItem>();
-            var custList = db.tbl_customer_list.OrderBy(x => x.cust_name).ToList();
+            var custList = db.tbl_cta_customers.OrderBy(x => x.CustomerName).ToList();
 
             foreach(var cust in custList)
             {
                 items.Add(new SelectListItem
                 {
 
-                    Value = cust.cust_us1,
-                    Text = cust.cust_name
+                    Value = cust.CustomerCode.ToString(),
+                    Text = cust.CustomerName
                 });
             }
 
@@ -335,10 +335,10 @@ namespace SeHubPortal.Controllers
         {
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             var custDetails = db.tbl_fleettvt_Customer.Where(x => x.customer_number == value).FirstOrDefault();
-            var cust_list = db.tbl_customer_list.Where(x => x.cust_us1 == value).FirstOrDefault();
+            var cust_list = db.tbl_cta_customers.Where(x => x.CustomerCode.ToString() == value).FirstOrDefault();
             if(custDetails != null)
             {
-                custDetails.customer_number = cust_list.cust_name;
+                custDetails.customer_number = cust_list.CustomerName;
             }
             var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
             string custDetailsJson = serializer.Serialize(custDetails);
@@ -351,7 +351,7 @@ namespace SeHubPortal.Controllers
         {
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             var unitDetails = db.tbl_fleetTVT_unit.Where(x => x.unit_number == value).FirstOrDefault();
-            var cust_list = db.tbl_customer_list.Where(x => x.cust_us1 == value).FirstOrDefault();
+            var cust_list = db.tbl_cta_customers.Where(x => x.CustomerCode.ToString() == value).FirstOrDefault();
             var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
             string unitDetailsJson = serializer.Serialize(unitDetails);
             return unitDetailsJson;
@@ -475,6 +475,7 @@ namespace SeHubPortal.Controllers
 
             return "";
         }
+
         [HttpPost]
         public string UpdateRecordToFleetSurveyTire(string cust, string unt, string dat, string pn, string pres, string trdDpth, string wr, string brnd, string mdl, string sze, string vlv, string com)
         {
@@ -611,6 +612,10 @@ namespace SeHubPortal.Controllers
 
         public ActionResult Dashboard(FleetTVT model)
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             int empId = Convert.ToInt32(Session["userID"].ToString());
             var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
@@ -622,12 +627,12 @@ namespace SeHubPortal.Controllers
             foreach(var item in cust_data)
             {
                 var customer = new FleetTVTDashboardCustomers();
-                var cust_list = db.tbl_customer_list.Where(x => x.cust_us1 == item.customer_number).FirstOrDefault();
+                var cust_list = db.tbl_cta_customers.Where(x => x.CustomerCode.ToString() == item.customer_number).FirstOrDefault();
                 var Units = db.tbl_fleetTVT_unit.Where(x => x.customer_number == item.customer_number).ToList();
 
                 if (cust_list != null)
                 {
-                    customer.customer_name = cust_list.cust_name;
+                    customer.customer_name = cust_list.CustomerName;
                 }
                 else {
                     customer.customer_name = "Blackwood, Jordan";
@@ -794,6 +799,10 @@ namespace SeHubPortal.Controllers
 
         public ActionResult FieldSurveyEditAccount(Field_Survey_Edit_Account model)
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             int empId = Convert.ToInt32(Session["userID"].ToString());
             var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
@@ -824,9 +833,11 @@ namespace SeHubPortal.Controllers
 
         public ActionResult EditAccount(FleetTvtEditAccount model, string custID, bool active)
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
             model.CustomerList = populateCustomers();
-
-            
 
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
 
@@ -1472,10 +1483,10 @@ namespace SeHubPortal.Controllers
 
             foreach (var val in config)
             {
-                var custDetails = db.tbl_customer_list.Where(x => x.cust_us1 == val.customer_number).FirstOrDefault();
+                var custDetails = db.tbl_cta_customers.Where(x => x.CustomerCode.ToString() == val.customer_number).FirstOrDefault();
                 items.Add(new SelectListItem
                 {
-                    Text = custDetails.cust_name +" ("+ val.customer_number + ")" ,
+                    Text = custDetails.CustomerName +" ("+ val.customer_number + ")" ,
                     Value = Convert.ToString(val.customer_number)
                 });
             }
@@ -1484,6 +1495,10 @@ namespace SeHubPortal.Controllers
 
         public ActionResult ViewOrEditSurvey(Field_Survey_Edit_Account model)
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             int empId = Convert.ToInt32(Session["userID"].ToString());
             var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
@@ -1498,8 +1513,6 @@ namespace SeHubPortal.Controllers
             model.ValveList = populateValve();
             model.TireConditionList = populateTireCondition();
             model.WheelConditionList = populateWheelCondition();
-
-
             model.Location = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
 
             return View(model);
@@ -1508,6 +1521,10 @@ namespace SeHubPortal.Controllers
 
         public ActionResult FleetSnapShot(FleetTvtEditAccount model, string custID, bool active)
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
             model.CustomerList = populateCustomers();
 
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
@@ -1534,22 +1551,19 @@ namespace SeHubPortal.Controllers
                     model.customerDetails.fleet_size = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 1).Count().ToString();
                 }
 
-                if (active != null)
+                if (active)
                 {
-                    if (active == true)
-                    {
-                        model.UnitsForCustomer = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 0).ToList();
-                        model.tractorCount = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 0 && x.survey_type == "Tractor").Count();
-                        model.trailerCount = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 0 && x.survey_type == "Trailer").Count();
-                        model.Active = true;
-                    }
-                    else
-                    {
-                        model.UnitsForCustomer = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 1).ToList();
-                        model.tractorCount = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 1 && x.survey_type == "Tractor").Count();
-                        model.trailerCount = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 1 && x.survey_type == "Trailer").Count();
-                        model.Active = false;
-                    }
+                    model.UnitsForCustomer = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 0).ToList();
+                    model.tractorCount = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 0 && x.survey_type == "Tractor").Count();
+                    model.trailerCount = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 0 && x.survey_type == "Trailer").Count();
+                    model.Active = true;
+                }
+                else
+                {
+                    model.UnitsForCustomer = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 1).ToList();
+                    model.tractorCount = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 1 && x.survey_type == "Tractor").Count();
+                    model.trailerCount = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 1 && x.survey_type == "Trailer").Count();
+                    model.Active = false;
                 }
 
                 model.SteerTiresCount = 0;
@@ -1564,268 +1578,9 @@ namespace SeHubPortal.Controllers
 
                     if (config != null)
                     {
-                        if (config.one_li == 1)
-                        {
-                            model.SteerTiresCount = model.SteerTiresCount + 1;
-                        }
-                        else if (config.one_li == 2)
-                        {
-                            model.DriveTiresCount = model.DriveTiresCount + 1;
-                        }
-                        else if (config.one_li == 3)
-                        {
-                            model.trailerTiresCount = model.trailerTiresCount + 1;
-                        }
-
-
-                        if (config.one_lo == 1)
-                        {
-                            model.SteerTiresCount = model.SteerTiresCount + 1;
-                        }
-                        else if (config.one_lo == 2)
-                        {
-                            model.DriveTiresCount = model.DriveTiresCount + 1;
-                        }
-                        else if (config.one_lo == 3)
-                        {
-                            model.trailerTiresCount = model.trailerTiresCount + 1;
-                        }
-
-                        if (config.one_ri == 1)
-                        {
-                            model.SteerTiresCount = model.SteerTiresCount + 1;
-                        }
-                        else if (config.one_ri == 2)
-                        {
-                            model.DriveTiresCount = model.DriveTiresCount + 1;
-                        }
-                        else if (config.one_ri == 3)
-                        {
-                            model.trailerTiresCount = model.trailerTiresCount + 1;
-                        }
-
-                        if (config.one_ro == 1)
-                        {
-                            model.SteerTiresCount = model.SteerTiresCount + 1;
-                        }
-                        else if (config.one_ro == 2)
-                        {
-                            model.DriveTiresCount = model.DriveTiresCount + 1;
-                        }
-                        else if (config.one_ro == 3)
-                        {
-                            model.trailerTiresCount = model.trailerTiresCount + 1;
-                        }
-
-                        if (config.two_li == 1)
-                        {
-                            model.SteerTiresCount = model.SteerTiresCount + 1;
-                        }
-                        else if (config.two_li == 2)
-                        {
-                            model.DriveTiresCount = model.DriveTiresCount + 1;
-                        }
-                        else if (config.two_li == 3)
-                        {
-                            model.trailerTiresCount = model.trailerTiresCount + 1;
-                        }
-
-                        if (config.two_lo == 1)
-                        {
-                            model.SteerTiresCount = model.SteerTiresCount + 1;
-                        }
-                        else if (config.two_lo == 2)
-                        {
-                            model.DriveTiresCount = model.DriveTiresCount + 1;
-                        }
-                        else if (config.two_lo == 3)
-                        {
-                            model.trailerTiresCount = model.trailerTiresCount + 1;
-                        }
-
-                        if (config.two_ri == 1)
-                        {
-                            model.SteerTiresCount = model.SteerTiresCount + 1;
-                        }
-                        else if (config.two_ri == 2)
-                        {
-                            model.DriveTiresCount = model.DriveTiresCount + 1;
-                        }
-                        else if (config.two_ri == 3)
-                        {
-                            model.trailerTiresCount = model.trailerTiresCount + 1;
-                        }
-
-                        if (config.two_ro == 1)
-                        {
-                            model.SteerTiresCount = model.SteerTiresCount + 1;
-                        }
-                        else if (config.two_ro == 2)
-                        {
-                            model.DriveTiresCount = model.DriveTiresCount + 1;
-                        }
-                        else if (config.two_ro == 3)
-                        {
-                            model.trailerTiresCount = model.trailerTiresCount + 1;
-                        }
-
-
-                        if (config.three_li == 1)
-                        {
-                            model.SteerTiresCount = model.SteerTiresCount + 1;
-                        }
-                        else if (config.three_li == 2)
-                        {
-                            model.DriveTiresCount = model.DriveTiresCount + 1;
-                        }
-                        else if (config.three_li == 3)
-                        {
-                            model.trailerTiresCount = model.trailerTiresCount + 1;
-                        }
-
-
-                        if (config.three_lo == 1)
-                        {
-                            model.SteerTiresCount = model.SteerTiresCount + 1;
-                        }
-                        else if (config.three_lo == 2)
-                        {
-                            model.DriveTiresCount = model.DriveTiresCount + 1;
-                        }
-                        else if (config.three_lo == 3)
-                        {
-                            model.trailerTiresCount = model.trailerTiresCount + 1;
-                        }
-
-                        if (config.three_ri == 1)
-                        {
-                            model.SteerTiresCount = model.SteerTiresCount + 1;
-                        }
-                        else if (config.three_ri == 2)
-                        {
-                            model.DriveTiresCount = model.DriveTiresCount + 1;
-                        }
-                        else if (config.three_ri == 3)
-                        {
-                            model.trailerTiresCount = model.trailerTiresCount + 1;
-                        }
-
-                        if (config.three_ro == 1)
-                        {
-                            model.SteerTiresCount = model.SteerTiresCount + 1;
-                        }
-                        else if (config.three_ro == 2)
-                        {
-                            model.DriveTiresCount = model.DriveTiresCount + 1;
-                        }
-                        else if (config.three_ro == 3)
-                        {
-                            model.trailerTiresCount = model.trailerTiresCount + 1;
-                        }
-
-                        if (config.four_li == 1)
-                        {
-                            model.SteerTiresCount = model.SteerTiresCount + 1;
-                        }
-                        else if (config.four_li == 2)
-                        {
-                            model.DriveTiresCount = model.DriveTiresCount + 1;
-                        }
-                        else if (config.four_li == 3)
-                        {
-                            model.trailerTiresCount = model.trailerTiresCount + 1;
-                        }
-
-                        if (config.four_lo == 1)
-                        {
-                            model.SteerTiresCount = model.SteerTiresCount + 1;
-                        }
-                        else if (config.four_lo == 2)
-                        {
-                            model.DriveTiresCount = model.DriveTiresCount + 1;
-                        }
-                        else if (config.four_lo == 3)
-                        {
-                            model.trailerTiresCount = model.trailerTiresCount + 1;
-                        }
-
-                        if (config.four_ri == 1)
-                        {
-                            model.SteerTiresCount = model.SteerTiresCount + 1;
-                        }
-                        else if (config.four_ri == 2)
-                        {
-                            model.DriveTiresCount = model.DriveTiresCount + 1;
-                        }
-                        else if (config.four_ri == 3)
-                        {
-                            model.trailerTiresCount = model.trailerTiresCount + 1;
-                        }
-
-                        if (config.four_ro == 1)
-                        {
-                            model.SteerTiresCount = model.SteerTiresCount + 1;
-                        }
-                        else if (config.four_ro == 2)
-                        {
-                            model.DriveTiresCount = model.DriveTiresCount + 1;
-                        }
-                        else if (config.four_ro == 3)
-                        {
-                            model.trailerTiresCount = model.trailerTiresCount + 1;
-                        }
-
-                        if (config.five_li == 1)
-                        {
-                            model.SteerTiresCount = model.SteerTiresCount + 1;
-                        }
-                        else if (config.five_li == 2)
-                        {
-                            model.DriveTiresCount = model.DriveTiresCount + 1;
-                        }
-                        else if (config.five_li == 3)
-                        {
-                            model.trailerTiresCount = model.trailerTiresCount + 1;
-                        }
-
-                        if (config.five_lo == 1)
-                        {
-                            model.SteerTiresCount = model.SteerTiresCount + 1;
-                        }
-                        else if (config.five_lo == 2)
-                        {
-                            model.DriveTiresCount = model.DriveTiresCount + 1;
-                        }
-                        else if (config.five_lo == 3)
-                        {
-                            model.trailerTiresCount = model.trailerTiresCount + 1;
-                        }
-
-                        if (config.five_ri == 1)
-                        {
-                            model.SteerTiresCount = model.SteerTiresCount + 1;
-                        }
-                        else if (config.five_ri == 2)
-                        {
-                            model.DriveTiresCount = model.DriveTiresCount + 1;
-                        }
-                        else if (config.five_ri == 3)
-                        {
-                            model.trailerTiresCount = model.trailerTiresCount + 1;
-                        }
-
-                        if (config.five_ro == 1)
-                        {
-                            model.SteerTiresCount = model.SteerTiresCount + 1;
-                        }
-                        else if (config.five_ro == 2)
-                        {
-                            model.DriveTiresCount = model.DriveTiresCount + 1;
-                        }
-                        else if (config.five_ro == 3)
-                        {
-                            model.trailerTiresCount = model.trailerTiresCount + 1;
-                        }
+                        model.SteerTiresCount = config.steerTiresCount.Value;
+                        model.DriveTiresCount = config.driveTiresCount.Value;
+                        model.trailerTiresCount = config.trailerTiresCount.Value;
                     }
 
                 }

@@ -25,36 +25,49 @@
         }
 </style>
 <div class="wrapper d-flex align-items-stretch">
-    <nav id="sidebar">
+    <nav id="sidebar" class="leftPane">
 
         <ul class="list-unstyled components mb-5">
             <li class="active" style="display:none" id="SettingsLink">
-                <a id="DashboardClicked" href="@Url.Action("Dashboard", "Settings", new { values = ""})">Dashboard</a>
-            </li>
-            <li class="active" style="display:none" id="EmployeePermissionsLink">
-                <a id="EmployeePermissionsClicked" href="@Url.Action("EmployeePermissions", "Tools", new { locId=""})">Manage Permissions</a>
-            </li>
-            <li class="active" style="display:none" id="CustomersLink">
-                <a id="CustomersClicked" href="@Url.Action("Customers", "Settings", new { locId=""})">Customer Maintenance</a>
+                <a class="commonSideNavigation" id="DashboardClicked" href="@Url.Action("Dashboard", "Settings", new { values = ""})">Dashboard</a>
             </li>
             <li class="active" style="display:none" id="AdministrationLink">
-                <a id="AdministrationClicked" href="@Url.Action("Administration", "Settings", new { LocId=""})">Administration</a>
+                <a class="commonSideNavigation" id="AdministrationClicked" href="@Url.Action("Administration", "Settings", new { LocId=""})">Administration</a>
             </li>
-            <li class="active" style="display:block" id="TimeClockLink">
-                <a id="TimeClockClicked" href="@Url.Action("TimeClock", "Settings", new { LocId=""})">TimeClock</a>
+            <li class="active" style="display:none" id="CustomersLink">
+                <a class="commonSideNavigation" id="CustomersClicked" href="@Url.Action("Customers", "Settings", new { locId=""})">Customer Maintenance</a>
             </li>
             <li class="active" style="display:block" id="DataResourcesLink">
-                <a id="DataResourcesClicked" href="@Url.Action("DataResources", "Settings", new { LocId=""})">Data Resources</a>
+                <a class="commonSideNavigation" id="DataResourcesClicked" href="@Url.Action("DataResources", "Settings", new { LocId=""})">Data Input</a>
+            </li>
+            <li class="active" style="display:none" id="EmployeePermissionsLink">
+                <a class="commonSideNavigation" id="EmployeePermissionsClicked" href="@Url.Action("EmployeePermissions", "Tools", new { locId=""})">Manage Permissions</a>
+            </li>
+            <li class="active" style="display:block" id="TimeClockLink">
+                <a class="commonSideNavigation" id="TimeClockClicked" href="@Url.Action("TimeClock", "Settings", new { LocId=""})">TimeClock</a>
             </li>
         </ul>
     </nav>
 
-    <!-- Page Content  -->
     <div id="content">
-        <div id="LibraryArea">
+        <div id="sideloading" style="display:none">
+            <div style="display:flex; width:100%; height:50em; justify-content:center; align-items:center">
+                <img src="~/Content/giphy.gif" style="width:170px" alt="Alternate Text" />
+            </div>
+        </div>
+        <div id="SettingsArea">
             @RenderBody()
         </div>
     </div>
 </div>
 <script src="~/Content/sidebar/sidebar.js"></script>
+<script>
+    $(".commonSideNavigation").on('click', function (event) {
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        $('#sideloading').css('display', 'block')
+        $('#SettingsArea').css('display', 'none')
+    });
+</script>
+@RenderSection("Scripts", false)
 

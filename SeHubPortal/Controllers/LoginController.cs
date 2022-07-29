@@ -397,6 +397,7 @@ namespace SeHubPortal.Controllers
 
             user.email = model.newHarpoonUser.email;
             user.profile = "Administrator";
+            user.loc_id = "All";
 
             client.client_id = (Convert.ToInt32(db.tbl_harpoon_clients.OrderByDescending(x => x.client_id).Select(x => x.client_id).FirstOrDefault()) + 1).ToString();
             client.client_name = model.newHarpoonUser.companyName;

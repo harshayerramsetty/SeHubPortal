@@ -13,7 +13,6 @@ using System.Web;
 using System.Web.Mvc;
 using System.Data;
 using System.Net.Mail;
-using System.Drawing;
 using System.Drawing.Drawing2D;
 
 
@@ -49,7 +48,18 @@ namespace SeHubPortal.Controllers
 
             var clientID = userdetails.client_id;
 
-            modal.MatchedStaffLocs = populateLocationsPermissionsLoc(clientID);
+            modal.client_info = db.tbl_harpoon_clients.Where(x => x.client_id == clientID).FirstOrDefault();
+
+            if (db.tbl_harpoon_settings.Where(x => x.client_id == clientID).Select(x => x.LocIDinListBox_OnOff).FirstOrDefault() == 1)
+            {
+                modal.MatchedStaffLocs_all = populateLocationsPermissions(clientID, uesrEmail, true);
+                modal.MatchedStaffLocs = populateLocationsPermissions(clientID, uesrEmail, false);
+            }
+            else
+            {
+                modal.MatchedStaffLocs_all = populateLocationsNames(clientID, uesrEmail, true);
+                modal.MatchedStaffLocs = populateLocationsNames(clientID, uesrEmail, false);
+            }
 
             if (db.tbl_harpoon_settings.Where(x => x.client_id == clientID).Select(x => x.LocIDinListBox_OnOff).FirstOrDefault() == 1)
             {
@@ -68,14 +78,23 @@ namespace SeHubPortal.Controllers
             {
                 //Debug.WriteLine("empId:" + empId);
                 var result = db.tbl_harpoon_employee.Where(a => a.client_id.Equals(clientID)).FirstOrDefault();
-
-                if (result != null)
+                if (userdetails.profile == "Administrator" || userdetails.profile == "Global Manager")
                 {
-                    locationid = result.auto_loc_id.Value.ToString();
+                    locationid = "All";
                 }
                 else
                 {
-                    locationid = "";
+                    if (result != null)
+                    {
+
+
+                        locationid = result.auto_loc_id.Value.ToString();
+                    }
+                    else
+                    {
+                        locationid = "";
+                    }
+
                 }
 
             }
@@ -85,66 +104,115 @@ namespace SeHubPortal.Controllers
             }
 
 
-            var EmployeeDetails = db.tbl_harpoon_employee.Where(x => x.auto_loc_id.ToString() == locationid && x.client_id == clientID).OrderBy(x => x.last_name).ToList();
-            
-
             List<HarpoonEmployeeViewModel> empldetList = new List<HarpoonEmployeeViewModel>();
-
-            foreach (var emp in EmployeeDetails)
+            if (locationid == "All")
             {
-                HarpoonEmployeeViewModel empdet = new HarpoonEmployeeViewModel();
-                empdet.employee_id = emp.employee_id;
-                empdet.first_name = emp.first_name;
-                empdet.middle_initial = emp.middle_initial;
-                empdet.last_name = emp.last_name;
-                empdet.position = emp.position;
-                empdet.Date_of_birth = emp.Date_of_birth;
-                empdet.client_id = emp.client_id;
-                empdet.status = emp.status;
-                empdet.profile_pic = emp.profile_pic;
-                empdet.locationId = emp.auto_loc_id.ToString();
-                empdet.auto_emp_id = emp.auto_emp_id;
-
-                var rfd = db.tbl_harpoon_employee_rfid.Where(x => x.auto_emp_id == emp.auto_emp_id).Select(x => x.rfid_number).FirstOrDefault();
-
-                if(rfd != null)
+                var EmployeeDetails = db.tbl_harpoon_employee.Where(x => x.client_id == clientID).OrderBy(x => x.last_name).ToList();
+                foreach (var emp in EmployeeDetails)
                 {
-                    empdet.rfidPaired = rfd;
+                    HarpoonEmployeeViewModel empdet = new HarpoonEmployeeViewModel();
+                    empdet.employee_id = emp.employee_id;
+                    empdet.first_name = emp.first_name;
+                    empdet.middle_initial = emp.middle_initial;
+                    empdet.last_name = emp.last_name;
+                    empdet.position = emp.position;
+                    empdet.Date_of_birth = emp.Date_of_birth;
+                    empdet.client_id = emp.client_id;
+                    empdet.status = emp.status;
+                    empdet.profile_pic = emp.profile_pic;
+                    empdet.locationId = emp.auto_loc_id.ToString();
+                    empdet.auto_emp_id = emp.auto_emp_id;
+
+                    var rfd = db.tbl_harpoon_employee_rfid.Where(x => x.auto_emp_id == emp.auto_emp_id).Select(x => x.rfid_number).FirstOrDefault();
+
+                    if (rfd != null)
+                    {
+                        empdet.rfidPaired = rfd;
+                    }
+                    else
+                    {
+                        empdet.rfidPaired = "NO";
+                    }
+
+
+
+                    empldetList.Add(empdet);
                 }
-                else
+                if (EmployeeDetails != null)
                 {
-                    empdet.rfidPaired = "NO";
+                    modal.employeeDetails = empldetList;
+
+                    if (modal.multipleLocation)
+                    {
+                        modal.MatchedStaffLocs_all = populateLocationsPermissions(clientID, uesrEmail, true);
+                        modal.MatchedStaffLocs = populateLocationsPermissions(clientID, uesrEmail, false);
+                    }
+                    else
+                    {
+                        modal.MatchedStaffLocs_all = populateLocationsNames(clientID, uesrEmail, true);
+                        modal.MatchedStaffLocs = populateLocationsNames(clientID, uesrEmail, false);
+                    }
+
+                    modal.MatchedStaffLocID = locationid;
+
                 }
-
-                
-
-                empldetList.Add(empdet);
             }
-
-
-
-            //Debug.WriteLine("locationid:" + locationid);
-            if (EmployeeDetails != null)
+            else
             {
-                modal.employeeDetails = empldetList;
-
-                if (modal.multipleLocation)
+                var EmployeeDetails = db.tbl_harpoon_employee.Where(x => x.auto_loc_id.ToString() == locationid && x.client_id == clientID).OrderBy(x => x.last_name).ToList();
+                foreach (var emp in EmployeeDetails)
                 {
-                    modal.MatchedStaffLocs = populateLocationsPermissions(clientID);
+                    HarpoonEmployeeViewModel empdet = new HarpoonEmployeeViewModel();
+                    empdet.employee_id = emp.employee_id;
+                    empdet.first_name = emp.first_name;
+                    empdet.middle_initial = emp.middle_initial;
+                    empdet.last_name = emp.last_name;
+                    empdet.position = emp.position;
+                    empdet.Date_of_birth = emp.Date_of_birth;
+                    empdet.client_id = emp.client_id;
+                    empdet.status = emp.status;
+                    empdet.profile_pic = emp.profile_pic;
+                    empdet.locationId = emp.auto_loc_id.ToString();
+                    empdet.auto_emp_id = emp.auto_emp_id;
+
+                    var rfd = db.tbl_harpoon_employee_rfid.Where(x => x.auto_emp_id == emp.auto_emp_id).Select(x => x.rfid_number).FirstOrDefault();
+
+                    if (rfd != null)
+                    {
+                        empdet.rfidPaired = rfd;
+                    }
+                    else
+                    {
+                        empdet.rfidPaired = "NO";
+                    }
+
+
+
+                    empldetList.Add(empdet);
                 }
-                else
+                if (EmployeeDetails != null)
                 {
-                    modal.MatchedStaffLocs = populateLocationsNames(clientID);
+                    modal.employeeDetails = empldetList;
+
+                    if (modal.multipleLocation)
+                    {
+                        modal.MatchedStaffLocs = populateLocationsPermissions(clientID, uesrEmail, true);
+                    }
+                    else
+                    {
+                        modal.MatchedStaffLocs = populateLocationsNames(clientID, uesrEmail, true);
+                    }
+
+                    modal.MatchedStaffLocID = locationid;
+
                 }
-
-                modal.MatchedStaffLocID = locationid;
-
             }
+            
 
             return View(modal);
         }
 
-        private static List<SelectListItem> populateLocationsNames(string clientID)
+        private static List<SelectListItem> populateLocationsNames(string clientID, string email, bool all)
         {
 
             List<SelectListItem> items = new List<SelectListItem>();
@@ -152,6 +220,18 @@ namespace SeHubPortal.Controllers
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
 
             var locaList = db.tbl_harpoon_locations.Where(x => x.client_id == clientID).ToList();
+
+            var user = db.tbl_harpoon_users.Where(x => x.email == email).FirstOrDefault();
+
+            if (all && (user.profile == "Administrator" || user.profile == "Global Manager"))
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "All",
+                    Value = null
+                });
+            }
+
 
             foreach (var loc in locaList)
             {
@@ -165,7 +245,7 @@ namespace SeHubPortal.Controllers
             return items;
         }
 
-        private static List<SelectListItem> populateLocationsPermissions(string clientID)
+        private static List<SelectListItem> populateLocationsPermissions(string clientID, string email, bool all)
         {
 
             List<SelectListItem> items = new List<SelectListItem>();
@@ -173,6 +253,17 @@ namespace SeHubPortal.Controllers
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
 
             var locaList = db.tbl_harpoon_locations.Where(x => x.client_id == clientID).ToList();
+
+            var user = db.tbl_harpoon_users.Where(x => x.email == email).FirstOrDefault();
+
+            if (all && (user.profile == "Administrator" || user.profile == "Global Manager"))
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = "All",
+                    Value = null
+                });
+            }
 
             foreach (var loc in locaList)
             {
@@ -216,14 +307,16 @@ namespace SeHubPortal.Controllers
 
             var userdetails = db.tbl_harpoon_users.Where(x => x.email == uesrEmail).FirstOrDefault();
 
+            modal.client_info = db.tbl_harpoon_clients.Where(x => x.client_id == userdetails.client_id).FirstOrDefault();
+
             List<tbl_harpoon_locations> locations = new List<tbl_harpoon_locations>();
             List<tbl_harpoon_departments> departments = new List<tbl_harpoon_departments>();
             List<tbl_harpoon_jobclock> jobClocks = new List<tbl_harpoon_jobclock>();
 
             locations = db.tbl_harpoon_locations.Where( x => x.client_id == userdetails.client_id).ToList();
-            departments = db.tbl_harpoon_departments.ToList();
-            jobClocks = db.tbl_harpoon_jobclock.ToList();
-
+            departments = db.tbl_harpoon_departments.Where(x => x.client_id == userdetails.client_id).ToList();
+            jobClocks = db.tbl_harpoon_jobclock.Where(x => x.client_id == userdetails.client_id).ToList();
+            modal.LocationsList = populateLocations();
             modal.Locations = locations;
             modal.Departments = departments;
             modal.JobClocks = jobClocks;
@@ -250,7 +343,7 @@ namespace SeHubPortal.Controllers
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
 
             modal.Locations = db.tbl_harpoon_locations.ToList();
-
+            modal.Serials = db.tbl_harpoon_source_serialNumbers.ToList();
             string uesrEmail = Session["userID"].ToString();
 
             var userdetails = db.tbl_harpoon_users.Where(x => x.email == uesrEmail).FirstOrDefault();
@@ -266,6 +359,8 @@ namespace SeHubPortal.Controllers
 
 
             var clientID = userdetails.client_id;
+
+            modal.client_info = db.tbl_harpoon_clients.Where(x => x.client_id == clientID).FirstOrDefault();
 
             var allDevices = db.tbl_harpoon_devices.Where(x => x.client_id == userdetails.client_id).ToList();
 
@@ -291,7 +386,7 @@ namespace SeHubPortal.Controllers
 
             modal.client = db.tbl_harpoon_clients.Where(x => x.client_id == userdetails.client_id).FirstOrDefault();
 
-            modal.Locations = populateLocationsPermissions(userdetails.client_id);
+            modal.Locations = populateLocationsPermissions(userdetails.client_id, uesrEmail, true);
 
             var locList = db.tbl_harpoon_locations.Where(x => x.client_id == modal.client.client_id).Select(x => x.location_id).ToList();
 
@@ -384,6 +479,16 @@ namespace SeHubPortal.Controllers
                 {
                     modal.master_loc_id = false;
                 }
+
+                if (settings.job_id_clocking.HasValue)
+                {
+                    modal.job_id_clocking = changeToBool(settings.job_id_clocking.Value);
+                }
+                else
+                {
+                    modal.job_id_clocking = false;
+                }
+
 
                 if (sunday.sunday_open.HasValue)
                 {
@@ -542,10 +647,18 @@ namespace SeHubPortal.Controllers
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             string uesrEmail = Session["userID"].ToString();
 
+            if(db.tbl_harpoon_users.Where(x => x.email == uesrEmail).Select(x => x.profile).FirstOrDefault() == "Shop Fireman")
+            {
+                return RedirectToAction("TimeClockEvents", "ManagementHarpoon");
+            }
+
             var userdetails = db.tbl_harpoon_users.Where(x => x.email == uesrEmail).FirstOrDefault();
 
             var clientID = userdetails.client_id;
-            modal.Locations = populateLocationsPermissions(clientID);
+
+            modal.client_info = db.tbl_harpoon_clients.Where(x => x.client_id == clientID).FirstOrDefault();
+
+            modal.Locations = populateLocationsPermissions(clientID, uesrEmail, true);
 
             if (db.tbl_harpoon_settings.Where(x => x.client_id == userdetails.client_id).Select(x => x.LocIDinListBox_OnOff).FirstOrDefault() == 1)
             {
@@ -565,6 +678,11 @@ namespace SeHubPortal.Controllers
                 tbl_harpoon_users userTemp = new tbl_harpoon_users();
 
                 userTemp = user;
+                var loc = db.tbl_harpoon_locations.Where(x => x.auto_loc_id.ToString() == user.loc_id).FirstOrDefault();
+                if(loc != null)
+                {
+                    userTemp.loc_id = loc.location_name+ " ("+loc.location_id+")";
+                }
                 userTemp.client_id = db.tbl_harpoon_clients.Where(x => x.client_id == user.client_id).Select(x => x.client_name).FirstOrDefault();
                 UsersList.Add(userTemp);
             }
@@ -620,6 +738,8 @@ namespace SeHubPortal.Controllers
         public string checkSerialNumber(string value, string verif)
         {
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            string uesrEmail = Session["userID"].ToString();
+            var userdetails = db.tbl_harpoon_users.Where(x => x.email == uesrEmail).FirstOrDefault();            
 
             var device = db.tbl_harpoon_devices.Where(x => x.serial_number == value).FirstOrDefault();
 
@@ -627,13 +747,37 @@ namespace SeHubPortal.Controllers
 
             if(device != null)
             {
-                return "true";
+                return "true;"+ serial.model;
             }
             else
             {
                 if (serial != null)
                 {
-                    return "false";
+                    if (serial.model.Substring(0,2) == "DC")
+                    {
+                        if (db.tbl_harpoon_departments.Where(x => x.client_id == userdetails.client_id).Count() > 0)
+                        {
+                            return "false;" + serial.model;
+                        }
+                        else
+                        {
+                            return "Department Not Registered";
+                        }
+                    }
+                    else
+                    {
+                        if (db.tbl_harpoon_locations.Where(x => x.client_id == userdetails.client_id).Count() > 0)
+                        {
+                            return "false;" + serial.model;
+                        }
+                        else
+                        {
+                            return "Location Not Registered";
+                        }
+                    }
+
+                    
+                    
                 }
                 else
                 {
@@ -832,7 +976,6 @@ namespace SeHubPortal.Controllers
             return items;
         }
 
-
         public ActionResult ProfileBlock(HarpoonProfileBlockViewModel model)
         {
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
@@ -966,7 +1109,6 @@ namespace SeHubPortal.Controllers
             return RedirectToAction("Locations", "SettingsHarpoon");
         }
 
-
         [HttpPost]
         public ActionResult AddLocation(HarpoonLocationsViewModel model)
         {
@@ -1011,16 +1153,14 @@ namespace SeHubPortal.Controllers
 
             tbl_harpoon_departments newDepartment = new tbl_harpoon_departments();
 
-            var department = db.tbl_harpoon_departments.Where(x => x.department_id == model.newDepartment.department_id).FirstOrDefault();
+            var department = db.tbl_harpoon_departments.Where(x => x.auto_department_id == model.newDepartment.auto_department_id).FirstOrDefault();
 
             if (department == null)
             {
-                newDepartment.department_id = model.newDepartment.department_id;
-                newDepartment.name = model.newDepartment.name;
-                newDepartment.available_to_all_loc = model.newDepartment.available_to_all_loc;
-                newDepartment.parent_location = model.newDepartment.parent_location;
-                newDepartment.admin = model.newDepartment.admin;
-                newDepartment.clocking_comments = model.newDepartment.clocking_comments;
+                newDepartment.auto_department_id = model.newDepartment.auto_department_id;
+                newDepartment.department_name = model.newDepartment.department_name;
+                newDepartment.loc_id_installation = model.newDepartment.loc_id_installation;
+                newDepartment.loc_id_pairing = model.newDepartment.loc_id_pairing;
 
                 db.tbl_harpoon_departments.Add(newDepartment);
                 db.SaveChanges();
@@ -1074,6 +1214,23 @@ namespace SeHubPortal.Controllers
             }
         }
 
+        public bool checkEmpIdLeangth(string empid)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            string uesrEmail = Session["userID"].ToString();
+
+            var userdetails = db.tbl_harpoon_users.Where(x => x.email == uesrEmail).FirstOrDefault();
+
+            if (db.tbl_harpoon_settings.Where(x => x.client_id == userdetails.client_id && x.EmpID_Length <= empid.Length).Count() == 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
 
         [HttpPost]
         public ActionResult AddEmployee(MyStaffHarpoonViewModel model)
@@ -1253,6 +1410,10 @@ namespace SeHubPortal.Controllers
             {
                 Users.profile = model.editUser.profile;
                 Users.loc_id = model.editUser.loc_id;
+                Users.adminClocking = model.editUser.adminClocking;
+                Users.adminClocking_editTime = model.editUser.adminClocking_editTime;
+                Users.jobIDClocking = model.editUser.jobIDClocking;
+                Users.jobIDClocking_editTime = model.editUser.jobIDClocking_editTime;
                 db.SaveChanges();
             }
 
@@ -1306,6 +1467,7 @@ namespace SeHubPortal.Controllers
                 settings.ManualCode_OnOff = changeToInt(model.manualCode);
                 settings.LocIDinListBox_OnOff = changeToInt(model.useLocIdInList);
                 settings.MasterLoc_OnOff = changeToInt(model.master_loc_id);
+                settings.job_id_clocking = changeToInt(model.job_id_clocking);
                 settings.DefaultEmpIDlength_OnOff = changeToInt(model.custom_empID_len);
 
                 if(model.masterLocID != null)
@@ -1364,6 +1526,7 @@ namespace SeHubPortal.Controllers
                 Newsettings.ManualCode_OnOff = changeToInt(model.manualCode);
                 Newsettings.LocIDinListBox_OnOff = changeToInt(model.useLocIdInList);
                 Newsettings.MasterLoc_OnOff = changeToInt(model.master_loc_id);
+                Newsettings.job_id_clocking = changeToInt(model.job_id_clocking);
 
                 if(model.masterLocID != null)
                 {

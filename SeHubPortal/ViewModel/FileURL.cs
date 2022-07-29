@@ -44,7 +44,9 @@ namespace SeHubPortal.ViewModel
         public string employeeFullName { get; set; }
         public string employeePosition { get; set; }
         public string Position { get; set; }
+        public string AccessType { get; set; }
 
         public List<SelectListItem> Positions { get; set; }
+        public tbl_harpoon_clients client_info { get; set; }
     }
 }

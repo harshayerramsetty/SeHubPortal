@@ -18,11 +18,15 @@ namespace SeHubPortal.Models
         public Nullable<int> priority { get; set; }
         public string size { get; set; }
         public string casing_spec { get; set; }
-        public Nullable<bool> virgin { get; set; }
+        public string virgin { get; set; }
         public string tread { get; set; }
         public Nullable<System.DateTime> production_date { get; set; }
         public Nullable<int> quantity { get; set; }
-        public Nullable<int> part_no { get; set; }
+        public string part_no { get; set; }
         public Nullable<int> quantity_complete { get; set; }
+        public string employee { get; set; }
+        public string comments { get; set; }
+        public string shipTo { get; set; }
+        public string failure_codes { get; set; }
     }
 }

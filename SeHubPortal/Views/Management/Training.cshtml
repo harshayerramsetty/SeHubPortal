@@ -13,7 +13,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <style>
-
+        .breadCrumb{
+        background-color:white;
+    }
         #PlantClicked {
             display: block !important;
         }
@@ -108,9 +110,6 @@
                 margin-top: 8px;
             }
 
-        .card-header {
-            background-color: #cde8ca;
-        }
 
             .card-header h6 {
                 color: black;
@@ -128,7 +127,7 @@
 </head>
 <body>
     <div class="row heading" style="margin-right:0px">
-        <div class="col" style="margin:0px 10px 10px 10px; padding:10px; background-color:white">
+        <div class="col breadCrumb" style="margin:0px 10px 10px 10px; padding:10px; background-color:white">
 
             <div style="display:flex; justify-content:space-between; align-items:center">
                 <div>
@@ -155,74 +154,98 @@
 
     <div class="row" style="padding:0px 15px 0px 15px">
         <div class="col-lg-12">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th style="font-size:18px; padding:0px; text-align:center; border:none" scope="col"></th>
-                        <th style="font-size:18px; padding:0px; text-align:center; border:none" scope="col"><button style="border:3px solid #00a2e8; color:#00a2e8; border-radius:10px; font-size:18px; font-weight:bold; width:70%; margin-bottom:5px">First Aid</button></th>
-                        <th style="font-size:18px; padding:0px; text-align:center; border:none" scope="col"><button style="border:3px solid #00a2e8; color:#00a2e8; border-radius:10px; font-size:18px; font-weight:bold; width:70%; margin-bottom:5px">OH & S</button></th>
-                        <th style="font-size:18px; padding:0px; text-align:center; border:none" scope="col"><button style="border:3px solid #00a2e8; color:#00a2e8; border-radius:10px; font-size:18px; font-weight:bold; width:70%; margin-bottom:5px">TIA</button></th>
-                        <th style="font-size:18px; padding:0px; text-align:center; border:none" scope="col"><button style="border:3px solid #00a2e8; color:#00a2e8; border-radius:10px; font-size:18px; font-weight:bold; width:70%; margin-bottom:5px">Goodyear</button></th>
-                        <th style="font-size:18px; padding:0px; text-align:center; border:none" scope="col"><button style="border:3px solid #00a2e8; color:#00a2e8; border-radius:10px; font-size:18px; font-weight:bold; width:70%; margin-bottom:5px">Mental Health</button></th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    @foreach (var train in Model.TrainingList)
-                    {
-                        <tr style="height:50px">
-                            <td style="padding:5px; text-align:left; vertical-align:middle; width:16.6%">@train.staff_member</td>
-                            <td style="padding: 5px;text-align: center;vertical-align: middle;width: 16.6%">
-                                @if (train.fa_aspiration_date.HasValue)
-                                {
-                                    @train.fa_aspiration_date.Value.ToString("MMM, yyyy")
-                                }
-                                @if (train.fa_certificate != null)
-                                {
-                                    <button data-toggle="modal" data-target="#CertificateModel" onclick="CertificateFunction(this.value)" value="@train.fa_certificate" style=" padding: 0px 5px 0px 5px; margin: 5px; border: none; outline: none; background-color: transparent">
-                                        <img src="~/Content/doc-icon.png" style="width: 30px;height: 30px"alt="Alternate Text" />
-                                    </button>
-                                }
-                            </td>
-                            <td style="padding: 5px;text-align: center;vertical-align: middle">
-                                @if (train.ohs_aspiration_date.HasValue)
-                                {
-                                    @train.ohs_aspiration_date.Value.ToString("MMM, yyyy")
-                                }
-                                @if (train.ohs_certificate != null)
-                                {
-                                    <button data-toggle="modal" data-target="#CertificateModel" onclick="CertificateFunction(this.value)" value="@train.ohs_certificate" style="padding: 0px 5px 0px 5px;margin: 5px;border: none;outline: none;background-color: transparent"><img src="~/Content/doc-icon.png" style="width: 30px;height: 30px" alt="Alternate Text" />
-                                    </button>
-                                }
-                            </td>
-                            <td style="padding:5px; text-align:center; vertical-align:middle; width:16.6%">
-                            </td>
-                            <td style="padding:5px; text-align:center; vertical-align:middle; width:16.6%">
-                                @if (train.gy_aspiration_date.HasValue)
-                                {
-                                    @train.gy_aspiration_date.Value.ToString("MMM, yyyy")
-                                }
-                                @if (train.gy_certificate != null)
-                                {
-                                    <button data-toggle="modal" data-target="#CertificateModel" onclick="CertificateFunction(this.value)" value="@train.gy_certificate" style="padding:0px 5px 0px 5px; margin:5px; border:none; outline:none; background-color:transparent"><img src="~/Content/doc-icon.png" style="width:30px; height:30px" alt="Alternate Text" /></button>
-                                }
-                            </td>
-                            <td style="padding:5px; text-align:center; vertical-align:middle; width:16.6%">
-                                @if (train.other_aspiration_date.HasValue)
-                                {
-                                    @train.other_aspiration_date.Value.ToString("MMM, yyyy")
-                                }
-                                @if (train.other_certificate != null)
-                                {
-                                    <button data-toggle="modal" data-target="#CertificateModel" onclick="CertificateFunction(this.value)" value="@train.other_certificate" style="padding:0px 5px 0px 5px; margin:5px; border:none; outline:none; background-color:transparent"><img src="~/Content/doc-icon.png" style="        width: 30px;
-        height: 30px" alt="Alternate Text" /></button>
-                                }
-                            </td>
+            <div class="row">
+                <table class="table table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th style="font-size:18px; padding:0px; text-align:center; border:none" scope="col"></th>
+                            <th style="font-size:18px; padding:0px 20px; text-align:center; border:none; width:16.6%" scope="col"><button style="border:3px solid #00a2e8; color:#00a2e8; border-radius:10px; font-size:18px; font-weight:bold; width:100%">First Aid</button></th>
+                            <th style="font-size:18px; padding:0px 20px; text-align:center; border:none; width:16.6%" scope="col"><button style="border:3px solid #00a2e8; color:#00a2e8; border-radius:10px; font-size:18px; font-weight:bold; width:100%">OH & S</button></th>
+                            <th style="font-size:18px; padding:0px 20px; text-align:center; border:none; width:16.6%" scope="col"><button style="border:3px solid #00a2e8; color:#00a2e8; border-radius:10px; font-size:18px; font-weight:bold; width:100%">TIA</button></th>
+                            <th style="font-size:18px; padding:0px 20px; text-align:center; border:none; width:16.6%" scope="col"><button style="border:3px solid #00a2e8; color:#00a2e8; border-radius:10px; font-size:18px; font-weight:bold; width:100%">Goodyear</button></th>
+                            <th style="font-size:18px; padding:0px 20px; text-align:center; border:none; width:16.6%" scope="col"><button style="border:3px solid #00a2e8; color:#00a2e8; border-radius:10px; font-size:18px; font-weight:bold; width:100%">Mental Health</button></th>
                         </tr>
-                    }
+                    </thead>
+                </table>
+            </div>
+            <div class="example" style="height:690px; overflow-y:auto">
+                <table class="table table-striped">
+                    <tbody>
 
-                </tbody>
-            </table>
+                        @foreach (var train in Model.TrainingList)
+                        {
+                            <tr style="height:50px">
+                                <td style="padding:5px; text-align:left; vertical-align:middle">@train.staff_member</td>
+                                <td style="padding: 5px;text-align: center;vertical-align: middle;width: 16.6%">
+                                    @if (train.fa_aspiration_date.HasValue)
+                                    {
+                                        @train.fa_aspiration_date.Value.ToString("MMM, yyyy")
+                                    }
+                                    @if (train.fa_certificate != null)
+                                    {
+                                        <button data-toggle="modal" data-target="#CertificateModel" onclick="CertificateFunction(this.value)" value="@train.fa_certificate" style="        padding: 0px 5px 0px 5px;
+        margin: 5px;
+        border: none;
+        outline: none;
+        background-color: transparent
+">
+                                            <img src="~/Content/doc-icon.png" style="width: 30px;height: 30px" alt="Alternate Text" />
+                                        </button>
+                                    }
+                                </td>
+                                <td style="padding: 5px;text-align: center;vertical-align: middle;width: 16.6%">
+                                    @if (train.ohs_aspiration_date.HasValue)
+                                    {
+                                        @train.ohs_aspiration_date.Value.ToString("MMM, yyyy")
+                                    }
+                                    @if (train.ohs_certificate != null)
+                                    {
+                                        <button data-toggle="modal" data-target="#CertificateModel" onclick="CertificateFunction(this.value)" value="@train.ohs_certificate" style="        padding: 0px 5px 0px 5px;
+        margin: 5px;
+        border: none;
+        outline: none;
+        background-color: transparent
+">
+                                            <img src="~/Content/doc-icon.png" style="        width: 30px;
+        height: 30px" alt="Alternate Text" />
+                                        </button>
+                                    }
+                                </td>
+                                <td style="        padding: 5px;
+        text-align: center;
+        vertical-align: middle;
+        width: 16.6%">
+                                </td>
+                                <td style="padding:5px; text-align:center; vertical-align:middle; width:16.6%">
+                                    @if (train.gy_aspiration_date.HasValue)
+                                    {
+                                        @train.gy_aspiration_date.Value.ToString("MMM, yyyy")
+                                    }
+                                    @if (train.gy_certificate != null)
+                                    {
+                                        <button data-toggle="modal" data-target="#CertificateModel" onclick="CertificateFunction(this.value)" value="@train.gy_certificate" style="padding:0px 5px 0px 5px; margin:5px; border:none; outline:none; background-color:transparent"><img src="~/Content/doc-icon.png" style="width:30px; height:30px" alt="Alternate Text" /></button>
+                                    }
+                                </td>
+                                <td style="padding:5px; text-align:center; vertical-align:middle; width:16.6%">
+                                    @if (train.other_aspiration_date.HasValue)
+                                    {
+                                        @train.other_aspiration_date.Value.ToString("MMM, yyyy")
+                                    }
+                                    @if (train.other_certificate != null)
+                                    {
+                                        <button data-toggle="modal" data-target="#CertificateModel" onclick="CertificateFunction(this.value)" value="@train.other_certificate" style="padding:0px 5px 0px 5px; margin:5px; border:none; outline:none; background-color:transparent">
+                                            <img src="~/Content/doc-icon.png" style="        width: 30px;
+        height: 30px" alt="Alternate Text" />
+                                        </button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+            
         </div>
     </div>
 

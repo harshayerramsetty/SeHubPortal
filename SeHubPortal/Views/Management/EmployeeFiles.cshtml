@@ -140,7 +140,9 @@
 
 
     <style>
-
+        .breadCrumb{
+        background-color:white;
+    }
         #ManagementClicked {
             display: block !important;
         }
@@ -178,10 +180,6 @@
                 margin-top: 8px;
             }
 
-        .card-header {
-            background-color: #cde8ca;
-        }
-
 
             .card-header h6 {
                 color: black;
@@ -202,7 +200,7 @@
     <div class="row heading">
         <div class="col">
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb" style="background-color: white; height: 100%; margin-top: 0px;">
+                <ol class="breadcrumb breadCrumb" style="background-color: white; height: 100%; margin-top: 0px;">
                     <li class="breadcrumb-item"><a href="@Url.Action("EmployeeFiles", "Management")">Management</a></li>
                     <li class="breadcrumb-item " aria-current="page">Employee Files</li>
                     @if (Model.SehubAccess.employee_folder >= 2)
@@ -210,7 +208,7 @@
                         using (Html.BeginForm("UploadEmployeeFiles", "Management", FormMethod.Post, new { enctype = "multipart/form-data" }))
                         {
                             <input for="Upload" type="text" readonly style="height:23px; width:100px; margin-left:450px" class="btn btn-success" name="name" value="Upload" onclick="document.getElementById('Upload').click()" />
-                            <input id="Upload" type="file" name="CompanyDocument" style="height:23px; width:100px; margin-left:450px; display:none" onchange="form.submit()" />
+                            <input id="Upload" type="file" name="CompanyDocument" style="height: 23px; width: 100px; margin-left: 450px; display: none" onchange="form.submit()" />
                             <input id="1" type="text" data-toggle="modal" data-target="#SupplierDocManage" readonly style="height:23px; width:100px; margin-left:20px" class="btn btn-primary" name="name" value="Manage" />
                             @Html.HiddenFor(m => m.SelectedEmployeeId)
                         }

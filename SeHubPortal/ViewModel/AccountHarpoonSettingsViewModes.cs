@@ -24,6 +24,7 @@ namespace SeHubPortal.ViewModel
         public bool manualCode { get; set; }
         public bool multipleLocations { get; set; }
         public bool master_loc_id { get; set; }
+        public bool job_id_clocking { get; set; }
         public bool useLocIdInList { get; set; }
         public bool custom_empID_len { get; set; }
         public int custEmpIDLength { get; set; }

@@ -49,8 +49,8 @@ namespace SeHubPortal.ViewModel
         public double YearlyVac { get; set; }
         public double YearlySic { get; set; }
 
-        public List<DateTime> vacDatesYearly { get; set; }
-        public List<DateTime> sicDatesYearly { get; set; }
+        public List<KeyValuePair<DateTime, double?>> vacDatesYearly { get; set; }
+        public List<KeyValuePair<DateTime, double?>> sicDatesYearly { get; set; }
 
     }
 }

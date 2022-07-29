@@ -1,0 +1,207 @@
+﻿@model SeHubPortal.ViewModel.FileURL
+@{
+    ViewBag.Title = "TimeSheet";
+    Layout = "~/Views/Shared/_LayoutHarpoon.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    @if (Model.client_info.employees_page.Value)
+    {
+        <style>
+            #ManagementClicked {
+                display: block !important;
+            }
+        </style>
+    }
+    @if (Model.client_info.fleet_page.Value)
+    {
+        <style>
+            #VehicleClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    <style>
+
+        #TimesheetClicked {
+            display: block !important;
+        }
+
+        #TimesheetClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #timesheetBtn {
+            color: black;
+            font-weight: 600;
+        }
+
+
+        body {
+            background-color: #f0f2f5;
+        }
+
+
+        .example::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .example {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+
+    </style>
+</head>
+<body>
+
+
+    <div class="row heading" style="margin:10px 0px 0px 0px">
+        <div class="col" style="margin:0px 5px 15px 15px; padding:10px; background-color:white">
+
+            <div style="display:flex; justify-content:space-between; align-items:center">
+                <div>
+                    <a href="@Url.Action("TimeSheet", "TimeSheetHarpoon")">Timesheet</a>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center">
+                    <div></div>
+                    <div style="display:flex; align-items:center">
+                        <label>Location</label>
+                        @using (Html.BeginForm("ChangeLocTimeSheet", "TimeSheetHarpoon", FormMethod.Post))
+                        {
+                            <div>
+                                @Html.DropDownListFor(m => m.Location_ID, Model.LocationsList, "Select", new { @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:150px;height:23px;font-size:15px;margin-left:6px;" })
+                                <noscript> <input style="display:none" class="btn btn-success" type="submit" value="Search" /></noscript>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+            <i class="fa fa-bars" style="font-size:25px"></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+
+    </div>
+
+    <div class="row" style="padding:0px 15px 0px 15px">
+        <div class="col-md-12">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#dashboard">Dashboard</a></li>
+                <li><a data-toggle="tab" href="#timesheet">Timesheet Entry</a></li>
+            </ul>
+            <div class="tab-content" style="background-color:white; margin:0px; padding:0px">
+                <div id="dashboard" class="tab-pane fade in active">
+                    <div class="row" style="height:70vh">
+
+                    </div>
+                </div>
+                <div id="timesheet" class="tab-pane fade">
+                    <div class="payRollMainBody example">
+                        <div class="row" style="padding:0px 30px 0px 30px">
+                            <div class="col-lg-2">
+                                <div class="row example" style="height:78vh; overflow-y:auto">
+                                    <div class="col-lg-12">
+                                        @foreach (var items in Model.employeeList)
+                                        {
+                                            if (Model.SelectedEmployeeId == items.employeeId.Split(';')[0])
+                                            {
+                                                if (items.employeeId.Split(';')[1] == "1")
+                                                {
+                                                    <div class="row empButton active" style="        cursor: pointer;
+        font-weight: bold;
+        padding: 15px;
+        background-color: white" onclick="location.href='@Url.Action("EmployeeFolder", "ManagementHarpoon", new { locId = Model.Location_ID, employeeId = @items.employeeId.Split(';')[0] })';">
+                                                        @items.fullName
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="row empButton inactive" style="display:none; cursor: pointer; font-weight: bold; padding: 15px; background-color: white" onclick="location.href='@Url.Action("EmployeeFolder", "ManagementHarpoon", new { locId = Model.Location_ID, employeeId = @items.employeeId.Split(';')[0] })';">
+                                                        @items.fullName
+                                                    </div>
+                                                }
+
+                                            }
+                                            else
+                                            {
+
+                                                if (items.employeeId.Split(';')[1] == "1")
+                                                {
+                                                    <div class="row empButton active" style="cursor:pointer; padding:15px; " onclick="location.href='@Url.Action("EmployeeFolder", "ManagementHarpoon", new { locId = Model.Location_ID, employeeId=@items.employeeId.Split(';')[0]})';">
+                                                        @items.fullName
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="row empButton inactive" style="display:none; cursor:pointer; padding:15px; " onclick="location.href='@Url.Action("EmployeeFolder", "ManagementHarpoon", new { locId = Model.Location_ID, employeeId=@items.employeeId.Split(';')[0]})';">
+                                                        @items.fullName
+                                                    </div>
+                                                }
+
+
+                                            }
+
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <script>
+                                $('.empButton').click(function () { $('#lodingWheel').css("display", "block") })
+                            </script>
+
+                            <div class="col-lg-10" style="background-color:white">
+                                <div id="AttendanceRightBody">
+                                    <div class="row" style="height:740px; overflow-y: auto; overflow-x: hidden;">
+
+                                        <div id="lodingWheel" style="display:none; width:100%">
+                                            <div style="width:100%; height:75vh; display:flex; justify-content:center; align-items:center">
+                                                <img src="~/Content/giphy.gif" style="width:100px; margin-left:auto; margin-right:auto" alt="Alternate Text" />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+    
+
+
+</body>
+
+</html>
+
+

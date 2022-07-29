@@ -183,9 +183,6 @@
             margin: 0px !important;
         }
 
-        .card-header {
-            background-color: #cde8ca;
-        }
 
             .card-header h6 {
                 color: black;
@@ -195,7 +192,9 @@
         #AddUnit {
             padding-right: 400px;
         }
-
+        .breadCrumb{
+        background-color:white;
+    }
         #exampleModalLong {
             padding-right: 400px;
         }
@@ -206,7 +205,7 @@
     <div class="row heading" style="padding:10px 20px 0px 15px">
         <div class="col">
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb" style="background-color: white;height: 100%;margin-top: 0px;">
+                <ol class="breadcrumb breadCrumb" style="background-color: white;height: 100%;margin-top: 0px;">
                     <li class="breadcrumb-item"><a href="@Url.Action("FieldSurveyEditAccount", "FleetTVT")">Fleet TVT</a></li>
                     <li class="breadcrumb-item " aria-current="page">Customers</li>
 
@@ -233,7 +232,8 @@
                         <div class="row" style="margin-bottom:0px; background-color:#b6b8ba">
                             <div class="col-lg-12" style="padding:0px">
                                 <div class="card" style="border:2px solid #aeafb0">
-                                    <div class="card-header" style="background-color: #c0c2c4 !important; padding:0px 2px 2px 15px">
+                                    <div class="card-header" style="padding:0px 2px 2px 15px">
+                                        @*background-color: #c0c2c4 !important; *@
                                         <div class="row">
                                             <div class="col-lg-2" style="padding-top:3px;"></div>
                                             <div class="col-lg-8 text-center" style="padding-top:8px; padding-bottom:0px;">
@@ -242,7 +242,12 @@
                                             <div class="col-lg-2" style="padding-top:8px;">
                                                 @if (Model.Customer != "Please Select Customer" && Model.Customer != null && Model.SehubAccess.fleetTvt_EditAccount >= 3)
                                                 {
-                                                    <button data-toggle="modal" data-target="#editCustomer" class="fa fa-edit" id="myButton" style="float: right;font-size: 30px;background-color: transparent;outline: none; border: none"></button>
+                                                    <button data-toggle="modal" data-target="#editCustomer" class="fa fa-edit" id="myButton" style="        float: right;
+        font-size: 30px;
+        background-color: transparent;
+        outline: none;
+        border: none
+"></button>
                                                 }
                                             </div>
                                         </div>
@@ -483,7 +488,7 @@
                     {
                         <div class="col-lg-3">
                             <div class="card" style="margin-bottom:10px; padding-top:0px">
-                                <div class="card-header text-center" style="background-color: #c0c2c4 !important; padding:3px 0px 0px 0px">
+                                <div class="card-header text-center" style="padding:3px 0px 0px 0px">@*background-color: #c0c2c4 !important; *@
                                     <b>@unit.unit_number</b> <button id="@unit.unit_number" onclick="PullUnitDetails(this)" style="float:right; background-color:transparent; border:none; outline:none" class="fa fa-edit" data-toggle="modal" data-target="#exampleModalLong"></button>
                                 </div>
                                 <div class="card-body" style="font-size:10px;">

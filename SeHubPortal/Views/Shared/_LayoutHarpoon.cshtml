@@ -68,14 +68,31 @@
             <div class="navbar-nav" id="TabLinks">
 
                 <a id="ManagementClicked" href="@Url.Action("TimeClockEvents", "ManagementHarpoon")" style="display:none; margin-left: 20px;margin-right: 20px;padding: 10px;border-radius: 5px" class="text-center">
-                    <img src="~/Content/man.png" /><br />
-                    <input type="button" id="managementBtn" class="btn btn-outline my-2 my-sm-0" style="visibility:visible;border-color:transparent;font-size:18px;color:black;" value="Management" />
+                    <div style="display:flex; flex-direction:column; justify-content:center; align-items:center">
+                        <img src="~/Content/employees_harpoon.png" style="margin-bottom:5px; height:30px;" />
+                        <span id="managementBtn" style="font-size:18px; color:black; margin:0px 10px">Employees</span>
+                    </div>
                 </a>
 
-                <a id="SettingsClicked" href="@Url.Action("System", "SettingsHarpoon")" style="display:none; margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center">
+                <a id="VehicleClicked" href="@Url.Action("Dashboard", "VehicleHarpoon")" style="display:none; margin-left: 20px;margin-right: 20px;padding: 10px;border-radius: 5px" class="text-center">
+                    <div style="display:flex; flex-direction:column; justify-content:center; align-items:center">
+                        <img src="~/Content/vehicles_harpoon.png" style="margin-bottom:0px; height:35px;" />
+                        <span id="vehicleBtn" style="font-size:18px; color:black; margin:0px 10px">Fleet</span>
+                    </div>
+                </a>
 
-                    <img style="height:20px;" src="~/Content/settings.png" /><br />
-                    <input type="button" id="libraryBtn" class="btn btn-outline my-2 my-sm-0 settingsBtn" style="visibility:visible;border-color:transparent;font-size:18px;color:black;" value="Settings" />
+                <a id="SettingsClicked" href="@Url.Action("System", "SettingsHarpoon")" style="display:block; margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center">
+                    <div style="display:flex; flex-direction:column; justify-content:center; align-items:center">
+                        <img src="~/Content/settings.png" style="margin:5px; height:25px;" />
+                        <span id="settingsBtn" style="font-size:18px; color:black; margin:0px 10px">Settings</span>
+                    </div>
+                </a>
+
+                <a id="TimesheetClicked" href="@Url.Action("Timesheet", "TimesheetHarpoon")" style="display:block; margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center">
+                    <div style="display:flex; flex-direction:column; justify-content:center; align-items:center">
+                        <img src="~/Content/payroll.png" style="margin:5px; height:25px;" />
+                        <span id="timesheetBtn" style="font-size:18px; color:black; margin:0px 10px">Timesheet</span>
+                    </div>
                 </a>
 
             </div>
@@ -83,7 +100,9 @@
         <div class="flex-grow-0" id="profileBlock" style="display:flex; align-items:center; width:270px; padding:0px !important">
 
         </div>
-        <div style="display:flex; flex-direction:column">
+        <div style="        display: flex;
+        flex-direction: column
+">
             <a style="float:right" href="@Url.Action("HarpoonLogin", "Login")" class="btn">
                 <img src="~/Content/power.png" />
             </a>

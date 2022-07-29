@@ -11,14 +11,14 @@ namespace SeHubPortal.ViewModel
     {
         public tbl_sehub_access SehubAccess { get; set; }
         public List<tbl_treadtracker_inventory_casing> CasingInventory { get; set; }
-        public List<tbl_customer_list> CustList { get; set; }
+        public List<tbl_cta_customers> CustList { get; set; }
         public List<SelectListItem> Customers { get; set; }
         public List<SelectListItem> CustomersList { get; set; }
         public String Customer { get; set; }
         public string FieldSheetURL { get; set; }
         public tbl_tread_tracker_customers AddCustomer { get; set; }
         public List<SelectListItem> RetreadList { get; set; }
-
+        public List<tbl_production_schedule> productionSchedule { get; set; }
 
     }
 }

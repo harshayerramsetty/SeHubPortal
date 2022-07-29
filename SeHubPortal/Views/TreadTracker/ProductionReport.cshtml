@@ -149,15 +149,14 @@
                 margin-top: 8px;
             }
 
-        .card-header {
-            background-color: #cde8ca;
-        }
 
             .card-header h6 {
                 color: black;
             }
 
-
+        .breadCrumb{
+        background-color:white;
+    }
 
 
         .orderMainBody {
@@ -317,7 +316,7 @@
             <div class="row heading">
                 <div class="col">
                     <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
+                        <ol class="breadcrumb breadCrumb" style="background-color:white;height:100%;margin-top:0px;">
                             <li class="breadcrumb-item"><a href="@Url.Action("ProductionReport", "TreadTracker")">Tread Tracker</a></li>
                             <li class="breadcrumb-item " aria-current="page">Production Report</li>
                         </ol>
@@ -340,10 +339,13 @@
                     <div class="dontShowInPrint btn" id="calender" style="width:100%; background-color:white"></div>
                 </div>
             </div>
+            <div class="row">
+                <button onclick="location.href='@Url.Action("PopulateTreadTracker", "Tools")';" >Populate TreadTracker</button>
+            </div>
         </div>
         <div class="col-lg-9" id="rightWindow" style="display:none; padding-right:30px">
             <div class="card">
-                <div class="card-header dontShowInPrint" style="padding-bottom: 5px; background-color: white">
+                <div class="card-header dontShowInPrint" style="padding-bottom: 5px; ">@*background-color: white*@
                     <div class="row">
                         <div class="col-lg-6">
                         </div>

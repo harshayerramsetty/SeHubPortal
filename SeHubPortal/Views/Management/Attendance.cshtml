@@ -143,7 +143,9 @@
 
 
     <style type="text/css">
-
+        .breadCrumb{
+        background-color:white;
+    }
         .example::-webkit-scrollbar {
             display: none;
         }
@@ -190,10 +192,6 @@
             .heading h2 {
                 margin-top: 8px;
             }
-
-        .card-header {
-            background-color: #cde8ca;
-        }
 
             .card-header h6 {
                 color: black;
@@ -344,70 +342,96 @@
     <div class="row" id="mainRow">
         <div class="col-md-12">
             <div>
-                <div class="row heading">
-                    <div class="col">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
-                                <li class="breadcrumb-item"><a href="@Url.Action("Attendance", "Management")">Management</a></li>
-                                <li class="breadcrumb-item " aria-current="page">Attendance</li>
 
-                                <lable style="margin-left:1180px; margin-right:0px">Location</lable>
+                <div class="row heading">
+                    <div class="col" style="margin:0px 5px 15px 15px; padding:10px; background-color:white">
+
+                        <div style="display:flex; justify-content:space-between; align-items:center">
+                            <div>
+                                <a href="@Url.Action("Attendance", "Management")">Management </a>/ Attendance History
+                            </div>
+
+                            <div style="display:flex;">
+                                <label style="margin-right:10px">
+                                    <b>Active ONLY</b>
+                                </label>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="Toggle1" class="custom-control-input" />
+                                    <label class="custom-control-label" for="Toggle1">
+                                        All
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div style="display:flex; justify-content:space-around; align-items:center">
+                                <label>Location</label>
                                 @using (Html.BeginForm("ChangeLocAttendance", "Management", FormMethod.Post))
                                 {
                                     <div>
-
-                                        @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "Select", new { @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:6px;" })
+                                        @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "Select", new { @id = "MatchedLocID", @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:6px;" })
 
                                         <noscript> <input style="display:none" class="btn btn-success" type="submit" value="Search" /></noscript>
                                     </div>
                                 }
-
-
-                            </ol>
-                        </nav>
+                            </div>
+                        </div>
                     </div>
                     <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
                         <i class="fa fa-bars" style="font-size:25px"></i>
                         <span class="sr-only">Toggle Menu</span>
                     </button>
                 </div>
+                <input style="display:none" type="text" id="tempEmpID" name="name" value="@Model.SelectedEmployeeId" />
                 <div class="payRollMainBody">
                     <div class="row" style="margin-left:0px">
-                        <div class="col-lg-2" style="padding-right:0px">
+                        <div class="col-lg-2">
                             <div class="row example" style="height:78vh; overflow-y:auto">
                                 <div class="col-lg-12" id="ul_list">
                                     @foreach (var items in Model.employeeList)
                                     {
                                         if (Model.SelectedEmployeeId == items.employeeId)
                                         {
-                                            <div class="row empButton commonClass @items.employeeId selectedEmployee" style="cursor: pointer; font-weight: bold; padding: 15px; background-color: white" id="@items.employeeId" onclick="pullAttendance(this.id)">
+                                            <div class="row empButton commonClass @items.employeeId selectedEmployee @items.atWork" style="cursor: pointer; font-weight: bold; padding: 15px; background-color: white" id="@items.employeeId" onclick="pullAttendance(this.id)">
                                                 @items.fullName
                                             </div>
                                         }
                                         else
                                         {
-                                            <div class="row empButton commonClass @items.employeeId" style="cursor: pointer; font-weight: bold; padding: 15px; background-color: transparent" id="@items.employeeId" onclick="pullAttendance(this.id)">
+                                            <div class="row empButton commonClass @items.employeeId @items.atWork" style="cursor: pointer; font-weight: bold; padding: 15px; background-color: transparent" id="@items.employeeId" onclick="pullAttendance(this.id)">
                                                 @items.fullName
                                             </div>
                                         }
                                     }
                                 </div>
                             </div>
-
-                            
                         </div>
                         <div class="col-lg-10">
-                            <div id="loading">
-                                <div style="background-color:white; width:100%; height:79vh; display:flex; justify-content:center; align-items:center;">
-                                    <img style="width:100px" src="~/Content/giphy.gif" alt="Alternate Text" />
+                            <div class="row" style="height:78vh; overflow-y:hidden; background-color:white; margin-right:5px">
+                                <div class="col-md-12">
+                                    <div id="loadingWheel" style="display:block; margin-bottom:1000px">
+                                        <div style="width:100%; height:78vh; display:flex; justify-content:center; align-items:center;">
+                                            <img style="width:100px" src="~/Content/giphy.gif" alt="Alternate Text" />
+                                        </div>
+                                    </div>
+                                    <div id="loadCalendar">
+                                        <div class="row" id="calendarParts" style="padding:10px 15px 10px 15px">
+                                            <div class="col-lg-2 text-left">
+                                                <button id="prev" class="btn btn-primary" style="display:none; font-weight:bolder; float:left; padding:2px 10px 2px 10px"><b><</b></button>
+                                            </div>
+                                            <div class="col-lg-8 text-center">
+                                                <h2 id="titleText" style="color:#2f88fc"></h2>
+                                            </div>
+                                            <div class="col-lg-2 text-right">
+                                                <button id="next" class="btn btn-primary" style="display:none; font-weight:bolder; float:right; padding:2px 10px 2px 10px"><b>></b></button>
+                                            </div>
+                                        </div>
+                                        <div class="dontShowInPrint btn" id="calender" style="width:100%; background-color:white"></div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="dontShowInPrint btn" id="calender" style="width:100%; background-color:white"></div>
                         </div>
                     </div>
 
-
-                    
                 </div>
             </div>
         </div>
@@ -448,13 +472,69 @@
         </div>
     </div>
 
+    
+
     <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
 
     <script>
 
+        $("#Toggle1").on('change', function () {
+            if ($(this).is(':checked')) {
+                $('.InActive').css("display", "block")
+            }
+            else {
+                $('.InActive').css("display", "none")
+            }
+        });
+
+        $("#next").click(function () {
+            const d = new Date();
+            if (d.getMonth() + 1 == getMonthNumber($('.fc-center h2').html().split(" ")[0])) {
+
+            }
+            else {
+                $('#loadingWheel').css("display", "block")
+                $('.fc-next-button').click();
+                $('#titleText').html($('.fc-center h2').html())
+                populateEmployeeList($('.fc-center h2').html().split(" ")[1] + "-" + getMonthNumber($('.fc-center h2').html().split(" ")[0]) + "-01");
+            }
+        });
+
+        $("#prev").click(function () {
+            $('#loadingWheel').css("display", "block")
+            $('.fc-prev-button').click();
+            $('#titleText').html($('.fc-center h2').html())
+            populateEmployeeList($('.fc-center h2').html().split(" ")[1] + "-" + getMonthNumber($('.fc-center h2').html().split(" ")[0]) + "-01");
+        });
+
+        function populateEmployeeList(val) {
+            $.ajax({
+                url: '@Url.Action("populateEmployeeList", "Management")',
+                data: { date: val, loc: $("#MatchedLocID").val() },
+                success: function (data) {
+                    var s = ''
+                    var empList = ''
+                    for (var i = 0; i < data.length; i++) {
+                        empList += data[i].value + ';'
+                        s += '<div class="row empButton commonClass ' + data[i].value + ' ' + data[i].text.split(";")[1] + '" style="cursor: pointer; font-weight: bold; padding: 15px; background-color: transparent" id="' + data[i].value + '" onclick="pullAttendance(this.id)">' + data[i].text.split(";")[0] + '</div>'
+                        //s += '<li class="list-group-item btn text-left commonClass '+ data[i].value +'" id="'+ data[i].value +'" onclick="pullAttendance(this.id)"><button class="btn" style="outline:none; border:none; background-color:transparent; vertical-align: middle">'+ data[i].text +'</button></li>'
+                    }
+                    
+                    $("#ul_list").html(s);
+                    if ($('#tempEmpID').val() != '' && empList.split(';').indexOf($('#tempEmpID').val()) > 0) {
+                        pullAttendance($('#tempEmpID').val())
+                    }
+                    else {
+                        pullAttendance(empList.split(';')[0])
+                    }
+                }
+            });
+        }
+
         $(window).on('load', function () {
             $('#AttendanceRightBody').css('display', 'block');
             $('#divLoader').css('display', 'none');
+            $('.0').css("display", "none")
         });
 
         $(document).ready(function () {
@@ -462,50 +542,44 @@
                 $('#sidebar').toggleClass('active');
                 $('#divLoader').css('display', 'block');
             });
-
+            $('.InActive').css("display", "none")
         });
-
-
 
         $("#AttendanceLink").click(function () {
             $('#AttendanceRightBody').css('display', 'none');
             $('#divLoader').css('display', 'block');
         });
 
-
         $(document).ready(function () {
+
+            const dDocRead = new Date();
+            const currentMonthDocRead = dDocRead.getMonth() + 1;
+
+            //alert(currentMonthDocRead)
+
             var events = [];
                 $.ajax({
                     type: "GET",
                     url: "/Management/GetAttendanceDates",
-                    data: { empid: @ViewData["EmployeeId"]},
+                    data: { empid: @ViewData["employee_id"], mon: currentMonthDocRead},
                     success: function (data) {
+
+                        $('#loadingWheel').css("display", "none")
+
                         $.each(data, function (i, v) {
 
-                            console.log(v);
-                            const words = v.split(' ');
+                            //alert(v)
 
-                            if (v.includes("clockIN")) {
-                                events.push({
-                                    start: words[0],
-                                    title: "clockIN" + " -> " + words[1],
-                                    color: 'white',
-                                });
-                            }
-                            else if (v.includes("clockOUT")) {
-                                events.push({
-                                    start: words[0],
-                                    title: "clockOUT" + " -> " + words[1],
-                                    color: 'white',
-                                });
-                            }
-                            else if (v.includes("autoOUT")) {
-                                events.push({
-                                    start: words[0],
-                                    title: "db autoOUT" + " -> " + words[1],
-                                    color: '#fc5151',
-                                });
-                            }
+                            const durat = netTime(v.split(";")[0].split(" ")[0], @ViewData["employee_id"], v.split(";")[1])
+
+                            //alert(durat)
+
+                            events.push({
+                                start: v.split(";")[0].split(" ")[0],
+                                title: durat.substring(0, 5) + " (" + v.split(";")[1] + ")",
+                                color: 'transparent',
+                                imageurl: '/Content/clockHarpoonn.png',
+                            });
 
                             eventOrder: 'color,start'
 
@@ -518,11 +592,11 @@
                     }
                 })
 
-                function GenerateCalender(events) {
+            function GenerateCalender(events) {
                     $('#calender').fullCalendar('destroy');
 
                     $('#calender').fullCalendar({
-                        contentHeight: 660,
+                        contentHeight: 630,
                         defaultDate: new Date(),
                         timeFormat: 'h(:mm)a',
                         displayEventTime: false,
@@ -531,7 +605,7 @@
                             center: 'title',
                             right: 'next'
                         },
-
+                        //defaultDate: moment().add(1, "months"),
                         eventLimit: true,
                         eventColor: '#378006',
                         events: events,
@@ -539,7 +613,7 @@
 
                         eventRender: function(event, eventElement) {
                         if (event.imageurl) {
-                            eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl +"' width='32' height='30'>");
+                            eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl +"' width='15' height='15' style='padding:0px 0px 5px 5px'>");
                             }
                         },
 
@@ -571,46 +645,42 @@
 
                         eventClick: function (calEvent, jsEvent, view) {
                             $.ajax({
-                                url: '@Url.Action("GetSwipDetails", "Management")', 
-                                data: { date: calEvent.start.format("YYYY-MM-DD"), empid: @ViewData["EmployeeId"]},
+                                url: '@Url.Action("GetSwipDetails", "Management")',
+                                data: { date: calEvent.start.format("YYYY-MM-DD"), empid: @ViewData["employee_id"], locid: calEvent.title.split("(")[1].split(")")[0]},
                                 success: function (data) {
-                                    var clockIN = [];
-                                    var clockOUT = [];
-
-                                    for (i = 0; i < data.length; i++) {
-                                        if (i % 2 == 0) {
-                                            clockIN.push(data[i]);
-                                        }
-                                        else {
-                                            clockOUT.push(data[i]);
-                                        }
-                                    }
 
                                     $('#pDetails').html("");
 
-                                    var duration = moment.duration('00:00:00')
-                                    for (i = 0; i < data.length; i++) {
-                                        if (i % 2 == 0) {
+                                    if (data.length == 1) {
+                                        $('#pDetails').html('<tr><td style="font-size:12px; padding:0px">'+ data[0].split(">")[0].split(" ")[1].split(":")[0] + ":" + data[0].split(">")[0].split(" ")[1].split(":")[1] + " " + data[0].split(">")[0].split(" ")[2] +'</td><td  style="font-size:12px; padding:0px"></td><td  style="font-size:12px; padding:0px"></td></tr>');
+                                        $('#myModal #eventTitle').empty().html(calEvent.title.split(" ")[1] + ' Attendance: ' + calEvent.start.format("MMM DD,YYYY"));
+                                    }
+                                    else {
+                                        var duration = moment.duration('00:00:00')
+                                        for (i = 0; i < data.length; i++) {
+                                            if (i % 2 == 0) {
+                                            }
+                                            else {
+
+                                                let startTime = Date.parse(data[i - 1].split(">")[0]);
+                                                let endTime = Date.parse(data[i].split(">")[0]);
+
+                                                var sessionstart= moment.unix(startTime/1000).format("DD/MM/YYYY HH:mm:ss");
+                                                var sessionend= moment.unix(endTime/1000).format("DD/MM/YYYY HH:mm:ss");
+                                                var ms = moment(sessionend,"DD/MM/YYYY HH:mm:ss").diff(moment(sessionstart,"DD/MM/YYYY HH:mm:ss"));
+                                                var d = moment.duration(ms);
+                                                var timeelapsed = Math.floor(d.asHours()) + moment.utc(ms).format(":mm:ss");
+
+                                                $('#pDetails').html($('#pDetails').html() + '<tr><td style="font-size:12px; padding:0px">'+ data[i-1].split(">")[0].split(" ")[1].split(":")[0] + ":" + data[i-1].split(">")[0].split(" ")[1].split(":")[1] + " " + data[i-1].split(">")[0].split(" ")[2] +'</td><td  style="font-size:12px; padding:0px">'+ data[i].split(">")[0].split(" ")[1].split(":")[0] + ":" + data[i].split(">")[0].split(" ")[1].split(":")[1] + " " + data[i].split(">")[0].split(" ")[2] +'</td><td  style="font-size:12px; padding:0px">'+ timeelapsed.split(":")[0] + ":" +  timeelapsed.split(":")[1]  +'</td></tr>');
+
+                                                duration = duration + moment.duration(timeelapsed).as('milliseconds')
+
+                                            }
                                         }
-                                        else {
-
-                                            let startTime = Date.parse(data[i - 1].split(">")[0]);
-                                            let endTime = Date.parse(data[i].split(">")[0]);
-
-                                            var sessionstart= moment.unix(startTime/1000).format("DD/MM/YYYY HH:mm:ss");
-                                            var sessionend= moment.unix(endTime/1000).format("DD/MM/YYYY HH:mm:ss");
-                                            var ms = moment(sessionend,"DD/MM/YYYY HH:mm:ss").diff(moment(sessionstart,"DD/MM/YYYY HH:mm:ss"));
-                                            var d = moment.duration(ms);
-                                            var timeelapsed = Math.floor(d.asHours()) + moment.utc(ms).format(":mm:ss");
-                                            
-                                            $('#pDetails').html($('#pDetails').html() + '<tr><td style="font-size:12px; padding:0px">'+data[i - 1].split(">")[0]+'</td><td  style="font-size:12px; padding:0px">'+ data[i].split(">")[0] +'</td><td  style="font-size:12px; padding:0px">'+timeelapsed+'</td></tr>');
-
-                                            duration = duration + moment.duration(timeelapsed).as('milliseconds')
-
-                                        }
+                                        $('#pDetails').html($('#pDetails').html() + '<tr style="background-color:white; border:1px solid white"><td style="font-size:12px; padding:0px; border:none"></td><td  style="font-size:12px; padding:0px; border:none"></td><td  style="font-size:12px; padding:0px; border:none">'+ moment.utc(duration).format("HH:mm") +'</td></tr>');
+                                        $('#myModal #eventTitle').empty().html(calEvent.title.split(" ")[1] + ' Attendance: ' + calEvent.start.format("MMM DD,YYYY"));
                                     }
 
-                                    $('#myModal #eventTitle').empty().html("Net Duration --> " + moment.utc(duration).format("HH:mm:ss") + " (HH:MM:SS)");
                                     $('#myModal').modal();
 
                                     //var newDate = new Date();
@@ -620,12 +690,32 @@
                             //$('#myModal').modal();
                         }
                     })
-                    $('#loading').css("display", "none")
+
+                    $('.fc-center').css("display", "none");
+                    $('.fc-prev-button').css("display", "none");
+                    $('.fc-today-button').css("display", "none");
+                    $('.fc-next-button').css("display", "none");
+                    $('#titleText').html($('.fc-center h2').html())
+                    $('#prev').css("display", "block")
+                    $('#next').css("display", "block")
+                    $('#loadingWheel').css("display", "none")
+                    //$('#loadCalendar').css('display', 'block')
                 }
         });
 
+        function getMonthNumber(val) {
+            var months = [" ", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            return months.indexOf(val);
+        }
 
         function pullAttendance(val) {
+            $('#loadingWheel').css("display", "block")
+            //$('#loadCalendar').css('display', 'none')
+            $('#tempEmpID').val(val)
+
+            const d = new Date();
+            const existingMonth = getMonthNumber($('.fc-toolbar h2').html().split(" ")[0])
+            const currentMonth = d.getMonth() + 1;
 
             $('.commonClass').css("background-color", "transparent")
             $('.'+val).css("background-color", "white")
@@ -634,40 +724,23 @@
                 $.ajax({
                     type: "GET",
                     url: "/Management/GetAttendanceDates",
-                    data: { empid: val},
+                    data: { empid: val, mon:existingMonth},
                     success: function (data) {
                         $.each(data, function (i, v) {
-
-                            console.log(v);
-                            const words = v.split(' ');
-
-                            if (v.includes("clockIN")) {
-                                events.push({
-                                    start: words[0],
-                                    title: "clockIN" + " -> " + words[1],
-                                    color: 'white',
-                                });
-                            }
-                            else if (v.includes("clockOUT")) {
-                                events.push({
-                                    start: words[0],
-                                    title: "clockOUT" + " -> " + words[1],
-                                    color: 'white',
-                                });
-                            }
-                            else if (v.includes("autoOUT")) {
-                                events.push({
-                                    start: words[0],
-                                    title: "db autoOUT" + " -> " + words[1],
-                                    color: '#fc5151',
-                                });
-                            }
-
+                            const durat = netTime(v.split(";")[0].split(" ")[0], val, v.split(";")[1])
+                            events.push({
+                                start: v.split(";")[0].split(" ")[0],
+                                title: durat.substring(0, 5) + " (" + v.split(";")[1] + ")",
+                                color: 'transparent',
+                                imageurl: '/Content/clockHarpoonn.png',
+                            });
                             eventOrder: 'color,start'
-
                         })
 
                         GenerateCalender(events);
+                        GenerateCalender(arrayUniqueByKey);
+                        $('#loadingWheel').css('display', 'none');
+                        //$('#loadCalendar').css('display', 'block')
                     },
                     error: function (error) {
 
@@ -678,7 +751,7 @@
                     $('#calender').fullCalendar('destroy');
 
                     $('#calender').fullCalendar({
-                        contentHeight: 660,
+                        contentHeight: 630,
                         defaultDate: new Date(),
                         timeFormat: 'h(:mm)a',
                         displayEventTime: false,
@@ -687,6 +760,7 @@
                             center: 'title',
                             right: 'next'
                         },
+                        defaultDate: moment().add(existingMonth-currentMonth, "months"),
 
                         eventLimit: true,
                         eventColor: '#378006',
@@ -695,7 +769,7 @@
 
                         eventRender: function(event, eventElement) {
                         if (event.imageurl) {
-                            eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl +"' width='32' height='30'>");
+                            eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl +"' width='15' height='15' style='padding:0px 0px 5px 5px'>");
                             }
                         },
 
@@ -727,46 +801,41 @@
 
                         eventClick: function (calEvent, jsEvent, view) {
                             $.ajax({
-                                url: '@Url.Action("GetSwipDetails", "Management")', 
-                                data: { date: calEvent.start.format("YYYY-MM-DD"), empid: val},
+                                url: '@Url.Action("GetSwipDetails", "Management")',
+                                data: { date: calEvent.start.format("YYYY-MM-DD"), empid: val, locid: calEvent.title.split("(")[1].split(")")[0]},
                                 success: function (data) {
-                                    var clockIN = [];
-                                    var clockOUT = [];
-
-                                    for (i = 0; i < data.length; i++) {
-                                        if (i % 2 == 0) {
-                                            clockIN.push(data[i]);
-                                        }
-                                        else {
-                                            clockOUT.push(data[i]);
-                                        }
-                                    }
-
                                     $('#pDetails').html("");
 
-                                    var duration = moment.duration('00:00:00')
-                                    for (i = 0; i < data.length; i++) {
-                                        if (i % 2 == 0) {
+                                    if (data.length == 1) {
+                                        $('#pDetails').html('<tr><td style="font-size:12px; padding:0px">'+ data[0].split(">")[0].split(" ")[1].split(":")[0] + ":" + data[0].split(">")[0].split(" ")[1].split(":")[1] + " " + data[0].split(">")[0].split(" ")[2] +'</td><td  style="font-size:12px; padding:0px"></td><td  style="font-size:12px; padding:0px"></td></tr>');
+                                        //$('#myModal #eventTitle').empty().html("Net Attendance");
+                                    }
+                                    else {
+                                        var duration = moment.duration('00:00:00')
+                                        for (i = 0; i < data.length; i++) {
+                                            if (i % 2 == 0) {
+                                            }
+                                            else {
+
+                                                let startTime = Date.parse(data[i - 1].split(">")[0]);
+                                                let endTime = Date.parse(data[i].split(">")[0]);
+
+                                                var sessionstart= moment.unix(startTime/1000).format("DD/MM/YYYY HH:mm:ss");
+                                                var sessionend= moment.unix(endTime/1000).format("DD/MM/YYYY HH:mm:ss");
+                                                var ms = moment(sessionend,"DD/MM/YYYY HH:mm:ss").diff(moment(sessionstart,"DD/MM/YYYY HH:mm:ss"));
+                                                var d = moment.duration(ms);
+                                                var timeelapsed = Math.floor(d.asHours()) + moment.utc(ms).format(":mm:ss");
+
+                                                $('#pDetails').html($('#pDetails').html() + '<tr><td style="font-size:12px; padding:0px">'+ data[i-1].split(">")[0].split(" ")[1].split(":")[0] + ":" + data[i-1].split(">")[0].split(" ")[1].split(":")[1] + " " + data[i-1].split(">")[0].split(" ")[2] +'</td><td  style="font-size:12px; padding:0px">'+ data[i].split(">")[0].split(" ")[1].split(":")[0] + ":" + data[i].split(">")[0].split(" ")[1].split(":")[1] + " " + data[i].split(">")[0].split(" ")[2] +'</td><td  style="font-size:12px; padding:0px">'+ timeelapsed.split(":")[0] + ":" +  timeelapsed.split(":")[1] +'</td></tr>');
+
+                                                duration = duration + moment.duration(timeelapsed).as('milliseconds')
+
+                                            }
                                         }
-                                        else {
-
-                                            let startTime = Date.parse(data[i - 1].split(">")[0]);
-                                            let endTime = Date.parse(data[i].split(">")[0]);
-
-                                            var sessionstart= moment.unix(startTime/1000).format("DD/MM/YYYY HH:mm:ss");
-                                            var sessionend= moment.unix(endTime/1000).format("DD/MM/YYYY HH:mm:ss");
-                                            var ms = moment(sessionend,"DD/MM/YYYY HH:mm:ss").diff(moment(sessionstart,"DD/MM/YYYY HH:mm:ss"));
-                                            var d = moment.duration(ms);
-                                            var timeelapsed = Math.floor(d.asHours()) + moment.utc(ms).format(":mm:ss");
-
-                                            $('#pDetails').html($('#pDetails').html() + '<tr><td style="font-size:12px; padding:0px">'+data[i - 1].split(">")[0]+'</td><td  style="font-size:12px; padding:0px">'+ data[i].split(">")[0] +'</td><td  style="font-size:12px; padding:0px">'+timeelapsed+'</td></tr>');
-
-                                            duration = duration + moment.duration(timeelapsed).as('milliseconds')
-
-                                        }
+                                        $('#pDetails').html($('#pDetails').html() + '<tr style="background-color:white; border:1px solid white"><td style="font-size:12px; padding:0px; border:none"></td><td  style="font-size:12px; padding:0px; border:none"></td><td  style="font-size:12px; padding:0px; border:none">'+ moment.utc(duration).format("HH:mm") +'</td></tr>');
+                                        $('#myModal #eventTitle').empty().html(calEvent.title.split(" ")[1] + ' Attendance: ' + calEvent.start.format("MMM DD,YYYY"));
                                     }
 
-                                    $('#myModal #eventTitle').empty().html("Net Duration --> " + moment.utc(duration).format("HH:mm:ss") + " (HH:MM:SS)");
                                     $('#myModal').modal();
 
                                     //var newDate = new Date();
@@ -776,9 +845,45 @@
                             //$('#myModal').modal();
                         }
                     })
+
+                    $('.fc-center').css("display", "none");
+                    $('.fc-prev-button').css("display", "none");
+                    $('.fc-today-button').css("display", "none");
+                    $('.fc-next-button').css("display", "none");
+                    $('#loadingWheel').css("display", "none")
+                    //$('#loadCalendar').css("display", "block")
+
                 }
         }
 
+        function netTime(dateVal, empIDVal, locID) {
+            var duration = moment.duration('00:00:00')
+            $.ajax({
+                url: '@Url.Action("GetSwipDetails", "Management")',
+                async:false,
+                data: { date: dateVal, empid: empIDVal , locid: locID},
+                success: function (data) {
+                    for (i = 0; i < data.length; i++) {
+                        if (i % 2 == 0) {
+                        }
+                        else {
+                            let startTime = Date.parse(data[i - 1].split(">")[0]);
+                            let endTime = Date.parse(data[i].split(">")[0]);
+                            var sessionstart = moment.unix(startTime / 1000).format("DD/MM/YYYY HH:mm:ss");
+                            var sessionend = moment.unix(endTime / 1000).format("DD/MM/YYYY HH:mm:ss");
+                            var ms = moment(sessionend, "DD/MM/YYYY HH:mm:ss").diff(moment(sessionstart, "DD/MM/YYYY HH:mm:ss"));
+                            var d = moment.duration(ms);
+                            var timeelapsed = Math.floor(d.asHours()) + moment.utc(ms).format(":mm:ss");
+                            duration = duration + moment.duration(timeelapsed).as('milliseconds')
+                            
+                        }
+                    }
+                }
+            });
+
+            return moment.utc(duration).format("HH:mm:ss");
+
+        }
 
     </script>
 </body>

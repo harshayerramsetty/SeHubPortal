@@ -103,8 +103,23 @@ namespace SeHubPortal.Models
         public virtual DbSet<tbl_source_RARcodes> tbl_source_RARcodes { get; set; }
         public virtual DbSet<tbl_cta_location_survey> tbl_cta_location_survey { get; set; }
         public virtual DbSet<tbl_management_training> tbl_management_training { get; set; }
-        public virtual DbSet<tbl_harpoon_departments> tbl_harpoon_departments { get; set; }
-        public virtual DbSet<tbl_production_schedule> tbl_production_schedule { get; set; }
         public virtual DbSet<tbl_harpoon_jobclock> tbl_harpoon_jobclock { get; set; }
+        public virtual DbSet<tbl_harpoon_job_log> tbl_harpoon_job_log { get; set; }
+        public virtual DbSet<tbl_sehub_color_scheme> tbl_sehub_color_scheme { get; set; }
+        public virtual DbSet<tbl_treadtracke_stock_production_schedule> tbl_treadtracke_stock_production_schedule { get; set; }
+        public virtual DbSet<tbl_harpoon_vehicle> tbl_harpoon_vehicle { get; set; }
+        public virtual DbSet<tbl_source_retread_part_number> tbl_source_retread_part_number { get; set; }
+        public virtual DbSet<tbl_harpoon_fuel_log> tbl_harpoon_fuel_log { get; set; }
+        public virtual DbSet<tbl_production_schedule> tbl_production_schedule { get; set; }
+        public virtual DbSet<tbl_harpoon_fuelReporting_chargeAccounts> tbl_harpoon_fuelReporting_chargeAccounts { get; set; }
+        public virtual DbSet<tbl_cta_customers> tbl_cta_customers { get; set; }
+        public virtual DbSet<tbl_data_import_history> tbl_data_import_history { get; set; }
+        public virtual DbSet<tbl_harpoon_attendance_log> tbl_harpoon_attendance_log { get; set; }
+        public virtual DbSet<tbl_attendance_log> tbl_attendance_log { get; set; }
+        public virtual DbSet<tbl_source_payrollDeductions_cpp> tbl_source_payrollDeductions_cpp { get; set; }
+        public virtual DbSet<tbl_source_payrollDeductions_ei> tbl_source_payrollDeductions_ei { get; set; }
+        public virtual DbSet<tbl_harpoon_departments> tbl_harpoon_departments { get; set; }
+        public virtual DbSet<tbl_salesReport_branch_monthly> tbl_salesReport_branch_monthly { get; set; }
+        public virtual DbSet<tbl_data_logger_temperature> tbl_data_logger_temperature { get; set; }
     }
 }

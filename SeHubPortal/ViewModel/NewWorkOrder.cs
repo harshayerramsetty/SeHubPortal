@@ -8,7 +8,7 @@ namespace SeHubPortal.ViewModel
 {
     public class NewWorkOrder
     {
-        public tbl_customer_list customerInfo { get; set; }
+        public tbl_cta_customers customerInfo { get; set; }
         public string workOrder { get; set; }
         public string OrderDate { get; set; }
         public string SubmittedEmployee { get; set; }

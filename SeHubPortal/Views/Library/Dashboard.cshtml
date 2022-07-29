@@ -157,13 +157,14 @@
             margin: 0px !important;
         }
 
-        .card-header {
-            background-color: #cde8ca;
-        }
-
             .card-header h6 {
                 color: black;
             }
+
+            .breadCrumb{
+        background-color:white;
+    }
+
     </style>
 </head>
 <body style="overflow-y: hidden;">
@@ -174,10 +175,10 @@
 
     @if (Model.SehubAccess.library_dashboard > 0)
     {
-        <div class="row heading" style="padding:10px 20px 0px 15px">
-            <div class="col">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb" style="        background-color: white;
+        <div class="row heading " style="padding:10px 20px 0px 15px">
+            <div class="col ">
+                <nav aria-label="breadcrumb ">
+                    <ol class="breadcrumb breadCrumb" style="        background-color: white;
         height: 100%;
         margin-top: 0px;
     ">
@@ -255,7 +256,8 @@
                                     @Html.DropDownListFor(m => m.ResourceType, listItems, new { @class = "text-center", @style = "text-align-last: center; width:200px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
                                 </div>
                             </div>
-                            <div class="row" style="margin:3px">
+                            <div class="row" style="        margin: 3px
+">
                                 <div class="col-md-5 text-left" style="margin:0px; padding:0px"><label>Document Name</label></div>
                                 <div class="col-md-7  text-right" style="margin:0px; padding:0px">
                                     @Html.EditorFor(m => m.DocumentName, new { htmlAttributes = new { @style = "width:200px;height:23px;", @required = "required" } })

@@ -10,7 +10,7 @@ using System.Web.Mvc;
 using SeHubPortal.ViewModel;
 using System.Configuration;
 using System.Data.SqlClient;
-
+using System.Drawing.Drawing2D;
 
 namespace SeHubPortal.Controllers
 {
@@ -34,6 +34,10 @@ namespace SeHubPortal.Controllers
 
         public ActionResult Dashboard(MainDashboard modal)
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
 
             if (CheckPermissions()!=null)
             {
@@ -59,9 +63,13 @@ namespace SeHubPortal.Controllers
 
             return View(modal);
         }
+
         public ActionResult LocationsMap(LocationsMap modal, string loc)
         {
-
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             
             int empId = Convert.ToInt32(Session["userID"].ToString());
@@ -166,8 +174,51 @@ namespace SeHubPortal.Controllers
             return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
 
+        public JsonResult GetBirthdayEventsMonth()
+        {
+            Trace.WriteLine("Reached till here GetBirthdayEventsMonth");
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            DateTime start = System.DateTime.Today;
+            var employees = db.tbl_employee.Where(x => x.status == 1 && x.Date_of_birth != null && x.Date_of_birth.Value.Month == start.Month).ToList();
+            
+            return new JsonResult { Data = employees, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        public JsonResult GetEventsMonth()
+        {
+            CityTireAndAutoEntities dc = new CityTireAndAutoEntities();
+
+            DateTime start = System.DateTime.Today.AddDays(-7);
+            DateTime end = System.DateTime.Today.AddDays(7);
+
+            var events = dc.tbl_Calendar_events.Where(x => x.start_date > start && x.end_date < end).ToList();
+
+            var vacations = dc.tbl_vacation_schedule.Where(x => x.start_date > start && x.end_date < end).ToList();
+
+            foreach (var item in vacations)
+            {
+                if(dc.tbl_employee.Where(x => x.employee_id == item.empid).Select(x => x.status).FirstOrDefault() == 1)
+                {
+                    tbl_Calendar_events eve = new tbl_Calendar_events();
+                    eve.subject = "Vacation";
+                    eve.start_date = item.start_date.AddDays(1);
+                    eve.end_date = item.end_date.Value.AddDays(1);
+                    eve.Description = dc.tbl_employee.Where(x => x.employee_id == item.empid).Select(x => x.full_name).FirstOrDefault() + " " + item.leave_type;
+
+                    events.Add(eve);
+                }
+            }
+
+            return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+
+        }
+
         public ActionResult Calendar(FileURL model)
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             int empId = Convert.ToInt32(Session["userID"].ToString());
             var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
@@ -353,6 +404,25 @@ namespace SeHubPortal.Controllers
             return PartialView(employee) ;
         }
 
+        public ActionResult RenderColor()
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            var color = db.tbl_sehub_color_scheme;
+
+            return new JsonResult { Data = color, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        protected Image Resize(Image img, int resizedW, int resizedH)
+        {
+            Bitmap bmp = new Bitmap(resizedW, resizedH);
+            Graphics graphic = Graphics.FromImage((Image)bmp);
+            graphic.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            graphic.DrawImage(img, 0, 0, resizedW, resizedH);
+            graphic.Dispose();
+            return (Image)bmp;
+        }
+
         [HttpPost]
         public ActionResult UploadProfileImage(HttpPostedFileBase EmployeeImage)
         {
@@ -363,19 +433,15 @@ namespace SeHubPortal.Controllers
             if (EmployeeImage != null && EmployeeImage.ContentLength > 0)
             {
                 var imageName = Path.GetFileName(EmployeeImage.FileName);
-                //Debug.WriteLine("EmployeeImage:" + imageName);
-                //string fileName = "C:/Users/mahes/Videos/Docs/Upload This/Resources/sidebar-04/js/" + imageName;
-
                 using (Image image = Image.FromStream(EmployeeImage.InputStream, true, true))
                 {
+                    double height = 170 * image.Height / image.Width;
+                    Image img = Resize(image, 170, (int)Math.Round(height));
+
                     using (MemoryStream m = new MemoryStream())
                     {
-                        image.Save(m, image.RawFormat);
+                        img.Save(m, image.RawFormat);
                         imageBytes = m.ToArray();
-
-                        // Convert byte[] to Base64 String
-                        string base64String = Convert.ToBase64String(imageBytes);
-                        //Debug.WriteLine("Image base64:" + base64String);
                     }
                 }
             }

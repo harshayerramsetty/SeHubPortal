@@ -1,0 +1,421 @@
+﻿
+@model SeHubPortal.ViewModel.AttendanceReportViewModel
+@{
+    ViewBag.Title = "EmployeeFolder";
+    Layout = "~/Views/Shared/_Management_Harpoon.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+
+
+    @if (Model.client_info.employees_page.Value)
+    {
+        <style>
+            #ManagementClicked {
+                display: block !important;
+            }
+        </style>
+    }
+    @if (Model.client_info.fleet_page.Value)
+    {
+        <style>
+            #VehicleClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.AccessType == "Administrator")
+    {
+        <style>
+            #SettingsClicked {
+                display: block !important;
+            }
+
+            #AttendanceLink {
+                display: block !important;
+            }
+
+            #SettingsLink {
+                display: block !important;
+            }
+
+            #EmployeeFilesLink {
+                display: block !important;
+            }
+
+            #TimeClockEventsLink {
+                display: block !important;
+            }
+        </style>
+    }
+    else if (Model.AccessType != "Shop Fireman")
+    {
+        <style>
+            #AttendanceLink {
+                display: block !important;
+            }
+
+            #SettingsLink {
+                display: block !important;
+            }
+
+            #EmployeeFilesLink {
+                display: block !important;
+            }
+
+            #TimeClockEventsLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+
+    <style>
+
+        #SettingsClicked {
+            display: block !important;
+        }
+
+        #ManagementClicked {
+            display: block !important;
+        }
+
+        #ManagementClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #managementBtn {
+            color: black;
+            font-weight: 600;
+        }
+
+        #AttendanceReportLink {
+            display: block !important;
+            color: black;
+            font-weight: 700;
+            background-color: #f0f2f5;
+        }
+
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .heading {
+            margin: 10px 0px 0px 0px;
+        }
+
+            .heading h2 {
+                margin-top: 8px;
+            }
+
+        .card-header {
+            background-color: #cde8ca;
+        }
+
+
+            .card-header h6 {
+                color: black;
+            }
+
+        .renameModal {
+            padding-left: 55% !important;
+            padding-top: 18%;
+        }
+
+        .deleteModal {
+            padding-left: 55% !important;
+            padding-top: 18%;
+        }
+
+        .example::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .example {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+    </style>
+</head>
+<body>
+    <div class="row heading">
+        <div class="col" style="margin:0px 5px 15px 15px; padding:10px; background-color:white">
+
+            <div style="display:flex; justify-content:space-between; align-items:center">
+                <div>
+                    <a href="@Url.Action("AttendanceReport", "ManagementHarpoon")">Management </a>/ Attendance Report
+                </div>
+
+                <div>
+                    @using (Html.BeginForm("ExportList", "ManagementHarpoon", FormMethod.Post))
+                    {
+                        if (Model.AttendanceList != null)
+                        {
+                            if (Model.AttendanceList.Count() > 0)
+                            {
+                                <button class="btn btn-success" style="padding:0px 20px 0px 20px; font-weight:bold">Export CSV</button>
+                                <div style="display:none">
+                                    @Html.EditorFor(m => m.MatchedLocID)
+                                    @Html.EditorFor(m => m.StartDate)
+                                    @Html.EditorFor(m => m.EndDate)
+                                    @Html.EditorFor(m => m.SelectedEmpID)
+                                    @Html.EditorFor(m => m.ShowJob)
+                                </div>
+                            }
+
+                        }
+
+                    }
+
+                </div>
+
+                <div style="display:flex; justify-content:space-around; align-items:center">
+                    <label>Location</label>
+                    @using (Html.BeginForm("ChangeLocAttendanceReport", "ManagementHarpoon", FormMethod.Post))
+                    {
+                        <div>
+                            @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "Select", new { @id = "MatchedLocID", @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:150px;height:23px;font-size:15px;margin-left:6px;" })
+
+                            <noscript> <input style="display:none" class="btn btn-success" type="submit" value="Search" /></noscript>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+            <i class="fa fa-bars" style="font-size:25px"></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+
+    @using (Html.BeginForm("BuildAttendanceReport", "ManagementHarpoon", FormMethod.Post))
+    {
+        <div class="row" style="padding:0px 30px 20px 30px">
+            <div class="col-md-12" style="background-color:white; padding:30px 0px">
+                <div style="display:flex; justify-content:space-between">
+                    <label style="margin:0px 10px">From</label>
+                    <div style="display:flex; justify-content:space-around; align-items:center; border:1px solid dimgray; border-radius:3px">
+                        <input style="text-align:center; height:25px; width:350px; border:none; outline:none" type="text" name="name" value="@(Model.StartDate != new DateTime(1, 1, 1)? Model.StartDate.ToString("MMMM dd, yyyy"): "")" id="firstDatefullDate" />
+                        @Html.EditorFor(m => m.StartDate, new { htmlAttributes = new { @id = "firstDateId", @style = "border:none; outline:none; width:22px; height:25px; border:nonr; outline:none", @type = "date", @min = Model.client_info.start_date.Value.ToString("yyyy-MM-dd"), @max = System.DateTime.Today.ToString("yyyy-MM-dd") } })
+                    </div>
+
+                    <label style="margin:0px 10px">To</label>
+                    <div style="display:flex; justify-content:space-around; align-items:center; border:1px solid dimgray; border-radius:3px">
+                        <input style="text-align:center; height:25px; width:350px; border:none; outline:none" type="text" name="name" value="@(Model.EndDate != new DateTime(1, 1, 1)? Model.EndDate.ToString("MMMM dd, yyyy"): "")" id="secondDatefullDate" />
+                        @Html.EditorFor(m => m.EndDate, new { htmlAttributes = new { @id = "secondDateId", @style = "border:none; outline:none; width:22px; height:25px;", @type = "date", @min = Model.client_info.start_date.Value.ToString("yyyy-MM-dd"), @max = System.DateTime.Today.ToString("yyyy-MM-dd") } })
+                    </div>
+
+                    <label style="margin:0px 10px">Employee</label>
+                    @Html.DropDownListFor(m => m.SelectedEmpID, Model.EmployeeList, "ALL", new { @style = "text-align-last: center;height:25px;font-size:15px;" })
+                    <label style="margin:0px 10px">Show Job Details</label>
+                    @Html.CheckBoxFor(m => m.ShowJob, new { @style = "width:22px; height:22px;"})
+
+                    <button type="submit" class="btn btn-primary" style="margin:0px 10px; padding: 0px 20px 0px 20px">
+                        Build
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+
+    }
+    <script>
+
+        document.getElementById("firstDateId").onchange = function () {
+            var input = document.getElementById("secondDateId");
+            input.setAttribute("min", this.value);
+            var d1 = new Date($('#firstDateId').val());
+            d1 = addDays(d1, 1);
+            $("#firstDatefullDate").val(moment(d1).format("dddd MMMM DD, yyyy"));
+        }
+
+        document.getElementById("secondDateId").onchange = function () {
+            var input = document.getElementById("firstDateId");
+            input.setAttribute("max", this.value);
+            var d2 = new Date($('#secondDateId').val());
+            d2 = addDays(d2, 1);
+            $("#secondDatefullDate").val(moment(d2).format("dddd MMMM DD, yyyy"));
+        }
+
+        function addDays(date, days) {
+          var result = new Date(date);
+          result.setDate(result.getDate() + days);
+          return result;
+        }
+
+    </script>
+    @if (Model.AttendanceList != null)
+    {
+        <div class="row example" style="height:630px; overflow-y:auto; background-color:white; margin:0px 15px">
+            <div class="col-md-12" style="padding:0px 30px 0px 30px">
+
+                <div class="row" style="font-size:40px; font-weight:bold; margin-bottom:10px">
+                    <u>@Model.LocationsList.Where(x => x.auto_loc_id.ToString() == Model.MatchedLocID).Select(x => x.location_name).FirstOrDefault() (@Model.LocationsList.Where(x => x.auto_loc_id.ToString() == Model.MatchedLocID).Select(x => x.location_id).FirstOrDefault())</u>
+                </div>
+
+                @foreach (var item in Model.emp_list)
+                {
+                    if (Model.AttendanceList.Where(x => x.auto_emp_id == item.auto_emp_id).ToList().Count() > 0)
+                    {
+
+                        <div class="row" style="padding-left:100px; font-size:30px; font-weight:bold; margin-bottom:15px">
+                            @item.first_name, @item.last_name (@item.employee_id)
+                        </div>
+
+                        for (int j = 0; j < (Model.EndDate - Model.StartDate).TotalDays; j++)
+                        {
+
+                            if (Model.AttendanceList.Where(x => x.auto_emp_id == item.auto_emp_id && x.time_stamp.ToString("dd MM yyyy") == Model.StartDate.AddDays(j).ToString("dd MM yyyy")).ToList().Count() > 0)
+                            {
+                                TimeSpan totalDuration = new TimeSpan(0, 0, 0);
+                                <div class="row" style="padding-left:200px; width:1500px">
+                                    <div class="col-md-4 text-right">
+                                        <h6>
+                                            <b>@Model.StartDate.AddDays(j).ToString("dddd, MMMM dd yyyy")</b>
+                                        </h6>
+                                    </div>
+                                    <div class="col-md-4 text-left" style="padding-left:0px">
+
+                                        <table class="table table-bordered" style="margin-bottom:30px">
+                                            <thead style="background-color:#797a7a; color:white">
+                                                <tr>
+                                                    <th style="text-align:center; font-size:10px; padding:0px" scope="col">Clock-IN</th>
+                                                    <th style="text-align:center; font-size:10px; padding:0px" scope="col">Clock-OUT</th>
+                                                    <th style="text-align:center; font-size:10px; padding:0px" scope="col">Duration</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody style="background-color:white; font-weight:bold">
+                                                @for (int i = 0; i < Model.AttendanceList.Where(x => x.auto_emp_id == item.auto_emp_id && x.time_stamp.ToString("dd MM yyyy") == Model.StartDate.AddDays(j).ToString("dd MM yyyy")).ToList().Count(); i++)
+                                                {
+                                                    if (i % 2 == 0)
+                                                    {
+                                                        <tr>
+                                                            <td style="text-align:center; font-size:10px; padding:0px" scope="col">
+                                                                @if (Model.AttendanceList.Where(x => x.auto_emp_id == item.auto_emp_id && x.time_stamp.ToString("dd MM yyyy") == Model.StartDate.AddDays(j).ToString("dd MM yyyy")).ToList()[i].event_id == "clockIN" || Model.AttendanceList.Where(x => x.auto_emp_id == item.auto_emp_id && x.time_stamp.ToString("dd MM yyyy") == Model.StartDate.AddDays(j).ToString("dd MM yyyy")).ToList()[i].event_id == "adminIN")
+                                                                {<span>@Model.AttendanceList.Where(x => x.auto_emp_id == item.auto_emp_id && x.time_stamp.ToString("dd MM yyyy") == Model.StartDate.AddDays(j).ToString("dd MM yyyy")).ToList()[i].time_stamp.ToString("hh:mm tt")</span>}
+                                                            </td>
+                                                            <td style="text-align:center; font-size:10px; padding:0px" scope="col">
+                                                                @if (i + 1 < Model.AttendanceList.Where(x => x.auto_emp_id == item.auto_emp_id && x.time_stamp.ToString("dd MM yyyy") == Model.StartDate.AddDays(j).ToString("dd MM yyyy")).ToList().Count)
+                                                                {
+                                                                    if (Model.AttendanceList.Where(x => x.auto_emp_id == item.auto_emp_id && x.time_stamp.ToString("dd MM yyyy") == Model.StartDate.AddDays(j).ToString("dd MM yyyy")).ToList()[i + 1].event_id == "clockOUT" || Model.AttendanceList.Where(x => x.auto_emp_id == item.auto_emp_id && x.time_stamp.ToString("dd MM yyyy") == Model.StartDate.AddDays(j).ToString("dd MM yyyy")).ToList()[i + 1].event_id == "adminOUT" || Model.AttendanceList.Where(x => x.auto_emp_id == item.auto_emp_id && x.time_stamp.ToString("dd MM yyyy") == Model.StartDate.AddDays(j).ToString("dd MM yyyy")).ToList()[i + 1].event_id == "autoOUT")
+                                                                    {
+                                                                        <span>@Model.AttendanceList.Where(x => x.auto_emp_id == item.auto_emp_id && x.time_stamp.ToString("dd MM yyyy") == Model.StartDate.AddDays(j).ToString("dd MM yyyy")).ToList()[i + 1].time_stamp.ToString("hh:mm tt")</span>
+                                                                    }
+                                                                }
+                                                            </td>
+                                                            <td style="text-align:center; font-size:10px; padding:0px" scope="col">
+                                                                @if (i + 1 < Model.AttendanceList.Where(x => x.auto_emp_id == item.auto_emp_id && x.time_stamp.ToString("dd MM yyyy") == Model.StartDate.AddDays(j).ToString("dd MM yyyy")).ToList().Count)
+                                                                {
+                                                                    TimeSpan diff2 = (Model.AttendanceList.Where(x => x.auto_emp_id == item.auto_emp_id && x.time_stamp.ToString("dd MM yyyy") == Model.StartDate.AddDays(j).ToString("dd MM yyyy")).ToList()[i + 1].time_stamp - Model.AttendanceList.Where(x => x.auto_emp_id == item.auto_emp_id && x.time_stamp.ToString("dd MM yyyy") == Model.StartDate.AddDays(j).ToString("dd MM yyyy")).ToList()[i].time_stamp);
+                                                                    totalDuration += diff2;
+                                                                    <span>
+                                                                        @diff2.ToString(@"hh\:mm")
+                                                                    </span>
+                                                                }
+                                                            </td>
+                                                        </tr>
+
+                                                    }
+
+                                                }
+                                                <tr style="border:1px solid white">
+                                                    <td style="text-align:center; font-size:15px; padding:0px; border:none" scope="col"></td>
+                                                    <td style="text-align:center; font-size:15px; padding:0px; border:none" scope="col">
+                                                        <b>Total Duration</b>
+                                                    </td>
+                                                    <td style="text-align:center; font-size:15px; padding:0px; border:none" scope="col">
+                                                        <b>@totalDuration.ToString(@"hh\:mm")</b>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-4 text-left" style="padding-left:0px">
+                                        @if (Model.ShowJob && Model.AttendanceList.Where(x => x.auto_emp_id == item.auto_emp_id && x.time_stamp.ToString("dd MM yyyy") == Model.StartDate.AddDays(j).ToString("dd MM yyyy") && x.job_ids != null).Any())
+                                        {
+                                            <table class="table table-bordered">
+                                                <thead style="background-color:#797a7a; color:white">
+                                                    <tr>
+                                                        <th style="text-align:center; font-size:10px; padding:0px" scope="col">Job ID</th>
+                                                        <th style="text-align:center; font-size:10px; padding:0px" scope="col">Count</th>
+                                                        <th style="text-align:center; font-size:10px; padding:0px" scope="col">Total</th>
+                                                        <th style="text-align:center; font-size:10px; padding:0px" scope="col">Average</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody style="background-color:white; font-weight:bold">
+                                                    @for (int i = 0; i < Model.AttendanceList.Where(x => x.auto_emp_id == item.auto_emp_id && x.time_stamp.ToString("dd MM yyyy") == Model.StartDate.AddDays(j).ToString("dd MM yyyy")).ToList().Count(); i++)
+                                                    {
+                                                        if (i % 2 == 0)
+                                                        {
+                                                            <tr>
+                                                                @if (Model.AttendanceList.Where(x => x.auto_emp_id == item.auto_emp_id && x.time_stamp.ToString("dd MM yyyy") == Model.StartDate.AddDays(j).ToString("dd MM yyyy")).ToList()[i].job_ids != null)
+                                                                {
+                                                                    int count = Model.AttendanceList.Where(x => x.auto_emp_id == item.auto_emp_id && x.time_stamp.ToString("dd MM yyyy") == Model.StartDate.AddDays(j).ToString("dd MM yyyy")).ToList()[i].job_ids.Split(';').Count();
+                                                                    TimeSpan totalJobDuration = new TimeSpan(0);
+                                                                    foreach (var job in Model.AttendanceList.Where(x => x.auto_emp_id == item.auto_emp_id && x.time_stamp.ToString("dd MM yyyy") == Model.StartDate.AddDays(j).ToString("dd MM yyyy")).ToList()[i].jobs)
+                                                                    {
+                                                                        totalJobDuration += (job.end_time - job.start_time).Value;
+                                                                    }
+                                                                    <td style="text-align:center; font-size:10px; padding:0px" scope="col">
+                                                                        <span>
+                                                                            @string.Join(" ", Model.AttendanceList.Where(x => x.auto_emp_id == item.auto_emp_id && x.time_stamp.ToString("dd MM yyyy") == Model.StartDate.AddDays(j).ToString("dd MM yyyy")).ToList()[i].job_ids.Split(';').Select(x => x.Trim()).Distinct().ToArray())
+                                                                        </span>
+                                                                    </td>
+                                                                    <td style="text-align:center; font-size:10px; padding:0px" scope="col">
+                                                                        <span>@count</span>
+                                                                    </td>
+                                                                    <td style="text-align:center; font-size:10px; padding:0px" scope="col">
+                                                                        <span>@totalJobDuration.ToString(@"hh\:mm")</span>
+                                                                    </td>
+                                                                    <td style="text-align:center; font-size:10px; padding:0px" scope="col">
+                                                                        <span>
+                                                                            @{
+                                                                                TimeSpan averageDuaration = new TimeSpan(totalJobDuration.Ticks / count);
+                                                                            }
+                                                                            @averageDuaration.ToString(@"hh\:mm")
+                                                                        </span>
+                                                                    </td>
+                                                                }
+                                                            </tr>
+                                                        }
+                                                    }
+
+                                                </tbody>
+                                            </table>
+                                        }
+                                    </div>
+                                </div>
+
+                            }
+
+                        }
+                    }
+                }
+            </div>
+        </div>
+    }
+
+
+
+</body>
+
+</html>
+
+

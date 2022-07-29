@@ -24,5 +24,6 @@ namespace SeHubPortal.Models
         public Nullable<int> EmpID_Length { get; set; }
         public Nullable<int> MasterLoc_OnOff { get; set; }
         public string MasterLoc_id { get; set; }
+        public Nullable<int> job_id_clocking { get; set; }
     }
 }

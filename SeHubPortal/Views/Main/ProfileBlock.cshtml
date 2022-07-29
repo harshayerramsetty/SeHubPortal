@@ -5,8 +5,11 @@
         <title></title>
     </head>
     <body>
-        <div style="display:flex">
-            <div style="padding:0px; display:flex; justify-content: space-between; align-items:center">
+        <div style="display:flex; border:2px solid #a6a6a6; padding:10px 0px; border-radius:10px">
+            <div style="        padding: 0px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center">
 
                 @{
                     string base64ProfilePic = "";
@@ -23,23 +26,23 @@
                 <div>
                     @if (base64ProfilePic == "")
                     {
-                        <img class="imageClass" data-toggle="modal" data-target="#upload" style="border-radius:40px; width:70px; margin:0px 10px 0px 10px" src="~/Content/profilepic.jpg" alt="ProfilePic" />
+                        <img class="imageClass" data-toggle="modal" data-target="#upload" style="cursor:pointer; border-radius:40px; width:70px; margin:0px 10px 0px 10px" src="~/Content/profilepic.jpg" alt="ProfilePic" />
                     }
                     else
                     {
-                        <img class="imageClass" data-toggle="modal" data-target="#upload" style="border-radius:30px; width:50px; margin:0px 10px 0px 10px" alt="profilePic" src="@base64ProfilePic" />
+                        <img class="imageClass" data-toggle="modal" data-target="#upload" style="cursor:pointer; border-radius:30px; width:50px; margin:0px 10px 0px 10px" alt="profilePic" src="@base64ProfilePic" />
                     }
                 </div>
                 <div>
-                    <p style="margin:0px; font-size:13px"><span><b>@Model.full_name</b></span></p>
-                    <p style="margin:0px; font-size:13px">@Model.employee_id</p>
-                    <p style="margin:0px; font-size:10px">@Model.cta_position</p>
+                    <p style="margin:0px; font-size:13px; color:black"><span><b>@Model.full_name</b></span></p>
+                    <p style="margin:0px; font-size:13px; color:black">@Model.employee_id</p>
+                    <p style="margin:0px; font-size:10px; color:black">@Model.cta_position</p>
                 </div>
 
                 <input id="base64string" type="text" style="display:none" name="name" value="@base64ProfilePic" />
             </div>
             <div>
-                <a href="@Url.Action("LogOut", "Main")" class="btn">
+                <a  style="padding:0px 10px" href="@Url.Action("LogOut", "Main")" class="btn">
                     <img src="~/Content/power.png" />
                 </a>
             </div>

@@ -20,5 +20,6 @@ namespace SeHubPortal.Models
         public string parent_location { get; set; }
         public Nullable<bool> admin { get; set; }
         public string clocking_comments { get; set; }
+        public string client_id { get; set; }
     }
 }

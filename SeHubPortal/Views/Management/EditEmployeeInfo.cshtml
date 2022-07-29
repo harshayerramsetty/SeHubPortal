@@ -199,13 +199,19 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-4">
-                                <label>Employee Start Date</label>
+                                <label>Employee start date</label>
                                 @*<input type="text" class="form-control">*@
-                                @Html.EditorFor(model => model.NewEmployeePersonal.employee_start_date, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
-
+                                @Html.EditorFor(model => model.NewEmployeePersonal.employee_start_date, new { htmlAttributes = new {@class = "form-control", @readonly = true } })
                             </div>
-                            <div class="form-group col-md-4"></div>
-                            <div class="form-group col-md-4" style="padding-left:20px">
+                            <div class="form-group col-md-3">
+                                <label style="visibility:hidden">Employee</label>
+                                @Html.EditorFor(model => model.NewEmployee.rfid_number, new { htmlAttributes = new { id = "editRfid", @class = "form-control", @required = "required", @readonly = true } })
+                            </div>
+                            <div class="form-group col-md-1">
+                                <label style="visibility:hidden">Employee</label>
+                                <button id="clearRfId" type="button" onclick="$('#editRfid').val('No RFID')" class="btn btn-secondary form-control" style="padding:0px">Clear</button>
+                            </div>
+                            <div class="form-group col-md-4" style="display:flex; justify-content:center; align-items:center">
                                 @{
                                     string base64ProfilePic = "";
                                     if (Model.NewEmployee.profile_pic is null)
@@ -221,11 +227,15 @@
 
                                 @if (base64ProfilePic == "")
                                 {
-                                    <img class="imageClass" data-toggle="modal" data-target="#upload" style="border-radius:40px; width:70px; height:70px" src="~/Content/profilepic.jpg" alt="ProfilePic" />
+                                    <div style="border:2px solid dimgray">
+                                        <img class="imageClass" data-toggle="modal" data-target="#upload" style="border-radius:40px; width:70px; height:70px" src="~/Content/profilepic.jpg" alt="ProfilePic" />
+                                    </div>
                                 }
                                 else
                                 {
-                                    <img class="imageClass" data-toggle="modal" data-target="#upload" style="border-radius:30px; width:60px; height:60px" alt="profilePic" src="@base64ProfilePic" />
+                                    <div style="border:2px solid dimgray">
+                                        <img class="imageClass" data-toggle="modal" data-target="#upload" style="border-radius:30px; width:60px; height:60px" alt="profilePic" src="@base64ProfilePic" />
+                                    </div>                                    
                                 }
 
 
@@ -261,9 +271,10 @@
             });
 
 
+
         });
 
-
+        
         
     </script>
 

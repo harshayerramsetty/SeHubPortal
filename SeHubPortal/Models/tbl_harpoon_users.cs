@@ -19,5 +19,9 @@ namespace SeHubPortal.Models
         public string client_id { get; set; }
         public string profile { get; set; }
         public string loc_id { get; set; }
+        public bool adminClocking_editTime { get; set; }
+        public bool jobIDClocking { get; set; }
+        public bool jobIDClocking_editTime { get; set; }
+        public bool adminClocking { get; set; }
     }
 }

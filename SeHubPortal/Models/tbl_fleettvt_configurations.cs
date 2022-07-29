@@ -36,5 +36,8 @@ namespace SeHubPortal.Models
         public Nullable<double> five_lo { get; set; }
         public Nullable<double> five_ri { get; set; }
         public Nullable<double> five_ro { get; set; }
+        public Nullable<int> steerTiresCount { get; set; }
+        public Nullable<int> driveTiresCount { get; set; }
+        public Nullable<int> trailerTiresCount { get; set; }
     }
 }

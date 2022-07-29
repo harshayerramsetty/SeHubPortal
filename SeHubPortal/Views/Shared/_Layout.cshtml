@@ -13,13 +13,42 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     @*<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>*@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <style>
+    @*
         
+    <script>
+        $( document ).ready(function() {
+            $.ajax({
+            url: '@Url.Action("RenderColor", "Main")',
+                success: function (data) {
+                    $('#mainNavBar').css("background", "linear-gradient(45deg, " + data[4].color + ", "+ data[5].color+")");
+                    $('.leftPane').css("background", "linear-gradient(45deg, " + data[3].color + ", "+ data[2].color+")");
+                    $('.breadCrumb').css("background-image", "linear-gradient(to right, "+data[0].color+", "+data[1].color+")");
+                }
+            });
+        });
+    </script>
+        
+    *@
+    <script>
+        $.ajax({
+            url: '@Url.Action("ProfileBlock", "Main")',
+            success: function (data) {
+                $('#profileBlock').html(data)
+            }
+        });
+    </script>
+    
+    <style>
+
         body {
-         overflow-x: hidden!important;
-         overflow-y: hidden;
+            overflow-x: hidden !important;
+            overflow-y: hidden;
+            background-color: #f0f2f5;
         }
 
+        .card-header {
+            background-color: #b1d2fc !important;
+        }
 
         #TabLinks {
             margin-left: 7%;
@@ -53,8 +82,8 @@
             box-shadow: none;
         }
 
-        #upload{
-            padding-left:10%
+        #upload {
+            padding-left: 10%
         }
 
         .example::-webkit-scrollbar {
@@ -67,12 +96,18 @@
             scrollbar-width: none; /* Firefox */
         }
 
+        .breadCrumb {
+            :  !important;
+        }
+
     </style>
 </head>
-<body>
-    <nav id="mainNavBar" class="navbar navbar-expand-md navbar-light bg-white" style="border:2px solid  #f0f2f5">
+<body >
+    <nav id="mainNavBar" class="navbar navbar-expand-md navbar-light " style="border:2px solid  #f0f2f5; background-color:white">
         @*<a href="#" class="navbar-brand">City Tire</a>*@
-        <img src="~/Content/dashboard.png" style="width:11em; margin-right:0px" class="navbar-brand" />
+        <div style="border:2px solid #a6a6a6; padding:5px 10px; border-radius:10px">
+            <img src="~/Content/dashboard-transparent.png" style="width:10em; margin-right:0px" class="navbar-brand" />
+        </div>
         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -80,57 +115,71 @@
         <div class="collapse navbar-collapse example" id="navbarCollapse" style="padding-left:0px; width:60%; overflow-x:auto">
             <div class="navbar-nav" id="TabLinks">
 
-                <a id="mainClicked" href="@Url.Action("Dashboard", "Main")" style="display:none; margin-right:10px; padding:10px; border-radius:5px; margin-left:0px" class="text-center commonMainNavigation">
+                @*
+
+        <div id="mainClicked" onclick="location.href='@Url.Action("Dashboard", "Main")'" style="clear:both; display:flex; flex-direction:column ;justify-content:center; align-items:center; height:80px">
+            <img src="~/Content/home.png" />
+            <span id="mainButton">Main</span>
+        </div>
+                *@
+
+
+                <a id="mainClicked" href="@Url.Action("Dashboard", "Main")" style="display:none; padding:10px; border-radius:5px; margin-left:0px" class="text-center commonMainNavigation">
                     <img src="~/Content/home.png" /><br />
                     <input type="button" id="mainButton" class="btn btn-outline my-2 my-sm-0" style="visibility:visible;border-color:transparent;color:black;font-size:18px;" value="Main">
                 </a>
 
-                <a id="libraryClicked" href="@Url.Action("Dashboard", "Library")" style="display:none; margin-left:10px; margin-right:10px; padding:10px; border-radius:5px" class="text-center commonMainNavigation">
+                <a id="libraryClicked" href="@Url.Action("Dashboard", "Library")" style="display:none; padding:10px; border-radius:5px" class="text-center commonMainNavigation">
                     <img src="~/Content/book.png" /><br />
-                    <input type="button" id="libraryBtn" class="btn btn-outline my-2 my-sm-0 libraryBtn" style=" font-size: 18px; visibility: visible; border-color: transparent; color: black;" value="Library" />
+                    <input type="button" id="libraryBtn" class="btn btn-outline my-2 my-sm-0 libraryBtn" style="font-size: 18px; visibility: visible; border-color: transparent; color: black;" value="Library" />
                 </a>
-
-                <a id="toolsClicked" href="@Url.Action("Dashboard", "Tools")" style="display:none; margin-left:10px; margin-right:10px; padding:10px; border-radius:5px" class="text-center commonMainNavigation">
+                <a id="toolsClicked" href="@Url.Action("Dashboard", "Tools")" style="display:none; padding:10px; border-radius:5px" class="text-center commonMainNavigation">
                     <img src="~/Content/wrench.png" /><br />
                     <input type="button" id="toolsBtn" class="btn btn-outline my-2 my-sm-0" style="visibility:visible;border-color:transparent;font-size:18px;color:black;" value="Tools" />
                 </a>
-
-                <a id="treadTrackereClicked" href="@Url.Action("Dashboard", "TreadTracker")" style="display:none; margin-left:10px; margin-right:10px; padding:10px; border-radius:5px" class="text-center commonMainNavigation">
+                <a id="treadTrackereClicked" href="@Url.Action("Dashboard", "TreadTracker")" style="display: none; padding: 10px; border-radius: 5px" class="text-center commonMainNavigation">
                     @*class="btn tabLinksSpace"        is replaced by        style="margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center"*@
                     <img style="height:25px;" src="~/Content/trdIcon.png" /><br />
                     <input type="button" id="treadTrackerButton" class="btn btn-outline my-2 my-sm-0" style="font-size:18px;visibility:visible;border-color:transparent;color:black;" value="Tread Tracker" />
                 </a>
 
-                <a id="FleetTVTClicked" href="@Url.Action("Dashboard", "FleetTVT")" style="display:none; margin-left:10px; margin-right:10px; padding:10px; border-radius:5px" class="text-center commonMainNavigation">
+                <a id="FleetTVTClicked" href="@Url.Action("Dashboard", "FleetTVT")" style="display:none; padding:10px; border-radius:5px" class="text-center commonMainNavigation">
                     <img style="height:25px;" src="~/Content/FleetTVT_icon (1).png" /><br />
                     <input type="button" id="libraryBtn" class="btn btn-outline my-2 my-sm-0 fleetTVTBtn" style="visibility: visible; border-color: transparent;font-size: 18px;color: black;" value="Fleet TVT" />
                 </a>
-
-                <a id="ManagementClicked" href="@Url.Action("Dashboard", "Management")" style="display:none; margin-left: 10px;margin-right: 10px;padding: 10px;border-radius: 5px" class="text-center commonMainNavigation">
+                <a id="ManagementClicked" href="@Url.Action("Dashboard", "Management")" style="display:none; padding: 10px;border-radius: 5px" class="text-center commonMainNavigation">
                     <img src="~/Content/man.png" /><br />
                     <input type="button" id="managementBtn" class="btn btn-outline my-2 my-sm-0" style="visibility:visible;border-color:transparent;font-size:18px;color:black;" value="Management" />
                 </a>
 
-                <a id="PayrollClicked" href="@Url.Action("Payroll", "Management", new { locId = "", ac = "Dashboard"})" style="display: none;margin-left: 10px;margin-right: 10px;padding: 10px;border-radius: 5px" class="text-center commonMainNavigation">
-
+                <a id="PayrollClicked" href="@Url.Action("Payroll", "Management", new { locId = "", ac = "Dashboard"})" style="display: none;padding: 10px;border-radius: 5px" class="text-center commonMainNavigation">
                     <img src="~/Content/payroll.png" /><br />
                     <input type="button" id="payrollBtn" class="btn btn-outline my-2 my-sm-0" style="visibility:visible;border-color:transparent;font-size:18px;color:black;" value="Payroll" />
                 </a>
 
                 @*
-                    
-                <a id="PlantClicked" href="@Url.Action("Plant", "Retread")" style="display:none; margin-left:10px; margin-right:10px; padding:10px; border-radius:5px" class="text-center commonMainNavigation">
+
+            <a id="PayrollDepositsClicked" href="@Url.Action("EmployeeDeductions", "PayrollDeposits")" style="display: block;padding: 10px;border-radius: 5px" class="text-center commonMainNavigation">
+            <img style="height:25px;" src="https://toppng.com/uploads/preview/hand-with-dollar-sign-11549435044ecgxeueeew.png" /><br />
+            <input type="button" id="payrollDepositsBtn" class="btn my-2 my-sm-0" style="visibility:visible;border:none; outline:none;font-size:18px;color:black;" value="Payroll Deposits" />
+        </a>
+
+                *@
+
+                <a id="PlantClicked" href="@Url.Action("Plant", "Retread")" style="display:none; padding:10px; border-radius:5px" class="text-center commonMainNavigation">
 
                     <img style="height:22px;" src="~/Content/Plant icon.png" /><br />
                     <input type="button" id="libraryBtn" class="btn btn-outline my-2 my-sm-0 " style="visibility: visible;border-color: transparent;font-size: 18px;color: black;outline: none" value="Retread Plant" />
                 </a>
-                    
-                    *@
 
-                <a id="SettingsClicked" href="@Url.Action("Dashboard", "Settings")" style="display:none; margin-left:10px; margin-right:10px; padding:10px; border-radius:5px" class="text-center commonMainNavigation">
-
+                <a id="DevelopmentClicked" href="@Url.Action("Dashboard_man", "Management")" style="display:block; padding:10px; border-radius:5px" class="text-center commonMainNavigation">
+                    <img style="height:22px;" src="https://ctasehub.blob.core.windows.net/sehub-content/Development.png" /><br />
+                    <input type="button" id="developmentBtn" class="btn btn-outline my-2 my-sm-0 " style="visibility: visible;border-color: transparent;font-size: 18px;color: black;outline: none" value="Development" />
+                </a>
+                
+                <a id="SettingsClicked" href="@Url.Action("Dashboard", "Settings")" style="display:none; padding:10px; border-radius:5px" class="text-center commonMainNavigation">
                     <img style="height:20px;" src="~/Content/settings.png" /><br />
-                    <input type="button" id="libraryBtn" class="btn btn-outline my-2 my-sm-0 settingsBtn" style="visibility:visible;border-color:transparent;font-size:18px;color:black;" value="Settings" />
+                    <input type="button" id="libraryBtn" class="btn btn-outline my-2 my-sm-0 settingsBtn" style="visibility: visible;border-color: transparent;font-size: 18px;color: black;" value="Settings" />
                 </a>
 
             </div>
@@ -139,70 +188,6 @@
         <div id="profileBlock" style="padding: 0px !important">
 
         </div>
-
-        <div class="modal fade" id="upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content" style="width:300px">
-
-                    @using (Html.BeginForm("UploadProfileImage", "Main", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                    {
-                        <div class="modal-header text-center" style="padding:3px 3px 0px 3px">
-                            <h5 style="margin-left:auto; margin-right:auto">Upload Profile Picture</h5>
-                        </div>
-                        <div class="modal-body text-center">
-                            <input style="display:none" name="EmployeeImage" type='file' id="imgInp" />
-                            <input for="imgInp" type="text" readonly style="margin-bottom:15px; height:23px; width:100px;" value="Upload" class="btn btn-primary" onclick="document.getElementById('imgInp').click()" />
-                            <img id="UploatImage" style="border-radius:100%; width:200px" src="~/Content/profilepic.jpg" alt="ProfilePic" />
-
-                        </div>
-                        <div class="modal-footer" style="padding:3px">
-                            <button type="button" class="btn btn-danger" style="padding:2px 22px 2px 22px" data-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-success" style="padding:2px 30px 2px 30px">Save</button>
-                        </div>
-                    }
-
-                </div>
-            </div>
-        </div>
-
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-
-        <script>
-
-            /*
-             
-             window.onload = function exampleFunction() {
-                $('#loading').css('display', 'none')
-                $('#page').css('display', 'block')
-            }
-             
-             */
-
-            $(".commonMainNavigation").on('click', function(event){
-                event.stopPropagation();
-                event.stopImmediatePropagation();
-                $('#loading').css('display', 'block')
-                $('#MainDiv').css('display', 'none')
-            });
-
-            function readURL(input) {
-                if (input.files && input.files[0]) {
-                    var reader = new FileReader();
-
-                    reader.onload = function (e) {
-                        $('#UploatImage').attr('src', e.target.result);
-                    }
-
-                    reader.readAsDataURL(input.files[0]); // convert to base64 string
-                }
-            }
-
-            $("#imgInp").change(function () {
-                readURL(this);
-            });
-
-            
-        </script>
     </nav>
 
     <div id="loading" style="display:none">
@@ -210,18 +195,74 @@
             <img src="~/Content/giphy.gif" style="width:170px" alt="Alternate Text" />
         </div>
     </div>
+    
+    <div class="modal fade" id="upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width:300px">
+
+                @using (Html.BeginForm("UploadProfileImage", "Main", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="modal-header text-center" style="padding:3px 3px 0px 3px">
+                        <h5 style="margin-left:auto; margin-right:auto">Upload Profile Picture</h5>
+                    </div>
+                    <div class="modal-body text-center">
+                        <input style="display:none" name="EmployeeImage" type='file' id="imgInp" />
+                        <input for="imgInp" type="text" readonly style="margin-bottom:15px; height:23px; width:100px;" value="Upload" class="btn btn-primary" onclick="document.getElementById('imgInp').click()" />
+                        <img id="UploatImage" style="border-radius:100%; width:200px" src="~/Content/profilepic.jpg" alt="ProfilePic" />
+
+                    </div>
+                    <div class="modal-footer" style="padding:3px">
+                        <button type="button" class="btn btn-danger" style="padding:2px 22px 2px 22px" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success" style="padding:2px 30px 2px 30px">Save</button>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
 
     <div id="MainDiv">
         @RenderBody()
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
     <script>
-        $.ajax({
-            url: '@Url.Action("ProfileBlock", "Main")',
-            success: function (data) {
-                $('#profileBlock').html(data)
-            }
+
+        /*
+
+         window.onload = function exampleFunction() {
+            $('#loading').css('display', 'none')
+            $('#page').css('display', 'block')
+        }
+
+         */
+
+        $(".commonMainNavigation").on('click', function (event) {
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+            $('#loading').css('display', 'block')
+            $('#MainDiv').css('display', 'none')
         });
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#UploatImage').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]); // convert to base64 string
+            }
+        }
+
+        $("#imgInp").change(function () {
+            readURL(this);
+        });
+
+
     </script>
+    
     @Scripts.Render("~/bundles/jquery")   @*I commented this line because datatables in the fuel log page is not working properly. please uncomment if you face any issue with other pages*@
     @Scripts.Render("~/bundles/fullcalendarjs")
     @Scripts.Render("~/bundles/bootstrap")

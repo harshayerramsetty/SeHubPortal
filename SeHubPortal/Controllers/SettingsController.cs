@@ -71,67 +71,46 @@ namespace SeHubPortal.Controllers
 
             if (model.treadTrackerEdit == true)
             {
-                var custm = db.tbl_customer_list.Where(x => x.cust_us1 == model.Customeredit).FirstOrDefault();
-                custm.cscttc = "True";
+                var custm = db.tbl_cta_customers.Where(x => x.CustomerCode.ToString() == model.Customeredit).FirstOrDefault();
+                custm.tread_tracker = true;
             }
             else
             {
-                var custm = db.tbl_customer_list.Where(x => x.cust_us1 == model.Customeredit).FirstOrDefault();
-                custm.cscttc = "False";
+                var custm = db.tbl_cta_customers.Where(x => x.CustomerCode.ToString() == model.Customeredit).FirstOrDefault();
+                custm.tread_tracker = false;
+            }
+
+            if (model.CRMedit == true)
+            {
+                var custm = db.tbl_cta_customers.Where(x => x.CustomerCode.ToString() == model.Customeredit).FirstOrDefault();
+                custm.call_reporting = true;
+            }
+            else
+            {
+                var custm = db.tbl_cta_customers.Where(x => x.CustomerCode.ToString() == model.Customeredit).FirstOrDefault();
+                custm.call_reporting = false;
             }
 
             if (model.fleetTVTEdit == true)
             {
-                if (db.tbl_fleettvt_Customer.Where(x => x.customer_number == model.Customeredit).Count() == 0)
-                {
-                    tbl_fleettvt_Customer FTVT_cust = new tbl_fleettvt_Customer();
-                    FTVT_cust.customer_number = model.Customeredit;
-                    db.tbl_fleettvt_Customer.Add(FTVT_cust);
-                }
+                var custm = db.tbl_cta_customers.Where(x => x.CustomerCode.ToString() == model.Customeredit).FirstOrDefault();
+                custm.fleet_tvt = true;
             }
             else
             {
-                var cust = db.tbl_fleettvt_Customer.Where(x => x.customer_number == model.Customeredit).FirstOrDefault();
-                if (cust != null)
-                {
-                    db.tbl_fleettvt_Customer.Remove(cust);
-                }
+                var custm = db.tbl_cta_customers.Where(x => x.CustomerCode.ToString() == model.Customeredit).FirstOrDefault();
+                custm.fleet_tvt = false;
             }
 
-            Trace.WriteLine(model.CRMedit);
-
-            if (model.CRMedit == true)
-            {
-
-
-                if(db.tbl_customer_reporting_customers.Where(x => x.customer_number == model.Customeredit).Count() == 0)
-                {
-                    tbl_customer_reporting_customers CRM_cust = new tbl_customer_reporting_customers();
-                    CRM_cust.customer_number = model.Customeredit;
-                    db.tbl_customer_reporting_customers.Add(CRM_cust);
-                }
-            }
-            else
-            {
-                var cust = db.tbl_customer_reporting_customers.Where(x => x.customer_number == model.Customeredit).FirstOrDefault();
-                if (cust != null)
-                {
-                    db.tbl_customer_reporting_customers.Remove(cust);
-                }
-            }
             db.SaveChanges();
 
 
             return RedirectToAction("Customers");
         }
 
-
-
         [HttpPost]
         public ActionResult EditCallenderEvent(SettingsViewModel model)
         {
-            
-
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
 
             int evid = Convert.ToInt32(model.CalenderPost.eventID);
@@ -149,6 +128,10 @@ namespace SeHubPortal.Controllers
 
         public ActionResult Dashboard()
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
             SettingsViewModel model = new SettingsViewModel();
             tbl_payroll_settings payset = new tbl_payroll_settings();
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
@@ -189,19 +172,24 @@ namespace SeHubPortal.Controllers
             model.payroll_Settings = payset;
             model.Calendar_Events = calendar_Events_List;
 
-            
+            model.topBar_left = db.tbl_sehub_color_scheme.Where(x => x.component == "topBar_left").Select(x => x.color).FirstOrDefault();
+            model.topBar_right = db.tbl_sehub_color_scheme.Where(x => x.component == "topBar_right").Select(x => x.color).FirstOrDefault();
 
             return View(model);
         }
 
         public ActionResult Customers(SettingsCustomers model)
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             int empId = Convert.ToInt32(Session["userID"].ToString());
             var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
             model.SehubAccess = empDetails;
 
-            model.CustomerList = db.tbl_customer_list.ToList();
+            model.CustomerList = db.tbl_cta_customers.ToList();
             model.CustomerListFleetTVT = db.tbl_fleettvt_Customer.ToList();
             model.CustomerListCRM = db.tbl_customer_reporting_customers.ToList();
 
@@ -226,6 +214,18 @@ namespace SeHubPortal.Controllers
 
             return RedirectToAction("Dashboard");
         }
+
+        [HttpPost]
+        public void ChangeColor(string component, string color)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            var change_color = db.tbl_sehub_color_scheme.Where(x => x.component == component).FirstOrDefault();
+            change_color.color = color;
+            db.SaveChanges();
+
+        }
+
 
         public ActionResult ChangeCalculatorSettings(SettingsViewModel model)
         {
@@ -307,6 +307,10 @@ namespace SeHubPortal.Controllers
         [HttpPost]
         public ActionResult Administration(MyStaffViewModel modal)
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
             return RedirectToAction("Administration", new { LocId = modal.MatchedStaffLocID });
         }
 
@@ -336,6 +340,10 @@ namespace SeHubPortal.Controllers
         [HttpGet]
         public ActionResult TimeClock(string LocId)
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
             TimeClockViewModel model = new TimeClockViewModel();
 
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
@@ -472,6 +480,10 @@ namespace SeHubPortal.Controllers
         [HttpGet]
         public ActionResult Administration(string LocId)
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
             MyStaffViewModel modal = new MyStaffViewModel();
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             int empId = Convert.ToInt32(Session["userID"].ToString());
@@ -954,6 +966,10 @@ namespace SeHubPortal.Controllers
         [HttpGet]
         public ActionResult DataResources(string ack)
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
             MyStaffViewModel modal = new MyStaffViewModel();
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
 
@@ -972,9 +988,361 @@ namespace SeHubPortal.Controllers
             }
 
             modal.DataResources = pdates.OrderByDescending(x => x.payroll_Id).ToList();
+            modal.ImportHistory = db.tbl_data_import_history.ToList();
 
             return View(modal);
         }
+
+        [HttpPost]
+        public ActionResult UploadCSVCustomerList(HttpPostedFileBase postedFile)
+        {
+
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+            //Trace.WriteLine("The drag and drop function");
+
+            string filePath = string.Empty;
+            if (postedFile != null)
+            {
+                string path = Server.MapPath("~/Content/");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                filePath = path + Path.GetFileName(postedFile.FileName);
+                string extension = Path.GetExtension(postedFile.FileName);
+                postedFile.SaveAs(filePath);
+
+                //Read the contents of CSV file.
+                string csvData = System.IO.File.ReadAllText(filePath);
+                Trace.WriteLine(csvData.Split('\n')[0]);
+                string[] Headercell = csvData.Split('\n')[0].Split(',');
+                if (Headercell[0] == "CustomerCode" && Headercell[1] == "Address1" && Headercell[2] == "Address2" && Headercell[3] == "Address3" && Headercell[4] == "CustomerName" && Headercell[5] == "Fax" && Headercell[6] == "Postcode")
+                {
+                    
+                    for (int i = 1; i < csvData.Split('\n').Length; i++)
+                    {
+
+                        tbl_cta_customers cust = new tbl_cta_customers();
+                        string[] cell = csvData.Split('\n')[i].Split(',');
+                        int custm = Convert.ToInt32(cell[0]);
+                        var custUpdt = db.tbl_cta_customers.Where(x => x.CustomerCode == custm).FirstOrDefault();
+                        if (custUpdt != null)
+                        {
+                            custUpdt.Address1 = cell[1];
+                            custUpdt.Address2 = cell[2];
+                            custUpdt.Address3 = cell[3];
+                            custUpdt.CustomerName = cell[4];
+                            custUpdt.Fax = cell[5];
+                            custUpdt.Postcode = cell[6];
+                            custUpdt.Telephone = cell[7];
+                            db.SaveChanges();
+                        }
+                        else
+                        {
+                            cust.CustomerCode = Convert.ToInt32(cell[0]);
+                            cust.Address1 = cell[1];
+                            cust.Address2 = cell[2];
+                            cust.Address3 = cell[3];
+                            cust.CustomerName = cell[4];
+                            cust.Fax = cell[5];
+                            cust.Postcode = cell[6];
+                            cust.Telephone = cell[7];
+                            db.tbl_cta_customers.Add(cust);
+                            db.SaveChanges();
+                        }
+                    }
+
+                    tbl_data_import_history importInfo = new tbl_data_import_history();
+                    importInfo.data_type = "CustomerList";
+                    importInfo.performed_by = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.full_name).FirstOrDefault();
+                    importInfo.import_date = System.DateTime.Now;
+                    db.tbl_data_import_history.Add(importInfo);
+
+                    db.SaveChanges();
+                    return RedirectToAction("DataResources", "Settings", new { ack = "DataImported" });
+                }
+
+            }
+            
+            return RedirectToAction("DataResources", "Settings");
+        }
+
+        
+         
+            [HttpPost]
+        public ActionResult UploadCSVbranchSalesReport(HttpPostedFileBase branchSalesReport)
+        {
+
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+            Trace.WriteLine("Reached 1");
+            string month1 = "";
+            string month2 = "";
+            string filePath_ei = string.Empty;
+            if (branchSalesReport != null)
+            {
+                Trace.WriteLine("Reached 2");
+                string path = Server.MapPath("~/Content/");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                filePath_ei = path + Path.GetFileName(branchSalesReport.FileName);
+                string extension = Path.GetExtension(branchSalesReport.FileName);
+                branchSalesReport.SaveAs(filePath_ei);
+
+                //Read the contents of CSV file.
+                string csvData_ei = System.IO.File.ReadAllText(filePath_ei);
+                Trace.WriteLine(csvData_ei.Split('\n')[0]);
+                string[] Headercell_ei = csvData_ei.Split('\n')[0].Split(',');
+                for (int i = 1; i < csvData_ei.Split('\n').Length; i++)
+                {
+                    string[] cell_ei = csvData_ei.Split('\n')[i].Split(',');
+                    if (csvData_ei.Split('\n')[i] != "")
+                    {
+                        if (cell_ei[0] == "Account Code")
+                        {
+                            month1 = cell_ei[3].Split(' ')[0];
+                            month2 = cell_ei[4].Split(' ')[0];
+                        }
+
+                        if (cell_ei[0].StartsWith("300") && cell_ei[1].Trim() != "")
+                        {
+                            tbl_salesReport_branch_monthly newReportMonth1 = new tbl_salesReport_branch_monthly();
+                            newReportMonth1.loc_id = cell_ei[1];
+                            newReportMonth1.year = System.DateTime.Today.Year.ToString();
+                            newReportMonth1.month = month1;
+                            if (cell_ei[3].Trim() != "")
+                            {
+                                newReportMonth1.total_sale = Convert.ToDouble(cell_ei[3]);
+                            }
+                            else
+                            {
+                                newReportMonth1.total_sale = 0;
+                            }
+                            var updateMonth1 = db.tbl_salesReport_branch_monthly.Where(x => x.loc_id == newReportMonth1.loc_id && x.year == newReportMonth1.year && x.month == newReportMonth1.month).FirstOrDefault();
+                            if (updateMonth1 != null)
+                            {
+                                if (newReportMonth1.total_sale != 0)
+                                {
+                                    Trace.WriteLine(newReportMonth1.total_sale + " update " + newReportMonth1.loc_id);
+                                    updateMonth1.total_sale = newReportMonth1.total_sale;
+                                    db.SaveChanges();
+                                }                                
+                            }
+                            else
+                            {
+                                Trace.WriteLine(newReportMonth1.total_sale + " insert " + newReportMonth1.loc_id);
+                                db.tbl_salesReport_branch_monthly.Add(newReportMonth1);
+                                db.SaveChanges();
+                            }
+                            
+
+                            tbl_salesReport_branch_monthly newReportMonth2 = new tbl_salesReport_branch_monthly();
+                            newReportMonth2.loc_id = cell_ei[1];
+                            newReportMonth2.year = System.DateTime.Today.Year.ToString();
+                            newReportMonth2.month = month2;
+                            if (cell_ei[4].Trim() != "")
+                            {
+                                newReportMonth2.total_sale = Convert.ToDouble(cell_ei[4]);
+                            }
+                            else
+                            {
+                                newReportMonth2.total_sale = 0;
+                            }
+                            var updateMonth2 = db.tbl_salesReport_branch_monthly.Where(x => x.loc_id == newReportMonth2.loc_id && x.year == newReportMonth2.year && x.month == newReportMonth2.month).FirstOrDefault();
+                            if (updateMonth2 != null)
+                            {
+                                if (newReportMonth2.total_sale != 0)
+                                {
+                                    Trace.WriteLine(newReportMonth2.total_sale + " update " + newReportMonth2.loc_id);
+                                    updateMonth2.total_sale = newReportMonth2.total_sale;
+                                    db.SaveChanges();
+                                }
+                            }
+                            else
+                            {
+                                Trace.WriteLine(newReportMonth2.total_sale + " insert " + newReportMonth2.loc_id);
+                                db.tbl_salesReport_branch_monthly.Add(newReportMonth2);
+                                db.SaveChanges();
+                            }
+                            
+
+                            
+                        }
+                        
+                    }
+
+                }
+
+            }
+            
+            tbl_data_import_history importInfo = new tbl_data_import_history();
+            importInfo.data_type = "BranchSalesReport";
+            importInfo.performed_by = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.full_name).FirstOrDefault();
+            importInfo.import_date = System.DateTime.Now;
+            db.tbl_data_import_history.Add(importInfo);
+
+            db.SaveChanges();
+            //return RedirectToAction("DataResources", "Settings", new { ack = "DataImported" });
+            return RedirectToAction("DataResources", "Settings");
+        }
+
+        
+        [HttpPost]
+        public ActionResult UploadCSVpayrollDeductions(HttpPostedFileBase payrollEI, HttpPostedFileBase payrollCPP)
+        {
+
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+            Trace.WriteLine("Reached 1");
+
+            string filePath_ei = string.Empty;
+            if (payrollEI != null)
+            {
+                Trace.WriteLine("Reached 2");
+                string path = Server.MapPath("~/Content/");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                filePath_ei = path + Path.GetFileName(payrollEI.FileName);
+                string extension = Path.GetExtension(payrollEI.FileName);
+                payrollEI.SaveAs(filePath_ei);
+
+                //Read the contents of CSV file.
+                string csvData_ei = System.IO.File.ReadAllText(filePath_ei);
+                Trace.WriteLine(csvData_ei.Split('\n')[0]);
+                string[] Headercell_ei = csvData_ei.Split('\n')[0].Split(',');
+                Trace.WriteLine(";" + Headercell_ei[0] + ";");
+                Trace.WriteLine(";" + Headercell_ei[1] + ";");
+                Trace.WriteLine(";" + Headercell_ei[2] + ";");
+                Trace.WriteLine(";" + Headercell_ei[3] + ";");
+                Trace.WriteLine(";" + Headercell_ei[4] + ";");
+                Trace.WriteLine(";" + Headercell_ei[5] + ";");
+                if (Headercell_ei[0] == "EI" && Headercell_ei[1] == "Annual max insurable earnings" && Headercell_ei[2] == "Employee contribution rate" && Headercell_ei[3] == "Employer contribution rate" && Headercell_ei[4] == "Annual max employee premium" && Headercell_ei[5].Contains("Annual max employer premium"))
+                {
+                    Trace.WriteLine("Reached 3");
+                    for (int i = 1; i < csvData_ei.Split('\n').Length; i++)
+                    {
+                        Trace.WriteLine("Reached 4");
+                        tbl_cta_customers cust = new tbl_cta_customers();
+                        string[] cell_ei = csvData_ei.Split('\n')[i].Split(',');
+                        if (csvData_ei.Split('\n')[i] != "")
+                        {
+                            string EI = cell_ei[0];
+                            var EIUpdate = db.tbl_source_payrollDeductions_ei.Where(x => x.EI == EI).FirstOrDefault();
+                            if (EIUpdate != null)
+                            {
+                                Trace.WriteLine("Reached 5");
+                                EIUpdate.Annual_max_insurable_earnings = Convert.ToDouble(cell_ei[1]);
+                                EIUpdate.Employee_contribution_rate = Convert.ToDouble(cell_ei[2]);
+                                EIUpdate.Employer_contribution_rate = Convert.ToDouble(cell_ei[3]);
+                                EIUpdate.Annual_max_employee_premium = Convert.ToDouble(cell_ei[4]);
+                                EIUpdate.Annual_max_employer_premium = Convert.ToDouble(cell_ei[5]);
+                                db.SaveChanges();
+                            }
+                            else
+                            {
+                                Trace.WriteLine("Reached 6");
+                                tbl_source_payrollDeductions_ei new_ei = new tbl_source_payrollDeductions_ei();
+                                new_ei.EI = cell_ei[0];
+                                new_ei.Annual_max_insurable_earnings = Convert.ToDouble(cell_ei[1]);
+                                new_ei.Employee_contribution_rate = Convert.ToDouble(cell_ei[2]);
+                                new_ei.Employer_contribution_rate = Convert.ToDouble(cell_ei[3]);
+                                new_ei.Annual_max_employee_premium = Convert.ToDouble(cell_ei[4]);
+                                new_ei.Annual_max_employer_premium = Convert.ToDouble(cell_ei[5]);
+                                db.tbl_source_payrollDeductions_ei.Add(new_ei);
+                                db.SaveChanges();
+                            }
+                        }
+                        
+                    }
+                    
+                }
+
+            }
+
+
+            string filePath_cpp = string.Empty;
+            if (payrollCPP != null)
+            {
+                Trace.WriteLine("Reached 7");
+                string path = Server.MapPath("~/Content/");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                filePath_cpp = path + Path.GetFileName(payrollCPP.FileName);
+                string extension = Path.GetExtension(payrollCPP.FileName);
+                payrollCPP.SaveAs(filePath_cpp);
+
+                //Read the contents of CSV file.
+                string csvData_cpp = System.IO.File.ReadAllText(filePath_cpp);
+                Trace.WriteLine(csvData_cpp.Split('\n')[0]);
+                string[] Headercell_cpp = csvData_cpp.Split('\n')[0].Split(',');
+                if (Headercell_cpp[0] == "CPP/QPP" && Headercell_cpp[1] == "YMPE" && Headercell_cpp[2] == "Basic Exemption" && Headercell_cpp[3] == "Max contributory earnings YMCE" && Headercell_cpp[4] == "Employee contribution rate" && Headercell_cpp[5] == "Employee max contribution" && Headercell_cpp[6] == "Self-employed max contribution" && Headercell_cpp[7].Contains("YMPE before rounding"))
+                {
+                    Trace.WriteLine("Reached 8");
+                    for (int i = 1; i < csvData_cpp.Split('\n').Length; i++)
+                    {
+                        Trace.WriteLine("Reached 9");
+                        tbl_cta_customers cust = new tbl_cta_customers();
+                        string[] cell_cpp = csvData_cpp.Split('\n')[i].Split(',');
+                        if (csvData_cpp.Split('\n')[i] != "")
+                        {
+                            string CPP = cell_cpp[0];
+                            var cppUpdate = db.tbl_source_payrollDeductions_cpp.Where(x => x.CPP_QPP == CPP).FirstOrDefault();
+                            if (cppUpdate != null)
+                            {
+                                Trace.WriteLine("Reached 10");
+                                cppUpdate.YMPE = Convert.ToDouble(cell_cpp[1]);
+                                cppUpdate.Basic_Exemption = Convert.ToDouble(cell_cpp[2]);
+                                cppUpdate.Max_contributory_earnings_YMCE = Convert.ToDouble(cell_cpp[3]);
+                                cppUpdate.Employee_contribution_rate = Convert.ToDouble(cell_cpp[4]);
+                                cppUpdate.Employee_max_contribution = Convert.ToDouble(cell_cpp[5]);
+                                cppUpdate.Self_employed_max_contribution = Convert.ToDouble(cell_cpp[6]);
+                                cppUpdate.YMPE_before_rounding = Convert.ToDouble(cell_cpp[7]);
+                                db.SaveChanges();
+                            }
+                            else
+                            {
+                                Trace.WriteLine("Reached 11");
+                                tbl_source_payrollDeductions_cpp new_cpp = new tbl_source_payrollDeductions_cpp();
+                                new_cpp.CPP_QPP = cell_cpp[0];
+                                new_cpp.YMPE = Convert.ToDouble(cell_cpp[1]);
+                                new_cpp.Basic_Exemption = Convert.ToDouble(cell_cpp[2]);
+                                new_cpp.Max_contributory_earnings_YMCE = Convert.ToDouble(cell_cpp[3]);
+                                new_cpp.Employee_contribution_rate = Convert.ToDouble(cell_cpp[4]);
+                                new_cpp.Employee_max_contribution = Convert.ToDouble(cell_cpp[5]);
+                                new_cpp.Self_employed_max_contribution = Convert.ToDouble(cell_cpp[6]);
+                                new_cpp.YMPE_before_rounding = Convert.ToDouble(cell_cpp[7]);
+                                db.tbl_source_payrollDeductions_cpp.Add(new_cpp);
+                                db.SaveChanges();
+                            }
+                        }                        
+                    }
+
+                }
+
+            }
+
+            tbl_data_import_history importInfo = new tbl_data_import_history();
+            importInfo.data_type = "PayrollDeductions";
+            importInfo.performed_by = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.full_name).FirstOrDefault();
+            importInfo.import_date = System.DateTime.Now;
+            db.tbl_data_import_history.Add(importInfo);
+
+            db.SaveChanges();
+            //return RedirectToAction("DataResources", "Settings", new { ack = "DataImported" });
+            return RedirectToAction("DataResources", "Settings");
+        }
+
 
     }
 }

@@ -29,5 +29,7 @@ namespace SeHubPortal.ViewModel
         public List<SelectListItem> PayrollIdList { get; set; }
         public string csvData { get; set; }
         public List<tbl_employee_payroll_dates> DataResources { get; set; }
-}
+        public List<tbl_data_import_history> ImportHistory { get; set; }
+        public string tempDropdown { get; set; }
+    }
 }

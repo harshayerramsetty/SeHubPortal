@@ -9,31 +9,32 @@
         color: black
     }
 
-        #sidebar ul li a {
-            color: black;
-            border-bottom: 2px solid #f0f2f5;
-            border-right: 1px solid #f0f2f5;
-        }
+    #sidebar ul li a {
+        color: black;
+        border-bottom: 2px solid #f0f2f5;
+        border-right: 1px solid #f0f2f5;
+    }
 
-        #sidebar ul li.active > a {
-            color: black;
-            border-bottom: 2px solid #f0f2f5;
-        }
+    #sidebar ul li.active > a {
+        color: black;
+        border-bottom: 2px solid #f0f2f5;
+    }
+
 </style>
 <div>
     <div class="wrapper d-flex align-items-stretch">
-        <nav id="sidebar">
+        <nav id="sidebar" class="leftPane">
             
 
             <ul class="list-unstyled components mb-5">
                 <li class="active" style="display:none" id="MainDashboardLink">
-                    <a id="DashboardClicked" href="@Url.Action("Dashboard", "Main")"><span class="fa  mr-3"></span> Dashboard</a>
+                    <a class="commonSideNavigation" id="DashboardClicked" href="@Url.Action("Dashboard", "Main")"><span class="fa  mr-3"></span> Dashboard</a>
                 </li>
-                <li id="MainCalendarLink" style="display:none">
-                    <a id="CalendarClicked" href="@Url.Action("Calendar", "Main")"><span class="fa  mr-3"></span> Calendar</a>
+                <li id="MainCalendarLink" style="display: none">
+                    <a class="commonSideNavigation" id="CalendarClicked" href="@Url.Action("Calendar", "Main")"><span class="fa  mr-3"></span> Calendar</a>
                 </li>
                 <li id="LocationsMapLink" style="display:block">
-                    <a id="LocationsMapClicked" href="@Url.Action("LocationsMap", "Main")"><span class="fa  mr-3"></span> Locations Map</a>
+                    <a class="commonSideNavigation" id="LocationsMapClicked" href="@Url.Action("LocationsMap", "Main")"><span class="fa  mr-3"></span> Locations Map</a>
                 </li>
                 @*<li>
             <a id="NewsletterClicked" href="@Url.Action("Newsletter", "Main")"><span class="fa  mr-3"></span></a>
@@ -44,6 +45,11 @@
 
         <!-- Page Content  -->
         <div id="content">
+            <div id="sideloading" style="display:none">
+                <div style="display:flex; width:100%; height:50em; justify-content:center; align-items:center">
+                    <img src="~/Content/giphy.gif" style="width:170px" alt="Alternate Text" />
+                </div>
+            </div>
             <div id="DashboardArea">
                 @RenderBody()
             </div>
@@ -56,4 +62,12 @@
     </footer>
 </div>
 <script src="~/Content/sidebar/sidebar.js"></script>
+<script>
+    $(".commonSideNavigation").on('click', function (event) {
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        $('#sideloading').css('display', 'block')
+        $('#DashboardArea').css('display', 'none')
+        });
+</script>
 @RenderSection("Scripts", false)

@@ -21,51 +21,49 @@
         }
 </style>
 <div class="wrapper d-flex align-items-stretch">
-    <nav id="sidebar">
+    <nav id="sidebar" class="leftPane">
         @*<div class="custom-menu">
-            <button type="button" id="sidebarCollapse" class="btn btn-primary">
-                <i class="fa fa-bars"></i>
-                <span class="sr-only">Toggle Menu</span>
-            </button>
-        </div>*@
+                <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                    <i class="fa fa-bars"></i>
+                    <span class="sr-only">Toggle Menu</span>
+                </button>
+            </div>*@
 
         <ul class="list-unstyled components mb-5">
             <li class="active" style="display:none" id="DashboardLink">
-                <a id="DashboardClicked" href="@Url.Action("Dashboard", "Management", new { values = ""})">Dashboard</a>
+                <a class="commonSideNavigation" id="DashboardClicked" href="@Url.Action("Dashboard", "Management", new { values = ""})">Dashboard</a>
             </li>
 
             <li class="active" style="display:none" id="AssetControlLink">
-                <a id="AssertControlClicked" href="@Url.Action("AssetControl", "Management", new { values=""})">Asset Control</a>
+                <a class="commonSideNavigation" id="AssertControlClicked" href="@Url.Action("AssetControl", "Management", new { values=""})">Asset Control</a>
             </li>
 
             <li class="active" style="display:none" id="AttendanceLink">
-                <a id="AttendanceClicked" href="@Url.Action("Attendance", "Management", new { locId = "",employeeId=""})">Attendance</a>
+                <a class="commonSideNavigation" id="AttendanceClicked" href="@Url.Action("Attendance", "Management", new { locId = "",employeeId=""})">Attendance History</a>
             </li>
 
             <li class="active" style="display:none" id="EmployeeFilesLink">
-                <a id="EmployeeFilesClicked" href="@Url.Action("EmployeeFiles", "Management", new { values=""})">Employee Folder</a>
+                <a class="commonSideNavigation" id="EmployeeFilesClicked" href="@Url.Action("EmployeeFiles", "Management", new { values=""})">Employee Folder</a>
             </li>
 
             <li class="active" style="display:none" id="MyStaffLink">
-                <a id="MyStaffClicked" href="@Url.Action("MyStaff", "Management", new { LocId=""})">My Staff</a>
+                <a class="commonSideNavigation" id="MyStaffClicked" href="@Url.Action("MyStaff", "Management", new { LocId=""})">My Staff</a>
             </li>
             @*<li class="active" id="PayrollLink">
-            <a id="PayrollClicked" href="@Url.Action("Payroll", "Management", new { locId = "",employeeId="",payrollID="" })"><span class="fa fa-sticky-note mr-3"></span> Payroll</a>
-        </li>*@
+                    <a id="PayrollClicked" href="@Url.Action("Payroll", "Management", new { locId = "",employeeId="",payrollID="" })"><span class="fa fa-sticky-note mr-3"></span> Payroll</a>
+                </li>*@
 
             @*<li class="active" id="NewHirePackageLink">
-            <a id="NewHireClicked" href="@Url.Action("NewHire", "Management", new { id = "",barcode="" })"><span class="fa fa-sticky-note mr-3"></span> New Hire Package</a>
-        </li>*@
+                    <a id="NewHireClicked" href="@Url.Action("NewHire", "Management", new { id = "",barcode="" })"><span class="fa fa-sticky-note mr-3"></span> New Hire Package</a>
+                </li>*@
             @*<li class="active" id="VacationScheduleLink">
-            <a id="VacationScheduleClicked" href="@Url.Action("VacationSchedule", "Management", new { id = "",barcode="" })"><span class="fa fa-sticky-note mr-3"></span>Leave Schedule</a>
-        </li>*@
+                    <a id="VacationScheduleClicked" href="@Url.Action("VacationSchedule", "Management", new { id = "",barcode="" })"><span class="fa fa-sticky-note mr-3"></span>Leave Schedule</a>
+                </li>*@
 
             <li class="active" style="display:block" id="TrainingLink">
-                <a id="TrainingClicked" href="@Url.Action("Training", "Management")">Training</a>
+                <a class="commonSideNavigation" id="TrainingClicked" href="@Url.Action("Training", "Management")">Training</a>
             </li>
-            <li class="active" style="display:none" id="LeaveSchedulerLink">
-                <a id="LeaveSchedulerClicked" href="@Url.Action("LeaveScheduler", "Management", new { values=""})">Vacation Scheduler</a>
-            </li>
+            
 
         </ul>
 
@@ -73,10 +71,24 @@
 
     <!-- Page Content  -->
     <div id="content">
+        <div id="sideloading" style="display:none">
+            <div style="display:flex; width:100%; height:50em; justify-content:center; align-items:center">
+                <img src="~/Content/giphy.gif" style="width:170px" alt="Alternate Text" />
+            </div>
+        </div>
         <div id="ManagemnetArea">
             @RenderBody()
         </div>
     </div>
 </div>
+<script>
+    $(".commonSideNavigation").on('click', function (event) {
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        $('#sideloading').css('display', 'block')
+        $('#ManagemnetArea').css('display', 'none')
+    });
+</script>
 <script src="~/Content/sidebar/sidebar.js"></script>
+@RenderSection("Scripts", false)
 

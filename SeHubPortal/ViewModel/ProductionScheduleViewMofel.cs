@@ -16,6 +16,18 @@ namespace SeHubPortal.ViewModel
         public tbl_production_schedule NewOrder { get; set; }
         public tbl_production_schedule EditOrder { get; set; }
         public tbl_production_schedule EditOrderReadonly { get; set; }
+        public List<SelectListItem> ShipTo { get; set; }
+        public List<SelectListItem> CasingSpec { get; set; }
 
+
+        public List<SelectListItem> SizeList { get; set; }
+        public List<SelectListItem> Treadlist { get; set; }
+
+        public List<string> PartNum { get; set; }
+
+        public List<SelectListItem> Customers { get; set; }
+        public List<SelectListItem> PartNumbers { get; set; }
+        public string customer { get; set; }
+        public string order_for { get; set; }
     }
 }

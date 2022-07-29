@@ -14,5 +14,6 @@ namespace SeHubPortal.ViewModel
         public List<SelectListItem> Profiles { get; set; }
         public List<SelectListItem> Locations { get; set; }
         public bool locIDorName { get; set; }
+        public tbl_harpoon_clients client_info { get; set; }
     }
 }

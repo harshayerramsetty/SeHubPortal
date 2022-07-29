@@ -15,7 +15,7 @@ namespace SeHubPortal.ViewModel
         public tbl_sehub_access SehubAccess { get; set; }
         public List<SelectListItem> LocationList { get; set; }
         public string Location { get; set; }
-        public tbl_tread_tracker_customers customerDetails { get; set; }
+        public tbl_cta_customers customerDetails { get; set; }
 
         public string reportingContact { get; set; }
         public string reportingEmail { get; set; }

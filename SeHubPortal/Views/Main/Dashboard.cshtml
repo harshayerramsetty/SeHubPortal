@@ -106,8 +106,6 @@
         </style>
     }
 
-
-
     <style>
 
         #MainDashboardLink {
@@ -156,7 +154,6 @@
             }
 
         .card-header {
-            background-color: #cde8ca;
             padding: 5px
         }
 
@@ -175,7 +172,7 @@
 </head>
 <body>
     <div class="row heading">
-        <div class="col" style="margin:0px 5px 15px 15px; padding:10px; background-color:white">
+        <div class="col breadCrumb" style="margin:0px 5px 15px 15px; padding:10px; background-color:white ">
 
             <div style="display: flex; justify-content: space-between; align-items: center">
                 <div>
@@ -193,9 +190,7 @@
     <div class="row" style="padding:0px 25px 15px 15px">
         <div class="col-md-12 col-lg-12" style=" text-align: center">
             <div class="card" style="height:366px; width:100%">
-                <div class="card-header">
-                    <h6>Weekly Events</h6>
-                </div>
+                
                 <div class="card-body">
                     <div id="calender" style="width:100%; margin:0px; padding:0px; background-color:white"></div>
                 </div>
@@ -244,7 +239,7 @@
                 var events = [];
                 $.ajax({
                     type: "GET",
-                    url: "/Main/GetEvents",
+                    url: "/Main/GetEventsMonth",
                     success: function (data) {
                         $.each(data, function (i, v) {
                             if (v.subject == 'Vacation') {
@@ -281,7 +276,7 @@
 
                 $.ajax({
                     type: "GET",
-                    url: "/Main/GetBirthdayEvents",
+                    url: "/Main/GetBirthdayEventsMonth",
                     success: function (data) {
                         $.each(data, function (i, v) {
                             //alert(moment(v.Date_of_birth));
@@ -313,7 +308,7 @@
                 function GenerateCalender(events) {
                     $('#calender').fullCalendar('destroy');
                     $('#calender').fullCalendar({
-                        contentHeight: 224,
+                        contentHeight: 260,
                         defaultDate: new Date(),
                         timeFormat: 'h(:mm)a',
                         displayEventTime: false,

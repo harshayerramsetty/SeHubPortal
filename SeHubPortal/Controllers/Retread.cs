@@ -18,60 +18,6 @@ namespace SeHubPortal.Controllers
 {
     public class RetreadController : Controller
     {
-        // GET: ToolsSample
-
-        string Baseurl = "http://169.254.67.83/";
-        public async Task<ActionResult> GetAPIdataWothoutAuth()
-        {
-            using (var client = new HttpClient())
-            {
-                Trace.WriteLine("Passing service base url");
-                client.BaseAddress = new Uri(Baseurl);
-                client.DefaultRequestHeaders.Clear();
-                Trace.WriteLine("Define request data format");
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                Trace.WriteLine("Sending request to find web api REST service resource GetAllEmployees using HttpClient");
-                HttpResponseMessage Res = await client.GetAsync("data/files/local/");
-                Trace.WriteLine("Checking the response is successful or not which is sent using HttpClient");
-                if (Res.IsSuccessStatusCode)
-                {
-                    Trace.WriteLine("Storing the response details recieved from web api");
-                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
-                    Trace.WriteLine("Deserializing the response recieved from web api and storing into the Employee list");
-                    Trace.WriteLine(EmpResponse);
-                    return Content(EmpResponse);
-                }
-                return Content("");
-            }
-        }
-
-        public async Task<ActionResult> GetAPIdata()
-        {
-            using (var client = new HttpClient())
-            {
-                var baseAddress = "http://169.254.67.83";
-                var api = "/data/files/local/";
-                client.BaseAddress = new Uri(baseAddress);
-                var contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                client.DefaultRequestHeaders.Accept.Add(contentType); 
-                var plainTextBytes = System.Text.Encoding.UTF8.GetBytes("admin:admin");
-                string base64EncodedAuthenticationString = System.Convert.ToBase64String(plainTextBytes);
-                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", base64EncodedAuthenticationString);
-                var response = await client.GetAsync(api);
-                var statusCode = response.StatusCode.ToString();
-                Trace.WriteLine(response.RequestMessage.RequestUri);
-                if (response.IsSuccessStatusCode)
-                {
-                    var stringData = await response.Content.ReadAsStringAsync();
-                    var result = JsonConvert.DeserializeObject<object>(stringData);
-                    return Content(result.ToString());
-                }
-                return Content("");
-            }
-        }
-
-
-
         public ActionResult Index()
         {
             return View();
@@ -92,9 +38,14 @@ namespace SeHubPortal.Controllers
             var workStations = db.tbl_treadTracker_workStations.Where(x => x.status == 1).OrderBy(x => x.barcode_id).ToList();
 
             var stationInfo = db.tbl_treadTracker_workStations.Where(x => x.barcode_id == model.stationBarcode && x.status == 1).FirstOrDefault();
-
+            Trace.WriteLine("Reached 1");
             if (stationInfo != null)
             {
+                if (stationInfo.station == "Chamber")
+                {
+                    return Redirect("http://169.254.67.83/analog-channel-1.html");
+                }
+
                 model.station = stationInfo.station;
                 model.icon = stationInfo.icon;
                 model.status = stationInfo.status.Value;
@@ -104,7 +55,7 @@ namespace SeHubPortal.Controllers
                 model.shipto = stationInfo.ship_to.Value;
                 model.consumables = stationInfo.consumables.Value;
                 model.reprint = stationInfo.reprint.Value;
-
+                Trace.WriteLine("Reached 2");
                 //model.SehubAccess = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
 
                 model.paneType = pane;
@@ -120,19 +71,11 @@ namespace SeHubPortal.Controllers
                     model.LocationList = db.tbl_cta_location_info.Where(x => x.tread_tracker_access == 1).ToList();
                     model.BrandList = db.tbl_source_commercial_tire_manufacturers.ToList();
                     model.workStations = workStations;
-
+                    Trace.WriteLine("Reached 3");
                     List<KeyValuePair<string, bool>> stationResults = new List<KeyValuePair<string, bool>>();
 
                     foreach (var item in workStations)
                     {
-                        /*
-                         
-                            if(item.station == "Preliminary")
-                        {
-                            stationResults.Add(new KeyValuePair<string, bool>("Preliminary", model.barcodeInfo.TT050_date.HasValue));
-                        }
-                             
-                             */
                         if (item.station == "NDT")
                         {
                             stationResults.Add(new KeyValuePair<string, bool>("NDT", model.barcodeInfo.TT100_date.HasValue));
@@ -159,11 +102,11 @@ namespace SeHubPortal.Controllers
                         }
 
                     }
-
+                    Trace.WriteLine("Reached 4");
                     model.workStationResults = stationResults;
 
                 }
-
+                Trace.WriteLine("Reached 5");
                 return View(model);
             }
             else

@@ -137,6 +137,9 @@
         display: block !important;
     }
 
+    .breadCrumb{
+        background-color:white;
+    }
 
     #libraryClicked {
         background-color: #f0f2f5;
@@ -172,7 +175,7 @@
 <body style="overflow-y: hidden;">
 
     <div class="row heading" style="margin-right:0px">
-        <div class="col" style="margin:10px 10px 10px 30px; padding:10px; background-color:white">
+        <div class="col breadCrumb" style="margin:10px 10px 10px 30px; padding:10px; background-color:white">
 
             <div style="display:flex; justify-content:space-between; align-items:center">
                 <div>
@@ -182,7 +185,10 @@
                 <div style="display:flex;">
                     @using (Html.BeginForm("UploadBranchShareDrive", "Library", FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
-                        <input type="text" readonly style="visibility:visible; height:23px; width:100px;" class="btn btn-success Upload" name="name" value="Upload" onclick="document.getElementById('Upload').click()" />
+                        <input type="text" readonly style="        visibility: visible;
+        height: 23px;
+        width: 100px;
+" class="btn btn-success Upload" name="name" value="Upload" onclick="document.getElementById('Upload').click()" />
                         <input id="Upload" type="file" name="BranchShareDrive" style="visibility:hidden; height: 23px;width: 100px;margin-left: 450px;display: none" onchange="form.submit()" />
                         <input id="1" type="text" readonly data-toggle="modal" data-target="#BranchShareDriveManage" style="visibility:visible; height: 23px; width: 100px; margin-left: 20px" class="btn btn-primary Manage" name="name" value="Manage" />
                         @Html.EditorFor(m => m.Location_ID, new { htmlAttributes = new { @class = "text-center", @style = "height:28px; display:none" } })

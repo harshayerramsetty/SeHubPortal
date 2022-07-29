@@ -1,0 +1,398 @@
+﻿
+@{
+    ViewBag.Title = "EmployeeDeductions";
+    //Layout = "~/Views/Shared/_PayrollLayout.cshtml";
+    Layout = "~/Views/Shared/_DevelopmentLayout.cshtml";
+}
+
+@model SeHubPortal.ViewModel.MyStaffViewModel
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>*@
+
+
+    @if (true)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (true)
+    {
+        <style>
+            #toolsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (true)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (true)
+    {
+        <style>
+            #FleetTVTClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (true)
+    {
+        <style>
+            #treadTrackereClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (true)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (true)
+    {
+        <style>
+            #mainClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (true)
+    {
+        <style>
+            #ManagementClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+
+    <style>
+        .breadCrumb {
+            background-color: white;
+        }
+
+        #SettingsClicked {
+            display: block !important;
+        }
+
+        #AdministrationLink {
+            display: block !important;
+        }
+
+        .example::-webkit-scrollbar {
+            display: none;
+        }
+
+        .example {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+
+        #PayrollDepositsClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #payrollDepositsBtn {
+            font-weight: bold;
+        }
+
+        #DevelopmentClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #developmentBtn {
+            font-weight: bold;
+        }
+
+        #EmployeeDeductionsLink {
+            color: black;
+            font-weight: 700;
+            background-color: #f0f2f5;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            padding-right: 0 !important;
+        }
+
+        .heading {
+            margin: 10px 0px 0px 0px;
+        }
+
+            .heading h2 {
+                margin-top: 8px;
+            }
+
+
+        .card-header h6 {
+            color: black;
+        }
+
+        .imageClass {
+            width: 100%;
+            height: 80%;
+            border-radius: 50%;
+        }
+
+        .card {
+            border: 1px solid #ededed;
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+
+        .card {
+            position: relative;
+            display: -ms-flexbox;
+            display: flex;
+            height: auto;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid rgba(0,0,0,.125);
+            border-radius: .25rem;
+        }
+
+        p {
+            font-size: 14px;
+        }
+
+        #MatchedStaffLocID {
+            height: 30px;
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div class="row heading" style="margin:10px 0px 0px 0px">
+        <div class="col" style="margin:0px 5px 15px 15px; padding:10px; background-color:white">
+
+            <div style="display:flex; justify-content:space-between; align-items:center">
+                <div>
+                    <a href="@Url.Action("EmployeeDeductions", "PayrollDeposits")">Payroll Deposits </a>/ Employee Deductions
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center">
+                    <div></div>
+                    <div style="display:flex; align-items:center">
+                        <label style="margin-right:10px">Location</label>
+                        @using (Html.BeginForm("EmployeeDeductions", "PayrollDeposits", FormMethod.Post))
+                        {
+                            <div>
+                                @Html.DropDownListFor(m => m.MatchedStaffLocID, Model.MatchedStaffLocs, "All", new { @onChange = "this.form.submit()", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:0px" })
+                                <noscript> <input class="btn btn-success" type="submit" value="Search" /></noscript>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+            <i class="fa fa-bars" style="font-size:25px"></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+
+    </div>
+
+    <div class="row" style="padding:0px 15px 0px 15px">
+
+        @foreach (var employee in Model.employeeDetails)
+        {
+            if (employee.status == 1)
+            {
+                string base64ProfilePic = "";
+                if (@employee.profile_pic is null)
+                {
+                    base64ProfilePic = "";
+                }
+                else
+                {
+                    base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(@employee.profile_pic);
+                }
+                <div class="col-md-2 col-lg-2 col-xl-2" data-toggle="modal" data-target="#EmpPayrollDeductions">
+                    <div class="card shadow-sm">
+                        <button style="color:Black;background-color:white;text-align:left;border:transparent" data-toggle="modal" data-target="#editEmployeeModal" data-id="@employee.employee_id" class="EditEmployeeBtn">
+                            @*data-toggle="modal" data-target="#editEmployeeModal"*@
+                            @*href="@Url.Action("StaffInfo", "Management", new { values = @employee.employee_id})"*@
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 text-center" style="display:flex; justify-content:center; align-items:center">
+                                        @if (base64ProfilePic == "")
+                                        {
+                                            <img class="imageClass" style="width:70px; object-fit:contain" src="~/Content/profilepic.jpg" alt="ProfilePic" />
+                                        }
+                                        else
+                                        {
+                                            <img class="imageClass" style="width:70px; object-fit:contain" alt="profilePic" src="@base64ProfilePic" />
+                                        }
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h6 style="font-size:18px;">@employee.first_name</h6>
+                                        <h6 style="font-size:15px;">@employee.last_name</h6>
+                                        <h6 style="font-size:12px;">@employee.employee_id</h6>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            }
+
+        }
+    </div>
+
+    <div class="modal" id="EmpPayrollDeductions" data-backdrop="static" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content" style="width:470px">
+                <div class="modal-header" style="padding:5px 5px 5px 15px">
+                    <h5 style="margin-left:auto; margin-right:auto" class="modal-title">Employee Payroll Deductions</h5>
+                </div>
+                <div class="modal-body" style="padding-bottom:0px; padding-left:30px">
+                    <div class="row" style="margin-bottom:15px">
+                        <div class="col-lg-4" style="display:flex; justify-content:center; align-items:center; border:2px solid #808080; border-radius:10px">
+                            <img style="width:80%" src="~/Content/profilepic.jpg" alt="Alternate Text" />
+                        </div>
+                        <div class="col-lg-8 text-left">
+                            <p style="font-size:20px; font-weight:bold; margin:5px">
+                                Blackwood, Jorden (10901)
+                            </p>
+                            <p style="font-size:18px; margin:5px">
+                                6 Waterford Heights South
+                            </p>
+                            <p style="font-size:17px; margin:5px">
+                                St.John's, NL A1E1G4
+                            </p>
+                            <p style="font-size:16px; margin:5px">
+                                Canada
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom:10px">
+                        <div class="col-md-4 text-center">
+                            TD1
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" style="width:100%" name="name" value="" />
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom:10px">
+                        <div class="col-md-4 text-center">
+                            Group INS
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" style="width:100%" name="name" value="" />
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom:10px">
+                        <div class="col-md-4" style="display:flex; flex-direction:column; justify-content:center; align-items:center">
+                            <div>Pension Plan</div>
+                            <div style="font-size:12px">(Sponcered)</div>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" style="width:100%" name="name" value="" />
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom:10px">
+                        <div class="col-md-4" style="display:flex; flex-direction:column; justify-content:center; align-items:center">
+                            <div>Pension Plan</div>
+                            <div style="font-size:12px">(Optional)</div>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" style="width:100%" name="name" value="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:5px">
+                    <button style="padding:3px 30px 3px 30px" class="btn btn-success" type="button">Save</button>
+                    <button data-dismiss="modal" style="padding:3px 25px 3px 25px" class="btn btn-danger" type="button">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+         $(document).ready(function () {
+             $('#profile-tab').css({ "font-weight": "normal", "color": "#24a0ed" });
+             $('#home-tab').css({ "font-weight": "bold", "color": "black" });
+             $('#nav-home-tab').on("click", function () {
+                 $('#profile-tab').css({ "font-weight": "normal","color": "#24a0ed"});
+                 $('#home-tab').css({ "font-weight": "bold", "color": "black" });
+             })
+
+             $('#profile-tab').on("click", function () {
+                 $('#profile-tab').css({ "font-weight": "bold", "color": "black" });
+                 $('#home-tab').css({ "font-weight": "normal", "color": "#24a0ed" });
+             })
+
+             $('#clickThis').on('click', function () {
+                 $('#sidebar').toggleClass('active');
+             });
+
+
+             $('.EditEmployeeBtn').click(function () {
+
+                 var id = $(this).data('id');
+                 $.ajax({
+                             url: '@Url.Action("EditEmployeeInfo", "Settings")',
+                             data: { value: id },
+                             type: 'GET',
+                             success: function (data) {
+                                 $("#EditEmployeeModalDiv").html(data);
+                                 //alert("Reached")
+                             }
+                 });
+             });
+
+             $('.EditEmployeeBtnInActive').click(function () {
+
+                 var id = $(this).data('id');
+                 $.ajax({
+                             url: '@Url.Action("EditEmployeeInfo", "Management")',
+                             data: { value: id },
+                             type: 'GET',
+                             success: function (data) {
+                                 $("#EditEmployeeModalInActiveDiv").html(data);
+
+                             }
+                 });
+             });
+
+         });
+
+    </script>
+</body>
+</html>

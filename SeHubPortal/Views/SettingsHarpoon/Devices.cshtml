@@ -15,17 +15,39 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>*@
+    <link href="http://fonts.cdnfonts.com/css/chiller" rel="stylesheet">
 
+    <style>
+        @@import url('http://fonts.cdnfonts.com/css/chiller');
+    </style>
+
+
+    @if (Model.client_info.employees_page.Value)
+    {
+        <style>
+            #ManagementClicked {
+                display: block !important;
+            }
+        </style>
+    }
+    @if (Model.client_info.fleet_page.Value)
+    {
+        <style>
+            #VehicleClicked {
+                display: block !important;
+            }
+        </style>
+    }
 
     <style>
 
         #SettingsClicked {
-                display: block !important;
-            }
+            display: block !important;
+        }
 
-            #ManagementClicked {
-                display: block !important;
-            }
+        #ManagementClicked {
+            display: block !important;
+        }
 
         .example::-webkit-scrollbar {
             display: none;
@@ -118,7 +140,6 @@
         .modal-backdrop.show {
             opacity: 0.7;
         }
-
     </style>
 </head>
 
@@ -149,92 +170,118 @@
 
         @foreach (var user in Model.devices)
         {
-            <div class="card shadow-lg " type="button" style="height:355px; margin-right:15px">
+            if (Model.Serials.Where(x => x.serial_number == user.serial_number).Select(x => x.model).FirstOrDefault() != null)
+            {
+                <div class="card shadow-lg " type="button" style="margin-right:15px">
 
-                <div class="card-body text-center" style="height: 270px; font-size: 11px; padding: 10px 20px 0px 20px ">
+                    <div class="card-body text-center" style="padding: 5px 10px 5px 10px">
 
-                    <div class="row" style="margin:0px">
-                        <div class="col-lg-12 text-right" style="padding:0px">
-                            <span>
-                                <button value="@user.serial_number;@user.client_id;@user.auto_loc_id;@user.location_zone;@user.display_color;@user.IP_address;@user.software_version" onclick="edit(this.value)" data-toggle="modal" data-target="#EditHarpoonDevice" style="background-color: transparent;border: none;outline: none;">
-                                    <i class="fa fa-edit" style="font-size:25px;color:black;float:right"></i>
+                        <div style="width:100%; padding:0px; display:flex; justify-content:space-between; align-items:center">
+                            <button style="border:none; outline:none; background-color:transparent; margin:0px; visibility:hidden">
+                                <i class="fa fa-edit" style="font-size:20px;color:black;"></i>
+                            </button>
+                            @if (Model.Serials.Where(x => x.serial_number == user.serial_number).Select(x => x.model).FirstOrDefault().Substring(0, 2) == "TC")
+                            {
+                                <span style="font-family: cursive; font-size:20px; color:#ffcc00; font-weight:bold; margin:0px">
+                                    TIME CLOCK
+                                </span>
+                                <button value="@user.serial_number;@user.client_id;@user.auto_loc_id;@user.location_zone;@user.display_color;@user.IP_address;@user.software_version;TC" onclick="edit(this.value)" data-toggle="modal" data-target="#EditHarpoonDevice" style="margin:0px; padding:0px; background-color: transparent;border: none;outline: none;">
+                                    <i class="fa fa-edit" style="font-size:20px;color:black;"></i>
                                 </button>
-                            </span>
+                            }
+                            else
+                            {
+                                <span style="font-family: cursive; font-size:20px; color:#ffcc00; font-weight:bold; margin:0px">
+                                    DEPARTMENT CLOCK
+                                </span>
+                                <button value="@user.serial_number;@user.client_id;@user.auto_loc_id;@user.location_zone;@user.display_color;@user.IP_address;@user.software_version;DC" onclick="edit(this.value)" data-toggle="modal" data-target="#EditHarpoonDevice" style="margin:0px; padding:0px; background-color: transparent;border: none;outline: none;">
+                                    <i class="fa fa-edit" style="font-size:20px;color:black;"></i>
+                                </button>
+                            }
+
                         </div>
+
+                        <div style="width:300px; display:flex">
+                            <div style="flex:5; display:flex; justify-content:center; align-items:center">
+                                @if (Model.Serials.Where(x => x.serial_number == user.serial_number).Select(x => x.model).FirstOrDefault().Substring(0, 2) == "TC")
+                                {
+                                    <img src="https://ctasehub.blob.core.windows.net/sehub-content/timeClock.png" style="margin-bottom:10px;height:100px;">
+                                }
+                                else
+                                {
+                                    <img src="https://ctasehub.blob.core.windows.net/sehub-content/departmentClock.png" style="margin-bottom:10px;height:100px;">
+                                }
+                            </div>
+                            <div style="flex:8; font-size:9px">
+                                <div class="row">
+                                    <div class="col-lg-5 text-right" style="padding-right:5px;">
+                                        Serial Number
+                                    </div>
+                                    <div class="col-lg-7 text-left" style="padding-left:5px;">
+                                        <span><b>@user.serial_number</b></span>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-5 text-right" style="padding-right:5px;">
+                                        Location ID
+                                    </div>
+                                    <div class="col-lg-7 text-left" style="padding-left:5px;">
+                                        <span><b>@Model.Locations.Where(x => x.auto_loc_id == user.auto_loc_id).Select(x => x.location_id).FirstOrDefault()</b></span>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-5 text-right" style="padding-right:5px;">
+                                        Location Name
+                                    </div>
+                                    <div class="col-lg-7 text-left" style="padding-left:5px;">
+                                        <span><b>@Model.Locations.Where(x => x.auto_loc_id == user.auto_loc_id).Select(x => x.location_name).FirstOrDefault()</b></span>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-5 text-right" style="padding-right:5px;">
+                                        Location Zone
+                                    </div>
+                                    <div class="col-lg-7 text-left" style="padding-left:5px; font-size:10px">
+                                        <span><b>@user.location_zone</b></span>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-5 text-right" style="        padding-right: 5px;
+">
+                                        Display Color
+                                    </div>
+                                    <div class="col-lg-7 text-left" style="padding-left:5px;">
+                                        <span><b>@user.display_color</b></span>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-5 text-right" style="padding-right:5px;">
+                                        IP Address
+                                    </div>
+                                    <div class="col-lg-7 text-left" style="padding-left:5px;">
+                                        <span><b>@user.IP_address</b></span>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-5 text-right" style="padding-right:5px;">
+                                        Software Version
+                                    </div>
+                                    <div class="col-lg-7 text-left" style="padding-left:5px;">
+                                        <span><b>@user.software_version</b></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <img src="~/Content/harpoonDevices.png" style="margin-bottom:10px;width:200px;">
-                        </div>
-                    </div>
-
-                    <div class="row" style="margin-top:10px">
-                        <div class="col-lg-6 text-right" style="padding-right:5px;">
-                            Serial Number
-                        </div>
-                        <div class="col-lg-6 text-left" style="padding-left:5px;">
-                            <span><b>@user.serial_number</b></span>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-6 text-right" style="padding-right:5px;">
-                            Location ID
-                        </div>
-                        <div class="col-lg-6 text-left" style="padding-left:5px;">
-                            <span><b>@Model.Locations.Where(x => x.auto_loc_id == user.auto_loc_id).Select(x => x.location_id).FirstOrDefault()</b></span>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-6 text-right" style="padding-right:5px;">
-                            Location Name
-                        </div>
-                        <div class="col-lg-6 text-left" style="padding-left:5px;">
-                            <span><b>@Model.Locations.Where(x => x.auto_loc_id == user.auto_loc_id).Select(x => x.location_name).FirstOrDefault()</b></span>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-6 text-right" style="padding-right:5px;">
-                            Location Zone
-                        </div>
-                        <div class="col-lg-6 text-left" style="padding-left:5px; font-size:10px">
-                            <span><b>@user.location_zone</b></span>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-6 text-right" style="padding-right:5px;">
-                            Display Color
-                        </div>
-                        <div class="col-lg-6 text-left" style="padding-left:5px;">
-                            <span><b>@user.display_color</b></span>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-6 text-right" style="padding-right:5px;">
-                            IP Address
-                        </div>
-                        <div class="col-lg-6 text-left" style="padding-left:5px;">
-                            <span><b>@user.IP_address</b></span>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-6 text-right" style="padding-right:5px;">
-                            Software Version
-                        </div>
-                        <div class="col-lg-6 text-left" style="padding-left:5px;">
-                            <span><b>@user.software_version</b></span>
-                        </div>
-                    </div>
-
-
                 </div>
-                </div>
+            }
         }
 
 
@@ -252,20 +299,29 @@
                         <h5 class="modal-title">Add Device</h5>
                     </div>
                     <div class="modal-body" style="padding-right:0px; padding-bottom:0px">
+                        <div class="row deviceName" style="font-family: cursive; display:flex; justify-content:center; font-size:25px; color:#ffcc00; font-weight:bold">
 
-                        <div class="row" style="margin-bottom:10px">
-                            <div class="col-lg-12 text-center">
-                                <img src="~/Content/harpoonDevices.png" style="margin-bottom:10px;width:200px;">
-                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom:10px; display:flex; justify-content:center">
+                            <img class="deviceImage" src="" style="margin-bottom:10px; height:100px; display:none">
                         </div>
 
-                        <div class="row" style="margin-bottom:10px;">
+                        <div class="row" style="margin-bottom:10px">
                             <div class="col-lg-5 text-right" style="font-weight:bold; color:dimgray">
                                 Serial Number
                             </div>
                             <div class="col-lg-6" style="padding-right:0px">
                                 @Html.EditorFor(m => m.newDevice.serial_number, new { htmlAttributes = new { @maxlength = "6", @oninput = "checkMaxLength(this.value)", @id = "addSerialNumber", @style = "text-align:center; font-weight:bold; width:100%;", @required = "required" } })
 
+                            </div>
+                        </div>
+
+                        <div class="row" id="deviceModelDiv" style="visibility:hidden">
+                            <div class="col-lg-5 text-right" style="font-weight:bold; color:dimgray">
+                                Model
+                            </div>
+                            <div class="col-lg-6" style="padding-right:0px">
+                                <input style="text-align:center" id="deviceModel" type="text" readonly name="name" value="" />
                             </div>
                         </div>
 
@@ -346,12 +402,16 @@
                     </div>
                     <div class="modal-body" style="padding-right:0px; padding-bottom:0px">
 
+                        <div class="row deviceName" style="font-family: cursive; display:flex; justify-content:center; font-size:25px; color:#ffcc00; font-weight:bold">
+
+                        </div>
+
                         <div class="row" style="margin-bottom:10px">
                             <div class="col-lg-1 text-left" style="padding-left:0px; padding-top:0px">
                                 <button type="button" data-dismiss="modal" data-toggle="modal" data-target="#DeletePopup" class="btn" style="border: none;outline: none; background-color: transparent"><img style="width:30px" src="~/Content/Trash Can.png" alt="Alternate Text" /></button>
                             </div>
                             <div class="col-lg-10 text-center">
-                                <img src="~/Content/harpoonDevices.png" style="margin-bottom:10px;width:200px;">
+                                <img class="deviceImage" src="" style="margin-bottom:10px;width:200px;">
                             </div>
                             <div class="col-lg-1"></div>
                         </div>
@@ -417,7 +477,7 @@
                 <div class="modal-header" style="padding:5px 5px 5px 15px">
                     <h5 class="modal-title">Confirm to delete</h5>
                 </div>
-                <div class="modal-body" style="padding-right:0px; padding-bottom:0px">
+                <div class="modal-body" style="padding-right: 0px; padding-bottom: 0px">
 
                     <div class="row" style="margin-bottom:15px">
                         <div class="col-lg-2"></div>
@@ -426,7 +486,8 @@
                         </div>
                         <div class="col-lg-4 text-center">
 
-                            <button style="padding:5px 40px 5px 40px" type="button" data-dismiss="modal" id="no" class="btn btn-danger">No</button>
+                            <button style="        padding: 5px 40px 5px 40px
+" type="button" data-dismiss="modal" id="no" class="btn btn-danger">No</button>
                         </div>
                         <div class="col-lg-2"></div>
                     </div>
@@ -508,6 +569,12 @@
             $('#display_color').val(data[4]);
             $('#IP_address').val(data[5]);
             $('#software_version').val(data[6]);
+            if ($('#software_version').val(data[7]) == "TC") {
+
+            }
+            else {
+
+            }
         }
 
 
@@ -525,24 +592,40 @@
                 data: { value: $('#addSerialNumber').val(), verif : $('#verificationCode').val()},
                 type: 'POST',
                 success: function (data) {
-
-                    if (data == "true") {
+                    if (data.split(';')[0] == "true") {
                         $('#AddHarpoonDevice').modal().hide();
                         $('#SerialExists').modal()
                     }
                     else {
-
-                        if (data != "incorrect verification") {
-                            $('#addSerialNumber').css("background-color", "#bdbdbd");
-                            $('#addSerialNumber').attr('readonly', 'true');
-                            $('.deviceDetails').css("display", "block")
-                            $('.verification').css("display", "none")
-                            $('.finalRow').css("margin-bottom", "10px")
+                        if (data.split(';')[0] != 'Department Not Registered' && data.split(';')[0] != 'Location Not Registered') {
+                            if (data.split(';')[0] != "incorrect verification") {
+                                $('#addSerialNumber').css("background-color", "#bdbdbd");
+                                $('#addSerialNumber').attr('readonly', 'true');
+                                $('.deviceDetails').css("display", "block")
+                                $('.verification').css("display", "none")
+                                $('.finalRow').css("margin-bottom", "10px")
+                                if (data.split(';')[1].substring(0,2) == 'TC') {
+                                    $('.deviceName').html('TIME CLOCK')
+                                    $(".deviceImage").attr("src","https://ctasehub.blob.core.windows.net/sehub-content/timeClock.png");
+                                    $(".deviceImage").css("display", "block");
+                                }
+                                else {
+                                    $('#deviceModel').val(data.split(';')[1])
+                                    $('#deviceModelDiv').css('visibility', 'visible')
+                                    $('.deviceName').html('DEPARTMENT CLOCK')
+                                    $(".deviceImage").attr("src", "https://ctasehub.blob.core.windows.net/sehub-content/departmentClock.png");
+                                    $(".deviceImage").css("display", "block");
+                                }                            
+                            }
+                            else {
+                                alert("Incorrect Verification Code!")
+                                $('#AddHarpoonDevice input').val("")
+                            }
                         }
                         else {
-                            alert("Incorrect Verification Code!")
-                            $('#AddHarpoonDevice input').val("")
+                            alert(data.split(';')[0]+"!")
                         }
+                        
                     }
                 }
             });
@@ -596,8 +679,23 @@
                 }
             });
 
+
+            $("#addSerialNumber").val("");
+            $("#verificationCode").val("");
+            $("#location").val("Select");
+            $("#locationZone").val("Select");
+            $("#dispColor").val("Select");
+            $(".deviceDetails").css("display", "none")
+            $(".verification").css("display", "none")
+            $('#addSerialNumber').css("background-color", "white");
+            $('#addSerialNumber').attr('readonly', false);
+            $("#deviceImage").css("display", "none");
+            $("#addSubmit").css("display", "none");
+            $('#deviceName').html('')
+            $('#deviceModelDiv').css('visibility', 'hidden')
+
             /*
-             $("#addSerialNumber").val("");
+            $("#addSerialNumber").val("");
             $("#verificationCode").val("");
             $("#location").val("Select");
             $("#locationZone").val("Select");

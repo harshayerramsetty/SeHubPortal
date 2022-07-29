@@ -28,6 +28,10 @@ namespace SeHubPortal.Controllers
         [HttpGet]
         public ActionResult Dashboard(LibraryAddDocumentRequest model)
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             int empId = Convert.ToInt32(Session["userID"].ToString());
             var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
@@ -397,6 +401,10 @@ namespace SeHubPortal.Controllers
         [HttpGet]
         public ActionResult Company_Documents()
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
             FileURL FileUrl = new FileURL();
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             int empId = Convert.ToInt32(Session["userID"].ToString());
@@ -558,6 +566,11 @@ namespace SeHubPortal.Controllers
         [HttpGet]
         public ActionResult Branch_Shared_drive(string loc)
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
+
             int empId = Convert.ToInt32(Session["userID"].ToString());
 
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
@@ -633,6 +646,10 @@ namespace SeHubPortal.Controllers
         [HttpGet]
         public ActionResult Supplier_Documents()
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
             var readPolicy = new SharedAccessBlobPolicy()
             {
                 Permissions = SharedAccessBlobPermissions.Read,
@@ -689,6 +706,10 @@ namespace SeHubPortal.Controllers
         [HttpGet]
         public ActionResult Customer_Documents()
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
             var readPolicy = new SharedAccessBlobPolicy()
             {
                 Permissions = SharedAccessBlobPermissions.Read,
@@ -745,6 +766,10 @@ namespace SeHubPortal.Controllers
         [HttpGet]
         public ActionResult Management()
         {
+            if (Session["userID"] == null)
+            {
+                return RedirectToAction("SignIn", "Login");
+            }
             FileURL FileUrl = new FileURL();
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             int empId = Convert.ToInt32(Session["userID"].ToString());

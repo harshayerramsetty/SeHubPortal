@@ -19,5 +19,11 @@ namespace SeHubPortal.ViewModel
         public bool multipleLocation { get; set; }
         public string AccessType { get; set; }
         public TimeClockEvent CreateEvent  { get; set; }
+        public string openJobID { get; set; }
+        public int openJobID_autoEmpID { get; set; }
+        public bool job_id_clocking { get; set; }
+
+        public bool AdminClockingEditTime { get; set; }
+        public tbl_harpoon_clients client_info { get; set; }
     }
 }

@@ -27,17 +27,20 @@
 <div class="wrapper d-flex align-items-stretch">
     <nav id="sidebar">
         <ul class="list-unstyled components mb-5">
-            <li class="active" style="display:block" id="TimeClockEventsLink">
+            <li class="active" style="display:none" id="TimeClockEventsLink">
                 <a id="TimeClockEventsClicked" href="@Url.Action("TimeClockEvents", "ManagementHarpoon")">Attendance</a>
             </li>
-            <li class="active" id="AttendanceLink">
+            <li class="active" style="display:none" id="AttendanceLink">
                 <a id="AttendanceClicked" href="@Url.Action("Attendance", "ManagementHarpoon", new { locId = "",employeeId=""})">Attendance History</a>
             </li>
-            <li class="active" style="display:block" id="SettingsLink">
+            <li class="active" style="display:none" id="SettingsLink">
                 <a id="DashboardClicked" href="@Url.Action("Employees", "SettingsHarpoon")">My Staff</a>
             </li>
-            <li class="active" style="display:block" id="EmployeeFilesLink">
+            <li class="active" style="display:none" id="EmployeeFilesLink">
                 <a id="EmployeeFilesClicked" href="@Url.Action("EmployeeFolder", "ManagementHarpoon", new { values=""})">Employee Folder</a>
+            </li>
+            <li class="active" style="display:block" id="AttendanceReportLink">
+                <a id="AttendanceReportClicked" href="@Url.Action("AttendanceReport", "ManagementHarpoon", new { showJob = false})">Attendance Report</a>
             </li>
         </ul>
     </nav>

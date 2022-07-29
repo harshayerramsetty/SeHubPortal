@@ -18,7 +18,7 @@ namespace SeHubPortal.ViewModel
         public bool CRM { get; set; }
         public bool CRMedit { get; set; }
         public string Customeredit { get; set; }
-        public List<tbl_customer_list> CustomerList { get; set; }
+        public List<tbl_cta_customers> CustomerList { get; set; }
         public List<tbl_customer_reporting_customers> CustomerListCRM { get; set; }
         public List<tbl_fleettvt_Customer> CustomerListFleetTVT { get; set; }
 

@@ -141,7 +141,9 @@
 
 
     <style>
-
+        .breadCrumb{
+        background-color:white;
+    }
         #ManagementClicked {
             display: block !important;
         }
@@ -177,10 +179,6 @@
 
         .heading h2 {
             margin-top: 8px;
-        }
-
-        .card-header {
-            background-color: #cde8ca;
         }
 
             .card-header h6 {
@@ -240,7 +238,7 @@
     <div class="row heading">
         <div class="col">
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb" style="background-color:white;height:100%;margin-top:0px;">
+                <ol class="breadcrumb breadCrumb" style="background-color:white;height:100%;margin-top:0px;">
                     <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Management")">Management</a></li>
                     <li class="breadcrumb-item " aria-current="page">Dashboard</li>
 
@@ -378,120 +376,124 @@
                             </a>
                         </div>
                     </div>
-                    <div class="row" style="margin-bottom:22px">
-                        <div class="col-lg-4">
-                            <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#EmpClasification" style="width:260px; height:230px">
-                                <div class="card-body text-center" style="height:270px; padding-top:5px">
-                                    <img src="~/Content/emcal.png" style="margin-top:0px; margin-bottom:0px; width:150px;">
-                                    <h5 style="margin-left:0px"><b>Employee Classification</b></h5>
+                    @if (Model.SehubAccess.management_dashboard == 3)
+                    {
+                        <div class="row" style="margin-bottom:22px">
+                            <div class="col-lg-4">
+                                <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#EmpClasification" style="width:260px; height:230px">
+                                    <div class="card-body text-center" style="height:270px; padding-top:5px">
+                                        <img src="~/Content/emcal.png" style="margin-top:0px; margin-bottom:0px; width:150px;">
+                                        <h5 style="margin-left:0px"><b>Employee Classification</b></h5>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#" style="width:260px; height:230px">
-                                <div class="card-body text-center" style="height:270px; padding-top:55px">
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#InspectionChecklist" style="width:260px; height:230px">
-                                <div class="card-body text-center" style="height:270px; padding-top:20px">
-                                    <img src="~/Content/Maintanence.png" style="margin-top:0px; margin-bottom:5px; width:115px;">
-                                    <h5 style="margin-left:0px"><b>Preventative Maintenance</b></h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-4">
-                            <div class="card shadow-lg " data-toggle="modal" data-target="#EmpClasification" style="width:260px; height:230px">
-                                <div class="card-body text-center" style="height:270px; padding-top:50px">
-                                    <h5 style="margin-left:0px"><b>Survey</b></h5>
-                                    <h5 style="margin-left:0px"><b>Workplace</b></h5>
-                                    <div class="row" style="padding:20px 20px 0px 10px">
-                                        <div class="col-md-4 text-center">
-                                            <button>
-                                                <img style="width:30px" src="https://cdn.pixabay.com/photo/2016/04/16/10/32/icon-1332772_1280.png" alt="Alternate Text" />
-                                            </button>
-
-                                        </div>
-                                        <div class="col-md-4 text-center">
-                                            <button>
-                                                <img style="width:30px" src="data:image/png;base64,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" alt="Alternate Text" />
-                                            </button>
-
-                                        </div>
-                                        <div class="col-md-4 text-center">
-                                            <button>
-                                                <img style="width:40px" src="https://mpng.subpng.com/20180420/xqe/kisspng-chart-computer-icons-statistics-report-elevator-repair-5ad986adef4327.78399718152420522998.jpg" alt="Alternate Text" />
-                                            </button>
-
-                                        </div>
+                            <div class="col-lg-4">
+                                <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#" style="width:260px; height:230px">
+                                    <div class="card-body text-center" style="height:270px; padding-top:55px">
 
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="card shadow-lg " data-toggle="modal" data-target="#EmpClasification" style="width:260px; height:230px">
-                                <div class="card-body text-center" style="height:270px; padding-top:50px">
-                                    <h5 style="margin-left:0px"><b>Survey</b></h5>
-                                    <h5 style="margin-left:0px"><b>Retail Customer</b></h5>
-                                    <div class="row" style="padding:20px 20px 0px 10px">
-                                        <div class="col-md-4 text-center">
-                                            <button>
-                                                <img style="width:30px" src="https://cdn.pixabay.com/photo/2016/04/16/10/32/icon-1332772_1280.png" alt="Alternate Text" />
-                                            </button>
-
-                                        </div>
-                                        <div class="col-md-4 text-center">
-                                            <button>
-                                                <img style="width:30px" src="data:image/png;base64,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" alt="Alternate Text" />
-                                            </button>
-
-                                        </div>
-                                        <div class="col-md-4 text-center">
-                                            <button>
-                                                <img style="width:40px" src="https://mpng.subpng.com/20180420/xqe/kisspng-chart-computer-icons-statistics-report-elevator-repair-5ad986adef4327.78399718152420522998.jpg" alt="Alternate Text" />
-                                            </button>
-
-                                        </div>
-
+                            <div class="col-lg-4">
+                                <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#InspectionChecklist" style="width:260px; height:230px">
+                                    <div class="card-body text-center" style="height:270px; padding-top:20px">
+                                        <img src="~/Content/Maintanence.png" style="margin-top:0px; margin-bottom:5px; width:115px;">
+                                        <h5 style="margin-left:0px"><b>Preventative Maintenance</b></h5>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4">
-                            <div class="card shadow-lg " data-toggle="modal" data-target="#EmpClasification" style="width:260px; height:230px">
-                                <div class="card-body text-center" style="height:270px; padding-top:50px">
-                                    <h5 style="margin-left:0px"><b>Survey</b></h5>
-                                    <h5 style="margin-left:0px"><b>Fleet Customer</b></h5>
-                                    <div class="row" style="padding:20px 20px 0px 10px">
-                                        <div class="col-md-4 text-center">
-                                            <button>
-                                                <img style="width:30px" src="https://cdn.pixabay.com/photo/2016/04/16/10/32/icon-1332772_1280.png" alt="Alternate Text" />
-                                            </button>
-                                            
-                                        </div>
-                                        <div class="col-md-4 text-center">
-                                            <button>
-                                                <img style="width:30px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAflBMVEUAAAD///+goKCKioq2traysrJ9fX2Pj4+5ubn39/dPT0/7+/ujo6PW1tasrKzj4+PLy8tvb28fHx+ampoWFhbi4uJhYWHBwcELCwspKSnt7e3Q0NDs7OxDQ0M1NTU9PT1mZmZbW1t2dnYSEhInJyeDg4MvLy83NzcdHR1LS0sN72KJAAAHR0lEQVR4nO2daXuqMBBGQWkVUcB63aXiUtv+/z94xapVJ8FJIMvQnM/FJ6cKZJs3ni9LqJ7ojHQbCzypqwaj/OCpZzc7st/P1+veZvg6GugyXIzWGuxYZHGowXD1YUjvh46wo6BhNDLqV9BXarg09fu8ZZKoMzT/BZ74N1VkGA1Nq115UWIYTkx73RArMLToGyzA/1DRhmZfEhD06x9rODVt9Mg7ti+HNAzfTRsB2vUadkz7MFjWaTg2bcNiU6fhq2kbJrjnKcowMe3CplefoY13YQHqjYExjJij3ayfDgaDZJwsCsIKo/HoOcuM1YRtXYYpyy+VkpEnnsFGzDCDRYxhG372RmKwXZElQxHzrMEY9sAnr/ULMn9KI8RlCMMQ3IazceXmygAfeJh+DcbwS+Zfp4AQzDBgHjUIw9W/xw8OKjdWDjBCzREXIQzH4BYXGWLXCTCcIC5CGA7Az98aww3iItqGPUQXA2EIn9Ld6o2VAkykKDMUms2rEWD43XjDzBn6KEM4CWWN4Sei90jb8N0Z+s7wxF801D2+v7BVZNi1xhBMas6doe8MTzhDfThDJs7Qt9pwX4/hCzBErk3WDthL8KbKUG6TYHXA8oIzLHCGvjPUiTNk4gx9Z6gTYPi1en4RwjAGhmLbkOsDGP5zhj4xQ7CQ3zhDsJO+cYbN/w6dIRNn6NttiGgJwrD1+Lkzawwx288QhuAZ7QyVocoQ/koX1RsrBfxfyxtGUbhKxicSuIH2tW2EDtjoOpteGllsw0YbLtJOnr0xduRazextPelMGb8uYJgO30w3tgJfE7AC/2D4YkMZbDXe4xJD9p5/cqxTnqElZb410GEaWlYkWo1JCA3Db9OtqpX16tFwQf8Rc89hdW8YNeMZc8tl3+LZMDfdHgVsbg1tLb+rxsevIas4rQlMr4Z7001RxC46G4LhUWPo/BiGptuhkMXJsG+6GQoZnQyb9q6/5T06Gi5Nt0KCrJOOF0na2jwdp6dHQ3rvws3vKHc1AsWR93wcDTd6mlUfrbsBbpKX/nHP9yJqkxZgmqL8Rxh51N4VjEqIUsXQW+lqWj20oKBfeqONPVghajPsgsOycJnUo9Xr5uxsLQmx6nrWBUCV8c0WZJQqX3nxAn3tqw4v6gDGPlyJPbjjyWK4JWX8tLzYgyu8FsPdQs+PeerTMuRuqOO/EvseqbETt0iAEaFzpkXLkHsfgsrEK8QMuXEV/F4NMcNXjuCCP4YiZnjgGJZ0W4gZ8m7Ekq43NUN2aXNZ37rlEZss/WAIRmUz2uQMWXHeednf0zO8W8EueJLgTO0+LMjvNp09C1GnaOjt2tcl7OXTzQckDY9ko6DbjbeIeUKqhnicIX2cIX2cIX2ab0hsJkqCv2BIar5UAmdIH2dIH2dIHznDfjcwQTfXZoiovlWCTMmLnKE1FZbO0Bk6Q2doiaHMnihKhrEzdIZakenTyBmaSjPT9x1ak9fmDJ2hM/wl3b7WzxZsgDJoqGYqBOzqdoYs/oKhzF59WoYyFSWUDAOp2jVKhqEncyI1IcOhXB0wIcNpUcstHmtCx/CzqOWWaB4dw9ZPpsJO9Do6huFPLobwZgUyhsUnnLJN+NV7bKgYvl2yTYTzaagY/ubTiF5KxPCnhuicEyUWrEDD8HyU7tkw/BS5FhgO2p36aYOKUSHD+TkH85LXlog8bSjMYuwv4a3XzL1EIKbG1IlWJWX3jxyu6bS/uYlhbr0hfpCwYeQmHuljc2etN7x9Rt3ll46R8ZeWG+Z3z4mHDNplTt5w8tA6kCOcjJ6Ppuw1zDog/5qRBR2N423vUDbgsNFwts+28ZhRYspLLA+TQTpNT8Bad2A4zXqyfDMzdZCGszg9M0hCfJ73I7AGExhW6bWx6l7Rhopy9es1bDtDZ1jdEE5yWGO4q+eMEth8awyVnTMDli41GYL3VuMMQbfZGSIN4QqjNYY1nX9osaGyMyydoTO0zRDu1miaYVetocDoCRjOtRkmQVeWQGB62aChJpwhE4Qh3FNkjeFBlWG3emOlAIafqgy5AY2KAale7IC6e2gbrjkziLcgDOEqvzWGWT2GcFtY0wxhWLY1hr16DMdgWdEaww3iIoThCgS8BhVbKgswnCAuQhiGINluWLmtUiRfjw3ZIq5CGEZwDwMjYlMDcNPPYw4mC4Shn4NP5gdrK4RRuYb5T2MMGWV/O/1dU1bxIWbkhTFkHpCx1Xuwc8LKYT0gXhYoQx+cpXziI3jRRcDeK8Q7DELc0NaEF1QCCcpwIbxPWguYdwXS0NKTgnEzPDjDxdy0DQPkJB3O0MY7EbPuJGBYcpCLKbDdf6zhArtvURfovjHW0LbzZjPEDI2gIWP5wiBzfHAF3pCxBmWMncBSgIChPT/UtUicmoihP7DjfPJcqNMvZOhHNhxaGgs1WdDw+DWaPrZ0KBr4J2p4vBtNOubixSzihscRcdvMUeVZSybcSMbwyGoaxP1+Syd9yeym/z13td6t6rZnAAAAAElFTkSuQmCC" alt="Alternate Text" />
-                                            </button>
-                                            
-                                        </div>
-                                        <div class="col-md-4 text-center">
-                                            <button>
-                                                <img style="width:40px" src="https://mpng.subpng.com/20180420/xqe/kisspng-chart-computer-icons-statistics-report-elevator-repair-5ad986adef4327.78399718152420522998.jpg" alt="Alternate Text" />
-                                            </button>
-                                            
-                                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="card shadow-lg " data-toggle="modal" data-target="#EmpClasification" style="width:260px; height:230px">
+                                    <div class="card-body text-center" style="height:270px; padding-top:50px">
+                                        <h5 style="margin-left:0px"><b>Survey</b></h5>
+                                        <h5 style="margin-left:0px"><b>Workplace</b></h5>
+                                        <div class="row" style="padding:20px 20px 0px 10px">
+                                            <div class="col-md-4 text-center">
+                                                <button>
+                                                    <img style="width:30px" src="https://cdn.pixabay.com/photo/2016/04/16/10/32/icon-1332772_1280.png" alt="Alternate Text" />
+                                                </button>
 
+                                            </div>
+                                            <div class="col-md-4 text-center">
+                                                <button>
+                                                    <img style="width:30px" src="data:image/png;base64,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" alt="Alternate Text" />
+                                                </button>
+
+                                            </div>
+                                            <div class="col-md-4 text-center">
+                                                <button>
+                                                    <img style="width:40px" src="https://mpng.subpng.com/20180420/xqe/kisspng-chart-computer-icons-statistics-report-elevator-repair-5ad986adef4327.78399718152420522998.jpg" alt="Alternate Text" />
+                                                </button>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="card shadow-lg " data-toggle="modal" data-target="#EmpClasification" style="width:260px; height:230px">
+                                    <div class="card-body text-center" style="height:270px; padding-top:50px">
+                                        <h5 style="margin-left:0px"><b>Survey</b></h5>
+                                        <h5 style="margin-left:0px"><b>Retail Customer</b></h5>
+                                        <div class="row" style="padding:20px 20px 0px 10px">
+                                            <div class="col-md-4 text-center">
+                                                <button>
+                                                    <img style="width:30px" src="https://cdn.pixabay.com/photo/2016/04/16/10/32/icon-1332772_1280.png" alt="Alternate Text" />
+                                                </button>
+
+                                            </div>
+                                            <div class="col-md-4 text-center">
+                                                <button>
+                                                    <img style="width:30px" src="data:image/png;base64,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" alt="Alternate Text" />
+                                                </button>
+
+                                            </div>
+                                            <div class="col-md-4 text-center">
+                                                <button>
+                                                    <img style="width:40px" src="https://mpng.subpng.com/20180420/xqe/kisspng-chart-computer-icons-statistics-report-elevator-repair-5ad986adef4327.78399718152420522998.jpg" alt="Alternate Text" />
+                                                </button>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="card shadow-lg " data-toggle="modal" data-target="#EmpClasification" style="width:260px; height:230px">
+                                    <div class="card-body text-center" style="height:270px; padding-top:50px">
+                                        <h5 style="margin-left:0px"><b>Survey</b></h5>
+                                        <h5 style="margin-left:0px"><b>Fleet Customer</b></h5>
+                                        <div class="row" style="padding:20px 20px 0px 10px">
+                                            <div class="col-md-4 text-center">
+                                                <button>
+                                                    <img style="width:30px" src="https://cdn.pixabay.com/photo/2016/04/16/10/32/icon-1332772_1280.png" alt="Alternate Text" />
+                                                </button>
+
+                                            </div>
+                                            <div class="col-md-4 text-center">
+                                                <button>
+                                                    <img style="width:30px" src="data:image/png;base64,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" alt="Alternate Text" />
+                                                </button>
+
+                                            </div>
+                                            <div class="col-md-4 text-center">
+                                                <button>
+                                                    <img style="width:40px" src="https://mpng.subpng.com/20180420/xqe/kisspng-chart-computer-icons-statistics-report-elevator-repair-5ad986adef4327.78399718152420522998.jpg" alt="Alternate Text" />
+                                                </button>
+
+                                            </div>
+
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    }
+
                 </div>
                 <div class="col-lg-6">
                     <div class="row">
@@ -540,7 +542,6 @@
                                             <div class="row example">
                                                 <div class="col-lg-12">
                                                     <table class="table table-striped table-bordered">
-
                                                         @if (Model.techefficiencyList != null)
                                                         {
                                                             <thead style="background-color:gray; color:white">
@@ -571,7 +572,6 @@
                                                                 {
 
                                                                     double paidhrspayroll = 0;
-
                                                                     if (tech.RegularHours != "" && tech.OtHours != "")
                                                                     {
                                                                         paidhrspayroll = double.Parse(tech.RegularHours) + double.Parse(tech.OtHours);

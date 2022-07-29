@@ -17,15 +17,32 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>*@
 
-    <style>
-
-        #SettingsClicked {
-                display: block !important;
-            }
-
+    @if (Model.client.employees_page.Value)
+    {
+        <style>
             #ManagementClicked {
                 display: block !important;
             }
+        </style>
+    }
+    @if (Model.client.fleet_page.Value)
+    {
+        <style>
+            #VehicleClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    <style>
+
+        #SettingsClicked {
+            display: block !important;
+        }
+
+        #ManagementClicked {
+            display: block !important;
+        }
 
         .example::-webkit-scrollbar {
             display: none;
@@ -259,16 +276,37 @@
                                     <div class="row" style="margin-bottom:10px">
                                         <div class="col-lg-2" style="padding: 0px 0px 0px 30px">
                                             <div class="row">
-                                                <label style="margin-right:10px">
-                                                    <b>OFF</b>
-                                                </label>
-                                                <div class="custom-control custom-switch">
-                                                    @Html.EditorFor(m => m.autoClockOut, new { htmlAttributes = new { @class = "custom-control-input", @id = "Toggle1", @type = "checkbox" } })
+                                                @if (Model.autoClockOut)
+                                                {
+                                                    <label id="Toggle1_off" style="margin-right:10px">
+                                                        OFF
+                                                    </label>
+                                                }
+                                                else
+                                                {
+                                                    <label id="Toggle1_off" style="margin-right:10px; font-weight:bold">
+                                                        OFF
+                                                    </label>
+                                                }
 
-                                                    <label class="custom-control-label" for="Toggle1">
+                                            <div class="custom-control custom-switch">
+                                                @Html.EditorFor(m => m.autoClockOut, new { htmlAttributes = new { @class = "custom-control-input", @id = "Toggle1", @type = "checkbox" } })
+
+                                                @if (Model.autoClockOut)
+                                                {
+                                                    <label id="Toggle1_on" class="custom-control-label" for="Toggle1" style="font-weight:bold">
                                                         ON
                                                     </label>
-                                                </div>
+                                                }
+                                                else
+                                                {
+                                                    <label id="Toggle1_on" class="custom-control-label" for="Toggle1">
+                                                        ON
+                                                    </label>
+                                                }
+
+
+                                            </div>
 
                                             </div>
                                         </div>
@@ -642,7 +680,15 @@
                                                 }
                                             </script>
                                             <div class="col-lg-3 text-center">
-                                                <input class="fridayTime" readonly id="friAuto" style="color:#007bff; border:none; outline:none; margin-left:auto; margin-right:auto; font-size:14px; font-weight:bold; text-align:center; width:100px" type="time" name="name" value="" />
+                                                <input class="fridayTime" readonly id="friAuto" style="        color: #007bff;
+        border: none;
+        outline: none;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: center;
+        width: 100px" type="time" name="name" value="" />
                                             </div>
                                         </div>
 
@@ -700,64 +746,198 @@
                             <div class="row" style="margin-bottom:10px">
                                 <div class="col-lg-1" style="padding:0px 0px 0px 30px">
                                     <div class="row">
-                                        <label style="margin-right:10px">
-                                            <b>OFF</b>
-                                        </label>
+                                        @if (Model.master_loc_id)
+                                        {
+                                            <label id="Toggle2_off" style="margin-right:10px">
+                                                OFF
+                                            </label>
+                                        }
+                                        else
+                                        {
+                                            <label id="Toggle2_off" style="margin-right:10px; font-weight:bold">
+                                                OFF
+                                            </label>
+                                        }
+
                                         <div class="custom-control custom-switch">
                                             @Html.EditorFor(m => m.master_loc_id, new { htmlAttributes = new { @class = "custom-control-input", @id = "Toggle2", @type = "checkbox" } })
-                                            <label class="custom-control-label" for="Toggle2">
-                                                ON
-                                            </label>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <div class="col-lg-11" style="padding-left:50px">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <h5><u><b>Use one master location</b></u></h5>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-12">
 
                                             @if (Model.master_loc_id)
                                             {
-                                                @Html.DropDownListFor(m => m.masterLocID, Model.Locations, "Select", new { @id = "locations", @type = "text", @style = "text-align-last: center;width:150px;height:40px;font-size:20px;" })
+                                                <label id="Toggle2_on" class="custom-control-label" for="Toggle2" style="font-weight:bold">
+                                                    ON
+                                                </label>
                                             }
                                             else
                                             {
-                                                @Html.DropDownListFor(m => m.masterLocID, Model.Locations, "Select", new { @id = "locations", @disabled = true, @type = "text", @style = "text-align-last: center;width:150px;height:40px;font-size:20px;" })
+                                                <label id="Toggle2_on" class="custom-control-label" for="Toggle2">
+                                                    ON
+                                                </label>
                                             }
 
+                                        </div>
 
+                                    </div>
+                                </div>
+                                <div class="col-lg-11" style="padding-left:50px">
+                                    <div class="row" style="margin-bottom:10px">
+                                        <div class="col-lg-12">
+                                            <h5><u><b>Add Departments in Locations list</b></u></h5>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-bottom:10px">
+                                        <div class="col-lg-12">
+                                            <b>Default (OFF)</b> <span style="margin-left:23px">Departments not listed in dropdown list</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <b>Custom (ON)</b> <span style="margin-left:25px">Departments listed in dropdown list</span>
                                         </div>
                                     </div>
                                 </div>
+                                @*
+
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        @if (Model.master_loc_id)
+                        {
+                            @Html.DropDownListFor(m => m.masterLocID, Model.Locations, "Select", new { @id = "locations", @type = "text", @style = "text-align-last: center;width:150px;height:40px;font-size:20px;" })
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(m => m.masterLocID, Model.Locations, "Select", new { @id = "locations", @disabled = true, @type = "text", @style = "text-align-last: center;width:150px;height:40px;font-size:20px;" })
+                        }
+
+
+                    </div>
+                </div>
+
+                                *@
                             </div>
                             <hr />
                             <div class="row" style="margin-bottom:10px">
                                 <div class="col-lg-1" style="padding:0px 0px 0px 30px">
                                     <div class="row">
-                                        <label style="margin-right:10px">
-                                            <b>OFF</b>
-                                        </label>
+                                        @if (Model.job_id_clocking)
+                                        {
+                                            <label id="Toggle6_off" style="margin-right:10px">
+                                                OFF
+                                            </label>
+                                        }
+                                        else
+                                        {
+                                            <label id="Toggle6_off" style="margin-right:10px; font-weight:bold">
+                                                OFF
+                                            </label>
+                                        }
+
+                                        <div class="custom-control custom-switch">
+                                            @Html.EditorFor(m => m.job_id_clocking, new { htmlAttributes = new { @class = "custom-control-input", @id = "Toggle6", @type = "checkbox" } })
+
+                                            @if (Model.job_id_clocking)
+                                            {
+                                                <label id="Toggle6_on" class="custom-control-label" for="Toggle6" style="font-weight:bold">
+                                                    ON
+                                                </label>
+                                            }
+                                            else
+                                            {
+                                                <label id="Toggle6_on" class="custom-control-label" for="Toggle6">
+                                                    ON
+                                                </label>
+                                            }
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-11" style="padding-left:50px">
+                                    <div class="row" style="margin-bottom:10px">
+                                        <div class="col-lg-12">
+                                            <h5><u><b>Job ID Clock</b></u></h5>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-bottom:10px">
+                                        <div class="col-lg-12">
+                                            <b>Default (OFF)</b> <span style="margin-left:23px">Job ID can not be assigned</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <b>Custom (ON)</b> <span style="margin-left:25px">Job ID can be assigned to "Clocked-IN" employees</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*
+
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        @if (Model.master_loc_id)
+                        {
+                            @Html.DropDownListFor(m => m.masterLocID, Model.Locations, "Select", new { @id = "locations", @type = "text", @style = "text-align-last: center;width:150px;height:40px;font-size:20px;" })
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(m => m.masterLocID, Model.Locations, "Select", new { @id = "locations", @disabled = true, @type = "text", @style = "text-align-last: center;width:150px;height:40px;font-size:20px;" })
+                        }
+
+
+                    </div>
+                </div>
+
+                                *@
+                            </div>
+                            <hr />
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-lg-1" style="padding:0px 0px 0px 30px">
+                                    <div class="row">
+                                        @if (Model.useLocIdInList)
+                                        {
+                                            <label id="Toggle5_off" style="margin-right:10px">
+                                                OFF
+                                            </label>
+                                        }
+                                        else
+                                        {
+                                            <label id="Toggle5_off" style="margin-right:10px; font-weight:bold">
+                                                OFF
+                                            </label>
+                                        }
+
                                         <div class="custom-control custom-switch">
                                             @Html.EditorFor(m => m.useLocIdInList, new { htmlAttributes = new { @class = "custom-control-input", @id = "Toggle5", @type = "checkbox" } })
-                                            <label class="custom-control-label" for="Toggle5">
-                                                ON
-                                            </label>
+                                            @if (Model.useLocIdInList)
+                                            {
+                                                <label id="Toggle5_on" style="font-weight:bold" class="custom-control-label" for="Toggle5">
+                                                    ON
+                                                </label>
+                                            }
+                                            else
+                                            {
+                                                <label id="Toggle5_on" class="custom-control-label" for="Toggle5">
+                                                    ON
+                                                </label>
+                                            }
                                         </div>
 
                                     </div>
                                 </div>
                                 <div class="col-lg-11" style="padding-left:50px">
                                     <div class="row">
-                                        <div class="col-lg-4">
+                                        <div class="col-lg-12">
                                             <h5><u><b>Use Location ID in list box</b></u></h5>
                                         </div>
-                                        <div class="col-lg-8">
-                                            <b>(Turn  off to use location names in list box)</b>
+                                    </div>
+                                    <div class="row" style="margin-bottom:10px">
+                                        <div class="col-lg-12">
+                                            <b>Default (OFF)</b> <span style="margin-left:23px">Use Location Names in Listbox</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <b>Custom (ON)</b> <span style="margin-left:25px">Use Location ID in Listbox</span>
                                         </div>
                                     </div>
                                 </div>
@@ -766,14 +946,34 @@
                             <div class="row" style="margin-bottom:10px">
                                 <div class="col-lg-1" style="padding:0px 0px 0px 30px">
                                     <div class="row">
-                                        <label style="margin-right:10px">
-                                            <b>OFF</b>
-                                        </label>
+                                        @if (Model.manualCode)
+                                        {
+                                            <label id="Toggle3_off" style="margin-right:10px">
+                                                OFF
+                                            </label>
+                                        }
+                                        else
+                                        {
+                                            <label id="Toggle3_off" style="margin-right:10px; font-weight:bold">
+                                                OFF
+                                            </label>
+                                        }
+
                                         <div class="custom-control custom-switch">
                                             @Html.EditorFor(m => m.manualCode, new { htmlAttributes = new { @checked = true, @class = "custom-control-input", @id = "Toggle3", @type = "checkbox" } })
-                                            <label class="custom-control-label" for="Toggle3">
-                                                ON
-                                            </label>
+                                            @if (Model.manualCode)
+                                            {
+                                                <label id="Toggle3_on" style="font-weight:bold" class="custom-control-label" for="Toggle3">
+                                                    ON
+                                                </label>    
+                                            }
+                                            else
+                                            {
+                                                <label id="Toggle3_on" class="custom-control-label" for="Toggle3">
+                                                    ON
+                                                </label>
+                                            }
+                                            
                                         </div>
 
                                     </div>
@@ -795,7 +995,7 @@
 
                                 </div>
                                 <div class="col-lg-11" style="padding-left:50px">
-                                    <u><b>Example:</b></u> Smith, John ; employee ID: <span style="border:1px solid blue">12345</span> ; Date of birth: January 1st 19<span style="border:1px solid red">90</span> ; Manual Entry: <b style="color:red">90</b><b style="color:blue">12345</b>
+                                    <u style="margin-right:50px"><b>Example:</b></u> Smith, John ; employee ID: <span style="border:1px solid blue">12345</span> ; Date of birth: January 1st 19<span style="border:1px solid red">90</span> ; Manual Entry: <b style="color:red">90</b><b style="color:blue">12345</b>
                                 </div>
                             </div>
                             <hr />
@@ -803,14 +1003,34 @@
                             <div class="row" style="margin-bottom:10px">
                                 <div class="col-lg-1" style="padding:0px 0px 0px 30px">
                                     <div class="row">
-                                        <label style="margin-right:10px">
-                                            <b>OFF</b>
-                                        </label>
+                                        @if (Model.custom_empID_len)
+                                        {
+                                            <label id="Toggle4_off" style="margin-right:10px">
+                                                OFF
+                                            </label>
+                                        }
+                                        else
+                                        {
+                                            <label id="Toggle4_off" style="margin-right:10px; font-weight:bold">
+                                                OFF
+                                            </label>
+                                        }
+
                                         <div class="custom-control custom-switch">
                                             @Html.EditorFor(m => m.custom_empID_len, new { htmlAttributes = new { @checked = true, @class = "custom-control-input", @id = "Toggle4", @type = "checkbox" } })
-                                            <label class="custom-control-label" for="Toggle4">
-                                                ON
-                                            </label>
+                                            @if (Model.custom_empID_len)
+                                            {
+                                                <label id="Toggle4_on" style="font-weight:bold" class="custom-control-label" for="Toggle4">
+                                                    ON
+                                                </label>
+                                            }
+                                            else
+                                            {
+                                                <label id="Toggle4_on" class="custom-control-label" for="Toggle4">
+                                                    ON
+                                                </label>
+                                            }
+                                            
                                         </div>
 
                                     </div>
@@ -844,7 +1064,7 @@
 
                                 </div>
                                 <div class="col-lg-11" style="padding-left:50px">
-                                    <b>Default (OFF)</b> 5 Character length
+                                    <b style="margin-right:23px">Default (OFF)</b> 5 Character length
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom:10px">
@@ -852,7 +1072,7 @@
 
                                 </div>
                                 <div class="col-lg-11" style="padding-left:50px">
-                                    <b>Custom (ON)</b> Minimum of 3 & maximum of 8 character length
+                                    <b style="margin-right:25px">Custom (ON)</b> Minimum of 3 & maximum of 8 character length
                                 </div>
                             </div>
 
@@ -1304,6 +1524,8 @@
             saveRowDisplay()
             if ($(this).is(':checked')) {
                 $('#appt-time').prop("readonly", false);
+                $('#Toggle1_on').css("font-weight", "bold");
+                $('#Toggle1_off').css("font-weight", "normal");
 
                 const adjust = $('#appt-time').val();
 
@@ -1325,6 +1547,8 @@
 
             }
             else {
+                $('#Toggle1_on').css("font-weight", "normal");
+                $('#Toggle1_off').css("font-weight", "bold");
                 $('#appt-time').prop("readonly", true);
                 $('#appt-time').val("0");
                 $('#sunAuto').val($('#sunEnd').val())
@@ -1342,12 +1566,20 @@
         $("#Toggle2").on('change', function () {
 
             if ($(this).is(':checked')) {
+
+                $('#Toggle2_on').css("font-weight", "bold");
+                $('#Toggle2_off').css("font-weight", "normal");
+
                 $("#Toggle2").prop('checked', true);
                 $("#locations").prop('disabled', false);
                 $("#locations").val("");
                 saveRowDisplay()
             }
             else {
+
+                $('#Toggle2_on').css("font-weight", "normal");
+                $('#Toggle2_off').css("font-weight", "bold");
+
                 $("#Toggle2").prop('checked', false);
                 $("#locations").prop('disabled', true);
                 $("#locations").val("");
@@ -1360,14 +1592,28 @@
 
         $("#Toggle3").on('change', function () {
             saveRowDisplay()
+            if ($(this).is(':checked')) {
+                $('#Toggle3_on').css("font-weight", "bold");
+                $('#Toggle3_off').css("font-weight", "normal");
+            }
+            else {
+                $('#Toggle3_on').css("font-weight", "normal");
+                $('#Toggle3_off').css("font-weight", "bold");
+            }
+            
+
         });
 
         $("#Toggle4").on('change', function () {
             saveRowDisplay()
             if ($(this).is(':checked')) {
+                $('#Toggle4_on').css("font-weight", "bold");
+                $('#Toggle4_off').css("font-weight", "normal");
                     $("#custEmpIDLength").prop("readonly", false);
                 }
             else {
+                $('#Toggle4_on').css("font-weight", "normal");
+                $('#Toggle4_off').css("font-weight", "bold");
                 $("#custEmpIDLength").val(5);
                 $("#custEmpIDLength").prop("readonly", true);
             }
@@ -1375,7 +1621,28 @@
 
         $("#Toggle5").on('change', function () {
             saveRowDisplay()
+            if ($(this).is(':checked')) {
+                $('#Toggle5_on').css("font-weight", "bold");
+                $('#Toggle5_off').css("font-weight", "normal");
+            }
+            else {
+                $('#Toggle5_on').css("font-weight", "normal");
+                $('#Toggle5_off').css("font-weight", "bold");
+            }
         });
+
+        $("#Toggle6").on('change', function () {
+            saveRowDisplay()
+            if ($(this).is(':checked')) {
+                $('#Toggle6_on').css("font-weight", "bold");
+                $('#Toggle6_off').css("font-weight", "normal");
+            }
+            else {
+                $('#Toggle6_on').css("font-weight", "normal");
+                $('#Toggle6_off').css("font-weight", "bold");
+            }
+        });
+
 
 
         function saveRowDisplay() {

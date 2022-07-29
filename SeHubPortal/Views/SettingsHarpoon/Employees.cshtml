@@ -16,10 +16,63 @@
         @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>*@
 
 
+        @if (Model.client_info.employees_page.Value)
+        {
+            <style>
+                #ManagementClicked {
+                    display: block !important;
+                }
+            </style>
+        }
+        @if (Model.client_info.fleet_page.Value)
+        {
+            <style>
+                #VehicleClicked {
+                    display: block !important;
+                }
+            </style>
+        }
+
         @if (Model.AccessType == "Administrator")
         {
             <style>
                 #SettingsClicked {
+                    display: block !important;
+                }
+
+                #AttendanceLink {
+                    display: block !important;
+                }
+
+                #SettingsLink {
+                    display: block !important;
+                }
+
+                #EmployeeFilesLink {
+                    display: block !important;
+                }
+
+                #TimeClockEventsLink {
+                    display: block !important;
+                }
+            </style>
+        }
+        else if (Model.AccessType != "Shop Fireman")
+        {
+            <style>
+                #AttendanceLink {
+                    display: block !important;
+                }
+
+                #SettingsLink {
+                    display: block !important;
+                }
+
+                #EmployeeFilesLink {
+                    display: block !important;
+                }
+
+                #TimeClockEventsLink {
                     display: block !important;
                 }
             </style>
@@ -85,7 +138,7 @@
                 width: 140px;
                 height: 140px;
                 border-radius: 50%;
-                object-fit:contain
+                object-fit: contain
             }
 
             .card {
@@ -126,7 +179,7 @@
 
                 <div style="display:flex; justify-content:space-between; align-items:center">
                     <div>
-                        <a href="@Url.Action("Employees", "SettingsHarpoon")">Management </a>/ Employees
+                        <a href="@Url.Action("Employees", "SettingsHarpoon")">Employees </a>/ Employees
                     </div>
                     <input id="AddEmployeeBtn" readonly type="text" class="btn btn-success EmpTransBtns " data-toggle="modal" data-target="#AddEmployeeModal" value="Add" style="height:23px; width:100px;" />
                     <div style="display:flex; justify-content:space-around; align-items:center">
@@ -444,7 +497,7 @@
                                     </div>
                                     <div class="row" style="margin-bottom:10px">
                                         <div class="col-lg-12" >
-                                            @Html.EditorFor(m => m.ediemp.rfidPaired, new { htmlAttributes = new { id = "editRfid", @style = "width:155px; font-size:15px", @required = "required" } })
+                                            @Html.EditorFor(m => m.ediemp.rfidPaired, new { htmlAttributes = new { id = "editRfid", @style = "width:155px; font-size:15px", @required = "required", @readonly = true } })
                                             <button id="clearRfId" type="button" onclick="clearRfid()" class="btn btn-secondary" style="float:right; margin-left:10px; width:90px; height:30px; padding-top:0px">Clear</button>
                                         </div>
                                     </div>
@@ -476,14 +529,28 @@
             function CheckIfEmpExist(val, id) {
 
                 $.ajax({
-                    url: '@Url.Action("checkEmpForClient", "SettingsHarpoon")',
+                    url: '@Url.Action("checkEmpIdLeangth", "SettingsHarpoon")',
                     data: { empid: val },
                     type: 'POST',
                     async:false,
                     success: function (data) {
-                        if (data == "True") {
-                            alert("Employee already exest!")
-                            $('#'+id).val("").focus()
+                        if (data == "False") {
+                            alert("Minimum employee-ID length is not satisfied!")
+                            $('#' + id).val("")
+                        }
+                        else {
+                            $.ajax({
+                                url: '@Url.Action("checkEmpForClient", "SettingsHarpoon")',
+                                data: { empid: val },
+                                type: 'POST',
+                                async:false,
+                                success: function (data) {
+                                    if (data == "True") {
+                                        alert("Employee already exest!")
+                                        $('#'+id).val("")
+                                    }
+                                }
+                            });
                         }
                     }
                 });

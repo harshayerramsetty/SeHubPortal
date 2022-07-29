@@ -1,0 +1,909 @@
+﻿
+@{
+    ViewBag.Title = "FuelReporting";
+    Layout = "~/Views/Shared/_Vehicle_Harpoon.cshtml";
+}
+
+
+@model SeHubPortal.ViewModel.HarpoonFuelReportingViewModel
+
+<html>
+
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Dashboard</title>
+        <meta charset="utf-8">
+        @*<link rel="shortcut icon" type="image/x-icon" href="~/Content/title_logo64.png">*@
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+        @if (Model.client_info.employees_page.Value)
+        {
+            <style>
+                #ManagementClicked {
+                    display: block !important;
+                }
+            </style>
+        }
+        @if (Model.client_info.fleet_page.Value)
+        {
+            <style>
+                #VehicleClicked {
+                    display: block !important;
+                }
+            </style>
+        }
+
+        <style>
+            .breadCrumb {
+                background-color: white;
+            }
+
+            #TimeClockLink {
+                display: block !important;
+            }
+
+            #SettingsClicked {
+                display: block !important;
+            }
+
+            #ManagementClicked {
+                display: block !important;
+            }
+
+            #VehicleClicked {
+                background-color: #f0f2f5;
+                color: black;
+                font-weight: 600;
+            }
+
+            #FuelReportingLink {
+                background-color: #f0f2f5;
+                color: black;
+                font-weight: 600;
+            }
+
+            .settingsBtn {
+                font-weight: bold;
+            }
+
+            #TimeClockLink {
+                color: black;
+                font-weight: 700;
+                background-color: #f0f2f5;
+                border-color: white;
+            }
+
+            body {
+                background-color: #f0f2f5;
+            }
+
+            .card-header {
+                background-color: #cde8ca;
+                padding: 5px;
+            }
+
+            table tr:hover {
+                background: lightgray;
+            }
+
+            input[type=number]::-webkit-inner-spin-button,
+            input[type=number]::-webkit-outer-spin-button {
+                opacity: 1;
+            }
+
+            /* Hide scrollbar for Chrome, Safari and Opera */
+            .example::-webkit-scrollbar {
+                display: none;
+            }
+
+            /* Hide scrollbar for IE, Edge and Firefox */
+            .example {
+                -ms-overflow-style: none; /* IE and Edge */
+                scrollbar-width: none; /* Firefox */
+            }
+
+            .dataTables_length {
+                display: none
+            }
+
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+              -webkit-appearance: none;
+              margin: 0;
+            }
+
+            /* Firefox */
+            input[type=number] {
+              -moz-appearance: textfield;
+            }
+
+        </style>
+    </head>
+
+    <body>
+
+        <div class="row heading" style="margin:10px 0px">
+            <div class="col" style="margin:0px 5px 15px 15px; padding:10px; background-color:white">
+
+                <div style="display:flex; justify-content:space-between; align-items:center">
+                    <div>
+                        <a href="@Url.Action("FuelReporting", "VehicleHarpoon")">Fleet </a>/ Fuel Reporting
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center">
+                        <div></div>
+                        <div style="display:flex; align-items:center">
+                            <label>Location</label>
+                            @using (Html.BeginForm("ChangeLocVehicleFuelReporting", "VehicleHarpoon", FormMethod.Post))
+                            {
+                                <div>
+                                    @Html.DropDownListFor(m => m.Location, Model.Locations, new { @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:150px;height:23px;font-size:15px;margin-left:6px;" })
+                                    <noscript><input style="display:none" class="btn btn-success" type="submit" value="Search" /></noscript>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+                <i class="fa fa-bars" style="font-size:25px"></i>
+                <span class="sr-only">Toggle Menu</span>
+            </button>
+
+        </div>
+
+        <div id="loading" style="width:100%; height:80vh; display:flex; justify-content:center; align-items:center">
+            <img src="~/Content/giphy.gif" style="width:150px" alt="Alternate Text" />
+        </div>
+
+        <div class="row" style="padding: 0px 30px 0px 30px">
+            <div class="col-md-3" style="padding-right:0px; padding-left:0px; ">
+
+                @{
+                    var selectedVehicle = Model.Vehicles.Where(x => x.vehicle_auto_id == Model.selectedVehicle).FirstOrDefault();
+                    string base64ProfilePic = "";
+                    if (selectedVehicle.thumbnail is null)
+                    {
+                        base64ProfilePic = "";
+                    }
+                    else
+                    {
+                        base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(selectedVehicle.thumbnail);
+                    }
+                }
+
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 col-xl-12">
+                        <div class="card commonclass @selectedVehicle.vehicle_auto_id" style="cursor: pointer; border: none" id="@selectedVehicle.vehicle_auto_id~@selectedVehicle.vehicle_long_id~@selectedVehicle.VIN~@selectedVehicle.plate~@selectedVehicle.manufacturer~@selectedVehicle.model~@base64ProfilePic" onclick="location.href='@Url.Action("FuelReporting", "VehicleHarpoon", new {loc = Model.Location, vid = selectedVehicle.vehicle_auto_id})';">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4" style="display:flex; align-items:center; justify-content:center">
+                                        @if (base64ProfilePic == "")
+                                        {
+                                            <img class="imageClass" style=" width:100%" src="~/Content/jordancar.png" alt="ProfilePic" />
+                                        }
+                                        else
+                                        {
+                                            <img class="imageClass" style=" width:100%; mix-blend-mode: multiply;" alt="profilePic" src="@base64ProfilePic" />
+                                        }
+                                    </div>
+                                    <div class="col-md-8">
+                                        <p class="mb-0" style="font-size:20px;font-style:italic;font-weight:bold ">@selectedVehicle.vehicle_long_id</p>
+                                        <p class="mb-0" style="font-size:17px;">VIN: <b>@selectedVehicle.VIN</b></p>
+                                        <p class="mb-0" style="font-size:17px;">Plate: <b>@selectedVehicle.plate</b></p>
+                                        <p class="mb-0" style="font-size:17px;">Manufacturer: <b>@selectedVehicle.manufacturer</b></p>
+                                        <p class="mb-0" style="font-size:17px;">Model: <b>@selectedVehicle.model</b></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="example" style="height:59vh; overflow-y:auto">
+                    @for (int i = 0; i < Model.Vehicles.Count; i++)
+                    {
+
+                        if (Model.Vehicles[i].thumbnail is null)
+                        {
+                            base64ProfilePic = "";
+                        }
+                        else
+                        {
+                            base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(Model.Vehicles[i].thumbnail);
+                        }
+
+                        if (Model.Vehicles[i].vehicle_auto_id != Model.selectedVehicle)
+                        {
+
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12 col-xl-12 ">
+                                    <div class="card commonclass @Model.Vehicles[i].vehicle_auto_id" id="@Model.Vehicles[i].vehicle_auto_id~@Model.Vehicles[i].vehicle_long_id~@Model.Vehicles[i].VIN~@Model.Vehicles[i].plate~@Model.Vehicles[i].manufacturer~@Model.Vehicles[i].model~@base64ProfilePic" style="cursor:pointer; background-color:#f0f2f5; border:none" onclick="location.href='@Url.Action("FuelReporting", "VehicleHarpoon", new {loc = Model.Location, vid = Model.Vehicles[i].vehicle_auto_id})';">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-4" style="display:flex; align-items:center; justify-content:center">
+                                                    @if (base64ProfilePic == "")
+                                                    {
+                                                        <img class="imageClass" style=" width:100%" src="~/Content/jordancar.png" alt="ProfilePic" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <img class="imageClass" style=" width:100%; mix-blend-mode: multiply;" alt="profilePic" src="@base64ProfilePic" />
+                                                    }
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <p class="mb-0" style="font-size:20px;font-style:italic;font-weight:bold ">@Model.Vehicles[i].vehicle_long_id</p>
+                                                    <p class="mb-0" style="font-size:17px;">VIN: <b>@Model.Vehicles[i].VIN</b></p>
+                                                    <p class="mb-0" style="font-size:17px;">Plate: <b>@Model.Vehicles[i].plate</b></p>
+                                                    <p class="mb-0" style="font-size:17px;">Manufacturer: <b>@Model.Vehicles[i].manufacturer</b></p>
+                                                    <p class="mb-0" style="font-size:17px;">Model: <b>@Model.Vehicles[i].model</b></p>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    }
+                </div>
+
+                
+
+
+            </div>
+            @if (Model.selectedVehicle != 0)
+            {
+                <div class="col-md-9" id="loadDiv" style="background-color:white; padding:15px;">
+                    <div id="report">
+                        <div class="row" style="margin-bottom:10px">
+                            <div class="col-md-12" id="searchField" style="display:flex; align-items:center; justify-content:space-between">
+                                <div>
+                                    <button class="btn btn-primary" data-target="#AddFuelLog" data-toggle="modal" style="padding:2px 20px 2px 20px">ADD RECORD</button>
+                                </div>
+                                <div style="display:flex; align-items:center; ">
+                                    <span style="margin:0px 10px">From</span>
+                                    <input type="Date" id="min" max="@System.DateTime.Today.ToString("yyyy-MM-dd")" style="height:25px;">
+                                    <span style="margin:0px 10px">To</span>
+                                    <input type="Date" id="max" max="@System.DateTime.Today.ToString("yyyy-MM-dd")" style="height:25px;">
+                                    <button style="padding:2px 20px 2px 20px; margin:0px 10px 0px 20px" onclick="filter('filter')" class="btn btn-success">GO</button>
+                                    <button disabled style="padding:2px 10px 2px 10px; margin:0px 10px 0px 0px" onclick="filter('clear')" class="btn btn-danger">Clear</button>
+                                </div>
+                                <div style="display:flex; justify-content:center; align-items:center;">
+                                    <div class="custom-control custom-switch">
+                                        <label style="margin-right:40px; margin-left:0px; font-weight:bold">
+                                            Report
+                                        </label>
+                                        <input type="checkbox" onchange="$('#report').css('display', 'none'); $('#audit').css('display', 'block'); $('#ToggleFromAuditToReport').prop('checked', true);" style="height:15px" class="custom-control-input" id="ToggleFromReportToAudit">
+                                        <label class="custom-control-label" for="ToggleFromReportToAudit" style="font-weight:normal">
+                                            Audit
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="example" style="height:70vh; overflow-y:auto;">
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="FuelLogTable" class="table table-striped table-bordered">
+                                        <thead style="background-color:#a6a8ab; color:white">
+                                            <tr>
+                                                <th style="text-align:center; font-size:10px; padding:0px" scope="col">Date</th>
+                                                <th style="text-align:center; font-size:10px; padding:0px" scope="col">Mileage</th>
+                                                <th style="text-align:center; font-size:10px; padding:0px" scope="col"># of Liters</th>
+                                                <th style="text-align:center; font-size:10px; padding:0px" scope="col">$/L</th>
+                                                <th style="text-align: center; font-size: 10px; padding: 0px" scope="col">Entry Date</th>
+                                                <th style="text-align: center; font-size: 10px; padding: 0px" scope="col">Entry User</th>
+                                                <th style="text-align: center; font-size: 10px; padding: 0px; width:40%" scope="col">Comments</th>
+                                                <th style="text-align:center; font-size:10px; padding:0px" scope="col">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody style="background-color:white">
+                                            @foreach (var fuel in Model.fuelLog)
+                                            {
+                                                <tr style="@(fuel.audit_status || fuel.flag ? fuel.audit_status ? fuel.flag ? "font-weight:bold; color:red" : "font-weight:bold" : "color:red":"")">
+                                                    <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle" scope="col">
+                                                        @if (fuel.date_of_purchase.HasValue)
+                                                        {
+                                                            @fuel.date_of_purchase.Value.ToString("MMM dd, yyyy")
+                                                        }
+                                                    </td>
+                                                    <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle" scope="col">
+                                                        @String.Format("{0:n0}", fuel.odometer)
+                                                    </td>
+                                                    <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle" scope="col">
+                                                        @String.Format("{0:#,0.000}", fuel.no_of_liters)
+                                                    </td>
+                                                    <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle" scope="col">
+                                                        @String.Format("{0:#,0.000}", fuel.price_per_liter)
+                                                    </td>
+                                                    <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle" scope="col">
+                                                        @fuel.entry_date.Value.ToString("MMM dd, yyyy")
+                                                    </td>
+                                                    <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle" scope="col">
+                                                        @fuel.entry_user
+                                                    </td>
+                                                    <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle" scope="col">
+                                                        @fuel.comments
+                                                    </td>
+                                                    <td style="text-align:center; font-size:12px; padding:0px; vertical-align:central" scope="col">
+                                                        <button id="@fuel.vehicle_auto_id~@fuel.client_id~@fuel.transaction_number~@fuel.entry_user~@fuel.odometer~@fuel.no_of_liters~@fuel.price_per_liter~@fuel.comments~@fuel.charge_type~@fuel.audit_status" onclick="PopulateEditForm(this.id)" style="margin:5px; background-color:transparent; border:none; outline:none; font-size:15px" class="fa fa-edit" data-toggle="modal" data-target="#EditFuelLog"></button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="audit" style="display:none">
+                        @using (Html.BeginForm("SubmitAuditStatus", "VehicleHarpoon", FormMethod.Post))
+                        {
+                            @Html.EditorFor(m => m.selectedVehicle, new { htmlAttributes = new { @style = "width:100%; display:none", @readonly = true, @id = "selectedVehicleRecipt", @class = "selectedVehicleRecipt" } })
+                            <div class="row" id="saveButton" style="display:none; padding:0px 15px 15px 15px">
+                                <div class="col-lg-12 text-center" style="background-color: #fdcf16;">
+                                    <button type="submit" style="margin:5px; padding:0px 30px 0px 30px" class="btn btn-success">Save</button>
+                                    <button type="button" onclick="location.reload()" style="margin:5px; padding:0px 20px 0px 20px" class="btn btn-danger">Cancel</button>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:10px">
+                                <div class="col-md-12" id="searchFieldAudit" style="display:flex; align-items:center; justify-content:space-between">
+                                    <div>
+                                        <button class="btn btn-success" type="submit" style="visibility: hidden; padding: 2px 16px 2px 16px">SUBMIT AUDIT</button>
+                                    </div>
+                                    <div style="display:flex; align-items:center;">
+                                        <div style="visibility:hidden">
+                                            <span style="margin:0px 10px">From</span>
+                                            <input type="Date" max="@System.DateTime.Today.ToString("yyyy-MM-dd")" style="height:25px;">
+                                            <span style="margin:0px 10px">To</span>
+                                            <input type="Date" max="@System.DateTime.Today.ToString("yyyy-MM-dd")" style="height:25px;">
+                                            <button style="padding:2px 20px 2px 20px; margin:0px 10px 0px 20px" onclick="filter('filter')" class="btn btn-success">GO</button>
+                                            <button disabled style="padding:2px 10px 2px 10px; margin:0px 10px 0px 0px" onclick="filter('clear')" class="btn btn-danger">Clear</button>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; justify-content:center; align-items:center;">
+                                        <div class="custom-control custom-switch">
+                                            <label style="margin-right:40px; margin-left:0px; font-weight:normal">
+                                                Report
+                                            </label>
+                                            <input type="checkbox" onchange="$('#report').css('display', 'block'); $('#audit').css('display', 'none'); $('#ToggleFromReportToAudit').prop('checked', false);" checked style="height:15px" class="custom-control-input" id="ToggleFromAuditToReport">
+                                            <label class="custom-control-label" for="ToggleFromAuditToReport" style="font-weight:bold">
+                                                Audit
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <table id="FuelAuditTable" class="table table-striped table-bordered">
+                                <thead style="background-color:#a6a8ab; color:white" class="text-center">
+                                    <tr>
+
+                                        <th style="font-size:10px; padding:0px">Date</th>
+                                        <th style="font-size:10px; padding:0px">Mileage</th>
+                                        <th style="font-size:10px; padding:0px">Trip</th>
+                                        <th style="font-size:10px; padding:0px">No of Liters</th>
+                                        <th style="font-size:10px; padding:0px">Price/Liter</th>
+                                        <th style="font-size:10px; padding:0px">Total Price</th>
+                                        <th style="font-size:10px; padding:0px">Flag</th>
+                                        <th style="font-size:10px; padding:0px; width:5%">Audit Status</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody style="text-align:center">
+                                    @for (int i = 0; i < Model.fuelLog.Count(); i++)
+                                    {
+                                        <tr style="@(Model.fuelLog[i].audit_status || Model.fuelLog[i].flag ? Model.fuelLog[i].audit_status ? Model.fuelLog[i].flag ? "font-weight:bold; color:red" : "font-weight:bold" : "color:red":"")">
+                                            @Html.HiddenFor(m => m.fuelLog[i].vehicle_auto_id)
+                                            @Html.HiddenFor(m => m.fuelLog[i].transaction_number)
+                                            @Html.HiddenFor(m => m.fuelLog[i].client_id)
+                                            @Html.HiddenFor(m => m.fuelLog[i].transaction_number)
+                                            @Html.HiddenFor(m => m.fuelLog[i].entry_user)
+                                            <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle">@Convert.ToDateTime(Model.fuelLog[i].date_of_purchase).ToString("MMM dd, yyyy")</td>
+                                            <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle">@Model.fuelLog[i].odometer</td>
+                                            @if (i < Model.fuelLog.Count - 1)
+                                            {
+                                                int trip = Model.fuelLog[i].odometer.Value - Model.fuelLog[i + 1].odometer.Value;
+                                                <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle">@trip</td>
+                                            }
+                                            else
+                                            {
+                                                <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle"><b>N/A</b></td>
+                                            }
+
+                                            <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle">@Model.fuelLog[i].no_of_liters</td>
+                                            <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle">@Model.fuelLog[i].price_per_liter</td>
+                                            <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle">
+                                                @{
+                                                    double tp = Model.fuelLog[i].no_of_liters.Value * @Model.fuelLog[i].price_per_liter.Value;
+                                                    <span>@tp.ToString("n2")</span>
+                                                }
+                                            </td>
+                                            <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle">
+                                                @{
+                                                    string flag = "flagz" + i.ToString();
+                                                    string flagBlack = "flagBlackz" + i.ToString();
+                                                    string flagRed = "flagRedz" + i.ToString();
+                                                    if (!Model.fuelLog[i].flag)
+                                                    {
+                                                        <img src="~/Content/flag.png" style="margin-left:auto; margin-right:auto; width:15px; height:15px; cursor:pointer" onclick="toggleFlag(this.id)" id="@flagBlack" alt="Alternate Text" />
+                                                        <img src="~/Content/redFlag.png" style="margin-left:auto; margin-right:auto; display:none; width:15px; height:15px; cursor:pointer" onclick="toggleFlag(this.id)" id="@flagRed" alt="Alternate Text" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/Content/flag.png" style="margin-left:auto; margin-right:auto; display:none; width:15px; height:15px; cursor:pointer" onclick="toggleFlag(this.id)" id="@flagBlack" alt="Alternate Text" />
+                                                        <img src="~/Content/redFlag.png" style="margin-left:auto; margin-right:auto; width:15px; height:15px; cursor:pointer" onclick="toggleFlag(this.id)" id="@flagRed" alt="Alternate Text" />
+                                                    }
+                                                    @Html.CheckBoxFor(m => m.fuelLog[i].flag, new { @style = "display:none", @id = flag })
+                                                }
+                                            </td>
+                                            <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle">
+                                                @Html.CheckBoxFor(m => m.fuelLog[i].audit_status, new { @style = "margin:7px", @onchange = "$('#saveButton').css('display', 'block');" })
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+
+                            </table>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-md-9" id="loadDiv" style="background-color:#f0f2f5; padding:15px;">
+
+                </div>
+            }
+        </div>
+
+        <div class="modal fade" id="AddFuelLog" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                @using (Html.BeginForm("SaveFuelReceipt", "VehicleHarpoon", FormMethod.Post))
+                {
+                    <div class="modal-content">
+                        <div class="modal-header text-center" style="padding:5px 15px">
+                            <h5 class="modal-title" id="exampleModalLabel">Enter Fuel Receipt</h5>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row" style="padding:0px 15px 5px 15px">
+                                <div class="col-md-12" style="border:2px solid dimgray; border-radius:5px; padding:10px">
+                                    <div class="row">
+                                        <div class="col-md-5" style="display:flex; align-items:center; justify-content:center">
+
+                                            @{
+                                                if (Model.Vehicles[0].thumbnail is null)
+                                                {
+                                                    base64ProfilePic = "";
+                                                }
+                                                else
+                                                {
+                                                    base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(Model.Vehicles[0].thumbnail);
+                                                }
+                                            }
+
+                                            <img class="commonImageClass" style=" width:100%; mix-blend-mode: multiply;" alt="profilePic" src="@base64ProfilePic" />
+                                        </div>
+                                        <div class="col-md-7">
+                                            <p class="mb-0 vehicle_long_id" style="font-size:14px;font-style:italic">@Model.Vehicles[0].vehicle_long_id</p>
+                                            <p class="mb-0 VIN" style="font-size:17px;"><b>VIN:</b>@Model.Vehicles[0].VIN</p>
+                                            <p class="mb-0 plate" style="font-size:17px;"><b>Plate:</b>@Model.Vehicles[0].plate</p>
+                                            <p class="mb-0 manufacturer" style="font-size:17px;"><b>Manufacturer:</b>@Model.Vehicles[0].manufacturer</p>
+                                            <p class="mb-0 model" style="font-size:17px;"><b>Model:</b>@Model.Vehicles[0].model</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="row" style="display:none">
+                                        <div class="col-lg-5 text-right">
+                                            <label style="font-size:14px;">Vehicle ID</label>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            @Html.EditorFor(m => m.selectedVehicle, new { htmlAttributes = new { @style = "width:100%", @readonly = true, @id = "selectedVehicleRecipt", @class = "selectedVehicleRecipt" } })
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:11px">
+                                        <div class="col-lg-5 text-right">
+                                            <label style="font-size:14px;">Date</label>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            @Html.EditorFor(m => m.fuelRecipt.date_of_purchase, new { htmlAttributes = new { @style = "width:100%", type = "date", @required = "required" } })
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:12px">
+                                        <div class="col-lg-5 text-right">
+                                            <label style="font-size:14px;">Mileage</label>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            @Html.EditorFor(m => m.fuelRecipt.odometer, new { htmlAttributes = new { @style = "width:100%", @required = "required", @onkeydown = "if(event.key==='.'){event.preventDefault();}" } })
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:12px">
+                                        <div class="col-lg-5 text-right">
+                                            <label style="font-size:14px;">Number of Liters</label>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            @Html.EditorFor(m => m.fuelRecipt.no_of_liters, new { htmlAttributes = new { @style = "width:100%", @required = "required", @oninput = "enforceNumberValidation(this)", @type = "number" } })
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:11px">
+                                        <div class="col-lg-5 text-right">
+                                            <label style="font-size:14px;">Price/Liter</label>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            @Html.EditorFor(m => m.fuelRecipt.price_per_liter, new { htmlAttributes = new { @style = "width:100%", @required = "required", @oninput = "enforceNumberValidation(this)", @type = "number" } })
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:11px">
+                                        <div class="col-lg-5 text-right">
+                                            <label style="font-size:14px;">Charge Account</label>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            @Html.DropDownListFor(m => m.fuelRecipt.charge_type, Model.ChargeAccounts, "Select", new { @class = "text-center", @style = "text-align-last: center; width:100%; height:28px", @required = "required", @id = "Brand" })
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:15px; margin-bottom:0px">
+                                        <div class="col-md-12">
+                                            @Html.TextAreaFor(m => m.fuelRecipt.comments, new { @placeholder = " Comments (Optional)", @style = "width:100%; height:170px" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="padding:5px 10px">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal" style="padding:2px 20px 2px 20px">Cancel</button>
+                            <button type="submit" class="btn btn-success" style="padding:2px 30px 2px 30px">Save</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="modal fade" id="EditFuelLog" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                @using (Html.BeginForm("EditFuelReceipt", "VehicleHarpoon", FormMethod.Post))
+                {
+                    <div class="modal-content">
+                        <div class="modal-header text-center" style="padding:5px 15px; display:flex; justify-content:space-between">
+                            <h5 class="modal-title" id="exampleModalLabel">Edit Fuel Receipt</h5>
+                            <button type="button" class="audited" data-dismiss="modal" data-toggle="modal" data-target="#deleteFuelTransaction" style="background-color:transparent;border:none;align-items:center"><i class="fa fa-trash text-danger" style="font-size:20px;"></i></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="row" style="padding:0px 15px 20px 15px">
+                                <div class="col-md-12" style="border:2px solid dimgray; border-radius:5px; padding:10px">
+                                    <div class="row">
+                                        <div class="col-md-5" style="display:flex; align-items:center; justify-content:center">
+
+                                            @{
+                                                if (Model.Vehicles[0].thumbnail is null)
+                                                {
+                                                    base64ProfilePic = "";
+                                                }
+                                                else
+                                                {
+                                                    base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(Model.Vehicles[0].thumbnail);
+                                                }
+                                            }
+
+                                            <img class="commonImageClass" style=" width:100%; mix-blend-mode: multiply;" alt="profilePic" src="@base64ProfilePic" />
+                                        </div>
+                                        <div class="col-md-7">
+                                            <p class="mb-0" style="font-size:14px;font-style:italic"><b class="vehicle_long_id">@Model.Vehicles[0].vehicle_long_id</b></p>
+                                            <p class="mb-0" style="font-size:17px;">VIN: <b class="VIN">@Model.Vehicles[0].VIN</b></p>
+                                            <p class="mb-0" style="font-size:17px;">Plate: <b class="plate">@Model.Vehicles[0].plate</b></p>
+                                            <p class="mb-0" style="font-size:17px;">Manufacturer: <b class="manufacturer">@Model.Vehicles[0].manufacturer</b></p>
+                                            <p class="mb-0" style="font-size:17px;">Model: <b class="model">@Model.Vehicles[0].model</b></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div style="display:none">
+                                        @Html.EditorFor(m => m.selectedVehicle, new { htmlAttributes = new { @style = "width:100%", @readonly = true, @id = "selectedVehicleRecipt", @class = "selectedVehicleRecipt" } })
+                                        @Html.EditorFor(m => m.EditfuelRecipt.client_id, new { htmlAttributes = new { @style = "width:100%", @readonly = true, @id = "client_id_edit" } })
+                                        @Html.EditorFor(m => m.EditfuelRecipt.transaction_number, new { htmlAttributes = new { @style = "width:100%", @readonly = true, @id = "transaction_number_edit" } })
+                                        @Html.EditorFor(m => m.EditfuelRecipt.entry_user, new { htmlAttributes = new { @style = "width:100%", @readonly = true, @id = "entry_user_edit" } })
+                                    </div>
+
+                                    <div class="row" style="display:none">
+                                        <div class="col-lg-5 text-right">
+                                            <label style="font-size:14px;">Vehicle ID</label>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            @Html.EditorFor(m => m.EditfuelRecipt.vehicle_auto_id, new { htmlAttributes = new { @class = "audited", @style = "width:100%", @readonly = true, @id = "vehicle_auto_id_edit" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12" style="display:flex; justify-content:space-between; align-items:center">
+                                            <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding-right:5px">
+                                                <label>
+                                                    Odometer KM
+                                                </label>
+                                                @Html.EditorFor(m => m.EditfuelRecipt.odometer, new { htmlAttributes = new { @class = "audited", @style = "width:100%; text-align:center; font-size:35px; font-weight:bold", @required = "required", @id = "odometer_edit", @oninput="if (this.value.length > 6) this.value = this.value.slice(0, this.maxLength);" } })
+                                            </div>
+                                            <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding-right:5px; padding-left:5px">
+                                                <label>
+                                                    # of Liters
+                                                </label>
+                                                @Html.EditorFor(m => m.EditfuelRecipt.no_of_liters, new { htmlAttributes = new { @class = "audited", @style = "width:100%; text-align:center; font-size:35px; font-weight:bold", @required = "required", @id = "no_of_liters_edit", @maxlength="7" } })
+                                            </div>
+                                            <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding-left:5px">
+                                                <label>
+                                                    $/Liter
+                                                </label>
+                                                @Html.EditorFor(m => m.EditfuelRecipt.price_per_liter, new { htmlAttributes = new { @class = "audited", @style = "width:100%; text-align:center; font-size:35px; font-weight:bold", @required = "required", @id = "price_per_liter_edit", @maxlength="5" } })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row" style="margin-top:11px;">
+                                        <div class="col-md-12" style="display:flex; align-items:center">
+                                            <div style="flex:1.1; display:flex; justify-content:center; align-items:center">
+                                                <label style="font-size:14px;">Charge Account</label>
+                                            </div>
+                                            <div style="flex:2.1; display:flex; justify-content:center; align-items:center">
+                                                @Html.DropDownListFor(m => m.EditfuelRecipt.charge_type, Model.ChargeAccounts, "Select", new { @class = "text-center audited", @style = "text-align-last: center; width:100%; height:28px", @required = "required", @id = "charge_type_edit" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:15px; margin-bottom:0px">
+                                        <div class="col-md-12">
+                                            @Html.TextAreaFor(m => m.EditfuelRecipt.comments, new { @class = "audited", @placeholder = " Comments (Optional)", @style = "width:100%; height:170px", @id = "comments_edit" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="padding:5px 10px">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal" style="padding:2px 20px 2px 20px">Cancel</button>
+                            <button type="submit" class="btn btn-success audited" style="padding:2px 30px 2px 30px">Save</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="modal fade" id="deleteFuelTransaction" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                @using (Html.BeginForm("DeleteFuelReceipt", "VehicleHarpoon", FormMethod.Post))
+                {
+                    <div class="modal-content">
+                        <div class="modal-header" style="padding:10px 0px 0px 15px">
+                            <h5>Please Confirm</h5>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    Are you sure you want to delete the fuel receipt?
+                                </div>
+                            </div>
+                            <hr />
+                            @Html.EditorFor(m => m.selectedVehicle, new { htmlAttributes = new { @style = "width:100%; display:none", @readonly = true, @id = "selectedVehicleRecipt", @class = "selectedVehicleRecipt" } })
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Vehicle ID
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.EditorFor(m => m.DeletefuelRecipt.vehicle_auto_id, new { htmlAttributes = new { @style = "width:100%; outline:none; border:none", @readonly = true, @id = "vehicle_auto_id_delete" } })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Client ID
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.EditorFor(m => m.DeletefuelRecipt.client_id, new { htmlAttributes = new { @style = "width:100%; outline:none; border:none", @readonly = true, @id = "client_id_delete" } })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Transaction ID
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.EditorFor(m => m.DeletefuelRecipt.transaction_number, new { htmlAttributes = new { @style = "width:100%; outline:none; border:none", @readonly = true, @id = "transaction_number_delete" } })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Entry User
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.EditorFor(m => m.DeletefuelRecipt.entry_user, new { htmlAttributes = new { @style = "width:100%; outline:none; border:none", @readonly = true, @id = "entry_user_delete" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="padding:3px">
+                            <button data-dismiss="modal" style="padding:0px 10px 0px 10px" class="btn btn-danger">Cancel</button>
+                            <button style="padding:0px 10px 0px 10px" class="btn btn-success">Delete</button>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+
+        <script>
+            window.onload = (event) => {
+                $('#loading').css('display', 'none')
+            };
+        </script>
+
+        <script>
+            function enforceNumberValidation(ele) {
+                var val = $(ele).val();
+                var splitVal = val.split('.');
+                if (splitVal.length == 2 && splitVal[1].length > 3) {
+                    $(ele).val(splitVal[0] + '.' + splitVal[1].substr(0, 3));
+                }
+            }
+        </script>
+
+        <script>
+            function toggleFlag(val) {
+                const id = val.split('z')[1]
+                if (~val.indexOf("flagRed")) {
+                    $('#flagBlackz' + id).css("display", "block")
+                    $('#flagRedz' + id).css("display", "none")
+                    $('#flagz' + id).prop("checked", false)
+                    $('#flagz' + id).closest('tr').css("color", "black")
+                }
+                else {
+                    $('#flagBlackz' + id).css("display", "none")
+                    $('#flagRedz' + id).css("display", "block")
+                    $('#flagz' + id).prop("checked", true)
+                    $('#flagz' + id).closest('tr').css("color", "red")
+                }
+                $('#saveButton').css("display", "block")
+            }
+        </script>
+
+        <script>
+
+            function PopulateEditForm(val) {
+                let arr = val.split('~');
+                if (arr[9] == 'id') {
+                    $('.audited').prop({ disabled: true });
+                }
+                else {
+                    $('.audited').prop({ disabled: false });
+                }
+                $('#vehicle_auto_id_edit').val(arr[0])
+                $('#vehicle_auto_id_delete').val(arr[0])
+                $('#client_id_edit').val(arr[1])
+                $('#client_id_delete').val(arr[1])
+                $('#transaction_number_edit').val(arr[2])
+                $('#transaction_number_delete').val(arr[2])
+                $('#entry_user_edit').val(arr[3])
+                $('#entry_user_delete').val(arr[3])
+                $('#odometer_edit').val(arr[4])
+                $('#no_of_liters_edit').val(parseFloat(arr[5]).toFixed(3))
+                $('#price_per_liter_edit').val(parseFloat(arr[6]).toFixed(3))
+                $('#comments_edit').val(arr[7])
+                $('#charge_type_edit').val(arr[8])
+            }
+        </script>
+
+        <script>
+
+            function filter(val) {
+            const auto_vehicl = $("#selectedVehicleRecipt").val();
+
+            if (val == "filter") {
+                if ($('#min').val() != '' && $('#max').val() != '') {
+                    const Startdate = $('#min').val() + ' 00:00'
+                    const Enddate = $('#max').val() + ' 00:00'
+
+                    $.ajax({
+                        url: '@Url.Action("pullFuelLog", "VehicleHarpoon")',
+                        data: { auto: auto_vehicl, start: Startdate, end: Enddate },
+                        type: 'GET',
+                        success: function (data) {
+                            $("#loadDiv").html(data);
+                            $('.commonclass').css("background-color", "#f0f2f5")   //.css("border", "1px solid #bfbfbf")
+                            $('#' + auto_vehicl).css("background-color", "white")
+                        }
+                    });
+                }
+
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("pullFuelLog", "VehicleHarpoon")',
+                    data: { auto: auto_vehicl, start: '1977-01-01 00:00', end: '1977-01-01 00:00' },
+                    type: 'GET',
+                    success: function (data) {
+                        $("#loadDiv").html(data);
+                        $('.commonclass').css("background-color", "#f0f2f5")   //.css("border", "1px solid #bfbfbf")
+                        $('#' + auto_vehicl).css("background-color", "white")
+                    }
+                });
+            }
+        }
+
+
+        </script>
+
+        <script>
+            function pullFuelLog(val) {
+                var arr = val.split('~');
+                $("#selectedVehicleRecipt").val(arr[0]);
+                $(".vehicle_long_id").html(arr[1]);
+                $(".VIN").html(arr[2]);
+                $(".plate").html(arr[3]);
+                $(".manufacturer").html(arr[4]);
+                $(".model").html(arr[5]);
+                if (arr[6] != "") {
+                    $(".commonImageClass").attr("src", arr[6]);
+                }
+                else {
+                    $(".commonImageClass").attr("src", "/Content/jordancar.png");
+                }
+
+
+                $(".selectedVehicleRecipt").val(arr[0]);
+
+                $.ajax({
+                    url: '@Url.Action("pullFuelLog", "VehicleHarpoon")',
+                    data: { auto: arr[0], start:'1977-01-01 00:00', end:'1977-01-01 00:00' },
+                    type: 'GET',
+                    success: function (data) {
+                        $("#loadDiv").html(data);
+                        $('.commonclass').css("background-color", "#f0f2f5")   //.css("border", "1px solid #bfbfbf")
+                        $('.'+arr[0]).css("background-color", "white")
+                    }
+                });
+            }
+        </script>
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+        <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+
+        <script type="text/javascript">
+            $("#FuelLogTable").DataTable(
+                {
+                    bLengthChange: true,
+                    lengthMenu: [20],
+                    bFilter: true,
+                    bSort: false,
+                    bPaginate: true,
+                });
+        </script>
+
+        <script type="text/javascript">
+            $("#FuelAuditTable").DataTable(
+                {
+                    bLengthChange: true,
+                    lengthMenu: [19],
+                    bFilter: true,
+                    bSort: false,
+                    bPaginate: true,
+                });
+        </script>
+
+        <script>
+            $(document).ready(function () {
+                $("#FuelLogTable_filter").appendTo("#searchField");
+                $("#FuelLogTable_filter :input").css("margin", "0px 0px 0px 10px");
+                $("#FuelAuditTable_filter").appendTo("#searchFieldAudit");
+                $("#FuelAuditTable_filter :input").css("margin", "0px 0px 0px 10px");
+            });
+        </script>
+
+    </body>
+
+</html>

@@ -22,7 +22,7 @@
         }
 </style>
 <div class="wrapper d-flex align-items-stretch">
-    <nav id="sidebar" style="border-color:black;border-width:10px;">
+    <nav id="sidebar" class="leftPane" style="border-color:black;border-width:10px;">
         @*<div class="custom-menu">
                 <button type="button" id="sidebarCollapse" class="btn btn-primary">
                     <i class="fa fa-bars"></i>
@@ -32,30 +32,51 @@
 
         <ul class="list-unstyled components mb-5">
             <li class="active" style="display:none" id="DashboardLink">
-                <a id="DashboardClicked" href="@Url.Action("Dashboard", "Tools", new { values = ""})">Dashboard</a>
+                <a class="commonSideNavigation" id="DashboardClicked" href="@Url.Action("Dashboard", "Tools", new { values = ""})">Dashboard</a>
             </li>
             @*<li>
             <a id="EditOrderClicked" href="@Url.Action("EditOrder", "TreadTracker")"><span class="fa fa-user mr-3"></span> Edit Order</a>
         </li>*@
-            <li class="active" style="display:none" id="FuelLogLink">
-                <a id="FuelClicked" href="@Url.Action("FuelLogMainPage", "Tools", new { VIN="" })">Fuel Reporting</a>
+            <li class="active" style="display: none " id="FuelLogLink">
+                <a class="commonSideNavigation" id="FuelClicked" href="@Url.Action("FuelLog", "Tools", new { VIN = "", loc = ""})">Fuel Reporting</a>
             </li>
             <li class="active" style="display:none" id="CRMLink">
-                <a id="CRMClicked" href="@Url.Action("CRM", "Tools", new { CustId=""})">CRM</a>
+                <a class="commonSideNavigation" id="CRMClicked" href="@Url.Action("CRM", "Tools", new { CustId=""})">Call Reporting</a>
             </li>
-            <li class="active" style="display:none" id="ExpnseClaimLink">
-                <a id="ExpnseClaimClicked" href="@Url.Action("ExpnseClaim", "Tools")">ExpnseClaim</a>
+            <li class="active" style="display:block" id="TALink">
+                <a class="commonSideNavigation" id="TAClicked" href="@Url.Action("TargetAccount", "Tools")">Target Account</a>
             </li>
+            @*
+                <li class="active" style="display:none" id="DRLink">
+                    <a class="commonSideNavigation" id="DRClicked" href="@Url.Action("DisputeResolution", "Tools")">Dispute Resolution</a>
+                </li>
+                <li class="active" style="display:none" id="ExpnseClaimLink">
+                    <a class="commonSideNavigation" id="ExpnseClaimClicked" href="@Url.Action("ExpnseClaim", "Tools")">ExpnseClaim</a>
+                </li>
+            *@
         </ul>
 
     </nav>
 
     <!-- Page Content  -->
     <div id="content">
+        <div id="sideloading" style="display:none">
+            <div style="display:flex; width:100%; height:50em; justify-content:center; align-items:center">
+                <img src="~/Content/giphy.gif" style="width:170px" alt="Alternate Text" />
+            </div>
+        </div>
         <div id="ToolsArea">
             @RenderBody()
         </div>
     </div>
 </div>
 <script src="~/Content/sidebar/sidebar.js"></script>
+<script>
+    $(".commonSideNavigation").on('click', function (event) {
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        $('#sideloading').css('display', 'block')
+        $('#ToolsArea').css('display', 'none')
+    });
+</script>
 @RenderSection("scripts", required: false)

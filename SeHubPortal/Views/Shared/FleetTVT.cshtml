@@ -22,25 +22,25 @@
 </style>
 <div>
     <div class="wrapper d-flex align-items-stretch">
-        <nav id="sidebar">
+        <nav id="sidebar" class="leftPane">
 
 
             <ul class="list-unstyled components mb-5">
                 <li class="active" style="display:none" id="FleetTVTDashboardLink">
-                    <a id="FleetTVTDashboardClicked" href="@Url.Action("Dashboard", "FleetTVT")"><span class="fa  mr-3"></span>Dashboard</a>
+                    <a class="commonSideNavigation" id="FleetTVTDashboardClicked" href="@Url.Action("Dashboard", "FleetTVT")"><span class="fa  mr-3"></span>Dashboard</a>
                 </li>
                 <li id="FleetTVTEditAccountLink" style="display:none">
-                    <a id="EditAccountClicked" href="@Url.Action("EditAccount", "FleetTVT", new { active = false})"><span class="fa  mr-3"></span>Customers</a>
+                    <a class="commonSideNavigation" id="EditAccountClicked" href="@Url.Action("EditAccount", "FleetTVT", new { active = false})"><span class="fa  mr-3"></span>Customers</a>
                 </li>
                 <li id="FleetSnapShotLink" style="display:none">
-                    <a id="FleetSnapShotClicked" href="@Url.Action("FleetSnapShot", "FleetTVT", new { active = false})"><span class="fa  mr-3"></span>Fleet Snapshot</a>
+                    <a class="commonSideNavigation" id="FleetSnapShotClicked" href="@Url.Action("FleetSnapShot", "FleetTVT", new { active = false})"><span class="fa  mr-3"></span>Fleet Snapshot</a>
                 </li>
                 <li id="FleetTVTFieldSurveyEditAccountLink" style="display:none">
-                    <a id="FieldSurveyEditAccountClicked" href="@Url.Action("FieldSurveyEditAccount", "FleetTVT")"><span class="fa  mr-3"></span>Survey - New</a>
+                    <a class="commonSideNavigation" id="FieldSurveyEditAccountClicked" href="@Url.Action("FieldSurveyEditAccount", "FleetTVT")"><span class="fa  mr-3"></span>Survey - New</a>
                 </li>
 
                 <li id="ViewOrEditSurveyLink" style="display:none">
-                    <a id="ViewOrEditSurveyClicked" href="@Url.Action("ViewOrEditSurvey", "FleetTVT")"><span class="fa  mr-3"></span>Survey - View/Edit</a>
+                    <a class="commonSideNavigation" id="ViewOrEditSurveyClicked" href="@Url.Action("ViewOrEditSurvey", "FleetTVT")"><span class="fa  mr-3"></span>Survey - View/Edit</a>
                 </li>
 
                 @*<li>
@@ -52,7 +52,12 @@
 
         <!-- Page Content  -->
         <div id="content">
-            <div id="DashboardArea">
+            <div id="sideloading" style="display:none">
+                <div style="display:flex; width:100%; height:50em; justify-content:center; align-items:center">
+                    <img src="~/Content/giphy.gif" style="width:170px" alt="Alternate Text" />
+                </div>
+            </div>
+            <div id="FleetTVTArea">
                 @RenderBody()
             </div>
         </div>
@@ -61,4 +66,12 @@
     <hr />
 </div>
 <script src="~/Content/sidebar/sidebar.js"></script>
+<script>
+    $(".commonSideNavigation").on('click', function (event) {
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        $('#sideloading').css('display', 'block')
+        $('#FleetTVTArea').css('display', 'none')
+    });
+</script>
 @RenderSection("Scripts", false)

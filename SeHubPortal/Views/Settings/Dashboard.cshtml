@@ -17,6 +17,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <!-- Syncfusion ASP.NET MVC controls styles -->
+    <link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/20.1.47/fluent.css" />
+    <!-- Syncfusion ASP.NET MVC controls scripts -->
+    <script src="https://cdn.syncfusion.com/ej2/20.1.47/dist/ej2.min.js"></script>
 
     @if (Model.SehubAccess.plant > 0)
     {
@@ -141,7 +145,9 @@
         .settingsBtn {
             font-weight: bold;
         }
-
+        .breadCrumb{
+        background-color:white;
+    }
         #SettingsLink {
             color: black;
             font-weight: 700;
@@ -154,7 +160,6 @@
         }
 
         .card-header {
-            background-color: #cde8ca;
             padding: 5px;
         }
 
@@ -172,7 +177,7 @@
     <div class="row heading" style="padding:10px 20px 0px 15px">
         <div class="col">
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb" style="background-color: white;
+                <ol class="breadcrumb breadCrumb" style="background-color: white;
                   height: 100%;
                   margin-top: 0px;
                   ">
@@ -191,7 +196,9 @@
             <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#CalculatorSettings" style="width:260px; height:350px">
 
                 <div class="card-body text-center" style="height:320px; margin-left:auto; margin-right:auto; margin-top:20px; padding-top:30px">
-                    <img src="~/Content/Calculator.png" style="margin-bottom:30px; width:150px;">
+                    <img src="~/Content/Calculator.png" style="        margin-bottom: 30px;
+        width: 150px;
+">
                     <h5 style="font-weight:bold; color:black">Calculator Settings</h5>
                 </div>
             </div>
@@ -677,16 +684,87 @@
         <div class="modal fade" id="BluetoothTest" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">Bluetooth</div>
+                    <div class="modal-header" style="padding:5px 0px 0px 15px">
+                        <h5><b>Color Scheme</b></h5>
+                    </div>
                     <div class="modal-body text-center" style="padding:20px">
-                        <input id="dataReceive" type="text" name="name" value="" />
+
+                        <div class="row" >
+                            <div class="col-md-12 text-center">
+                                <h5><b>Layout</b></h5>
+                            </div>
+                        </div>
+                        <div class="row" style="display:flex; justify-content:center; padding:20px">
+                            <div style="width:80%; box-shadow:5px 5px 17px 6px rgba(0,0,0,0.53); height:200px; display:flex; flex-direction:column">
+                                <div style="width:100%; height:30px; background: linear-gradient(45deg, @Model.topBar_left, @Model.topBar_right);"></div>
+                                <div style="display:flex; width:100%; height:170px">
+                                    <div style="flex:2; background: linear-gradient(#ccd0ff, #edefff);" ></div>
+                                    <div style="flex:9; padding:3px; display:flex; flex-direction:column">
+                                        <div style="width:100%; height:10px;background: linear-gradient(45deg, #ccd0ff, #edefff)"></div>
+                                        <div style="width:100%; height:154px; display:flex">
+                                            <div style="flex:1; height:70px; background-color:#dbffc7; margin:3px 3px 3px 0px"></div>
+                                            <div style="flex:1; height:70px; background-color:#dbffc7; margin:3px 3px 3px 0px"></div>
+                                            <div style="flex:1; height:70px; background-color:#dbffc7; margin:3px 3px 3px 0px"></div>
+                                            <div style="flex:1"></div>
+                                            <div style="flex:1"></div>
+                                            <div style="flex:1"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row" style="margin-bottom:15px">
+                            <div class="col-md-12 text-center">
+                                <h5><b>Top Navigation-Bar Left</b></h5>
+                            </div>
+                        </div>
+                        <div class="row" style="display:flex; justify-content:space-evenly; align-items:center; margin-bottom:10px">
+                            <input id="topBar_leftInput" type="color" onchange="ColorChange(this.value, this.id)" name="name" value="@Model.topBar_left" />
+                            <div id="topBar_left" style="width:100px; height:100px; background-color:@Model.topBar_left">
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row" style="margin-bottom:15px">
+                            <div class="col-md-12 text-center">
+                                <h5><b>Top Navigation-Bar Right</b></h5>
+                            </div>
+                        </div>
+                        <div class="row" style="display:flex; justify-content:space-evenly; align-items:center">
+                            <input id="topBar_rightInput" type="color" onchange="ColorChange(this.value, this.id)" name="name" value="@Model.topBar_right" />
+                            <div id="topBar_right" style="width:100px; height:100px; background-color:@Model.topBar_right">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <button onclick="location.href='@Url.Action("UploadTemperatureReading", "Management")'"></button>
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button onclick="location.href='@Url.Action("sp_DataReceived", "Settings")';" style="padding: 1px 30px 1px 30px" class="btn btn-danger">Close</button>
+                        <button class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <script>
+            function ColorChange(val, id) {
+                $('#' + id.replace("Input", "")).css("background-color", val);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("ChangeColor", "Settings")',
+                    data: { component: id.replace("Input", ""), color: val },
+                    success: function (data) {
+                    if (id == "topBar_rightInput") {
+                        $('#mainNavBar').css("background", "linear-gradient(45deg, " + $('#topBar_leftInput').val() + ", " + val + ")")
+                    }
+                    else if (id == "topBar_leftInput") {
+                        $('#mainNavBar').css("background", "linear-gradient(45deg, " + val + ", " + $('#topBar_rightInput').val() + ")")
+                    }}
+                });
+                
+            }
+        </script>
 
         <div class="col-lg-2">
             <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#Calendar_Events" style="width:260px; height:350px">
@@ -700,10 +778,9 @@
 
         <div class="col-lg-2">
             <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#BluetoothTest" style="width:260px; height:350px">
-
-                <div class="card-body text-center" style="height:320px; margin-left:auto; margin-right:auto; margin-top:20px; padding-top:30px">
-                    <img src="~/Content/calendar-icon.jpg" style="margin-bottom: 35px; width:170px;">
-                    <h5 style="font-weight:bold; color:black">Bluetooth Test</h5>
+                <div class="card-body text-center" style="height:320px; margin-left:auto; margin-right:auto; margin-top:30px; padding-top:30px">
+                    <img src="https://i.stack.imgur.com/DfraS.png" style="margin-bottom: 40px; width:170px;">
+                    <h5 style="font-weight:bold; color:black">Color Scheme</h5>
                 </div>
             </div>
         </div>

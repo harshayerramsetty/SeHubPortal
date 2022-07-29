@@ -19,7 +19,67 @@
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 
+    @if (Model.client_info.employees_page.Value)
+    {
+        <style>
+            #ManagementClicked {
+                display: block !important;
+            }
+        </style>
+    }
+    @if (Model.client_info.fleet_page.Value)
+    {
+        <style>
+            #VehicleClicked {
+                display: block !important;
+            }
+        </style>
+    }
 
+    @if (Model.AccessType == "Administrator")
+    {
+        <style>
+            #SettingsClicked {
+                display: block !important;
+            }
+
+            #AttendanceLink {
+                display: block !important;
+            }
+
+            #SettingsLink {
+                display: block !important;
+            }
+
+            #EmployeeFilesLink {
+                display: block !important;
+            }
+
+            #TimeClockEventsLink {
+                display: block !important;
+            }
+        </style>
+    }
+    else if (Model.AccessType != "Shop Fireman")
+    {
+        <style>
+            #AttendanceLink {
+                display: block !important;
+            }
+
+            #SettingsLink {
+                display: block !important;
+            }
+
+            #EmployeeFilesLink {
+                display: block !important;
+            }
+
+            #TimeClockEventsLink {
+                display: block !important;
+            }
+        </style>
+    }
 
 
     <style>
@@ -73,17 +133,17 @@
                 color: black;
             }
 
-    .renameModal {
-        padding-left: 55% !important;
-        padding-top: 18%;
-    }
+        .renameModal {
+            padding-left: 55% !important;
+            padding-top: 18%;
+        }
 
-    .deleteModal {
-        padding-left: 55% !important;
-        padding-top: 18%;
-    }
+        .deleteModal {
+            padding-left: 55% !important;
+            padding-top: 18%;
+        }
 
-    .example::-webkit-scrollbar {
+        .example::-webkit-scrollbar {
             display: none;
         }
 
@@ -92,7 +152,6 @@
             -ms-overflow-style: none; /* IE and Edge */
             scrollbar-width: none; /* Firefox */
         }
-
     </style>
 </head>
 <body>
@@ -100,7 +159,7 @@
         <div class="col">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb" style="background-color: white; height: 100%; margin-top: 0px;">
-                    <li class="breadcrumb-item"><a href="@Url.Action("EmployeeFiles", "ManagementHarpoon")">Management</a></li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("EmployeeFolder", "ManagementHarpoon")">Employees</a></li>
                     <li class="breadcrumb-item " aria-current="page">Employee Folder</li>
                     @using (Html.BeginForm("UploadEmployeeFolder", "ManagementHarpoon", FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
@@ -120,12 +179,11 @@
                         </label>
                     </div>
 
-                    <lable style="float:right; margin-left:120px; margin-right:0px">Location</lable>
+                    <lable style="float:right; margin-left:70px; margin-right:0px">Location</lable>
                     @using (Html.BeginForm("ChangeLocEmployeeFolder", "ManagementHarpoon", FormMethod.Post))
                     {
                         <div>
-
-                            @Html.DropDownListFor(m => m.Location_ID, Model.LocationsList, "Select", new { @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:6px;" })
+                            @Html.DropDownListFor(m => m.Location_ID, Model.LocationsList, "Select", new { @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:150px;height:23px;font-size:15px;margin-left:6px;" })
                             <noscript> <input style="display:none" class="btn btn-success" type="submit" value="Search" /></noscript>
                         </div>
                     }

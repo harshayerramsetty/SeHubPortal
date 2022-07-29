@@ -1,0 +1,359 @@
+﻿@model SeHubPortal.ViewModel.pullHarpoonFuleLog
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+
+<script>
+    function filter(val) {
+        const auto_vehicl = $("#selectedVehicleRecipt").val();
+
+        if (val == "filter") {
+            if ($('#min').val() != '' && $('#max').val() != '' && $('#min').val() < $('#max').val()) {
+                const Startdate = $('#min').val() + ' 00:00'
+                const Enddate = $('#max').val() + ' 00:00'
+
+                $.ajax({
+                    url: '@Url.Action("pullFuelLog", "VehicleHarpoon")',
+                    data: { auto: auto_vehicl, start: Startdate, end: Enddate },
+                    type: 'GET',
+                    success: function (data) {
+                        $("#loadDiv").html(data);
+                        $('.commonclass').css("background-color", "#f0f2f5")   //.css("border", "1px solid #bfbfbf")
+                        $('#' + auto_vehicl).css("background-color", "white")
+                    }
+                });
+            }
+                
+        }
+        else {
+            $.ajax({
+                url: '@Url.Action("pullFuelLog", "VehicleHarpoon")',
+                data: { auto: auto_vehicl, start: '1977-01-01 00:00', end: '1977-01-01 00:00' },
+                type: 'GET',
+                success: function (data) {
+                    $("#loadDiv").html(data);
+                    $('.commonclass').css("background-color", "#f0f2f5")   //.css("border", "1px solid #bfbfbf")
+                    $('#' + auto_vehicl).css("background-color", "white")
+                }
+            });
+        }
+    }
+
+    $(document).ready(function () {
+
+    });
+</script>
+
+<script>
+    function toggleFlag(val) {
+        const id = val.split('z')[1]
+        if (~val.indexOf("flagRed")) {
+            $('#flagBlackz' + id).css("display", "block")
+            $('#flagRedz' + id).css("display", "none")
+            $('#flagz' + id).prop("checked", false)
+            $('#flagz' + id).closest('tr').css("color", "black")
+        }
+        else {
+            $('#flagBlackz' + id).css("display", "none")
+            $('#flagRedz' + id).css("display", "block")
+            $('#flagz' + id).prop("checked", true)
+            $('#flagz' + id).closest('tr').css("color", "red")
+        }
+        $('#saveButton').css("display", "block")
+    }
+</script>
+
+<script>
+    function PopulateEditForm(val) {
+        let arr = val.split('~');
+        if (arr[9] == 'id') {
+            $('.audited').prop({ disabled: true });
+        }
+        else {
+            $('.audited').prop({ disabled: false });
+        }
+        $('#vehicle_auto_id_edit').val(arr[0])
+        $('#vehicle_auto_id_delete').val(arr[0])
+        $('#client_id_edit').val(arr[1])
+        $('#client_id_delete').val(arr[1])
+        $('#transaction_number_edit').val(arr[2])
+        $('#transaction_number_delete').val(arr[2])
+        $('#entry_user_edit').val(arr[3])
+        $('#entry_user_delete').val(arr[3])
+        $('#odometer_edit').val(arr[4])
+        $('#no_of_liters_edit').val(parseFloat(arr[5]).toFixed(3))
+        $('#price_per_liter_edit').val(parseFloat(arr[6]).toFixed(3))
+        $('#comments_edit').val(arr[7])
+        $('#charge_type_edit').val(arr[8])
+    }
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#FuelLogTable").DataTable(
+            {
+                bLengthChange: true,
+                lengthMenu: [20],
+                bFilter: true,
+                bSort: false,
+                bPaginate: true,
+            });
+    });
+
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#FuelAuditTable").DataTable(
+        {
+            bLengthChange: true,
+            lengthMenu: [19],
+            bFilter: true,
+            bSort: false,
+            bPaginate: true,
+        });
+    });
+    
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#FuelLogTable_filter").appendTo("#searchField");
+        $("#FuelLogTable_filter :input").css("margin", "0px 0px 0px 10px");
+        $("#FuelAuditTable_filter").appendTo("#searchFieldAudit");
+        $("#FuelAuditTable_filter :input").css("margin", "0px 0px 0px 10px");
+    });
+</script>
+
+
+<div id="report">
+    <div class="row" style="margin-bottom:10px">
+        <div class="col-md-12" id="searchField" style="display:flex; align-items:center; justify-content:space-between">
+            <div>
+                <button class="btn btn-primary" data-target="#AddFuelLog" data-toggle="modal" style="padding:2px 20px 2px 20px">ADD RECORD</button>
+            </div>
+            <div style="display:flex; align-items:center; ">
+                <span style="margin:0px 10px">From</span>
+                @if (Model.start != new DateTime(1977, 01, 01))
+                {
+                    <input type="Date" value="@Model.start.ToString("yyyy-MM-dd")" id="min" max="@System.DateTime.Today.ToString("yyyy-MM-dd")" style="height:25px;">
+                }
+                else
+                {
+                    <input type="Date" id="min" max="@System.DateTime.Today.ToString("yyyy-MM-dd")" style="height:25px;">
+                }
+
+                <span style="margin:0px 10px">To</span>
+
+                @if (Model.end != new DateTime(1977, 01, 01))
+                {
+                    <input type="Date" value="@Model.end.ToString("yyyy-MM-dd")" id="max" max="@System.DateTime.Today.ToString("yyyy-MM-dd")" style="height:25px;">
+                }
+                else
+                {
+                    <input type="Date" id="max" max="@System.DateTime.Today.ToString("yyyy-MM-dd")" style="height:25px;">
+                }
+
+
+                @if (Model.start != new DateTime(1977, 01, 01) && Model.end != new DateTime(1977, 01, 01))
+                {
+                    <button disabled style="padding:2px 20px 2px 20px; margin:0px 10px 0px 20px" onclick="filter('filter')" class="btn btn-success">GO</button>
+                    <button style="padding:2px 10px 2px 10px; margin:0px 10px 0px 0px" onclick="filter('clear')" class="btn btn-danger">Clear</button>
+                }
+                else
+                {
+                    <button style="padding:2px 20px 2px 20px; margin:0px 10px 0px 20px" onclick="filter('filter')" class="btn btn-success">GO</button>
+                    <button disabled style="padding:2px 10px 2px 10px; margin:0px 10px 0px 0px" onclick="filter('clear')" class="btn btn-danger">Clear</button>
+                }
+            </div>
+            <div style="display:flex; justify-content:center; align-items:center;">
+                <div class="custom-control custom-switch">
+                    <label style="margin-right:40px; margin-left:0px; font-weight:bold">
+                        Report
+                    </label>
+                    <input type="checkbox" onchange="$('#report').css('display', 'none'); $('#audit').css('display', 'block'); $('#ToggleFromAuditToReport').prop('checked', true);" style="height:15px" class="custom-control-input" id="ToggleFromReportToAudit">
+                    <label class="custom-control-label" for="ToggleFromReportToAudit" style="font-weight:normal">
+                        Audit
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="example" style="height:70vh; overflow-y:auto;">
+
+        <div class="row">
+            <div class="col-md-12">
+                <table id="FuelLogTable" class="table table-striped table-bordered">
+                    <thead style="background-color:#a6a8ab; color:white">
+                        <tr>
+                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Date</th>
+                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Mileage</th>
+                            <th style="text-align:center; font-size:10px; padding:0px" scope="col"># of Liters</th>
+                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">$/L</th>
+                            <th style="text-align: center; font-size: 10px; padding: 0px" scope="col">Entry Date</th>
+                            <th style="text-align: center; font-size: 10px; padding: 0px" scope="col">Entry User</th>
+                            <th style="text-align: center; font-size: 10px; padding: 0px; width:40%" scope="col">Comments</th>
+                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody style="background-color:white">
+
+                        @if (Model.fuelLog.Count > 0)
+                        {
+                            foreach (var fuel in Model.fuelLog)
+                            {
+                                <tr style="@(fuel.audit_status || fuel.flag ? fuel.audit_status ? fuel.flag ? "font-weight:bold; color:red" : "font-weight:bold" : "color:red":"")">
+                                    <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle" scope="col">
+                                        @if (fuel.date_of_purchase.HasValue)
+                                        {
+                                            @fuel.date_of_purchase.Value.ToString("MMM dd, yyyy")
+                                        }
+                                    </td>
+                                    <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle" scope="col">
+                                        @String.Format("{0:n0}", fuel.odometer)
+                                    </td>
+                                    <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle" scope="col">
+                                        @String.Format("{0:#,0.000}", fuel.no_of_liters)
+                                    </td>
+                                    <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle" scope="col">
+                                        @String.Format("{0:#,0.000}", fuel.price_per_liter)
+                                    </td>
+                                    <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle" scope="col">
+                                        @fuel.entry_date.Value.ToString("MMM dd, yyyy")
+                                    </td>
+                                    <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle" scope="col">
+                                        @fuel.entry_user
+                                    </td>
+                                    <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle" scope="col">
+                                        @fuel.comments
+                                    </td>
+                                    <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle" scope="col">
+                                        <button  id="@fuel.vehicle_auto_id~@fuel.client_id~@fuel.transaction_number~@fuel.entry_user~@fuel.odometer~@fuel.no_of_liters~@fuel.price_per_liter~@fuel.comments~@fuel.charge_type~@fuel.audit_status" onclick="PopulateEditForm(this.id)" style="margin:5px; background-color:transparent; border:none; outline:none; font-size:15px" class="fa fa-edit" data-toggle="modal" data-target="#EditFuelLog"></button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="audit" style="display:none">
+    @using (Html.BeginForm("SubmitAuditStatusPartial", "VehicleHarpoon", FormMethod.Post))
+    {
+        @Html.EditorFor(m => m.selectedVehicle, new { htmlAttributes = new { @style = "width:100%; display:none", @readonly = true, @id = "selectedVehicleRecipt", @class = "selectedVehicleRecipt" } })
+        <div class="row" id="saveButton" style="display:none; padding:0px 15px 15px 15px">
+            <div class="col-lg-12 text-center" style="background-color: #fdcf16;">
+                <button type="submit" style="margin:5px; padding:0px 30px 0px 30px" class="btn btn-success">Save</button>
+                <button type="button" onclick="location.reload()" style="margin:5px; padding:0px 20px 0px 20px" class="btn btn-danger">Cancel</button>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom:10px">
+            <div class="col-md-12" id="searchFieldAudit" style="display:flex; align-items:center; justify-content:space-between">
+                <div>
+                    <button class="btn btn-success auditSubmit" type="submit" style="visibility:hidden; padding:2px 16px 2px 16px">SUBMIT AUDIT</button>
+                </div>
+                <div style="display:flex; align-items:center;">
+                    <div style="visibility:hidden">
+                        <span style="margin:0px 10px">From</span>
+                        <input type="Date" max="@System.DateTime.Today.ToString("yyyy-MM-dd")" style="height:25px;">
+                        <span style="margin:0px 10px">To</span>
+                        <input type="Date" max="@System.DateTime.Today.ToString("yyyy-MM-dd")" style="height:25px;">
+                        <button style="padding:2px 20px 2px 20px; margin:0px 10px 0px 20px" onclick="filter('filter')" class="btn btn-success">GO</button>
+                        <button disabled style="padding:2px 10px 2px 10px; margin:0px 10px 0px 0px" onclick="filter('clear')" class="btn btn-danger">Clear</button>
+                    </div>
+                </div>
+                <div style="display:flex; justify-content:center; align-items:center;">
+                    <div class="custom-control custom-switch">
+                        <label style="margin-right:40px; margin-left:0px; font-weight:normal">
+                            Report
+                        </label>
+                        <input type="checkbox" onchange="$('#report').css('display', 'block'); $('#audit').css('display', 'none'); $('#ToggleFromReportToAudit').prop('checked', false);" checked style="height:15px" class="custom-control-input" id="ToggleFromAuditToReport">
+                        <label class="custom-control-label" for="ToggleFromAuditToReport" style="font-weight:bold">
+                            Audit
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="FuelAuditTable" class="table table-striped table-bordered">
+            <thead style="background-color:#a6a8ab; color:white" class="text-center">
+                <tr>
+
+                    <th style="font-size:10px; padding:0px">Date</th>
+                    <th style="font-size:10px; padding:0px">Mileage</th>
+                    <th style="font-size:10px; padding:0px">Trip</th>
+                    <th style="font-size:10px; padding:0px">No of Liters</th>
+                    <th style="font-size:10px; padding:0px">Price/Liter</th>
+                    <th style="font-size:10px; padding:0px">Total Price</th>
+                    <th style="font-size:10px; padding:0px">Flag</th>
+                    <th style="font-size:10px; padding:0px; width:5%">Audit Status</th>
+
+                </tr>
+            </thead>
+            <tbody style="text-align:center">
+                @for (int i = 0; i < Model.fuelLog.Count(); i++)
+                {
+                    <tr style="@(Model.fuelLog[i].audit_status || Model.fuelLog[i].flag ? Model.fuelLog[i].audit_status ? Model.fuelLog[i].flag ? "font-weight:bold; color:red" : "font-weight:bold" : "color:red":"")">
+                        @Html.HiddenFor(m => m.fuelLog[i].vehicle_auto_id)
+                        @Html.HiddenFor(m => m.fuelLog[i].transaction_number)
+                        @Html.HiddenFor(m => m.fuelLog[i].client_id)
+                        @Html.HiddenFor(m => m.fuelLog[i].transaction_number)
+                        @Html.HiddenFor(m => m.fuelLog[i].entry_user)
+                        <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle">@Convert.ToDateTime(Model.fuelLog[i].date_of_purchase).ToString("MMM dd, yyyy")</td>
+                        <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle">@Model.fuelLog[i].odometer</td>
+                        @if (i < Model.fuelLog.Count - 1)
+                        {
+                            int trip = Model.fuelLog[i].odometer.Value - Model.fuelLog[i + 1].odometer.Value;
+                            <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle">
+                                @trip
+                            </td>
+                        }
+                        else
+                        {
+                            <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle"><b>N/A</b></td>
+                        }
+
+                        <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle">@Model.fuelLog[i].no_of_liters</td>
+                        <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle">@Model.fuelLog[i].price_per_liter</td>
+                        <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle">
+                            @{
+                                double tp = @Model.fuelLog[i].no_of_liters.Value * @Model.fuelLog[i].price_per_liter.Value;
+                                <span>@tp.ToString("n2")</span>
+                            }
+                        </td>
+                        <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle">
+                            @{
+                                string flag = "flagz" + i.ToString();
+                                string flagBlack = "flagBlackz" + i.ToString();
+                                string flagRed = "flagRedz" + i.ToString();
+                                if (!Model.fuelLog[i].flag)
+                                {
+                                    <img src="~/Content/flag.png" style="margin-left:auto; margin-right:auto; width:15px; height:15px; cursor:pointer" onclick="toggleFlag(this.id)" id="@flagBlack" alt="Alternate Text" />
+                                    <img src="~/Content/redFlag.png" style="margin-left:auto; margin-right:auto; display:none; width:15px; height:15px; cursor:pointer" onclick="toggleFlag(this.id)" id="@flagRed" alt="Alternate Text" />
+                                    }
+                                else
+                                {
+                                    <img src="~/Content/flag.png"  style="margin-left:auto; margin-right:auto; display:none; width:15px; height:15px; cursor:pointer" onclick="toggleFlag(this.id)" id="@flagBlack" alt="Alternate Text" />
+                                    <img src="~/Content/redFlag.png" style="margin-left:auto; margin-right:auto; width:15px; height:15px; cursor:pointer" onclick="toggleFlag(this.id)" id="@flagRed" alt="Alternate Text" />
+                                    }
+                                @Html.CheckBoxFor(m => m.fuelLog[i].flag, new { @style = "display:none", @id = flag})
+                                }
+                        </td>
+                        <td style="text-align:center; font-size:12px; padding:0px; vertical-align:middle">
+                            @Html.CheckBoxFor(m => m.fuelLog[i].audit_status, new { @style = "margin:7px", @onchange="$('#saveButton').css('display', 'block')"})
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+
+

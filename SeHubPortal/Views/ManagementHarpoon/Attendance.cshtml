@@ -20,16 +20,71 @@
     <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" rel="stylesheet" />
     <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.css" rel="stylesheet" media="print" />
 
+    @if (Model.client_info.employees_page.Value)
+    {
+        <style>
+            #ManagementClicked {
+                display: block !important;
+            }
+        </style>
+    }
+    @if (Model.client_info.fleet_page.Value)
+    {
+        <style>
+            #VehicleClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
     @if (Model.AccessType == "Administrator")
     {
         <style>
             #SettingsClicked {
                 display: block !important;
             }
+
+            #AttendanceLink {
+                display: block !important;
+            }
+
+            #SettingsLink {
+                display: block !important;
+            }
+
+            #EmployeeFilesLink {
+                display: block !important;
+            }
+
+            #TimeClockEventsLink {
+                display: block !important;
+            }
+        </style>
+    }
+    else if (Model.AccessType != "Shop Fireman")
+    {
+        <style>
+            #AttendanceLink {
+                display: block !important;
+            }
+
+            #SettingsLink {
+                display: block !important;
+            }
+
+            #EmployeeFilesLink {
+                display: block !important;
+            }
+
+            #TimeClockEventsLink {
+                display: block !important;
+            }
         </style>
     }
 
     <style type="text/css">
+
+
 
         .fc-event .fc-bg {
             opacity: 0 !important;
@@ -94,6 +149,7 @@
             margin: 0px 15px 0px 20px;
             height: 100%;
         }
+
         /*.card-header {
          background-color: #5f76e8;
          }
@@ -101,6 +157,7 @@
          {
          color:#fff;
          }*/
+
         .wrap {
             width: 100%;
             overflow: auto;
@@ -230,20 +287,19 @@
             background-color: #cfcfcf;
         }
 
-        .fc-title{
-            font-weight:bolder;
-            font-size:15px;
+        .fc-title {
+            font-weight: bolder;
+            font-size: 15px;
         }
 
-        .fc-content{
-            align-items:center;
-            justify-content:center
+        .fc-content {
+            align-items: center;
+            justify-content: center
         }
 
         .fc-toolbar h2 {
             color: #008ce3;
         }
-
     </style>
 </head>
 <body style="overflow-y:hidden">
@@ -256,7 +312,7 @@
 
                         <div style="display:flex; justify-content:space-between; align-items:center">
                             <div>
-                                <a href="@Url.Action("Attendance", "ManagementHarpoon")">Management </a>/ Attendance History
+                                <a href="@Url.Action("Attendance", "ManagementHarpoon")">Employees </a>/ Attendance History
                             </div>
 
                             <div style="display:flex;">
@@ -289,57 +345,69 @@
                         <span class="sr-only">Toggle Menu</span>
                     </button>
                 </div>
-                <div class="payRollMainBody">
-                    <div class="row" style="margin-left:0px">
-                        <div class="col-lg-2">
-                            <div class="row example" style="height:78vh; overflow-y:auto">
-                                <div class="col-lg-12" id="ul_list">
-                                    @foreach (var items in Model.employeeList)
-                                    {
-                                        if (Model.SelectedEmployeeId == items.employeeId)
+                <input style="display:none" type="text" id="tempEmpID" name="name" value="@Model.SelectedEmployeeId" />
+                @if (Model.client_info.start_date.HasValue)
+                {
+                    <div class="payRollMainBody">
+                        <div class="row" style="margin-left:0px">
+                            <div class="col-lg-2">
+                                <div class="row example" style="height:78vh; overflow-y:auto">
+                                    <div class="col-lg-12" id="ul_list">
+                                        @foreach (var items in Model.employeeList)
                                         {
-                                            <div class="row empButton commonClass @items.employeeId selectedEmployee @items.atWork" style="cursor: pointer; font-weight: bold; padding: 15px; background-color: white" id="@items.employeeId" onclick="pullAttendance(this.id)">
-                                                @items.fullName
-                                            </div>
+                                            if (Model.SelectedEmployeeId == items.employeeId)
+                                            {
+                                                <div class="row empButton commonClass @items.employeeId selectedEmployee @items.atWork" style="cursor: pointer; font-weight: bold; padding: 15px; background-color: white" id="@items.employeeId" onclick="pullAttendance(this.id)">
+                                                    @items.fullName
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="row empButton commonClass @items.employeeId @items.atWork" style="cursor: pointer; font-weight: bold; padding: 15px; background-color: transparent" id="@items.employeeId" onclick="pullAttendance(this.id)">
+                                                    @items.fullName
+                                                </div>
+                                            }
                                         }
-                                        else
-                                        {
-                                            <div class="row empButton commonClass @items.employeeId @items.atWork" style="cursor: pointer; font-weight: bold; padding: 15px; background-color: transparent" id="@items.employeeId" onclick="pullAttendance(this.id)">
-                                                @items.fullName
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-10">
+                                <div class="row" style="height:78vh; overflow-y:hidden; background-color:white; margin-right:5px">
+                                    <div class="col-md-12">
+                                        <div id="loadingWheel" style="margin-bottom:1000px">
+                                            <div style="width:100%; height:78vh; display:flex; justify-content:center; align-items:center;">
+                                                <img style="width:100px" src="~/Content/giphy.gif" alt="Alternate Text" />
                                             </div>
-                                        }
-                                    }
+                                        </div>
+                                        <div id="loadCalendar">
+                                            <div class="row" id="calendarParts" style="padding:10px 15px 10px 15px; visibility:hidden">
+                                                <div class="col-lg-2 text-left">
+                                                    @if (Model.client_info.start_date.Value.ToString("MMMM") == System.DateTime.Today.ToString("MMMM"))
+                                                    {
+                                                        <button id="prev" class="btn btn-primary" style="display:none; font-weight:bolder; float:left; padding:2px 10px 2px 10px"><b><</b></button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button id="prev" class="btn btn-primary" style="font-weight:bolder; float:left; padding:2px 10px 2px 10px"><b><</b></button>
+                                                    }
+                                                </div>
+                                                <div class="col-lg-8 text-center">
+                                                    <h2 id="titleText" style="color:#2f88fc"></h2>
+                                                </div>
+                                                <div class="col-lg-2 text-right">
+                                                    <button id="next" class="btn btn-primary" style="display:none; font-weight:bolder; float:right; padding:2px 10px 2px 10px"><b>></b></button>
+                                                </div>
+                                            </div>
+                                            <div class="dontShowInPrint btn" id="calender" style="width:100%; background-color:white"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-10">
-                            <div class="row" style="height:78vh; overflow-y:hidden; background-color:white; margin-right:5px">
-                                <div class="col-md-12">
-                                    <div id="loading">
-                                        <div style="width:100%; height:75vh; display:flex; justify-content:center; align-items:center;">
-                                            <img style="width:100px" src="~/Content/giphy.gif" alt="Alternate Text" />
-                                        </div>
-                                    </div>
 
-
-                                    <div class="row" style="padding:10px 15px 10px 15px">
-                                        <div class="col-lg-2 text-left">
-                                            <input id="prev" type="text" class="btn btn-primary" readonly value="<" style="height:30px; width:40px; display:none" />
-                                        </div>
-                                        <div class="col-lg-8 text-center">
-                                            <h2 id="titleText" style="color:#2f88fc"></h2>
-                                        </div>
-                                        <div class="col-lg-2 text-right">
-                                            <input id="next" type="text" class="btn btn-primary" readonly value=">" style="float:right; height:30px; width:40px; display:none" />
-                                        </div>
-                                    </div>
-                                    <div class="dontShowInPrint btn" id="calender" style="width:100%; background-color:white"></div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
+                }
 
-                </div>
             </div>
         </div>
     </div>
@@ -362,7 +430,6 @@
                             <table class="table table-striped table-bordered">
                                 <thead style="background-color:gray; color:white">
                                     <tr>
-                                        <th style="font-size:10px; padding:0px" scope="col">Date</th>
                                         <th style="font-size:10px; padding:0px" scope="col">Clock-IN</th>
                                         <th style="font-size:10px; padding:0px" scope="col">Clock-Out</th>
                                         <th style="font-size:10px; padding:0px" scope="col">Duration</th>
@@ -383,6 +450,7 @@
     </div>
 
     <input type="text" id="duration" style="display:none" name="name" value="" />
+    <input type="text" id="clientStartDate" style="display:none" name="name" value="@(Model.client_info.start_date.HasValue ? Model.client_info.start_date.Value.ToString("MMMM yyyy"):"")" />
 
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
@@ -399,15 +467,35 @@
         });
 
         $("#next").click(function () {
+            $("#prev").css("display", "block");
+            $('#loadingWheel').css("display", "block")
             $('.fc-next-button').click();
             $('#titleText').html($('.fc-center h2').html())
             populateEmployeeList($('.fc-center h2').html().split(" ")[1] + "-" + getMonthNumber($('.fc-center h2').html().split(" ")[0]) + "-01");
+
+            const d = new Date();
+            if (($('.fc-center h2').html().split(" ")[1] == d.getFullYear()) && getMonthNumber($('.fc-center h2').html().split(" ")[0]) > d.getMonth()) {
+                $("#next").css("display", "none");
+                
+            }
+            else {
+                $("#next").css("display", "block");
+            }
         });
 
         $("#prev").click(function () {
+            $("#next").css("display", "block");
+            $('#loadingWheel').css("display", "block")
             $('.fc-prev-button').click();
             $('#titleText').html($('.fc-center h2').html())
             populateEmployeeList($('.fc-center h2').html().split(" ")[1] + "-" + getMonthNumber($('.fc-center h2').html().split(" ")[0]) + "-01");
+
+            if ($('#clientStartDate').val().split(" ")[1] == $('.fc-center h2').html().split(" ")[1] && (getMonthNumber($('#clientStartDate').val().split(" ")[0]) < getMonthNumber($('.fc-center h2').html().split(" ")[0]))) {
+                $("#prev").css("display", "block");
+            }
+            else {
+                $("#prev").css("display", "none");
+            }
         });
 
         function populateEmployeeList(val) {
@@ -417,13 +505,19 @@
                 data: { date: val, loc: $("#MatchedLocID").val() },
                 success: function (data) {
                     var s = ''
+                    var empList = ''
                     for (var i = 0; i < data.length; i++) {
-
-                        s+= '<div class="row empButton commonClass '+ data[i].value +' '+ data[i].text.split(";")[1] +'" style="cursor: pointer; font-weight: bold; padding: 15px; background-color: transparent" id="'+ data[i].value +'" onclick="pullAttendance(this.id)">'+ data[i].text.split(";")[0] +'</div>'
-
+                        empList += data[i].value + ';'
+                        s += '<div class="row empButton commonClass ' + data[i].value + ' ' + data[i].text.split(";")[1] + '" style="cursor: pointer; font-weight: bold; padding: 15px; background-color: transparent" id="' + data[i].value + '" onclick="pullAttendance(this.id)">' + data[i].text.split(";")[0] + '</div>'
                         //s += '<li class="list-group-item btn text-left commonClass '+ data[i].value +'" id="'+ data[i].value +'" onclick="pullAttendance(this.id)"><button class="btn" style="outline:none; border:none; background-color:transparent; vertical-align: middle">'+ data[i].text +'</button></li>'
                     }
                     $("#ul_list").html(s);
+                    if ($('#tempEmpID').val() != '' && empList.split(';').indexOf($('#tempEmpID').val()) > 0) {
+                        pullAttendance($('#tempEmpID').val())
+                    }
+                    else {
+                        pullAttendance(empList.split(';')[0])
+                    }
                 }
             });
         }
@@ -448,23 +542,23 @@
         });
 
         $(document).ready(function () {
+
+            const dDocRead = new Date();
+            const currentMonthDocRead = dDocRead.getMonth() + 1;
+
+            //alert(currentMonthDocRead)
+
             var events = [];
                 $.ajax({
                     type: "GET",
                     url: "/ManagementHarpoon/GetAttendanceDates",
-                    data: { empid: @ViewData["auto_emp_id"]},
+                    data: { empid: @ViewData["auto_emp_id"], mon: currentMonthDocRead},
                     success: function (data) {
 
-                        //alert(data)
+                        $('#loadingWheel').css("display", "none")
 
                         $.each(data, function (i, v) {
-
-                            //alert(v)
-
                             const durat = netTime(v.split(";")[0].split(" ")[0], @ViewData["auto_emp_id"], getLocID(v.split(";")[1]))
-
-                            //alert(durat)
-
                             events.push({
                                 start: v.split(";")[0].split(" ")[0],
                                 title: durat.substring(0, 5) + " (" + getLocID(v.split(";")[1]) + ")",
@@ -475,11 +569,10 @@
                             eventOrder: 'color,start'
 
                         })
-
                         GenerateCalender(events);
                     },
                     error: function (error) {
-
+                        GenerateCalender(events);
                     }
                 })
 
@@ -543,7 +636,7 @@
                                     $('#pDetails').html("");
 
                                     if (data.length == 1) {
-                                        $('#pDetails').html('<tr><td style="font-size:12px; padding:0px">' + moment(data[0].split(">")[0].split(" ")[0]).format("MMMM DD,YYYY") + '</td><td style="font-size:12px; padding:0px">'+ data[0].split(">")[0].split(" ")[1].split(":")[0] + ":" + data[0].split(">")[0].split(" ")[1].split(":")[1] + " " + data[0].split(">")[0].split(" ")[2] +'</td><td  style="font-size:12px; padding:0px"></td><td  style="font-size:12px; padding:0px"></td></tr>');
+                                        $('#pDetails').html('<tr><td style="font-size:12px; padding:0px">'+ data[0].split(">")[0].split(" ")[1].split(":")[0] + ":" + data[0].split(">")[0].split(" ")[1].split(":")[1] + " " + data[0].split(">")[0].split(" ")[2] +'</td><td  style="font-size:12px; padding:0px"></td><td  style="font-size:12px; padding:0px"></td><td  style="font-size:12px; padding:0px">'+data[0].split(">")[2]+'</td></tr>');
                                         $('#myModal #eventTitle').empty().html(calEvent.title.split(" ")[1] + ' Attendance: ' + calEvent.start.format("MMM DD,YYYY"));
                                     }
                                     else {
@@ -562,13 +655,13 @@
                                                 var d = moment.duration(ms);
                                                 var timeelapsed = Math.floor(d.asHours()) + moment.utc(ms).format(":mm:ss");
 
-                                                $('#pDetails').html($('#pDetails').html() + '<tr><td style="font-size:12px; padding:0px">' + moment(data[i].split(">")[0].split(" ")[0]).format("MMMM DD,YYYY") + '</td><td style="font-size:12px; padding:0px">'+ data[i-1].split(">")[0].split(" ")[1].split(":")[0] + ":" + data[i-1].split(">")[0].split(" ")[1].split(":")[1] + " " + data[i-1].split(">")[0].split(" ")[2] +'</td><td  style="font-size:12px; padding:0px">'+ data[i].split(">")[0].split(" ")[1].split(":")[0] + ":" + data[i].split(">")[0].split(" ")[1].split(":")[1] + " " + data[i].split(">")[0].split(" ")[2] +'</td><td  style="font-size:12px; padding:0px">'+ timeelapsed.split(":")[0] + ":" +  timeelapsed.split(":")[1]  +'</td><td style="font-size:12px; padding:0px">'+ data[i-1].split(">")[2] + " " + data[i].split(">")[2] +'</td></tr>');
+                                                $('#pDetails').html($('#pDetails').html() + '<tr><td style="font-size:12px; padding:0px">'+ data[i-1].split(">")[0].split(" ")[1].split(":")[0] + ":" + data[i-1].split(">")[0].split(" ")[1].split(":")[1] + " " + data[i-1].split(">")[0].split(" ")[2] +'</td><td  style="font-size:12px; padding:0px">'+ data[i].split(">")[0].split(" ")[1].split(":")[0] + ":" + data[i].split(">")[0].split(" ")[1].split(":")[1] + " " + data[i].split(">")[0].split(" ")[2] +'</td><td  style="font-size:12px; padding:0px">'+ timeelapsed.split(":")[0] + ":" +  timeelapsed.split(":")[1]  +'</td><td style="font-size:12px; padding:0px">'+data[i].split(">")[2]+'</td></tr>');
 
                                                 duration = duration + moment.duration(timeelapsed).as('milliseconds')
 
                                             }
                                         }
-                                        $('#pDetails').html($('#pDetails').html() + '<tr style="background-color:white; border:1px solid white"><td style="font-size:12px; padding:0px; border:none">Total</td><td style="font-size:12px; padding:0px; border:none"></td><td  style="font-size:12px; padding:0px; border:none"></td><td  style="font-size:12px; padding:0px; border:none">'+ moment.utc(duration).format("HH:mm") +'</td><td style="font-size:12px; padding:0px; border:none"></td></tr>');
+                                        $('#pDetails').html($('#pDetails').html() + '<tr style="background-color:white; border:1px solid white"><td style="font-size:12px; padding:0px; border:none"></td><td  style="font-size:12px; padding:0px; border:none"></td><td  style="font-size:12px; padding:0px; border:none">'+ moment.utc(duration).format("HH:mm") +'</td><td style="font-size:12px; padding:0px; border:none"></td></tr>');
                                         $('#myModal #eventTitle').empty().html(calEvent.title.split(" ")[1] + ' Attendance: ' + calEvent.start.format("MMM DD,YYYY"));
                                     }
 
@@ -586,28 +679,31 @@
                     $('.fc-prev-button').css("display", "none");
                     $('.fc-today-button').css("display", "none");
                     $('.fc-next-button').css("display", "none");
-
                     $('#titleText').html($('.fc-center h2').html())
-                    $('#prev').css("display", "block")
-                    $('#next').css("display", "block")
-                    $('#loading').css("display", "none")
+                    $('#calendarParts').css("visibility", "visible")
+                    //$('#prev').css("display", "block")
+                    //$('#next').css("display", "block")
+                    $('#loadingWheel').css("display", "none")
                 }
         });
 
 
         function getMonthNumber(val) {
-            var months = [" ", "January", "February", "March", "April", "May", "Jule", "July", "August", "September", "October", "November", "December"];
+            var months = [" ", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             return months.indexOf(val);
         }
 
 
         function pullAttendance(val) {
 
+            $('#loadingWheel').css("display", "block")
+            $('#tempEmpID').val(val)
 
             const d = new Date();
             const existingMonth = getMonthNumber($('.fc-toolbar h2').html().split(" ")[0])
             const currentMonth = d.getMonth() + 1;
 
+            //alert(existingMonth)
 
 
             $('.commonClass').css("background-color", "transparent")
@@ -617,7 +713,7 @@
                 $.ajax({
                     type: "GET",
                     url: "/ManagementHarpoon/GetAttendanceDates",
-                    data: { empid: val},
+                    data: { empid: val, mon:existingMonth},
                     success: function (data) {
                         $.each(data, function (i, v) {
                             const durat = netTime(v.split(";")[0].split(" ")[0], val, getLocID(v.split(";")[1]))
@@ -632,9 +728,11 @@
 
                         GenerateCalender(events);
                         GenerateCalender(arrayUniqueByKey);
+                        $('#loadingWheel').css('display', 'none');
+                        //$('#calendarParts, #calender').css('display', 'block')
                     },
                     error: function (error) {
-
+                        GenerateCalender(events);
                     }
                 })
 
@@ -698,7 +796,7 @@
                                     $('#pDetails').html("");
 
                                     if (data.length == 1) {
-                                        $('#pDetails').html('<tr><td style="font-size:12px; padding:0px">' + moment(data[0].split(">")[0].split(" ")[0]).format("MMMM DD,YYYY") + '</td><td style="font-size:12px; padding:0px">'+ data[0].split(">")[0].split(" ")[1].split(":")[0] + ":" + data[0].split(">")[0].split(" ")[1].split(":")[1] + " " + data[0].split(">")[0].split(" ")[2] +'</td><td  style="font-size:12px; padding:0px"></td><td  style="font-size:12px; padding:0px"></td></tr>');
+                                        $('#pDetails').html('<tr><td style="font-size:12px; padding:0px">'+ data[0].split(">")[0].split(" ")[1].split(":")[0] + ":" + data[0].split(">")[0].split(" ")[1].split(":")[1] + " " + data[0].split(">")[0].split(" ")[2] +'</td><td  style="font-size:12px; padding:0px"></td><td  style="font-size:12px; padding:0px"></td><td  style="font-size:12px; padding:0px">'+data[0].split(">")[2]+'</td></tr>');
                                         //$('#myModal #eventTitle').empty().html("Net Attendance");
                                     }
                                     else {
@@ -717,13 +815,14 @@
                                                 var d = moment.duration(ms);
                                                 var timeelapsed = Math.floor(d.asHours()) + moment.utc(ms).format(":mm:ss");
 
-                                                $('#pDetails').html($('#pDetails').html() + '<tr><td style="font-size:12px; padding:0px">' + moment(data[i].split(">")[0].split(" ")[0]).format("MMMM DD,YYYY") + '</td><td style="font-size:12px; padding:0px">'+ data[i-1].split(">")[0].split(" ")[1].split(":")[0] + ":" + data[i-1].split(">")[0].split(" ")[1].split(":")[1] + " " + data[i-1].split(">")[0].split(" ")[2] +'</td><td  style="font-size:12px; padding:0px">'+ data[i].split(">")[0].split(" ")[1].split(":")[0] + ":" + data[i].split(">")[0].split(" ")[1].split(":")[1] + " " + data[i].split(">")[0].split(" ")[2] +'</td><td  style="font-size:12px; padding:0px">'+ timeelapsed.split(":")[0] + ":" +  timeelapsed.split(":")[1]  +'</td></tr>');
+                                                $('#pDetails').html($('#pDetails').html() + '<tr><td style="font-size:12px; padding:0px">'+ data[i-1].split(">")[0].split(" ")[1].split(":")[0] + ":" + data[i-1].split(">")[0].split(" ")[1].split(":")[1] + " " + data[i-1].split(">")[0].split(" ")[2] +'</td><td  style="font-size:12px; padding:0px">'+ data[i].split(">")[0].split(" ")[1].split(":")[0] + ":" + data[i].split(">")[0].split(" ")[1].split(":")[1] + " " + data[i].split(">")[0].split(" ")[2] +'</td><td  style="font-size:12px; padding:0px">'+ timeelapsed.split(":")[0] + ":" +  timeelapsed.split(":")[1] +'</td><td style="font-size:12px; padding:0px">'+data[i].split(">")[2]+'</td></tr>');
 
                                                 duration = duration + moment.duration(timeelapsed).as('milliseconds')
 
                                             }
                                         }
-                                        //$('#myModal #eventTitle').empty().html("Net Attendance --> " + moment.utc(duration).format("HH:mm:ss") + " (HH:MM:SS)");
+                                        $('#pDetails').html($('#pDetails').html() + '<tr style="background-color:white; border:1px solid white"><td style="font-size:12px; padding:0px; border:none"></td><td  style="font-size:12px; padding:0px; border:none"></td><td  style="font-size:12px; padding:0px; border:none">'+ moment.utc(duration).format("HH:mm") +'</td><td style="font-size:12px; padding:0px; border:none"></td></tr>');
+                                        $('#myModal #eventTitle').empty().html(calEvent.title.split(" ")[1] + ' Attendance: ' + calEvent.start.format("MMM DD,YYYY"));
                                     }
 
                                     $('#myModal').modal();
@@ -742,9 +841,10 @@
                     $('.fc-next-button').css("display", "none");
 
                     $('#titleText').html($('.fc-center h2').html())
-                    $('#prev').css("display", "block")
-                    $('#next').css("display", "block")
-                    $('#loading').css("display", "none")
+                    $('#calendarParts').css("visibility", "visible")
+                    //$('#prev').css("display", "block")
+                    //$('#next').css("display", "block")
+                    $('#loadingWheel').css('display', 'none');
                 }
         }
 

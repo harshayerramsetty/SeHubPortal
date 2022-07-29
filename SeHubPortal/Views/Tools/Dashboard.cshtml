@@ -121,7 +121,7 @@
         </style>
     }
 
-    @if (Convert.ToInt32(ViewData["usrid"]) == 10577 || Convert.ToInt32(ViewData["usrid"]) == 10901 )
+    @if (Convert.ToInt32(ViewData["usrid"]) == 10577 || Convert.ToInt32(ViewData["usrid"]) == 10901)
     {
         <style>
             #ExpnseClaimLink {
@@ -129,6 +129,9 @@
             }
         </style>
     }
+
+
+
 
 
     <style>
@@ -170,6 +173,14 @@
         input[type="email"]::-ms-input-placeholder {
             text-align: center;
         }
+
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none; 
+        }
+
 
         @@media screen {
             #printSection {
@@ -284,32 +295,28 @@
 
 </head>
 <body>
-
-    <div class="row heading" style="margin-right:0px">
-        <div class="col" style="margin:0px 10px 10px 15px; padding:10px; background-color:white">
-
-            <div style="display:flex; justify-content:space-between; align-items:center">
-                <div>
-                    <a href="@Url.Action("Dashboard", "Tools")">Tools </a>/ Dashboard
-                </div>
-
-
-                <div style="display:flex; justify-content:space-around; align-items:center">
-                    <label style="margin-right:10px">Location</label>
+    <div class="row heading">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="background-color: white;
+                  height: 100%;
+                  margin-top: 0px;">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Calculator", "Tools")">Tools</a></li>
+                    <li class="breadcrumb-item " aria-current="page">Dashboard</li>
                     @using (Html.BeginForm("DashboardChangeLocation", "Tools", FormMethod.Post))
                     {
+                        <label style="margin: 0px 3px 0px 1240px ">Location</label>
                         @Html.DropDownListFor(m => m.location_id, new SelectList(ViewBag.TypeSelectionList, "Text", "Value"), new { @onChange = "this.form.submit()", @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
+
                     }
-                </div>
-            </div>
+                </ol>
+            </nav>
         </div>
-        <button type="button" id="clickThis" class="btn">
-            <i class="fa fa-bars" style="font-size:25px"></i>
+        <button type="button" id="clickThis" class="btn" style=" margin-bottom: 14px;">
+            <i class="fa fa-bars" style="font-size: 25px "></i>
             <span class="sr-only">Toggle Menu</span>
         </button>
     </div>
-
-    
     <!-- Modal -->
     <div class="modal fade show in noselect" data-backdrop="static" data-keyboard="false" id="myModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
@@ -356,7 +363,7 @@
                             </div>
                             <div class="col-md-4 text-right">
                                 <div class="dontShowInPrint">
-                                    <button id="btnPrint" type="button" class="btn btn-primary dontShowInPrint" style="float:right; display:none; margin-top:5px; width:110px; padding:2px 20px 2px 20px" data-toggle="tooltip" data-placement="top" title="Replacement Invoice is required">
+                                    <button id="btnPrint" onclick="printElement(document.getElementById('printThis'));" type="button" class="btn btn-primary dontShowInPrint" style="float:right; display:none; margin-top:5px; width:110px; padding:2px 20px 2px 20px" data-toggle="tooltip" data-placement="top" title="Replacement Invoice is required">
                                         Print
                                     </button>
                                 </div>
@@ -675,8 +682,8 @@
                                         <tbody>
                                             <tr>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.dot_0, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @id = "dot_0" } })</td>
-                                                <td style="padding:0px">@Html.EditorFor(m => m.product_code_0, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @style = "width:250px", @id = "product_code_0" } })</td>
-                                                <td style="padding:0px">@Html.EditorFor(m => m.thirty_seconds_0, new { htmlAttributes = new { @autocomplete = "off", @onkeypress = "return isNumberKey(event)", @type = "text", @class = "text-center clear", @style = "width:100%", @id = "thirty_seconds_0" } })</td>
+                                                <td style="padding:0px">@Html.EditorFor(m => m.product_code_0, new { htmlAttributes = new { @type="number", @autocomplete = "off", @class = "text-center clear", @style = "width:250px", @id = "product_code_0" } })</td>
+                                                <td style="padding:0px">@Html.EditorFor(m => m.thirty_seconds_0, new { htmlAttributes = new { @autocomplete = "off", @onkeypress = "return isNumberKey(event)", @type = "text", @class = "text-center clear", @style = "width:102px", @id = "thirty_seconds_0" } })</td>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.mileage_0, new { htmlAttributes = new { @autocomplete = "off", @onkeypress = "return isNumberKey(event)", @type = "text", @class = "text-center clear", @id = "mileage_0" } })</td>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.percent_worn_0, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @style = "width:150px", @id = "percent_worn_0" } })</td>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.repl_cost_0, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @id = "repl_cost_0" } })</td>
@@ -684,8 +691,8 @@
                                             </tr>
                                             <tr>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.dot_1, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @id = "dot_1" } })</td>
-                                                <td style="padding:0px">@Html.EditorFor(m => m.product_code_1, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @style = "width:250px", @id = "product_code_1" } })</td>
-                                                <td style="padding:0px">@Html.EditorFor(m => m.thirty_seconds_1, new { htmlAttributes = new { @autocomplete = "off", @onkeypress = "return isNumberKey(event)", @type = "text", @class = "text-center clear", @style = "width:100%", @id = "thirty_seconds_1" } })</td>
+                                                <td style="padding:0px">@Html.EditorFor(m => m.product_code_1, new { htmlAttributes = new { @type="number", @autocomplete = "off", @class = "text-center clear", @style = "width:250px", @id = "product_code_1" } })</td>
+                                                <td style="padding:0px">@Html.EditorFor(m => m.thirty_seconds_1, new { htmlAttributes = new { @autocomplete = "off", @onkeypress = "return isNumberKey(event)", @type = "text", @class = "text-center clear", @style = "width:102px", @id = "thirty_seconds_1" } })</td>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.mileage_1, new { htmlAttributes = new { @autocomplete = "off", @onkeypress = "return isNumberKey(event)", @type = "text", @class = "text-center clear", @id = "mileage_1" } })</td>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.percent_worn_1, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @style = "width:150px", @id = "percent_worn_1" } })</td>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.repl_cost_1, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @id = "repl_cost_1" } })</td>
@@ -693,8 +700,8 @@
                                             </tr>
                                             <tr>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.dot_2, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @id = "dot_2" } })</td>
-                                                <td style="padding:0px">@Html.EditorFor(m => m.product_code_2, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @style = "width:250px", @id = "product_code_2" } })</td>
-                                                <td style="padding:0px">@Html.EditorFor(m => m.thirty_seconds_2, new { htmlAttributes = new { @autocomplete = "off", @onkeypress = "return isNumberKey(event)", @type = "text", @class = "text-center clear", @style = "width:100%", @id = "thirty_seconds_2" } })</td>
+                                                <td style="padding:0px">@Html.EditorFor(m => m.product_code_2, new { htmlAttributes = new { @type="number", @autocomplete = "off", @class = "text-center clear", @style = "width:250px", @id = "product_code_2" } })</td>
+                                                <td style="padding:0px">@Html.EditorFor(m => m.thirty_seconds_2, new { htmlAttributes = new { @autocomplete = "off", @onkeypress = "return isNumberKey(event)", @type = "text", @class = "text-center clear", @style = "width:102px", @id = "thirty_seconds_2" } })</td>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.mileage_2, new { htmlAttributes = new { @autocomplete = "off", @onkeypress = "return isNumberKey(event)", @type = "text", @class = "text-center clear", @id = "mileage_2" } })</td>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.percent_worn_2, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @style = "width:150px", @id = "percent_worn_2" } })</td>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.repl_cost_2, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @id = "repl_cost_2" } })</td>
@@ -702,8 +709,8 @@
                                             </tr>
                                             <tr>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.dot_3, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @id = "dot_3" } })</td>
-                                                <td style="padding:0px">@Html.EditorFor(m => m.product_code_3, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @style = "width:250px", @id = "product_code_3" } })</td>
-                                                <td style="padding:0px">@Html.EditorFor(m => m.thirty_seconds_3, new { htmlAttributes = new { @autocomplete = "off", @onkeypress = "return isNumberKey(event)", @type = "text", @class = "text-center clear", @style = "width:100%", @id = "thirty_seconds_3" } })</td>
+                                                <td style="padding:0px">@Html.EditorFor(m => m.product_code_3, new { htmlAttributes = new { @type="number", @autocomplete = "off", @class = "text-center clear", @style = "width:250px", @id = "product_code_3" } })</td>
+                                                <td style="padding:0px">@Html.EditorFor(m => m.thirty_seconds_3, new { htmlAttributes = new { @autocomplete = "off", @onkeypress = "return isNumberKey(event)", @type = "text", @class = "text-center clear", @style = "width:102px", @id = "thirty_seconds_3" } })</td>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.mileage_3, new { htmlAttributes = new { @autocomplete = "off", @onkeypress = "return isNumberKey(event)", @type = "text", @class = "text-center clear", @id = "mileage_3" } })</td>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.percent_worn_3, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @style = "width:150px", @id = "percent_worn_3" } })</td>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.repl_cost_3, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @id = "repl_cost_3" } })</td>
@@ -711,8 +718,8 @@
                                             </tr>
                                             <tr>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.dot_4, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @id = "dot_4" } })</td>
-                                                <td style="padding:0px">@Html.EditorFor(m => m.product_code_4, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @style = "width:250px", @id = "product_code_4" } })</td>
-                                                <td style="padding:0px">@Html.EditorFor(m => m.thirty_seconds_4, new { htmlAttributes = new { @autocomplete = "off", @onkeypress = "return isNumberKey(event)", @type = "text", @class = "text-center clear", @style = "width:100%", @id = "thirty_seconds_4" } })</td>
+                                                <td style="padding:0px">@Html.EditorFor(m => m.product_code_4, new { htmlAttributes = new { @type="number", @autocomplete = "off", @class = "text-center clear", @style = "width:250px", @id = "product_code_4" } })</td>
+                                                <td style="padding:0px">@Html.EditorFor(m => m.thirty_seconds_4, new { htmlAttributes = new { @autocomplete = "off", @onkeypress = "return isNumberKey(event)", @type = "text", @class = "text-center clear", @style = "width:102px", @id = "thirty_seconds_4" } })</td>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.mileage_4, new { htmlAttributes = new { @autocomplete = "off", @onkeypress = "return isNumberKey(event)", @type = "text", @class = "text-center clear", @id = "mileage_4" } })</td>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.percent_worn_4, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @style = "width:150px", @id = "percent_worn_4" } })</td>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.repl_cost_4, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @id = "repl_cost_4" } })</td>
@@ -720,8 +727,8 @@
                                             </tr>
                                             <tr>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.dot_5, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @id = "dot_5" } })</td>
-                                                <td style="padding:0px">@Html.EditorFor(m => m.product_code_5, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @style = "width:250px", @id = "product_code_5" } })</td>
-                                                <td style="padding:0px">@Html.EditorFor(m => m.thirty_seconds_5, new { htmlAttributes = new { @autocomplete = "off", @onkeypress = "return isNumberKey(event)", @type = "text", @class = "text-center clear", @style = "width:100%", @id = "thirty_seconds_5" } })</td>
+                                                <td style="padding:0px">@Html.EditorFor(m => m.product_code_5, new { htmlAttributes = new { @type="number", @autocomplete = "off", @class = "text-center clear", @style = "width:250px", @id = "product_code_5" } })</td>
+                                                <td style="padding:0px">@Html.EditorFor(m => m.thirty_seconds_5, new { htmlAttributes = new { @autocomplete = "off", @onkeypress = "return isNumberKey(event)", @type = "text", @class = "text-center clear", @style = "width:102px", @id = "thirty_seconds_5" } })</td>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.mileage_5, new { htmlAttributes = new { @autocomplete = "off", @onkeypress = "return isNumberKey(event)", @type = "text", @class = "text-center clear", @id = "mileage_5" } })</td>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.percent_worn_5, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @style = "width:150px", @id = "percent_worn_5" } })</td>
                                                 <td style="padding:0px">@Html.EditorFor(m => m.repl_cost_5, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @id = "repl_cost_5" } })</td>
@@ -747,8 +754,8 @@
                     </div>
                     <div class="modal-footer text-center" style="padding:0px 10px 0px 6px">
                         <JavaBlink style="padding-right:200px"><p style="font-weight:bold ; font-size:20px ; color:#acadad">-- Print and Save buttons not visible untill invoice# is entered --</p></JavaBlink>
-                        <input type="button" id="submitBtn1" data-toggle="tooltip" data-placement="top" title="Replacement Invoice is required" class="btn btn-success dontShowInPrint" value="Save" style="padding:2px 30px 2px 30px" />
-                        <button type="button" id="cancel" class="btn btn-danger" data-dismiss="modal" style="padding:2px 25px 2px 25px">Close</button>
+                        <button type="button" id="submitBtn1" readonly data-toggle="tooltip" data-placement="top" title="Replacement Invoice is required" class="btn btn-success dontShowInPrint" style="padding:2px 35px 2px 35px">Save</button>
+                        <button type="button" id="cancel" class="btn btn-danger" data-dismiss="modal" style="padding:2px 30px 2px 30px">Close</button>
                     </div>
                 </div>
             }
@@ -946,7 +953,7 @@
                                         </div>
                                     </div>
                                     <div class="row" style="margin-top:0px;">
-                                        <input class="btn" id="SCSReset" readonly style="color:white; background-color:#808080; margin-left:242px; width:170px; height:60px; font-weight:bold; font-size:25px" type="text" name="name" value="Reset" />
+                                        <button class="btn" id="SCSReset" style="color:white; background-color:#808080; margin-left:242px; width:170px; height:60px; font-weight:bold; font-size:25px">Reset</button>
                                     </div>
 
                                     <div class="row text-center" style="margin-top:50px; margin-bottom:10px;">
@@ -1254,34 +1261,40 @@
         </div>
     </div>
 
-    <div class="row" style="margin-left: 0px; display:flex">
-        <div class="card shadow-lg" style="margin-bottom:15px; margin-left:15px; width:260px;" id="calcButton" type="button" data-toggle="modal" data-target="#myModal1">
-            <div class="card-body text-center" style="height:338px; margin-left:auto; margin-right:auto; margin-top:20px; padding-top:40px">
-                <img src="~/Content/Calculator.png" style="margin-bottom:30px; width:150px;">
-                <h5 style="font-weight:bold; color:black">Calculator</h5>
+    <div class="row" style="margin-left: 0px">
+        <div class="col-lg-2">
+            <div class="card shadow-lg" style="width:260px;" id="calcButton" type="button" data-toggle="modal" data-target="#myModal1">
+                <div class="card-body text-center" style="height:338px; margin-left:auto; margin-right:auto; margin-top:20px; padding-top:40px">
+                    <img src="~/Content/Calculator.png" style="margin-bottom:30px; width:150px;">
+                    <h5 style="font-weight:bold; color:black">Calculator</h5>
+                </div>
             </div>
         </div>
         @if (Convert.ToString(ViewData["usrid"]) == "109011" || Convert.ToString(ViewData["usrid"]) == "105771")
         {
-            <div class="card shadow-lg" style="margin-bottom:15px; margin-left:15px; width:260px;" id="calcButton" type="button" data-toggle="modal" data-target="#myModal12">
-                <div class="card-body text-center" style="height:338px; margin-left:auto; margin-right:auto; margin-top:20px; padding-top:40px">
-                    <img src="~/Content/Calculator.png" style="margin-bottom:30px; width:150px;">
-                    <h5 style="font-weight:bold; color:black">Calculator</h5>
+            <div class="col-lg-2">
+                <div class="card shadow-lg" style="width:260px;" id="calcButton" type="button" data-toggle="modal" data-target="#myModal12">
+                    <div class="card-body text-center" style="height:338px; margin-left:auto; margin-right:auto; margin-top:20px; padding-top:40px">
+                        <img src="~/Content/Calculator.png" style="margin-bottom:30px; width:150px;">
+                        <h5 style="font-weight:bold; color:black">Calculator</h5>
+                    </div>
                 </div>
             </div>
         }
 
         @if (Convert.ToInt32(ViewData["tools_dashboard"]) >= 2)
         {
-            <div class="card shadow-lg" style="margin-bottom:15px; margin-left:15px; padding-top:40px; width:260px; height:358px" type="button" data-toggle="modal" data-target="#editOrOpen">
-                <div class="card-body">
-                    <div class="row">
-                        <img src="~/Content/tire12.png" style="height:110px; width:140px; margin-left:auto; margin-right:auto">
+            <div class="col-lg-2">
+                <div class="card shadow-lg" style="padding-top:40px; width:260px; height:358px" type="button" data-toggle="modal" data-target="#editOrOpen">
+                    <div class="card-body">
+                        <div class="row">
+                            <img src="~/Content/tire12.png" style="height:110px; width:140px; margin-left:auto; margin-right:auto">
+                        </div>
+                        <div class="row">
+                            <img src="~/Content/Adjust.png" style="height:110px; width:150px; margin-left:auto; margin-right:auto">
+                        </div>
+                        <h5 style="margin-left:20px; font-weight:bold; color:black">Tire Adjustment</h5>
                     </div>
-                    <div class="row">
-                        <img src="~/Content/Adjust.png" style="height:110px; width:150px; margin-left:auto; margin-right:auto">
-                    </div>
-                    <h5 style="margin-left:20px; font-weight:bold; color:black">Tire Adjustment</h5>
                 </div>
             </div>
         }
@@ -1290,18 +1303,22 @@
         @*if (Convert.ToString(ViewData["usrid"]) == "10901" || Convert.ToString(ViewData["usrid"]) == "10577")*@
         @if (Convert.ToInt32(ViewData["tools_dashboard"]) >= 2)
         {
-            <div class="card shadow-lg" style="margin-bottom:15px; margin-left:15px; width:260px;" id="calcButton" type="button" data-toggle="modal" data-target="#ExpenseModel">
-                <div class="card-body text-center" style="height:338px; margin-left:auto; margin-right:auto; margin-top:20px; padding-top:40px">
-                    <img src="~/Content/expense.png" style="margin-bottom:30px; width:190px;">
-                    <h5 style="font-weight:bold; color:black">Expense Claim</h5>
+            <div class="col-lg-2">
+                <div class="card shadow-lg" style="width:260px;" id="calcButton" type="button" data-toggle="modal" data-target="#ExpenseModel">
+                    <div class="card-body text-center" style="height:338px; margin-left:auto; margin-right:auto; margin-top:20px; padding-top:40px">
+                        <img src="~/Content/expense.png" style="margin-bottom:30px; width:190px;">
+                        <h5 style="font-weight:bold; color:black">Expense Claim</h5>
+                    </div>
                 </div>
             </div>
         }
 
-        <div class="card shadow-lg" style="margin-bottom:15px; margin-left:15px; width:260px;" type="button" data-toggle="modal" data-target="#CreditCard">
-            <div class="card-body text-center" style="height:338px; margin-left:auto; margin-right:auto; margin-top:20px; padding-top:40px">
-                <img src="~/Content/CreditCard.png" style="margin-bottom:40px; width:190px;">
-                <h5 style="font-weight:bold; color:black">Credit Card Authorization</h5>
+        <div class="col-lg-2">
+            <div class="card shadow-lg" style="width:260px;" type="button" data-toggle="modal" data-target="#CreditCard">
+                <div class="card-body text-center" style="height:338px; margin-left:auto; margin-right:auto; margin-top:20px; padding-top:40px">
+                    <img src="~/Content/CreditCard.png" style="margin-bottom:40px; width:190px;">
+                    <h5 style="font-weight:bold; color:black">Credit Card Authorization</h5>
+                </div>
             </div>
         </div>
 
@@ -1502,50 +1519,23 @@
 
                     <div class="row">
                         <div class="col-lg-12 text-center">
-                            <button id="newTA" data-toggle="modal" data-dismiss="modal" class="btn btn-primary" style="padding:6px 43px 6px 43px" data-target="#myModal">New Entry</button>
+                            <button onclick="$('#submitBtn1').css('display', 'block')" id="newTA" data-toggle="modal" data-dismiss="modal" class="btn btn-primary" style="padding:6px 43px 6px 43px" data-target="#myModal">New Entry</button>
 
                         </div>
 
                     </div>
                     <hr />
-                    <div style="display:none">
-                        <div class="row" style="margin-bottom:10px">
-                            <div class="col-lg-12 text-center">
-                                <label id="firstDigits">TA-@Model.location_id</label>
-                                <input type="text" onkeydown="check5Digits()" autocomplete="off" maxlength="5" style="margin-right:15px; width:100px" id="entreTAnumber" name="name" value="" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-12 text-center">
-                                <button aria-expanded="false" disabled type="button" id="GO" data-dismiss="modal" class="btn btn-primary" style="padding:5px 30px 5px 30px">Open Existing</button>
-                            </div>
-
+                    <div class="row" style="margin-bottom:10px">
+                        <div class="col-lg-12 text-center">
+                            <label id="firstDigits">TA-@Model.location_id</label>
+                            <input type="text" onkeydown="check5Digits()" autocomplete="off" maxlength="5" style="margin-right:15px; width:100px" id="entreTAnumber" name="name" value="" />
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-lg-12 text-center">
+                            <button aria-expanded="false" disabled type="button" id="GO" data-dismiss="modal" class="btn btn-primary" style="padding:5px 30px 5px 30px">Open Existing</button>
+                        </div>
 
-                    <div id="">
-                        <div class="row">
-                            <div class="col-lg-12 text-center">
-                                <button aria-expanded="false" type="button" onclick="openExisting()" class="btn btn-primary" style="padding:5px 30px 5px 30px">Open Existing</button>
-                            </div>
-                        </div>
-                        <div class="row" style="margin-top:15px">
-                            <div class="col-lg-12">
-                                <div id="existingTA" style="display:none">
-                                    <table class="table table-striped table-bordered">
-                                        <thead style="background-color:gray; color:white">
-                                            <tr>
-                                                <th style="font-size:10px; padding:0px; text-align:center" scope="col">Date</th>
-                                                <th style="font-size:10px; padding:0px; text-align:center" scope="col">TA-ID</th>
-                                                <th style="font-size:10px; padding:0px; text-align:center" scope="col">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="pDetails">
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                 </div>
@@ -1589,22 +1579,20 @@
     </div>
 
     <div class="modal SavedSuccessfully" id="SavedSuccessfully">
-        <div class="modal-dialog" style="box-shadow:5px 5px 22px 11px rgba(0,0,0,0.71)">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header" style="background-color:#66c46c; padding:5px 2px 0px 2px">
                     <h5 style="margin-left:auto; margin-right:auto">Acknowledgment</h5>
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-lg-12"> <h6 style="margin-left:auto; margin-right:auto">Tire Adjustment form saved successfully with ID <span id="TAnumberSaveModal"></span> </h6> </div>
+                        <div class="col-lg-12"> <h6 style="margin-left:auto; margin-right:auto">Tire Adjustment form saved successfully</h6> </div>
                     </div>
                 </div>
             </div>
         </div>
 
     </div>
-
-    <input type="text" style="display:none" id="locIDop" name="name" value="@Model.location_id" />
 
 
     <br />
@@ -1627,19 +1615,7 @@
 
     <script type="text/javascript">
 
-        function openExisting() {
-
-            $.ajax({
-                url: '@Url.Action("PopulateTireAdjustment", "Tools")',
-                data: { loc: $('#locIDop').val()},
-                success: function (data) {
-                    for (i = 0; i < data.length; i++) {
-                        $('#pDetails').html($('#pDetails').html() + '<tr><td style="font-size:12px; padding:0px; text-align:center">' + data[i].value + '</td><td  style="font-size:12px; padding:0px; text-align:center">'+ data[i].text +'</td><td  style="font-size:12px; padding:0px; text-align:center"><button class="btn-primary" id="'+ data[i].text +'" onclick="openExistingForm(this.id)" data-dismiss="modal"><b><i>i</i></b></button></td></tr>');
-                    }
-                    $('#existingTA').css("display", "block");
-                }
-            });
-        }
+        //$('#WheelLink').css("background-color", "white");
 
         function check5Digits() {
             if ($("#entreTAnumber").val().length >= 4) {
@@ -1809,7 +1785,6 @@
                 type: 'POST',
                 success: function (data) {
                     $("#TAnumber").val(data)
-                    $("#TAnumberSaveModal").text(data)
                     $("#btnPrint").css("display", "block");
                     $('#SavedSuccessfully').modal();
                 }
@@ -1881,104 +1856,101 @@
         });
 
 
-        function openExistingForm(val) {
+        $("#GO").click(function () {
+            $('#btnPrint').css('display', 'block')
+            $('#submitBtn1').css('display', 'none')
+            var TAnum = $("#entreTAnumber").val();
+            var FullTAnum = "TA-" + $("#Location").val() + TAnum;
 
-                var FullTAnum = val ;
+            $.ajax({
+                url: '@Url.Action("LoadTAform", "Tools")',
+                data: { value: FullTAnum },
+                type: 'POST',
+                success: function (TAdata) {
+                    var TAdetails = JSON.parse(TAdata);
+                    if (TAdetails == null) {
+                        $('#InvalidTA').modal();
+                    }
+                    else {
+                        $('#myModal').modal();
+                        $("#TAnumber").val(TAdetails.Tire_Adjustment_id);
+                        var num = TAdetails.date.match(/\d+/g);
+                        var date = new Date(parseFloat(num)); //converting to date
+                        $("#TAdate").html(date.getMonth() + 1 + "-" + date.getDate() + '-' + date.getFullYear());
+                        $("#TAemployee").html(TAdetails.cta_employee_name);
+                        $("#TAnonSig").html(TAdetails.non_sig_number);
+                        $("#TAlocation").html(TAdetails.location_id);
+                        $("#replacement_invoice").val(TAdetails.replacement_invoice);
 
-                $.ajax({
-                            url: '@Url.Action("LoadTAform", "Tools")',
-                            data: { value: FullTAnum },
-                            type: 'POST',
-                            success: function (TAdata) {
+                        $("#TAname").val(TAdetails.name);
+                        $("#TAphone").val(TAdetails.phone);
+                        $("#TAstreet").val(TAdetails.street);
+                        $("#TAcity").val(TAdetails.city);
+                        $("#TAprovince").val(TAdetails.province);
+                        $("#TApostalCode").val(TAdetails.postal_code);
 
-                                var TAdetails = JSON.parse(TAdata);
+                        $("#Brand").val(TAdetails.brand);
+                        $("#TAtread").val(TAdetails.tread);
+                        $("#TAsize").val(TAdetails.size);
+                        $("#quantity").val(TAdetails.quantity);
+                        $("#current_EDL").val(TAdetails.current_EDL);
+                        $("#original_32nds").val(TAdetails.original_32nds);
 
-                                if (TAdetails == null) {
+                        $("#Manufacture_Approval").val(TAdetails.manufacture_approval);
+                        $("#Modified_Adjustment_Mod").val(TAdetails.modified_adjustment_modified);
+                        $("#Mileage_Warranty").val(TAdetails.mileage_warranty);
+                        $("#Average_Tire_Mileage").val(TAdetails.average_tire_mileage);
+                        $("#Modified_Adjustment").val(TAdetails.modified_adjustment_mileage);
 
-                                    $('#InvalidTA').modal();
+                        $("#dot_0").val(TAdetails.dot_0);
+                        $("#product_code_0").val(TAdetails.product_code_0);
+                        $("#thirty_seconds_0").val(TAdetails.thirty_seconds_0);
+                        $("#mileage_0").val(TAdetails.mileage_0);
+                        $("#percent_worn_0").val(TAdetails.percent_worn_0);
+                        $("#repl_cost_0").val(TAdetails.repl_cost_0);
+                        $("#reason_for_removal_0").val(TAdetails.reason_for_removal_0);
 
+                        $("#dot_1").val(TAdetails.dot_1);
+                        $("#product_code_1").val(TAdetails.product_code_1);
+                        $("#thirty_seconds_1").val(TAdetails.thirty_seconds_1);
+                        $("#mileage_1").val(TAdetails.mileage_1);
+                        $("#percent_worn_1").val(TAdetails.percent_worn_1);
+                        $("#repl_cost_1").val(TAdetails.repl_cost_1);
+                        $("#reason_for_removal_1").val(TAdetails.reason_for_removal_1);
 
-                                }
-                                else {
-                                    $('#myModal').modal();
-                                    $("#TAnumber").val(TAdetails.Tire_Adjustment_id);
-                                    var num = TAdetails.date.match(/\d+/g);
-                                    var date = new Date(parseFloat(num)); //converting to date
-                                    $("#TAdate").html(date.getMonth() + 1 + "-" + date.getDate() + '-' + date.getFullYear());
-                                    $("#TAemployee").html(TAdetails.cta_employee_name);
-                                    $("#TAnonSig").html(TAdetails.non_sig_number);
-                                    $("#TAlocation").html(TAdetails.location_id);
-                                    $("#replacement_invoice").val(TAdetails.replacement_invoice);
+                        $("#dot_2").val(TAdetails.dot_2);
+                        $("#product_code_2").val(TAdetails.product_code_2);
+                        $("#thirty_seconds_2").val(TAdetails.thirty_seconds_2);
+                        $("#mileage_2").val(TAdetails.mileage_2);
+                        $("#percent_worn_2").val(TAdetails.percent_worn_2);
+                        $("#repl_cost_2").val(TAdetails.repl_cost_2);
+                        $("#reason_for_removal_2").val(TAdetails.reason_for_removal_2);
 
-                                    $("#TAname").val(TAdetails.name);
-                                    $("#TAphone").val(TAdetails.phone);
-                                    $("#TAstreet").val(TAdetails.street);
-                                    $("#TAcity").val(TAdetails.city);
-                                    $("#TAprovince").val(TAdetails.province);
-                                    $("#TApostalCode").val(TAdetails.postal_code);
+                        $("#dot_3").val(TAdetails.dot_3);
+                        $("#product_code_3").val(TAdetails.product_code_3);
+                        $("#thirty_seconds_3").val(TAdetails.thirty_seconds_3);
+                        $("#mileage_3").val(TAdetails.mileage_3);
+                        $("#percent_worn_3").val(TAdetails.percent_worn_3);
+                        $("#repl_cost_3").val(TAdetails.repl_cost_3);
+                        $("#reason_for_removal_3").val(TAdetails.reason_for_removal_3);
 
-                                    $("#Brand").val(TAdetails.brand);
-                                    $("#TAtread").val(TAdetails.tread);
-                                    $("#TAsize").val(TAdetails.size);
-                                    $("#quantity").val(TAdetails.quantity);
-                                    $("#current_EDL").val(TAdetails.current_EDL);
-                                    $("#original_32nds").val(TAdetails.original_32nds);
+                        $("#dot_4").val(TAdetails.dot_4);
+                        $("#product_code_4").val(TAdetails.product_code_4);
+                        $("#thirty_seconds_4").val(TAdetails.thirty_seconds_4);
+                        $("#mileage_4").val(TAdetails.mileage_4);
+                        $("#percent_worn_4").val(TAdetails.percent_worn_4);
+                        $("#repl_cost_4").val(TAdetails.repl_cost_4);
+                        $("#reason_for_removal_4").val(TAdetails.reason_for_removal_4);
 
-                                    $("#Manufacture_Approval").val(TAdetails.manufacture_approval);
-                                    $("#Modified_Adjustment_Mod").val(TAdetails.modified_adjustment_modified);
-                                    $("#Mileage_Warranty").val(TAdetails.mileage_warranty);
-                                    $("#Average_Tire_Mileage").val(TAdetails.average_tire_mileage);
-                                    $("#Modified_Adjustment").val(TAdetails.modified_adjustment_mileage);
+                        $("#dot_5").val(TAdetails.dot_5);
+                        $("#product_code_5").val(TAdetails.product_code_5);
+                        $("#thirty_seconds_5").val(TAdetails.thirty_seconds_5);
+                        $("#mileage_5").val(TAdetails.mileage_5);
+                        $("#percent_worn_5").val(TAdetails.percent_worn_5);
+                        $("#repl_cost_5").val(TAdetails.repl_cost_5);
+                        $("#reason_for_removal_5").val(TAdetails.reason_for_removal_5);
 
-                                    $("#dot_0").val(TAdetails.dot_0);
-                                    $("#product_code_0").val(TAdetails.product_code_0);
-                                    $("#thirty_seconds_0").val(TAdetails.thirty_seconds_0);
-                                    $("#mileage_0").val(TAdetails.mileage_0);
-                                    $("#percent_worn_0").val(TAdetails.percent_worn_0);
-                                    $("#repl_cost_0").val(TAdetails.repl_cost_0);
-                                    $("#reason_for_removal_0").val(TAdetails.reason_for_removal_0);
-
-                                    $("#dot_1").val(TAdetails.dot_1);
-                                    $("#product_code_1").val(TAdetails.product_code_1);
-                                    $("#thirty_seconds_1").val(TAdetails.thirty_seconds_1);
-                                    $("#mileage_1").val(TAdetails.mileage_1);
-                                    $("#percent_worn_1").val(TAdetails.percent_worn_1);
-                                    $("#repl_cost_1").val(TAdetails.repl_cost_1);
-                                    $("#reason_for_removal_1").val(TAdetails.reason_for_removal_1);
-
-                                    $("#dot_2").val(TAdetails.dot_2);
-                                    $("#product_code_2").val(TAdetails.product_code_2);
-                                    $("#thirty_seconds_2").val(TAdetails.thirty_seconds_2);
-                                    $("#mileage_2").val(TAdetails.mileage_2);
-                                    $("#percent_worn_2").val(TAdetails.percent_worn_2);
-                                    $("#repl_cost_2").val(TAdetails.repl_cost_2);
-                                    $("#reason_for_removal_2").val(TAdetails.reason_for_removal_2);
-
-                                    $("#dot_3").val(TAdetails.dot_3);
-                                    $("#product_code_3").val(TAdetails.product_code_3);
-                                    $("#thirty_seconds_3").val(TAdetails.thirty_seconds_3);
-                                    $("#mileage_3").val(TAdetails.mileage_3);
-                                    $("#percent_worn_3").val(TAdetails.percent_worn_3);
-                                    $("#repl_cost_3").val(TAdetails.repl_cost_3);
-                                    $("#reason_for_removal_3").val(TAdetails.reason_for_removal_3);
-
-                                    $("#dot_4").val(TAdetails.dot_4);
-                                    $("#product_code_4").val(TAdetails.product_code_4);
-                                    $("#thirty_seconds_4").val(TAdetails.thirty_seconds_4);
-                                    $("#mileage_4").val(TAdetails.mileage_4);
-                                    $("#percent_worn_4").val(TAdetails.percent_worn_4);
-                                    $("#repl_cost_4").val(TAdetails.repl_cost_4);
-                                    $("#reason_for_removal_4").val(TAdetails.reason_for_removal_4);
-
-                                    $("#dot_5").val(TAdetails.dot_5);
-                                    $("#product_code_5").val(TAdetails.product_code_5);
-                                    $("#thirty_seconds_5").val(TAdetails.thirty_seconds_5);
-                                    $("#mileage_5").val(TAdetails.mileage_5);
-                                    $("#percent_worn_5").val(TAdetails.percent_worn_5);
-                                    $("#repl_cost_5").val(TAdetails.repl_cost_5);
-                                    $("#reason_for_removal_5").val(TAdetails.reason_for_removal_5);
-
-                                    $("#TAcomments").html("commentsSection");
+                        $("#TAcomments").html("commentsSection");
 
 
                                     if (TAdetails.manufacture_approval != null && TAdetails.manufacture_approval != "") {
@@ -2322,7 +2294,9 @@
 
                             }
                 });
-        }
+
+            $("#entreTAnumber").val("")
+        });
 
 
         const form = document.getElementById('PartsCost');
@@ -2557,10 +2531,9 @@
         const form5 = document.getElementById('SCSCost');
 
         $('#SCSCost').keydown(function (event) {
-            var keyCode1 = (event.keyCode ? event.keyCode : event.which);
-            if (keyCode1 == 9) {
+            var keyCode = (event.keyCode ? event.keyCode : event.which);
+            if (keyCode == 9 || keyCode == 13) {
                 $('#SCSReset').focus();
-
             }
         });
 
@@ -2665,7 +2638,7 @@
         });
 
         $("#ScsLink").click(function () {
-            //$("#WheelCost").focus();
+            $("#SCS input").val("");
             $('#PartsLink').css("background-color", "white");
             $('#TireLink').css("background-color", "white");
             $('#WheelLink').css("background-color", "white");
@@ -2848,6 +2821,7 @@
                 $('#percent_worn_0').removeAttr("disabled").attr('readonly', 'true');
                 $('#repl_cost_0').removeAttr("disabled").attr('readonly', 'true');
                 $('#reason_for_removal_0').prop({ disabled: false, required: true });
+
                 $('#dot_1').prop({ disabled: false, required: true });
                 $('#product_code_1').prop({ disabled: false, required: true });
                 $('#thirty_seconds_1').prop({ disabled: false, required: true }).focusout(function () {
@@ -4348,10 +4322,6 @@
 
         $(document).ready(function () {
 
-            $('#clickThis').on('click', function () {
-                $('#sidebar').toggleClass('active');
-            });
-
             $(window).keydown(function (event) {
                 if (event.keyCode == 13) {
                     event.preventDefault();
@@ -5045,9 +5015,6 @@
 
     </script>
     <script type="text/javascript">
-        document.getElementById("btnPrint").onclick = function () {
-            printElement(document.getElementById("printThis"));
-        }
 
         function printElement(elem) {
             var domClone = elem.cloneNode(true);

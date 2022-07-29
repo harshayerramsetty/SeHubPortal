@@ -14,11 +14,10 @@ namespace SeHubPortal.Models
     
     public partial class tbl_harpoon_departments
     {
-        public string department_id { get; set; }
-        public string name { get; set; }
-        public Nullable<bool> available_to_all_loc { get; set; }
-        public string parent_location { get; set; }
-        public Nullable<bool> admin { get; set; }
-        public string clocking_comments { get; set; }
+        public string auto_department_id { get; set; }
+        public string department_name { get; set; }
+        public string loc_id_pairing { get; set; }
+        public string loc_id_installation { get; set; }
+        public string client_id { get; set; }
     }
 }

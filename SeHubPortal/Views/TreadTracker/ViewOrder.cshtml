@@ -17,16 +17,13 @@
 
     <style type="text/css">
 
-        .card-header {
-            background-color: #cde8ca;
-        }
 
             .card-header h6 {
                 color: black;
             }
 
         body {
-            background-color: #f0f2f5;
+            background-color: white;
         }
 
         .heading {
@@ -78,7 +75,6 @@
         input {
             text-align: center;
             visibility: visible;
-            height: 32px;
         }
 
         .lineStyle {
@@ -123,12 +119,6 @@
                 margin: 0px 0px 0px 10px;
             }
 
-        .transcationButtons {
-            margin: 0px 0px 0px 0px;
-            border-radius: 5px;
-            width: 90px;
-            height: 35px;
-        }
 
         .commentsSection {
             margin: 10px 0px 0px 0px;
@@ -220,6 +210,7 @@
 
             #printSection, #printSection * {
                 visibility: visible;
+                font-size:13px
             }
 
             #printSection {
@@ -234,31 +225,32 @@
 
     </style>
 </head>
-<body>
+<body style="background-color:white">
 
     <div class="card">
         <div id="EditForm">
-            <div class="card-header" style="padding:5px 30px 5px 0px; background-color:white">
+            <div class="card-header" style="padding:3px 15px; background-color:white !important">
                 <div class="row">
-                    <div class="col-md-7" style="padding-left: 30px; padding-top: 5px; padding-bottom: 0px">
-                        <h4><b>View Work Order</b></h4>
-                    </div>
-                    <div class="col-md-5 text-right" style="padding-right:0px">
+                    <div class="col-md-12" style="display:flex; justify-content:space-between; align-items:center">
+                        <div style="display:flex; align-items:center; font-weight:bolder; font-size:25px">
+                            View Work Order
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center">
+                            <button type="button" class="btn btn-primary transcationButtons" id="emailButton" style="padding:0px 20px 0px 20px; margin:0px 5px">Email</button>
+                            @if (Model.SehubAccess.treadTrackerDashboard >= 2)
+                            {
+                                <button id="EditFormOpen" type="button" class="btn btn-primary" style="padding: 0px 25px 0px 25px; margin:0px 5px">
+                                    Edit
+                                </button>
+                            }
+                            <button class="btn btn-primary dontShowInPrint" id="btnPrint" style="padding:0px 20px 0px 20px; margin:0px 0px 0px 5px">Print</button>
+                        </div>
 
-                        <input type="button" class="btn btn-primary transcationButtons" style=" margin-top:5px; padding-top:0px; width:110px; height: 30px; margin-right:10px; visibility:visible" id="emailButton" value="Email" />
-
-                        <input class="btn btn-primary dontShowInPrint" id="btnPrint" style="float:right; margin-top:5px; width:110px; height: 30px; padding-top:0px" type="text" readonly name="name" value="print" />
-
-                        @if (Model.SehubAccess.treadTrackerDashboard >= 2)
-                        {
-                            <button id="EditFormOpen" type="button" class="btn btn-primary" style="margin-right: 10px;float: right;margin-top: 5px;width: 110px;padding: 2px 20px 2px 20px">
-                                Edit
-                            </button>
-                        }
                     </div>
                 </div>
+                
             </div>
-            <div class="card-body" id="printThis" style="padding:0px">
+            <div class="card-body" id="printThis" style="padding:0px; background-color:white">
                 <div>
                     <div class="row">
                         <div class="col-md-12">
@@ -278,7 +270,7 @@
         </div>
                                     *@
 
-                                    <div class="row text-center" id="dontshow">
+                                    <div class="row text-center" id="dontshow" >
                                         <div class="col-md-4"></div>
                                         <div class="col-md-4 text-center"><img src="~/Content/LoginLogo.png" style="margin-left: auto;margin-right: auto; width:300px;"></div>
                                         <div class="col-md-4 text-right" style="padding-top:30px">
@@ -303,7 +295,7 @@
                                                 <div class="col-lg-4"></div>
                                                 <div class="col-lg-4 text-center"><img src="~/Content/LoginLogo.png" style="margin-left: auto;margin-right: auto; width:350px;"></div>
 
-                                                <div class="col-md-4 text-right" style="padding-right:33px; padding-top:40px">
+                                                <div class="col-md-4 text-right" style="padding-right: 33px; padding-top: 40px">
                                                     <p style="margin: 0px; padding: 0px; line-height : 10px">
                                                         <font size="2">
                                                             @ViewBag.addressSTREET1, @if (ViewBag.addressSTREET2 != null)
@@ -326,8 +318,8 @@
                                             <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
                                                 <div class="card-body" style="background-color:white; padding-top:10px; padding-bottom:10px">
                                                     <div class="row" style="padding-left:15px">
-                                                        <div class="col-md-3">
-                                                            <img style="width:90%; height:90%" src="~/Content/trdIcon.png" alt="Alternate Text" />
+                                                        <div class="col-md-3" style="display:flex; justify-content:center; align-items:center" >
+                                                            <img style="width:90%; height:90%; object-fit:contain" src="~/Content/trdIcon.png" alt="Alternate Text" />
                                                         </div>
                                                         <div class="col-md-9">
                                                             <div class="row">
@@ -368,35 +360,41 @@
                                             <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
                                                 <div class="card-body" style="padding-top:10px; padding-bottom:10px">
                                                     <div class="row" style="padding:0px 15px 0px 15px">
-                                                        <div class="col-md-9" style="padding:0px">
-                                                            <h4>@Model.CustomerInfo.cust_name</h4>
+                                                        <div class="col-lg-7" style="padding:0px">
+                                                            <h4>@Model.CustomerInfo.CustomerName</h4>
                                                         </div>
-                                                        <div class="col-md-3 text-right" style="padding:0px">
-                                                            <h4>@Model.CustomerInfo.cust_us1</h4>
+                                                        <div class="col-lg-5 text-right" style="padding:0px">
+                                                            <h4>@Model.CustomerInfo.CustomerCode</h4>
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-md-3">
+                                                        <div class="col-lg-6">
                                                             <div class="row" style="margin-bottom:5px">
-                                                                <div class="col-md-12">
+                                                                <div class="col-lg-6">
                                                                     Contact
+                                                                </div>
+                                                                <div class="col-lg-6">
+
                                                                 </div>
                                                             </div>
                                                             <div class="row" style="margin-bottom:5px">
-                                                                <div class="col-md-12">
+                                                                <div class="col-lg-6">
                                                                     Email
+                                                                </div>
+                                                                <div class="col-lg-6">
+
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-9 text-right" style="padding-right:15px">
+                                                        <div class="col-lg-6 text-right" style="padding-right:15px">
                                                             <div class="row" style="margin-bottom:5px">
-                                                                <div class="col-md-12 text-right">
-                                                                    @Model.CustomerInfo.cust_add1 @Model.CustomerInfo.cust_add2
+                                                                <div class="col-lg-12 text-right">
+                                                                    @Model.CustomerInfo.Address1 @Model.CustomerInfo.Address2
                                                                 </div>
                                                             </div>
                                                             <div class="row" style="margin-bottom:5px">
-                                                                <div class="col-md-12 text-right">
-                                                                    @Model.CustomerInfo.cust_city, @Model.CustomerInfo.cust_state @Model.CustomerInfo.cust_zip Canada
+                                                                <div class="col-lg-12 text-right">
+                                                                    @Model.CustomerInfo.Address2, @Model.CustomerInfo.Address3 @Model.CustomerInfo.Postcode Canada
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -438,37 +436,35 @@
                                                         @for (int i = 0; i < Model.BarcodeInformation.Count; i++)
                                                         {
                                                             var j = i + 1;
-                                                            if (true)
-                                                            {@*Model.BarcodeInformation[i].ndt_machine_result is null*@
                                                             <tr>
-                                                                <td style="padding:3px">@(++incVal)</td>
-                                                                <td style="padding:3px">
+                                                                <td style="padding:3px; vertical-align:middle">@(++incVal)</td>
+                                                                <td style="padding:3px; vertical-align:middle">
                                                                     @*<input type="text" id="line1" name="line1" maxlength="2" onkeypress="return onlyNumberKey(event)" class="lineStyle" onfocusout="line1Out()">*@
                                                                     @*@Html.EditorFor(modelItem => barcodes.line_code)*@
                                                                     @Html.DisplayFor(m => m.BarcodeInformation[i].line_code, new { htmlAttributes = new { @class = "LineValues", @type = "text", @maxlength = "2", @id = "Line" + j + "Value", @onkeypress = "return onlyNumberKey(event)", @onfocusout = "line" + j + "Out()" } })
                                                                 </td>
-                                                                <td style="display:none; padding:3px">
+                                                                <td style="display:none; padding:3px; vertical-align:middle">
                                                                     @*<input type="text" id="barcode1" name="barcode1" maxlength="8" onkeypress="return onlyNumberKey(event)">*@
                                                                     @*@Html.EditorFor(modelItem => barcodes.barcode)*@
                                                                     @Html.HiddenFor(m => m.BarcodeInformation[i].barcode, new { htmlAttributes = new { @maxlength = "8", @onkeypress = "return onlyNumberKey(event)", } })
                                                                 </td>
-                                                                <td style="padding:3px">
+                                                                <td style="padding:3px; vertical-align:middle">
                                                                     @*<input type="text" id="barcode1" name="barcode1" maxlength="8" onkeypress="return onlyNumberKey(event)">*@
                                                                     @*@Html.EditorFor(modelItem => barcodes.barcode)*@
                                                                     @Html.DisplayFor(m => m.BarcodeInformation[i].changed_barcode, new { htmlAttributes = new { @maxlength = "8", @onkeypress = "return onlyNumberKey(event)", @style = "width:120px" } })
                                                                 </td>
-                                                                <td style="padding:3px">
+                                                                <td style="padding:3px; vertical-align:middle">
                                                                     @*<input type="text" id="serial1" name="serial1" maxlength="8" style="text-transform:uppercase">*@
                                                                     @*@Html.EditorFor(modelItem => barcodes.serial_dot)*@
                                                                     @Html.DisplayFor(m => m.BarcodeInformation[i].serial_dot, new { htmlAttributes = new { @class = "SerialValues", @style = "width:120px" } })
                                                                 </td>
-                                                                <td style="padding:3px">
+                                                                <td style="padding:3px; vertical-align:middle">
                                                                     @*<div id="casing1Div"></div>*@
                                                                     @*@Html.DropDownListFor(modelItem => barcodes.casing_size, new SelectList(ViewBag.CasingSizeList, "size_id", "casing_size", barcodes.size_id))*@
                                                                     @Html.DisplayFor(m => m.BarcodeInformation[i].casing_size, new { htmlAttributes = new { @id = "casing" + j + "size" } })
                                                                 </td>
 
-                                                                <td style="padding:3px">
+                                                                <td style="padding:3px; vertical-align:middle">
                                                                     @*<div id="Brand1Div"></div>*@
                                                                     @*@Html.EditorFor(modelItem => barcodes.casing_brand)*@
                                                                     @*@Html.DropDownListFor(modelItem => barcodes.casing_brand, new SelectList(ViewBag.CasingBrandList, "brand_id", "casing_brand", barcodes.brand_id))*@
@@ -476,7 +472,7 @@
                                                                 </td>
                                                                 @if (Model.BarcodeInformation[i].barcode != null)
                                                                 {
-                                                                    <td style="padding:0px">
+                                                                    <td style="padding:3px; vertical-align:middle">
                                                                         @*<div id="Brand1Div"></div>*@
                                                                         @*@Html.EditorFor(modelItem => barcodes.casing_brand)*@
                                                                         @*@Html.DropDownListFor(modelItem => barcodes.casing_brand, new SelectList(ViewBag.CasingBrandList, "brand_id", "casing_brand", barcodes.brand_id))*@
@@ -485,21 +481,21 @@
                                                                 }
                                                                 else
                                                                 {
-                                                                    <td></td>
+                                                                    <td style="padding:3px; vertical-align:middle"></td>
                                                                 }
-                                                                <td style="padding:3px">
+                                                                <td style="padding:3px; vertical-align:middle">
                                                                     @*<div id="Tread1Div"></div>*@
                                                                     @*@Html.EditorFor(modelItem => barcodes.retread_design)*@
                                                                     @*@Html.DropDownListFor(modelItem => barcodes.retread_design, new SelectList(ViewBag.CasingTreadList, "tread_id", "tread_design", barcodes.tread_id))*@
                                                                     @Html.DisplayFor(m => m.BarcodeInformation[i].retread_design, new { htmlAttributes = new { @required = "required" } })
                                                                 </td>
-                                                                <td style="padding:3px">
+                                                                <td style="padding:3px; vertical-align:middle">
                                                                     @*<input type="text" id="unit1" name="unit1" onkeypress="return onlyNumberKey(event)">*@
                                                                     @*@Html.EditorFor(modelItem => barcodes.unit_ID)*@
                                                                     @Html.DisplayFor(m => m.BarcodeInformation[i].unit_ID, new { htmlAttributes = new { @onkeypress = "return onlyNumberKey(event)", @style = "width:120px" } })
                                                                 </td>
 
-                                                                <td style="padding:3px">
+                                                                <td style="padding:3px; vertical-align:middle">
                                                                     @if (Model.BarcodeInformation[i].final_inspection_result == null)
                                                                     {
                                                                         if (Model.BarcodeInformation[i].buffer_builder_result == null)
@@ -530,11 +526,10 @@
                                                                             <lable>@Model.BarcodeInformation[i].final_inspection_result</lable>
                                                                         }
                                                                     }
-
                                                                 </td>
                                                                 @if (Model.BarcodeInformation[i].barcode != null)
                                                                 {
-                                                                    <td style="width:270px; padding:3px">
+                                                                    <td style="width:270px; padding:3px; vertical-align:middle">
                                                                         @if (Model.BarcodeInformation[i].final_inspection_result == null)
                                                                         {
                                                                             if (Model.BarcodeInformation[i].buffer_builder_result == null)
@@ -543,14 +538,14 @@
                                                                                 {
                                                                                     if (Model.BarcodeInformation[i].preliminary_inspection_result.ToUpper() == "GOOD")
                                                                                     {
-                                                                                        <div class="progress">
+                                                                                        <div class="progress" style="margin-right:10px">
                                                                                             <div class="progress-bar bg-success  progress-bar-animated" role="progressbar" style="width:25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                                                                                         </div>
 
                                                                                     }
                                                                                     else
                                                                                     {
-                                                                                        <div class="progress">
+                                                                                        <div class="progress" style="margin-right:10px">
                                                                                             <div class="progress-bar bg-danger  progress-bar-animated" role="progressbar" style="width:25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                                                                                         </div>
                                                                                     }
@@ -559,13 +554,13 @@
                                                                                 {
                                                                                     if (Model.BarcodeInformation[i].ndt_machine_result.ToUpper() == "GOOD")
                                                                                     {
-                                                                                        <div class="progress">
+                                                                                        <div class="progress" style="margin-right:10px">
                                                                                             <div class="progress-bar bg-success  progress-bar-animated" role="progressbar" style="width:50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                                                                         </div>
                                                                                     }
                                                                                     else
                                                                                     {
-                                                                                        <div class="progress">
+                                                                                        <div class="progress" style="margin-right:10px">
                                                                                             <div class="progress-bar bg-danger  progress-bar-animated" role="progressbar" style="width:50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                                                                         </div>
                                                                                     }
@@ -575,13 +570,13 @@
                                                                             {
                                                                                 if (Model.BarcodeInformation[i].buffer_builder_result.ToUpper() == "GOOD")
                                                                                 {
-                                                                                    <div class="progress">
+                                                                                    <div class="progress" style="margin-right:10px">
                                                                                         <div class="progress-bar bg-success  progress-bar-animated" role="progressbar" style="width:75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
                                                                                     </div>
                                                                                 }
                                                                                 else
                                                                                 {
-                                                                                    <div class="progress">
+                                                                                    <div class="progress" style="margin-right:10px">
                                                                                         <div class="progress-bar bg-danger  progress-bar-animated" role="progressbar" style="width:75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
                                                                                     </div>
                                                                                 }
@@ -593,13 +588,13 @@
                                                                         {
                                                                             if (Model.BarcodeInformation[i].final_inspection_result.ToUpper() == "GOOD")
                                                                             {
-                                                                                <div class="progress">
+                                                                                <div class="progress" style="margin-right:10px">
                                                                                     <div class="progress-bar bg-success progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                                                                                 </div>
                                                                             }
                                                                             else
                                                                             {
-                                                                                <div class="progress">
+                                                                                <div class="progress" style="margin-right:10px">
                                                                                     <div class="progress-bar bg-danger progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                                                                                 </div>
                                                                             }
@@ -610,65 +605,28 @@
                                                                 }
                                                                 else
                                                                 {
-                                                                    <td></td>
+                                                                    <td style="padding:3px; vertical-align:middle"></td>
                                                                 }
                                                             </tr>
-                                                        }
-                                                        else
-                                                        {
-                                                            <tr>
-                                                                <td>@(++incVal)</td>
-                                                                <td>
-                                                                    @*<input type="text" id="line1" name="line1" maxlength="2" onkeypress="return onlyNumberKey(event)" class="lineStyle" onfocusout="line1Out()">*@
-                                                                    @*@Html.EditorFor(modelItem => barcodes.line_code)*@
-                                                                    @Html.DisplayFor(m => m.BarcodeInformation[i].line_code, new { htmlAttributes = new { @class = "LineValues", @type = "text", @maxlength = "2", @onkeypress = "return onlyNumberKey(event)" } })
-                                                                </td>
-                                                                <td>
-                                                                    @*<input type="text" id="barcode1" name="barcode1" maxlength="8" onkeypress="return onlyNumberKey(event)">*@
-                                                                    @*@Html.EditorFor(modelItem => barcodes.barcode)*@
-                                                                    @Html.DisplayFor(m => m.BarcodeInformation[i].barcode, new { htmlAttributes = new { @maxlength = "8", @onkeypress = "return onlyNumberKey(event)" } })
-                                                                </td>
-                                                                <td>
-                                                                    @*<input type="text" id="serial1" name="serial1" maxlength="8" style="text-transform:uppercase">*@
-                                                                    @*@Html.EditorFor(modelItem => barcodes.serial_dot)*@
-                                                                    @Html.DisplayFor(m => m.BarcodeInformation[i].serial_dot, new { htmlAttributes = new { @class = "SerialValues" } })
-                                                                </td>
-                                                                <td>
-                                                                    @*<div id="casing1Div"></div>*@
-                                                                    @*@Html.DropDownListFor(modelItem => barcodes.casing_size, new SelectList(ViewBag.CasingSizeList, "size_id", "casing_size", barcodes.size_id))*@
-                                                                    @Html.HiddenFor(m => m.BarcodeInformation[i].size_id)
-                                                                    @Html.DropDownListFor(m => m.BarcodeInformation[i].casing_size, new SelectList(ViewBag.CasingSizeList, "size_id", "casing_size", Model.BarcodeInformation[i].size_id), new { @disabled = "disabled", @id = "DropDownClass" })
-                                                                </td>
 
-                                                                <td>
-                                                                    @*<div id="Brand1Div"></div>*@
-                                                                    @*@Html.EditorFor(modelItem => barcodes.casing_brand)*@
-                                                                    @*@Html.DropDownListFor(modelItem => barcodes.casing_brand, new SelectList(ViewBag.CasingBrandList, "brand_id", "casing_brand", barcodes.brand_id))*@
-                                                                    @Html.HiddenFor(m => m.BarcodeInformation[i].brand_id)
-                                                                    @Html.DropDownListFor(m => m.BarcodeInformation[i].casing_brand, new SelectList(ViewBag.CasingBrandList, "brand_id", "casing_brand", Model.BarcodeInformation[i].brand_id), new { @disabled = "disabled", @id = "DropDownClass" })
-                                                                </td>
-                                                                <td>
-                                                                    @*<div id="Tread1Div"></div>*@
-                                                                    @*@Html.EditorFor(modelItem => barcodes.retread_design)*@
-                                                                    @*@Html.DropDownListFor(modelItem => barcodes.retread_design, new SelectList(ViewBag.CasingTreadList, "tread_id", "tread_design", barcodes.tread_id))*@
-                                                                    @Html.HiddenFor(m => m.BarcodeInformation[i].tread_id)
-                                                                    @Html.DropDownListFor(m => m.BarcodeInformation[i].retread_design, new SelectList(ViewBag.CasingTreadList, "tread_id", "tread_design", Model.BarcodeInformation[i].tread_id), new { @disabled = "disabled", @id = "DropDownClass" })
-                                                                </td>
-                                                                <td>
-                                                                    @*<input type="text" id="unit1" name="unit1" onkeypress="return onlyNumberKey(event)">*@
-                                                                    @*@Html.EditorFor(modelItem => barcodes.unit_ID)*@
-                                                                    @Html.DisplayFor(m => m.BarcodeInformation[i].unit_ID, new { htmlAttributes = new { @onkeypress = "return onlyNumberKey(event)" } })
-                                                                </td>
-                                                            </tr>
                                                         }
-
-                                                    }
                                                     </tbody>
 
                                                 </table>
 
                                             </div>
-
+                                            <div class="row" style="color:#b4b6b8; margin-bottom:10px">
+                                                <div class="col-md-12" style="display:flex; justify-content:space-evenly; align-items:center">
+                                                    <span>1 - RET (Retread Only)</span>
+                                                    <span>5 - RPO (Repair Only)</span>
+                                                    <span>6 - CCR (Casing Credit)</span>
+                                                    <span>7 - ADJ (Adjustment)</span>
+                                                    <span>9 - SCP (Scrap)</span>
+                                                    <span>10 - Bank (Bank/Pool)</span>
+                                                    <span>11 - STK (Stock)</span>
+                                                </div>
+                                            </div>
+                                            
                                         </div>
                                     </div>
                                     @*//Here begin form*@
@@ -678,8 +636,53 @@
                                             <h6 class="card-title mb-0 d-inline-block">Comments</h6>
                                         </div>
                                         <div class="card-body" style="padding:10px">
-                                            <div style="width:100%">
-                                                <textarea id="comments"></textarea>
+                                            <div class="row" style="padding:0px 15px 10px 0px">
+                                                <div class="col-md-12" style="max-height :50px">
+                                                    @for (int i = 0; i < Model.BarcodeInformation.Count; i++)
+                                                    {
+                                                        if (Model.BarcodeInformation[i].final_inspection_result == null)
+                                                        {
+                                                            if (Model.BarcodeInformation[i].buffer_builder_result == null)
+                                                            {
+                                                                if (Model.BarcodeInformation[i].ndt_machine_result == null)
+                                                                {
+                                                                    if (Model.BarcodeInformation[i].preliminary_inspection_result != "GOOD" && Model.BarcodeInformation[i].preliminary_inspection_result != "Good" && Model.BarcodeInformation[i].preliminary_inspection_result != null)
+                                                                    {
+                                                                        <span style="margin:0px 15px 0px 15px">[@Model.BarcodeInformation[i].preliminary_inspection_result] --> @Model.FailureCodesBarcodeInformation.Where(x => x.code == Model.BarcodeInformation[i].preliminary_inspection_result).Select(x => x.description).FirstOrDefault()</span>
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (Model.BarcodeInformation[i].ndt_machine_result != "GOOD" && Model.BarcodeInformation[i].ndt_machine_result != "Good" && Model.BarcodeInformation[i].ndt_machine_result != null)
+                                                                    {
+                                                                        <span style="margin:0px 15px 0px 15px">[@Model.BarcodeInformation[i].ndt_machine_result] --> @Model.FailureCodesBarcodeInformation.Where(x => x.code == Model.BarcodeInformation[i].ndt_machine_result).Select(x => x.description).FirstOrDefault()</span>
+                                                                    }
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                if (Model.BarcodeInformation[i].buffer_builder_result != "GOOD" && Model.BarcodeInformation[i].buffer_builder_result != "Good" && Model.BarcodeInformation[i].buffer_builder_result != null)
+                                                                {
+                                                                    <span style="margin:0px 15px 0px 15px">[@Model.BarcodeInformation[i].buffer_builder_result] --> @Model.FailureCodesBarcodeInformation.Where(x => x.code == Model.BarcodeInformation[i].buffer_builder_result).Select(x => x.description).FirstOrDefault()</span>
+                                                                }
+                                                            }
+
+                                                        }
+                                                        else
+                                                        {
+                                                            if (Model.BarcodeInformation[i].final_inspection_result != "GOOD" && Model.BarcodeInformation[i].final_inspection_result != "Good" && Model.BarcodeInformation[i].final_inspection_result != null)
+                                                            {
+                                                                <span style="margin:0px 15px 0px 15px">[@Model.BarcodeInformation[i].final_inspection_result] --> @Model.FailureCodesBarcodeInformation.Where(x => x.code == Model.BarcodeInformation[i].final_inspection_result).Select(x => x.description).FirstOrDefault()</span>
+                                                            }
+                                                        }
+                                                    }
+                                                </div>
+
+                                            </div>
+                                            <div class="row" style="padding:0px 15px">
+                                                <div class="col-md-12" style="border:1px solid #b7b9bd; border-radius:5px; height:80px">
+                                                    @Model.WorkOrderInfo.comments
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -691,23 +694,14 @@
                     </div>
                 </div>
             </div>
-            <div class="card-footer">
-                <div class="row">
-                    <div class="col-lg-10"></div>
-                    <div class="col-lg-1">
-
-                    </div>
-                    <div class="col-lg-1" style="padding-right:10px">
-                        <button type="button" id="Cancelbutton" class="btn btn-danger" data-dismiss="modal" style="float:right; width:112px; padding:2px 30px 2px 30px">Cancel</button>
-                    </div>
-                </div>
-
+            <div class="card-footer" style="padding:10px 15px; display:flex; justify-content:space-between; align-items:center">
+                <div></div>
+                <button type="button" id="Cancelbutton" class="btn btn-danger" data-dismiss="modal" style="padding:0px 15px 0px 15px">Cancel</button>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.5/dist/html2canvas.min.js">
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.5/dist/html2canvas.min.js"></script>
 
     <script>
         var d = new Date(moment($('#datepicker').val()).add(1, 'days').format("YYYY-MM-DD"));
@@ -788,7 +782,10 @@
         });
 
         $('#Cancelbutton').click(function () {
-            location.reload();
+            //location.reload();
+            //$('#sideloading').css('display', 'block').css('background-color', '#f0f2f5')
+            //$('#TreadTrackerArea').css('display', 'none')
+            $('.body').css('background-color', '#f0f2f5')
         });
 
         $(document).ready(function () {
