@@ -299,7 +299,7 @@ namespace SeHubPortal.Controllers
 
                     //Trace.WriteLine(" This is the Total " + regularTotal);
 
-                    EmployeePayrollListModel empvalid = new EmployeePayrollListModel();
+                    EmployeePayrollListModel empvalid = new EmployeePayrollListModel(); 
                     empvalid.employeeId = emp.employee_id.ToString();
                     empvalid.fullName = emp.full_name;
                     if (regularTotal <= 80)
