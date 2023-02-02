@@ -574,7 +574,10 @@
                                             Last Survey
                                         </div>
                                         <div class="col-lg-7" style="font-size:9px">
-                                            @unit.last_survey
+                                            @if (unit.last_survey.HasValue)
+                                            {
+                                                @unit.last_survey.Value.ToString("MMM dd yyyy")
+                                            }
                                         </div>
                                     </div>
 
@@ -653,12 +656,12 @@
                                                         Value = "Trailer"
                                                     });
                                                 }
-                                                @Html.DropDownListFor(m => m.AddUnit.survey_type, listItems, new { @id = "Type", @class = "text-center", @style = "text-align-last: center; width:100%; height:30px;", @onchange = "jsFunction(this.value);" })
+                                                @Html.DropDownListFor(m => m.AddUnit.survey_type, listItems, new { @id = "Type", @class = "text-center", @style = "text-align-last: center; width:100%; height:30px;"})
 
                                             </div>
                                             <div class="col-lg-6" style="padding-left:5px">
-                                                @Html.DropDownListFor(m => m.AddUnit.survey_configuration, Model.ConfigurationsListTractor, new { @class = "text Tractor configuration", @style = "text-align-last: center; width:100%; height:30px", @onchange = "jsFunction(this.value);" })
-                                                @Html.DropDownListFor(m => m.AddUnit.survey_configuration, Model.ConfigurationsListTrailer, new { @class = "text Trailer configuration", @style = "text-align-last: center; width:100%; height:30px", @onchange = "jsFunction(this.value);" })
+                                                @Html.DropDownListFor(m => m.AddUnit.survey_configuration, Model.ConfigurationsListTractor, new { @class = "text Tractor configuration", @style = "text-align-last: center; width:100%; height:30px"})
+                                                @Html.DropDownListFor(m => m.AddUnit.survey_configuration, Model.ConfigurationsListTrailer, new { @class = "text Trailer configuration", @style = "text-align-last: center; width:100%; height:30px"})
 
                                             </div>
                                         </div>
@@ -705,42 +708,6 @@
                                     </div>
                                 </div>
 
-                                <div class="row mileage" style="margin-top:5px">
-                                    <div class="col-lg-5 text-right">
-                                        Mileage
-                                    </div>
-                                    <div class="col-lg-7">
-                                        @Html.EditorFor(m => m.AddUnit.mileage, new { htmlAttributes = new { @style = "width: 100%" } })
-                                    </div>
-                                </div>
-                                <div class="row hours" style="margin-top:5px">
-                                    <div class="col-lg-5 text-right">
-                                        Engin Hours
-                                    </div>
-                                    <div class="col-lg-7">
-                                        @Html.EditorFor(m => m.AddUnit.hours, new { htmlAttributes = new { @style = "width: 100%" } })
-                                    </div>
-                                </div>
-
-
-                                <div class="row length" style="margin-top:5px">
-                                    <div class="col-lg-5 text-right">
-                                        Length
-                                    </div>
-                                    <div class="col-lg-7">
-                                        @Html.EditorFor(m => m.AddUnit.length, new { htmlAttributes = new { @style = "width: 100%" } })
-                                    </div>
-                                </div>
-
-
-                                <div class="row" style="margin-top:5px">
-                                    <div class="col-lg-5 text-right">
-                                        Date Expired
-                                    </div>
-                                    <div class="col-lg-7">
-                                        @Html.EditorFor(m => m.AddUnit.date_expired, new { htmlAttributes = new { @style = "width: 100%" } })
-                                    </div>
-                                </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="row tractor" style="margin-top:5px">
@@ -748,7 +715,7 @@
                                         Steer Type Spec PSI
                                     </div>
                                     <div class="col-lg-7">
-                                        @Html.EditorFor(m => m.AddUnit.spec_psi_1, new { htmlAttributes = new { @style = "width: 100%" } })
+                                        @Html.EditorFor(m => m.AddUnit.spec_psi_1, new { htmlAttributes = new { @id="spec_psi_1", @style = "width: 100%", @disabled = true } })
                                     </div>
                                 </div>
                                 <div class="row tractor" style="margin-top:5px">
@@ -756,7 +723,7 @@
                                         Drive Type Spec PSI
                                     </div>
                                     <div class="col-lg-7">
-                                        @Html.EditorFor(m => m.AddUnit.spec_psi_2, new { htmlAttributes = new { @style = "width: 100%" } })
+                                        @Html.EditorFor(m => m.AddUnit.spec_psi_2, new { htmlAttributes = new { @id="spec_psi_2",  @style = "width: 100%", @disabled = true } })
                                     </div>
                                 </div>
 
@@ -765,7 +732,7 @@
                                         Trailer Type Spec PSI
                                     </div>
                                     <div class="col-lg-7">
-                                        @Html.EditorFor(m => m.AddUnit.spec_psi_3, new { htmlAttributes = new { @style = "width: 100%" } })
+                                        @Html.EditorFor(m => m.AddUnit.spec_psi_3, new { htmlAttributes = new { @id="spec_psi_3",   @style = "width: 100%" } })
                                     </div>
                                 </div>
 
@@ -792,7 +759,7 @@
                                         Tire Size 3
                                     </div>
                                     <div class="col-lg-7">
-                                        @Html.DropDownListFor(m => m.AddUnit.tire_size_3, Model.SizesList, new { @class = "text", @style = "text-align-last: center; width:100%; height:30px" })
+                                        @Html.DropDownListFor(m => m.AddUnit.tire_size_3, Model.SizesList, new { @id = "tire_size_3", @class = "text", @style = "text-align-last: center; width:100%; height:30px" })
                                     </div>
                                 </div>
 
@@ -802,7 +769,7 @@
                                     </div>
                                     <div class="col-lg-7">
 
-                                        @Html.TextAreaFor(m => m.AddUnit.short_description, 4, 30, new { htmlAttributes = new { @style = "width: 100%" } })
+                                        @Html.TextAreaFor(m => m.AddUnit.short_description, new { @style = "width: 100%" })
                                     </div>
                                 </div>
                                 <div class="row " style="margin-top:0px">
@@ -1017,10 +984,20 @@
             if (Type == "Tractor") {
                 $('.Trailer').css("display", "none");
                 $('.Tractor').css("display", "block");
+                $("#spec_psi_1").attr("disabled", "disabled");
+                $("#spec_psi_2").attr("disabled", "disabled");
+
+                $("#spec_psi_3").removeAttr("disabled");
+                $("#tire_size_3").removeAttr("disabled");                
             }
             if (Type == "Trailer") {
                 $('.Tractor').css("display", "none");
                 $('.Trailer').css("display", "block");
+                $("#spec_psi_1").removeAttr("disabled");
+                $("#spec_psi_2").removeAttr("disabled");
+
+                $("#spec_psi_3").attr("disabled", "disabled");
+                $("#tire_size_3").attr("disabled", "disabled");
             }
         });
 

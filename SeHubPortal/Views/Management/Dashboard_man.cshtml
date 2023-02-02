@@ -1,86 +1,164 @@
 ﻿@model SeHubPortal.ViewModel.FileURL
 @{
-    ViewBag.Title = "Dashboard_man";
+    ViewBag.Title = "Dashboard";
     Layout = "~/Views/Shared/_DevelopmentLayout.cshtml";
 }
-
-
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="~/Content/NewOrder.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
-    <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
-    <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+    @if (Model.SehubAccess.plant > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.plant > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.tools > 0)
+    {
+        <style>
+            #toolsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.payroll > 0)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.fleetTVT > 0)
+    {
+        <style>
+            #FleetTVTClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTracker > 0)
+    {
+        <style>
+            #treadTrackereClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_access > 0)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.main > 0)
+    {
+        <style>
+            #mainClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings == 3)
+    {
+        <style>
+            #SettingsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.my_staff > 0)
+    {
+        <style>
+            #MyStaffLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.attendance > 0)
+    {
+        <style>
+            #AttendanceLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.vacation_schedule > 0)
+    {
+        <style>
+            #LeaveSchedulerLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.asset_control > 0)
+    {
+        <style>
+            #AssetControlLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.employee_folder > 0)
+    {
+        <style>
+            #EmployeeFilesLink {
+                display: block !important;
+            }
+        </style>
+    }
 
 
     <style>
+        .breadCrumb{
+        background-color:white;
+    }
+        #ManagementClicked {
+            display: block !important;
+        }
 
         #DashboardLink {
             display: block !important;
         }
 
-        #DevelopmentClicked {
-            display: block !important;
-        }
-
-        #mainClicked {
-            display: block !important;
-        }
-
-        #libraryClicked {
-            display: block !important;
-        }
-
-        #toolsClicked {
-            display: block !important;
-        }
-
-        #treadTrackereClicked {
-            display: block !important;
-        }
-
-        #FleetTVTClicked {
-            display: block !important;
-        }
-
         #ManagementClicked {
-            display: block !important;
-        }
-
-        #PayrollClicked {
-            display: block !important;
-        }
-
-        #PlantClicked {
-            display: block !important;
-        }
-
-        #DevelopmentClicked {
-            display: block !important;
-        }
-
-        #SettingsClicked {
-            display: block !important;
-        }
-
-
-
-
-        #developmentBtn {
-            font-weight: bold;
-        }
-
-        #DevelopmentClicked {
             background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #managementBtn {
             color: black;
             font-weight: 600;
         }
@@ -93,517 +171,1291 @@
 
         body {
             background-color: #f0f2f5;
-            padding: 0px !important;
-            margin: 0px !important;
         }
 
-        .card-header h6 {
-            color: black;
+        .heading {
+            margin: 10px 0px 0px 0px;
         }
+
+        .heading h2 {
+            margin-top: 8px;
+        }
+
+            .card-header h6 {
+                color: black;
+            }
+
+        .example::-webkit-scrollbar {
+            display: none;
+        }
+
+        .example {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+
+        @@media screen {
+            #printSection {
+                display: none;
+            }
+
+            #dontshow {
+                display: none;
+            }
+
+            .dontshow {
+                display: none;
+            }
+        }
+
+        @@media print {
+
+            @@page {
+                margin: 0in;
+            }
+
+            .dontShowInPrint {
+                display: none;
+            }
+
+            body * {
+                visibility: hidden;
+            }
+
+            #printSection, #printSection * {
+                visibility: visible;
+            }
+
+            #printSection {
+                width:100%;
+                height:100%;
+                background-color:white;
+                padding:0;
+                margin:0;
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+
+            html, body {
+                height:100vh; 
+                margin: 0 !important; 
+                padding: 0 !important;
+                overflow: hidden;
+            }
+
+
+        }
+
     </style>
 </head>
-<body style="overflow-y: hidden; overflow-x: hidden">
+<body>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="row" style="padding:10px 30px 10px 30px">
-                <div class="col-md-4" style="padding:10px 10px 10px 20px; background-color:white; vertical-align:middle">
-                    <a href="@Url.Action("Plant", "Retread")">Management</a> / Dashboart
-                </div>
-                <div class="col-md-4" style="background-color:white; vertical-align:middle">
-                </div>
-                <div class="col-md-4 text-right" style="background-color:white; vertical-align:middle; display:flex; align-items:center; justify-content:space-between">
-                    <div></div>
-                    @using (Html.BeginForm("Dashboard_manChangeLocation", "Management", FormMethod.Post))
-                    {
-                        @Html.DropDownListFor(m => m.Location_ID, Model.LocationsList, new { @onChange = "this.form.submit()", @class = "text-center", @style = "font-weight:bold; text-align-last: center; width:200px; height:100%;", @required = "required", @id = "Location" }) @*, @onchange = "salesPerformance()"*@
-                    }
-                </div>
+    <div id="printThis" class="row dontshow" style="background-color:white">
+
+        <div style="display:flex; width:100%; justify-content:center; flex-direction:column; padding:10vw 20vw">
+            <img src="~/Content/dashboard.png" style="width:100%; object-fit:contain; margin-bottom:5vw" alt="Alternate Text" />
+            <div class="text-center" style="padding:0px 10px; border:2px solid black; font-weight:bold; width:100%; font-size: 19vw">
+                11R22.5
+            </div>
+            <div class="text-center" style="background-color: black;color: white;padding: 0px;border: 2px solid black;font-weight: bold; font-size: 19vw; margin-bottom:3vw">
+                G182
             </div>
 
-            <div class="row" style="margin-bottom:0px">
-                <div class="col-md-12" style="display:flex; justify-content:space-between; padding:15px 300px 15px 300px">
-
-                    <div style="display:flex; justify-content:center; align-items:center">
-                        <div class="custom-control custom-switch">
-                            <label style="margin-right:40px; margin-left:0px; font-weight:bold" id="techText">
-                                Tech Efficiency
-                            </label>
-                            <input type="checkbox" style="width:60px; height:25px" class="custom-control-input" id="ToggleFromTechToSales">
-                            <label class="custom-control-label" for="ToggleFromTechToSales" id="salesText">
-                                Sales Performance
-                            </label>
-                        </div>
-                    </div>
-
-                    @Html.DropDownListFor(m => m.Year, Model.Positions, new { @onChange = "techEfficiency()", @class = "text-center", @style = "width:200px; text-align-last: center; font-weight:bold", @id = "year" })
-
-
-
-                    <select name="techType" id="techType" style="width:200px; text-align-last: center; font-weight:bold" onchange="techEfficiency()">
-                        <option value="auto">Auto Technician</option>
-                        <option value="tire">Tire Technician</option>
-                    </select>
-
-                    @Html.DropDownListFor(m => m.Payroll_ID, Model.PayrollIdList, new { @class = "text-center", @style = "display:none; font-weight:bold; text-align-last: center; width:200px;", @required = "required", @id = "employees", @onchange = "techEfficiency()" })
-
-                </div>
+            <div class="text-center" style="padding: 0px;font-weight: bold; font-size: 20px; margin-bottom:3vw; display:flex; justify-content:space-evenly; align-items:center">
+                <span style="font-weight:normal; font-size:15px">P/N (s)</span>
+                <span>TBD</span>
             </div>
 
-
-            <div class="row" style="margin-top:40px; padding:0px 40px 10px 40px; height:60vh">
-                <div class="col-lg-12" style="padding: 30px ;border: 2px solid dimgray;border-radius: 15px;background-color: white">
-                    <div id="chart-container">
-
-                    </div>               
-                </div>
+            <div class="text-center" style="padding: 0px;font-weight: bold; display:flex; justify-content:space-evenly; align-items:center; background-color:dimgray; color:white">
+                <span style="font-weight:bold; font-size:10px; width:50%; border:1px solid black; padding:2px">Barcode</span>
+                <span style="font-weight:bold; font-size:10px; width:50%; border:1px solid black; padding:2px">WorkOrder</span>
+            </div>
+            <div class="text-center" style="padding: 0px;font-weight: bold; margin-bottom:3vw; display:flex; justify-content:space-evenly; align-items:center;">
+                <span style="font-weight:bold; font-size:15px; width:50%; border:1px solid black; padding:2px">15805995</span>
+                <span style="font-weight:bold; font-size:15px; width:50%; border:1px solid black; padding:2px">206307</span>
             </div>
 
+            <div class="text-center" style="padding: 0px;font-weight: bold; font-size: 20px; margin-bottom:3vw; display:flex; justify-content:space-evenly; align-items:center">
+                <span style="font-weight:normal; font-size:15px">CAP Count</span>
+                <span>Virgin</span>
+            </div>
+
+            <div class="text-center" style="padding: 0px;font-weight: bold; display:flex; justify-content:space-evenly; align-items:center; background-color:dimgray; color:white">
+                <span style="font-weight:bold; font-size:10px; width:50%; border:1px solid black; padding:2px">Creation</span>
+                <span style="font-weight:bold; font-size:10px; width:50%; border:1px solid black; padding:2px">Production</span>
+            </div>
+            <div class="text-center" style="padding: 0px;font-weight: bold; margin-bottom:12vw; display:flex; justify-content:space-evenly; align-items:center;">
+                <span style="font-weight:bold; font-size:15px; width:50%; border:1px solid black; padding:2px">2022-05-30</span>
+                <span style="font-weight:bold; font-size:15px; width:50%; border:1px solid black; padding:2px">2022-06-07</span>
+            </div>
+
+            <div class="text-center" style="padding:5px; border:2px solid black; font-weight:bolder; font-size:11vw; margin-top:3vw">
+                <span>STOCK</span>
+            </div>
+
+            <div class="text-center" style="background-color: black; padding: 0px; border: 2px solid black;">
+                <h1 style="font-size:32vw; font-weight:bolder; margin:0; color:white">347</h1>
+            </div>
+            <img src="https://ctasehub.blob.core.windows.net/sehub-content/MadeInNewfoundland.png" style="margin-top:3vw; width:100%; object-fit:contain; margin-bottom:3vw" alt="Alternate Text" />
         </div>
     </div>
 
+    <div class="row heading">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb breadCrumb" style="background-color:white;height:100%;margin-top:0px;">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Management")">Management</a></li>
+                    <li class="breadcrumb-item " aria-current="page">Dashboard</li>
+
+                    @using (Html.BeginForm("DashboardChangeLocation", "Management", FormMethod.Post))
+                    {
+                        if (Model.SehubAccess.management_dashboard >= 2)
+                        {
+                            <label style="margin: 0px 3px 0px 1187px ">Location</label>
+                            @Html.DropDownListFor(m => m.Location_ID, Model.LocationsList, new { @onChange = "this.form.submit()", @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
+                        }
+                    }
+
+                </ol>
+            </nav>
+        </div>
+        <button type="button" id="clickThis" class="btn" style="margin-bottom: 14px;">
+            <i class="fa fa-bars" style="font-size:25px"></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+
+
+
+    <div class="modal fade" id="InspectionChecklist" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" style="height:400px; width:600px">
+                <div class="modal-header" style="padding:7px 0px 0px 15px "><h5>Preventative Maintenance</h5></div>
+                <div class="modal-body" style="padding:0px">
+                    <label style="margin-left:15px; margin-top:15px"><h5>Inspection</h5></label>
+                    <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin:0px 15px 0px 15px">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Vehicles</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Ramps & Liftes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Tools & Equipments</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent" style="margin: 0px 15px 0px 14px; border-bottom: 2px solid #f0f2f5; border-right: 2px solid #f0f2f5; border-left: 2px solid #f0f2f5">
+                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab" style="height:245px">
+                            <div class="row">
+                                <div class="col-lg-4" style="margin-top:10px">
+                                    <div id="div" class="text-center" style="padding: 20px">
+                                        <a data-dismiss="modal" id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 130px; border-color: white"></p></a>
+                                        <div style="word-wrap: break-word; white-space: normal; padding-top: 0px; color: cornflowerblue; font-size: 13px; margin-left: 15px; margin-right: 10px">
+                                            <strong>Passenger / Light Truck pm1</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4" style="margin-top:10px">
+                                    <div id="div" class="text-center" style="padding: 20px 20px 0px 20px">
+                                        <a data-dismiss="modal" id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 130px; border-color: white"></p></a>
+                                    </div>
+                                    <div style="word-wrap: break-word; white-space: normal; padding-top: 0px; color: cornflowerblue; font-size: 13px; margin-left: 30px; margin-right: 10px; margin-top:10px">
+                                        <strong>Service Truck pm1</strong>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4" style="margin-top:10px">
+                                    <div id="div" class="text-center" style="padding: 20px 20px 0px 20px">
+                                        <a data-dismiss="modal" id="anchor" class="btn" data-toggle="modal" data-target="#exampleModal" style="padding-left:0px" href=""><p style="padding-left:0px; margin:0px"><img src="~/Content/doc-icon.png" style="width: 130px; border-color: white"></p></a>
+                                    </div>
+                                    <div style="word-wrap: break-word; white-space: normal; padding-top: 0px; color: cornflowerblue; font-size: 13px; margin-left: 35px; margin-right: 10px; margin-top:10px">
+                                        <strong>Boom Truck pm1</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab" style="height:245px"></div>
+                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab" style="height:245px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12" style="padding:0px 30px 0px 30px">
+            <div class="row">
+
+                <div class="col-lg-6" style="padding-right:0px">
+                    <div class="row" style="margin-bottom:22px">
+                        @foreach (var items in Model.URLName)
+                        {
+                            <div id="div" class="col-md-4 text-center">
+                                <a id="anchor" data-toggle="modal" data-target="#exampleModal" href="">
+                                    <span style="display:none">@items.Key</span>
+                                    <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#Document" style="width:260px; height:230px">
+                                        @{
+                                            if (items.Value == "Technician Time Card ")
+                                            {
+                                                <div class="card-body text-center" style="height:270px;  padding-top:25px">
+                                                    <img src="~/Content/time card icon.png" style="margin-top:0px; margin-bottom:45px; width:210px;">
+                                                    <h5 style="margin-left:0px"><b>Tech Time Card</b></h5>
+                                                </div>
+                                            }
+                                            else if (items.Value.Contains("New Hire Package "))
+                                            {
+                                                <div class="card-body text-center" style="height:270px; padding-top:30px">
+                                                    <img src="~/Content/NewHirePackage.png" style="margin-top:0px; margin-bottom:20px; width:130px;">
+                                                    <h5><b>New Hire Package</b></h5>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="card-body text-center" style="height:270px; padding-top:20px">
+                                                    <img src="~/Content/CTAQRCode.png" style="margin-top:0px; margin-bottom:20px; width:120px;">
+                                                    <h5><b>Work Place Employee Survey</b></h5>
+                                                </div>
+
+                                            }
+                                        }
+                                    </div>
+                                </a>
+                            </div>
+
+                        }
+
+                        <div class="col-lg-4">
+                            <a href="mailto:?subject=Your Feedback is How We Improve world&body=We are very Interested in Your Opinion! %0D %0DThe link below will direct you to a Customer Satisfaction Survey via SurveyMonkey. This survey will take less than 4 minutes to complete.%0D @Model.commercialCustomerSurvey_link %0D %0D Thank you for your time and your business.%0D %0D Sincerely,%0D @Model.employeeFullName,%0D @Model.employeePosition.">
+                                <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#" style="width:260px; height:230px">
+                                    <div class="card-body text-center" style="height:270px; padding-top:20px">
+                                        <img src="~/Content/checklist icon.png" style="margin-top:0px; margin-bottom:15px; width:90px;">
+                                        <h5 style="margin-left:0px"><b>Fleet Customer Satisfaction Survey</b></h5>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    @if (Model.SehubAccess.management_dashboard == 3)
+                    {
+                        <div class="row" style="margin-bottom:22px">
+                            <div class="col-lg-4">
+                                <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#EmpClasification" style="width:260px; height:230px">
+                                    <div class="card-body text-center" style="height:270px; padding-top:5px">
+                                        <img src="~/Content/emcal.png" style="margin-top:0px; margin-bottom:0px; width:150px;">
+                                        <h5 style="margin-left:0px"><b>Employee Classification</b></h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div id="btnPrint" class="card shadow-lg " type="button" data-toggle="modal" data-target="#" style="width:260px; height:230px">
+                                    <div class="card-body text-center" style="height:270px; padding-top:55px">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#InspectionChecklist" style="width:260px; height:230px">
+                                    <div class="card-body text-center" style="height:270px; padding-top:20px">
+                                        <img src="~/Content/Maintanence.png" style="margin-top:0px; margin-bottom:5px; width:115px;">
+                                        <h5 style="margin-left:0px"><b>Preventative Maintenance</b></h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="card shadow-lg " data-toggle="modal" data-target="#EmpClasification" style="width:260px; height:230px">
+                                    <div class="card-body text-center" style="height:270px; padding-top:50px">
+                                        <h5 style="margin-left:0px"><b>Survey</b></h5>
+                                        <h5 style="margin-left:0px"><b>Workplace</b></h5>
+                                        <div class="row" style="padding:20px 20px 0px 10px">
+                                            <div class="col-md-4 text-center">
+                                                <button>
+                                                    <img style="width:30px" src="https://cdn.pixabay.com/photo/2016/04/16/10/32/icon-1332772_1280.png" alt="Alternate Text" />
+                                                </button>
+
+                                            </div>
+                                            <div class="col-md-4 text-center">
+                                                <button>
+                                                    <img style="width:30px" src="data:image/png;base64,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" alt="Alternate Text" />
+                                                </button>
+
+                                            </div>
+                                            <div class="col-md-4 text-center">
+                                                <button>
+                                                    <img style="width:40px" src="https://mpng.subpng.com/20180420/xqe/kisspng-chart-computer-icons-statistics-report-elevator-repair-5ad986adef4327.78399718152420522998.jpg" alt="Alternate Text" />
+                                                </button>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="card shadow-lg " data-toggle="modal" data-target="#EmpClasification" style="width:260px; height:230px">
+                                    <div class="card-body text-center" style="height:270px; padding-top:50px">
+                                        <h5 style="margin-left:0px"><b>Survey</b></h5>
+                                        <h5 style="margin-left:0px"><b>Retail Customer</b></h5>
+                                        <div class="row" style="padding:20px 20px 0px 10px">
+                                            <div class="col-md-4 text-center">
+                                                <button>
+                                                    <img style="width:30px" src="https://cdn.pixabay.com/photo/2016/04/16/10/32/icon-1332772_1280.png" alt="Alternate Text" />
+                                                </button>
+
+                                            </div>
+                                            <div class="col-md-4 text-center">
+                                                <button>
+                                                    <img style="width:30px" src="data:image/png;base64,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" alt="Alternate Text" />
+                                                </button>
+
+                                            </div>
+                                            <div class="col-md-4 text-center">
+                                                <button>
+                                                    <img style="width:40px" src="https://mpng.subpng.com/20180420/xqe/kisspng-chart-computer-icons-statistics-report-elevator-repair-5ad986adef4327.78399718152420522998.jpg" alt="Alternate Text" />
+                                                </button>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="card shadow-lg " data-toggle="modal" data-target="#EmpClasification" style="width:260px; height:230px">
+                                    <div class="card-body text-center" style="height:270px; padding-top:50px">
+                                        <h5 style="margin-left:0px"><b>Survey</b></h5>
+                                        <h5 style="margin-left:0px"><b>Fleet Customer</b></h5>
+                                        <div class="row" style="padding:20px 20px 0px 10px">
+                                            <div class="col-md-4 text-center">
+                                                <button>
+                                                    <img style="width:30px" src="https://cdn.pixabay.com/photo/2016/04/16/10/32/icon-1332772_1280.png" alt="Alternate Text" />
+                                                </button>
+
+                                            </div>
+                                            <div class="col-md-4 text-center">
+                                                <button>
+                                                    <img style="width:30px" src="data:image/png;base64,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" alt="Alternate Text" />
+                                                </button>
+
+                                            </div>
+                                            <div class="col-md-4 text-center">
+                                                <button>
+                                                    <img style="width:40px" src="https://mpng.subpng.com/20180420/xqe/kisspng-chart-computer-icons-statistics-report-elevator-repair-5ad986adef4327.78399718152420522998.jpg" alt="Alternate Text" />
+                                                </button>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-lg-12">
+
+                            @if (Model.Location_ID != "007")
+                            {
+                                <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#AddDocuments" style="width:100%; height:735px">
+                                    <div class="card-header text-center" style="padding:6px 6px 0px 6px">
+                                        <div class="row">
+                                            <div class="col-lg-3"></div>
+                                            <div class="col-lg-6">
+                                                <h5>Branch Efficiency</h5>
+                                            </div>
+                                            <div class="col-lg-3 text-right" style="padding-right:30px">
+
+                                                @using (Html.BeginForm("DashboardChangeYear", "Management", FormMethod.Post))
+                                                {
+                                                    if (Model.SehubAccess.management_dashboard >= 2)
+                                                    {
+                                                        @Html.DropDownListFor(m => m.Year, Model.PayrollIdList, new { @onChange = "this.form.submit()", @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
+                                                        @Html.HiddenFor(m => m.Location_ID)
+                                                    }
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body text-center example" style="height:500px; overflow-y:auto">
+
+                                        @{
+                                            double ytdHrsBilled = 0;
+                                            double prlHrsAdjusted = 0;
+                                            double TechnicianEfficiency = 0;
+                                        }
+
+                                        @if (Model.techefficiencyList.Where(x => x.TechClass == "1st Year Apprentice" || x.TechClass == "2nd Year Apprentice" || x.TechClass == "3rd Year Apprentice" || x.TechClass == "4th Year Apprentice" || x.TechClass == "Journeyman").Count() != 0)
+                                        {
+                                            <div class="row">
+                                                <div class="col-lg-12 text-center">
+                                                    <h5>Auto Technician</h5>
+                                                </div>
+                                            </div>
+
+                                            <div class="row example">
+                                                <div class="col-lg-12">
+                                                    <table class="table table-striped table-bordered">
+                                                        @if (Model.techefficiencyList != null)
+                                                        {
+                                                            <thead style="background-color:gray; color:white">
+                                                                <tr>
+                                                                    <th style="padding:0px; font-size:8px; width: 35%" scope="col">Technician</th>
+                                                                    <th style="padding:0px; font-size:8px; width: 25%" scope="col">Tech Class</th>
+                                                                    <th style="padding:0px; font-size:8px; display:none" scope="col">Compensation Type</th>
+                                                                    <th style="padding:0px; font-size:8px; width: 16.66%" scope="col">Payroll Efficiency</th>
+                                                                    <th style="padding:0px; font-size:8px; width: 16.66%" scope="col">YTD Efficiency</th>
+                                                                    <th style="padding:0px; font-size:8px; display:none" scope="col">Payroll Hours Billed</th>
+                                                                    <th style="padding:0px; font-size:8px; display:none" scope="col">YTD Hours Billed</th>
+                                                                    <th style="padding:0px; font-size:8px; display:none" scope="col">Payroll Attendance</th>
+                                                                    <th style="padding:0px; font-size:8px; display:none" scope="col">YTD Attendance</th>
+                                                                    <th style="padding:0px; font-size:8px; display:none" scope="col">Payroll Hours Adj</th>
+                                                                    <th style="padding:0px; font-size:8px; display:none" scope="col">Regular Hours</th>
+                                                                    <th style="padding:0px; font-size:8px; display:none" scope="col">Ot Hours</th>
+                                                                    <th style="padding:0px; font-size:8px; display:none" scope="col">Comissionable Sales Due</th>
+                                                                    <th style="padding:0px; font-size:8px; display:none" scope="col">Door rate</th>
+                                                                </tr>
+                                                            </thead>
+                                                        }
+
+                                                        <tbody>
+
+                                                            @foreach (var tech in Model.techefficiencyList)
+                                                            {
+                                                                if (tech.TechClass == "1st Year Apprentice" || tech.TechClass == "2nd Year Apprentice" || tech.TechClass == "3rd Year Apprentice" || tech.TechClass == "4th Year Apprentice" || tech.TechClass == "Journeyman")
+                                                                {
+
+                                                                    double paidhrspayroll = 0;
+                                                                    if (tech.RegularHours != "" && tech.OtHours != "")
+                                                                    {
+                                                                        paidhrspayroll = double.Parse(tech.RegularHours) + double.Parse(tech.OtHours);
+                                                                    }
+                                                                    double billedhrspayroll = Convert.ToDouble(tech.BilledHoursPayroll);
+                                                                    double billedhrsytd = Convert.ToDouble(tech.OverallEfficiency);
+                                                                    double payrollEfficiency = Convert.ToDouble(billedhrspayroll.ToString("n2")) * 100 / Convert.ToDouble(paidhrspayroll);
+                                                                    double ytdEfficiency = Convert.ToDouble(billedhrsytd.ToString("n2")) * 100 / Convert.ToDouble(tech.BilledHoursYear);
+                                                                    <tr>
+                                                                        <td style="padding:0px; font-size:15px; text-align:left; padding-left:10px">
+                                                                            @if (tech.Status == 1)
+                                                                            {
+                                                                                <b>
+                                                                                    @tech.Technician
+                                                                                </b>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @tech.Technician
+                                                                            }
+
+                                                                        </td>
+                                                                        <td style="padding:0px; font-size:15px">
+                                                                            @if (tech.Status == 1)
+                                                                            {
+                                                                                <b>
+                                                                                    @tech.TechClass
+                                                                                </b>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @tech.TechClass
+                                                                            }
+
+                                                                        </td>
+                                                                        <td style="padding:0px; font-size:9px; display:none">
+                                                                            @tech.CompensationType
+                                                                        </td>
+                                                                        <td style="padding:0px; font-size:15px">
+
+                                                                            @if (Model.Year != System.DateTime.Now.Year.ToString())
+                                                                            {
+                                                                                <span>-</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                if (billedhrspayroll != 0)
+                                                                                {
+                                                                                    if (tech.Status == 1)
+                                                                                    {
+                                                                                        <b>
+                                                                                            <span>@payrollEfficiency.ToString("n2") %</span>
+                                                                                        </b>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <span>@payrollEfficiency.ToString("n2") %</span>
+                                                                                    }
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    if (tech.Status == 1)
+                                                                                    {
+                                                                                        <b>
+                                                                                            <span>0 %</span>
+                                                                                        </b>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <span>0 %</span>
+                                                                                    }
+
+                                                                                }
+                                                                            }
+
+                                                                        </td>
+                                                                        <td style="padding:0px; font-size:15px">
+
+                                                                            @if (billedhrsytd != 0)
+                                                                            {
+                                                                                if (tech.Status == 1)
+                                                                                {
+                                                                                    <b>
+                                                                                        <span>@ytdEfficiency.ToString("n2") %</span>
+                                                                                    </b>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <span>@ytdEfficiency.ToString("n2") %</span>
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                if (tech.Status == 1)
+                                                                                {
+                                                                                    <b>
+                                                                                        <span>0 %</span>
+                                                                                    </b>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <span>0 %</span>
+                                                                                }
+                                                                            }
+
+                                                                        </td>
+                                                                        <td style="padding:0px; font-size:9px; display:none">@billedhrspayroll.ToString("n2")</td>
+                                                                        <td style="padding:0px; font-size:9px; display:none">
+                                                                            @{
+                                                                                ytdHrsBilled = ytdHrsBilled + Convert.ToDouble(billedhrsytd.ToString("n2"));
+                                                                            }
+                                                                            @billedhrsytd.ToString("n2")
+                                                                        </td>
+                                                                        <td style="padding:0px; font-size:9px; display:none">@paidhrspayroll</td>
+                                                                        <td style="padding:0px; font-size:9px; display:none">@tech.BilledHoursYear</td>
+                                                                        <td style="padding:0px; font-size:9px; display:none; display:none">
+                                                                            @if (tech.CompensationType != "Commission")
+                                                                            {
+                                                                                prlHrsAdjusted = prlHrsAdjusted + Convert.ToDouble(tech.BilledHoursYear);
+                                                                                <span>
+                                                                                    @tech.BilledHoursYear
+                                                                                </span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                prlHrsAdjusted = prlHrsAdjusted + Convert.ToDouble(billedhrsytd.ToString("n2"));
+                                                                                <span>
+                                                                                    @billedhrsytd.ToString("n2")
+                                                                                </span>
+
+                                                                            }
+                                                                        </td>
+                                                                        <td style="padding:0px; font-size:15px; display:none">@tech.RegularHours</td>
+                                                                        <td style="padding:0px; font-size:15px; display:none">@tech.OtHours</td>
+                                                                        <td style="padding:0px; font-size:15px; display:none">@tech.ComissionableSalesDue</td>
+                                                                        <td style="padding:0px; font-size:15px; display:none">@tech.Doorrate</td>
+                                                                    </tr>
+                                                                }
+                                                            }
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                            <div class="row" style="display:none">
+                                                <div class="col-lg-12 text-right">
+                                                    Total Hours Billed: @ytdHrsBilled
+                                                    <br />
+                                                    Total Payroll Hours Adjusted: @prlHrsAdjusted
+                                                </div>
+                                            </div>
+
+                                            <div class="row" style="margin-bottom:10px">
+                                                <div class="col-lg-10 text-right">
+                                                    @if (prlHrsAdjusted != 0)
+                                                    {
+                                                        TechnicianEfficiency = ytdHrsBilled * 100 / prlHrsAdjusted;
+                                                        <span>Average Auto Technician Efficiency: </span>
+                                                    }
+                                                </div>
+                                                <div class="col-lg-2 text-center">
+                                                    @if (prlHrsAdjusted != 0)
+                                                    {
+                                                        <b style="font-size:20px">@TechnicianEfficiency.ToString("n1")%</b>
+                                                    }
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-lg-12 text-center">
+                                                    <h5>Tire Technician</h5>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        @if (Model.techefficiencyList.Where(x => x.TechClass.Contains("Tire Tech")).Count() != 0)
+                                        {
+                                            ytdHrsBilled = 0;
+                                            prlHrsAdjusted = 0;
+                                            TechnicianEfficiency = 0;
+
+                                            <div class="row example">
+                                                <div class="col-lg-12">
+                                                    <table class="table table-striped table-bordered">
+
+                                                        @if (Model.techefficiencyList != null)
+                                                        {
+                                                            <thead style="background-color:gray; color:white">
+                                                                <tr>
+                                                                    <th style="padding:0px; font-size:8px; width: 35%" scope="col">Technician</th>
+                                                                    <th style="padding:0px; font-size:8px; width: 25%" scope="col">Tech Class</th>
+                                                                    <th style="padding:0px; font-size:8px; display:none" scope="col">Compensation Type</th>
+                                                                    <th style="padding:0px; font-size:8px; width: 16.66%" scope="col">Payroll Efficiency</th>
+                                                                    <th style="padding:0px; font-size:8px; width: 16.66%" scope="col">YTD Efficiency</th>
+                                                                    <th style="padding:0px; font-size:8px; display:none" scope="col">Payroll Hours Billed</th>
+                                                                    <th style="padding:0px; font-size:8px; display:none" scope="col">YTD Hours Billed</th>
+                                                                    <th style="padding:0px; font-size:8px; display:none" scope="col">Payroll Attendance</th>
+                                                                    <th style="padding:0px; font-size:8px; display:none" scope="col">YTD Attendance</th>
+                                                                    <th style="padding:0px; font-size:8px; display:none" scope="col">Payroll Hours Adj</th>
+                                                                    <th style="padding:0px; font-size:8px; display:none" scope="col">Regular Hours</th>
+                                                                    <th style="padding:0px; font-size:8px; display:none" scope="col">Ot Hours</th>
+                                                                    <th style="padding:0px; font-size:8px; display:none" scope="col">Comissionable Sales Due</th>
+                                                                    <th style="padding:0px; font-size:8px; display:none" scope="col">Door rate</th>
+                                                                </tr>
+                                                            </thead>
+                                                        }
+
+                                                        <tbody>
+
+                                                            @foreach (var TIREtech in Model.techefficiencyList)
+                                                            {
+
+                                                                if (TIREtech.TechClass.Contains("Tire Tech"))
+                                                                {
+                                                                    double paidhrspayrollTIRE = Convert.ToDouble(TIREtech.RegularHours) + Convert.ToDouble(TIREtech.OtHours);
+                                                                    double billedhrspayrollTIRE = Convert.ToDouble(TIREtech.BilledHoursPayroll);
+                                                                    double billedhrsytdTIRE = Convert.ToDouble(TIREtech.OverallEfficiency);
+                                                                    double payrollEfficiencyTIRE = Convert.ToDouble(billedhrspayrollTIRE.ToString("n2")) * 100 / Convert.ToDouble(paidhrspayrollTIRE);
+                                                                    double ytdEfficiencyTIRE = Convert.ToDouble(billedhrsytdTIRE.ToString("n2")) * 100 / Convert.ToDouble(TIREtech.BilledHoursYear);
+                                                                    <tr>
+                                                                        <td style="padding:0px; font-size:15px; text-align:left; padding-left:10px">
+                                                                            @if (TIREtech.Status == 1)
+                                                                            {
+                                                                                <b>
+                                                                                    @TIREtech.Technician
+                                                                                </b>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @TIREtech.Technician
+                                                                            }
+
+                                                                        </td>
+                                                                        <td style="padding:0px; font-size:15px">
+                                                                            @if (TIREtech.Status == 1)
+                                                                            {
+                                                                                <b>
+                                                                                    @TIREtech.TechClass
+                                                                                </b>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @TIREtech.TechClass
+                                                                            }
+
+                                                                        </td>
+                                                                        <td style="padding:0px; font-size:10px; display:none">
+                                                                            @TIREtech.CompensationType
+                                                                        </td>
+                                                                        <td style="padding:0px; font-size:15px">
+                                                                            @if (Model.Year != System.DateTime.Now.Year.ToString())
+                                                                            {
+                                                                                <span>-</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                if (billedhrspayrollTIRE != 0)
+                                                                                {
+                                                                                    if (TIREtech.Status == 1)
+                                                                                    {
+                                                                                        <b>
+                                                                                            <span>@payrollEfficiencyTIRE.ToString("n2") %</span>
+                                                                                        </b>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <span>@payrollEfficiencyTIRE.ToString("n2") %</span>
+                                                                                    }
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    if (TIREtech.Status == 1)
+                                                                                    {
+                                                                                        <b>
+                                                                                            <span>0 %</span>
+                                                                                        </b>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <span>0 %</span>
+                                                                                    }
+
+                                                                                }
+                                                                            }
+
+
+                                                                        </td>
+                                                                        <td style="padding:0px; font-size:15px">
+
+                                                                            @if (billedhrsytdTIRE != 0)
+                                                                            {
+                                                                                if (TIREtech.Status == 1)
+                                                                                {
+                                                                                    <b>
+                                                                                        <span>@ytdEfficiencyTIRE.ToString("n2") %</span>
+                                                                                    </b>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <span>@ytdEfficiencyTIRE.ToString("n2") %</span>
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                if (TIREtech.Status == 1)
+                                                                                {
+                                                                                    <b>
+                                                                                        <span>0 %</span>
+                                                                                    </b>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <span>0 %</span>
+                                                                                }
+                                                                            }
+
+                                                                        </td>
+                                                                        <td style="padding:0px; font-size:10px; display:none">@billedhrspayrollTIRE.ToString("n2")</td>
+                                                                        <td style="padding:0px; font-size:10px; display:none">
+                                                                            @{
+                                                                                ytdHrsBilled = ytdHrsBilled + Convert.ToDouble(billedhrsytdTIRE.ToString("n2"));
+                                                                            }
+                                                                            @billedhrsytdTIRE.ToString("n2")
+                                                                        </td>
+                                                                        <td style="padding:0px; font-size:10px; display:none">@paidhrspayrollTIRE</td>
+                                                                        <td style="padding:0px; font-size:10px; display:none">@TIREtech.BilledHoursYear</td>
+                                                                        <td style="padding:0px; font-size:10px; display:none">
+                                                                            @if (TIREtech.CompensationType != "Commission")
+                                                                            {
+                                                                                prlHrsAdjusted = prlHrsAdjusted + Convert.ToDouble(TIREtech.BilledHoursYear);
+                                                                                <span>
+                                                                                    @TIREtech.BilledHoursYear
+                                                                                </span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                prlHrsAdjusted = prlHrsAdjusted + Convert.ToDouble(billedhrsytdTIRE.ToString("n2"));
+                                                                                <span>
+                                                                                    @billedhrsytdTIRE.ToString("n2")
+                                                                                </span>
+
+                                                                            }
+                                                                        </td>
+                                                                        <td style="padding:0px; font-size:15px; display:none">@TIREtech.RegularHours</td>
+                                                                        <td style="padding:0px; font-size:15px; display:none">@TIREtech.OtHours</td>
+                                                                        <td style="padding:0px; font-size:15px; display:none">@TIREtech.ComissionableSalesDue</td>
+                                                                        <td style="padding:0px; font-size:15px; display:none">@TIREtech.Doorrate</td>
+                                                                    </tr>
+                                                                }
+                                                            }
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                            <div class="row" style="display:none">
+                                                <div class="col-lg-12 text-right">
+                                                    Total Hours Billed: @ytdHrsBilled
+                                                    <br />
+                                                    Total Payroll Hours Adjusted: @prlHrsAdjusted
+                                                </div>
+                                            </div>
+
+                                            <div class="row" style="margin-bottom:10px;">
+                                                <div class="col-lg-10 text-right">
+                                                    @if (prlHrsAdjusted != 0)
+                                                    {
+                                                        TechnicianEfficiency = ytdHrsBilled * 100 / prlHrsAdjusted;
+                                                        <span>Average Tire Technician Efficiency: </span>
+                                                    }
+                                                </div>
+                                                <div class="col-lg-2 text-center">
+                                                    @if (prlHrsAdjusted != 0)
+                                                    {
+                                                        <b style="font-size:20px">@TechnicianEfficiency.ToString("n1")%</b>
+                                                    }
+                                                </div>
+
+                                            </div>
+                                        }
+
+                                        @if (Model.techefficiencyList.Where(x => x.TechClass == "Branch Manager" || x.TechClass == "Assistant Branch Manager" || x.TechClass == "Service Advisor").Count() != 0)
+                                        {
+
+                                            <div style="display:none">
+                                                <div class="row">
+                                                    <div class="col-lg-12 text-center">
+                                                        <h5>Sales Staff</h5>
+                                                    </div>
+                                                </div>
+
+                                                @ytdHrsBilled = 0;
+                                                @prlHrsAdjusted = 0;
+                                                @TechnicianEfficiency = 0;
+                                                <div class="row example">
+                                                    <div class="col-lg-12">
+                                                        <table class="table table-striped table-bordered">
+
+                                                            @if (Model.techefficiencyList != null)
+                                                            {
+                                                                <thead style="background-color:gray; color:white">
+                                                                    <tr>
+                                                                        <th style="padding:0px; font-size:8px; width: 35%" scope="col">Technician</th>
+                                                                        <th style="padding:0px; font-size:8px; width: 25%" scope="col">Tech Class</th>
+                                                                        <th style="padding:0px; font-size:8px; display:none" scope="col">Compensation Type</th>
+                                                                        <th style="padding:0px; font-size:8px; width: 16.66%" scope="col">Payroll Efficiency</th>
+                                                                        <th style="padding:0px; font-size:8px; width: 16.66%" scope="col">YTD Efficiency</th>
+                                                                        <th style="padding:0px; font-size:8px; display:none" scope="col">Payroll Hours Billed</th>
+                                                                        <th style="padding:0px; font-size:8px; display:none" scope="col">YTD Hours Billed</th>
+                                                                        <th style="padding:0px; font-size:8px; display:none" scope="col">Payroll Attendance</th>
+                                                                        <th style="padding:0px; font-size:8px; display:none" scope="col">YTD Attendance</th>
+                                                                        <th style="padding:0px; font-size:8px; display:none" scope="col">Payroll Hours Adj</th>
+                                                                        <th style="padding:0px; font-size:8px; display:none" scope="col">Regular Hours</th>
+                                                                        <th style="padding:0px; font-size:8px; display:none" scope="col">Ot Hours</th>
+                                                                        <th style="padding:0px; font-size:8px; display:none" scope="col">Comissionable Sales Due</th>
+                                                                        <th style="padding:0px; font-size:8px; display:none" scope="col">Door rate</th>
+                                                                    </tr>
+                                                                </thead>
+                                                            }
+
+
+                                                            <tbody>
+
+                                                                @foreach (var managetech in Model.techefficiencyList)
+                                                                {
+                                                                    if (managetech.TechClass == "Branch Manager" || managetech.TechClass == "Assistant Branch Manager" || managetech.TechClass == "Service Advisor")
+                                                                    {
+
+                                                                        double managepaidhrspayroll = 0;
+
+                                                                        if (managetech.RegularHours != "" && managetech.OtHours != "")
+                                                                        {
+                                                                            managepaidhrspayroll = double.Parse(managetech.RegularHours) + double.Parse(managetech.OtHours);
+                                                                        }
+                                                                        double managebilledhrspayroll = Convert.ToDouble(managetech.BilledHoursPayroll);
+                                                                        double managebilledhrsytd = Convert.ToDouble(managetech.OverallEfficiency);
+                                                                        double managepayrollEfficiency = Convert.ToDouble(managebilledhrspayroll.ToString("n2")) * 100 / Convert.ToDouble(managepaidhrspayroll);
+                                                                        double manageytdEfficiency = Convert.ToDouble(managebilledhrsytd.ToString("n2")) * 100 / Convert.ToDouble(managetech.BilledHoursYear);
+                                                                        <tr>
+                                                                            <td style="padding:0px; font-size:15px; text-align:left; padding-left:10px">
+                                                                                @if (managetech.Status == 1)
+                                                                                {
+                                                                                    <b>
+                                                                                        @managetech.Technician
+                                                                                    </b>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    @managetech.Technician
+                                                                                }
+
+                                                                            </td>
+                                                                            <td style="padding:0px; font-size:15px">
+                                                                                @if (managetech.Status == 1)
+                                                                                {
+                                                                                    <b>
+                                                                                        @managetech.TechClass
+                                                                                    </b>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    @managetech.TechClass
+                                                                                }
+
+                                                                            </td>
+                                                                            <td style="padding:0px; font-size:9px; display:none">
+                                                                                @managetech.CompensationType
+                                                                            </td>
+                                                                            <td style="padding:0px; font-size:15px">
+
+                                                                                @if (managebilledhrspayroll != 0)
+                                                                                {
+                                                                                    if (managetech.Status == 1)
+                                                                                    {
+                                                                                        <b>
+                                                                                            <span>@managepayrollEfficiency.ToString("n2") %</span>
+                                                                                        </b>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <span>@managepayrollEfficiency.ToString("n2") %</span>
+                                                                                    }
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    if (managetech.Status == 1)
+                                                                                    {
+                                                                                        <b>
+                                                                                            <span>0 %</span>
+                                                                                        </b>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <span>0 %</span>
+                                                                                    }
+
+                                                                                }
+                                                                            </td>
+                                                                            <td style="padding:0px; font-size:15px">
+
+                                                                                @if (managebilledhrsytd != 0)
+                                                                                {
+                                                                                    if (managetech.Status == 1)
+                                                                                    {
+                                                                                        <b>
+                                                                                            <span>@manageytdEfficiency.ToString("n2") %</span>
+                                                                                        </b>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <span>@manageytdEfficiency.ToString("n2") %</span>
+                                                                                    }
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    if (managetech.Status == 1)
+                                                                                    {
+                                                                                        <b>
+                                                                                            <span>0 %</span>
+                                                                                        </b>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <span>0 %</span>
+                                                                                    }
+                                                                                }
+
+                                                                            </td>
+                                                                            <td style="padding:0px; font-size:9px; display:none">@managebilledhrspayroll.ToString("n2")</td>
+                                                                            <td style="padding:0px; font-size:9px; display:none">
+                                                                                @{
+                                                                                    ytdHrsBilled = ytdHrsBilled + Convert.ToDouble(managebilledhrsytd.ToString("n2"));
+                                                                                }
+                                                                                @managebilledhrsytd.ToString("n2")
+                                                                            </td>
+                                                                            <td style="padding:0px; font-size:9px; display:none">@managepaidhrspayroll</td>
+                                                                            <td style="padding:0px; font-size:9px; display:none">@managetech.BilledHoursYear</td>
+                                                                            <td style="padding:0px; font-size:9px; display:none; display:none">
+                                                                                @if (managetech.CompensationType != "Commission")
+                                                                                {
+                                                                                    prlHrsAdjusted = prlHrsAdjusted + Convert.ToDouble(managetech.BilledHoursYear);
+                                                                                    <span>
+                                                                                        @managetech.BilledHoursYear
+                                                                                    </span>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    prlHrsAdjusted = prlHrsAdjusted + Convert.ToDouble(managebilledhrsytd.ToString("n2"));
+                                                                                    <span>
+                                                                                        @managebilledhrsytd.ToString("n2")
+                                                                                    </span>
+
+                                                                                }
+                                                                            </td>
+                                                                            <td style="padding:0px; font-size:15px; display:none">@managetech.RegularHours</td>
+                                                                            <td style="padding:0px; font-size:15px; display:none">@managetech.OtHours</td>
+                                                                            <td style="padding:0px; font-size:15px; display:none">@managetech.ComissionableSalesDue</td>
+                                                                            <td style="padding:0px; font-size:15px; display:none">@managetech.Doorrate</td>
+                                                                        </tr>
+                                                                    }
+                                                                }
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        }
+
+
+
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="card shadow-lg " type="button" data-toggle="modal" data-target="#AddDocuments" style="width:100%; height:735px">
+                                    <div class="card-header text-center" style="padding:6px 6px 0px 6px">
+                                        <div class="row">
+                                            <div class="col-lg-3"></div>
+                                            <div class="col-lg-6">
+                                                <h5>Branch Efficiency</h5>
+                                            </div>
+                                            <div class="col-lg-3 text-right" style="padding-right:30px">
+
+                                                @using (Html.BeginForm("DashboardChangeYear", "Management", FormMethod.Post))
+                                                {
+                                                    if (Model.SehubAccess.management_dashboard >= 2)
+                                                    {
+                                                        @Html.DropDownListFor(m => m.Year, Model.PayrollIdList, new { @onChange = "this.form.submit()", @class = "text-center", @style = "text-align-last: center; width:100px; height:23px; margin-left:2px", @required = "required", @id = "Location" })
+                                                        @Html.HiddenFor(m => m.Location_ID)
+                                                    }
+                                                }
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body text-center example" style="height:500px; overflow-y:auto">
+                                        <div class="row" style="margin-bottom:10px">
+                                            <div class="col-lg-12 text-left">
+                                                <span style="font-size:30px; margin-right:15px">YTD Retread Production</span> <span style="float:right; font-size:30px; margin-left:15px; margin-right:80px;">Unit</span> <input type="text" style="float:right; text-align:center; font-size:30px; width:160px" name="name" value="@Model.ytd_barcode" />
+                                            </div>
+                                        </div>
+
+                                        <div class="row" style="margin-bottom:10px">
+                                            <div class="col-lg-12 text-left">
+                                                <span style="font-size:30px; margin-right:15px">Anual Production</span> <span style="float:right; font-size:30px; margin-left:15px; margin-right:80px;">Unit</span> <input type="text" style="float:right; text-align:center; font-size:30px; width:160px" name="name" value="@Model.anual_production.ToString("N2")" />
+                                            </div>
+                                        </div>
+
+                                        @{
+                                            var efficiency = (Model.ytd_tech_minutes * 60) / Model.ytd_tech_production;
+                                        }
+
+                                        <div class="row" style="margin-bottom:10px">
+                                            <div class="col-lg-12 text-left">
+                                                <span style="font-size:30px; margin-right:15px">YTD Tech Efficiency</span> <span style="float:right; font-size:30px; margin-left:15px; margin-right:10px">Tech/Unit</span> <input type="text" style="float:right; text-align:center; font-size:30px; width:160px" name="name" value="@efficiency.ToString("N2")" />
+                                            </div>
+                                        </div>
+
+                                        <hr />
+
+                                        <div class="row" style="margin-bottom:10px">
+                                            <div class="col-lg-12 text-left">
+                                                <span style="font-size:30px; margin-right:15px">Industry Bench Mark</span> <span style="float:right; font-size:30px; margin-left:15px; margin-right:10px">Tech/Unit</span> <input type="text" style="float:right; text-align:center; font-size:30px; width:160px" name="name" value="60" />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="Document" tabindex="-1" role="dialog" aria-labelledby="DocumentLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" style="height:980px; width:900px">
+                <div class="modal-body" style="padding:0px">
+                    <div>
+                        <iframe id="modal_content" src="" style="width:100%;height:980px;"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="EmpClasification" tabindex="-1" role="dialog" aria-labelledby="DocumentLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" style="width:930px">
+                <div class="modal-header" style="padding:5px 15px 0px 15px">
+                    <h5>Employee Classification</h5>
+                    <button id="btnPrint" type="button" class="btn btn-primary" style="padding:0px 20px 0px 20px">Print</button>
+                </div>
+                <div id="printThis" class="modal-body" style="padding:0px">
+
+                    <div id="dontshow" class="row">
+                        <div class="col-md-12" style="padding:0px 30px 0px 30px">
+                            <table style="width:100%;">
+                                <tr id="title">
+                                    <td style="padding:20px; width:33%">
+                                    </td>
+                                    <td style="padding:10px; width:33%; text-align:center">
+                                        <div class="row">
+                                            <img src="~/Content/LoginLogo.png" style="margin-left: auto;margin-right: auto; width:300px;">
+                                        </div>
+                                    </td>
+                                    <td class="text-right" style="padding:10px; width:33%; text-align:right">
+                                        <div class="row">
+                                            <div class="col-md-12 text-right" style="padding:0px 5px 0px 0px">
+                                                <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">1123 Topsail Road, P.O. Box 549</font></p>
+                                                <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Mount Pearl, NL A1N 2W4</font></p>
+                                                <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Tel: (709) 364-6808 • Fax: (709) 364-0074</font></p>
+                                                <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">24 Hour: (709) 368-5971</font></p>
+                                                <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Email: cta@citytire.com • www.citytire.com</font></p>
+
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="row" style="padding:10px 15px 10px 15px">
+                                <div class="col-md-12 text-center" style="border:2px solid dimgray; padding:8px 0px 2px 0px">
+                                    <h4><b>Employee Classification</b></h4>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row example">
+                        <div class="col-md-12" style="padding:10px 30px 0px 30px">
+                            <table class="table table-striped table-bordered" style="width:900px">
+                                <thead style="background-color:#a6a8ab; color:white">
+                                    <tr>
+                                        <th style="text-align:center; font-size:10px; padding:0px" scope="col">Employee Name</th>
+                                        <th style="text-align:center; font-size:10px; padding:0px" scope="col">ID</th>
+                                        <th style="text-align:center; font-size:10px; padding:0px" scope="col">Current Position</th>
+                                        <th style="text-align:center; font-size:10px; padding:0px" scope="col">Proposed Position</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="background-color:white; font-weight:bold">
+                                    @foreach (var emp in Model.employeeVacList)
+                                    {
+                                        <tr>
+                                            <td style="text-align:center; font-size:10px; padding:0px; vertical-align:middle" scope="col">
+                                                @emp.full_name
+                                            </td>
+                                            <td style="text-align:center; font-size:10px; padding:0px; vertical-align:middle" scope="col">
+                                                @emp.employee_id
+                                            </td>
+                                            <td style="text-align:center; font-size:10px; padding:0px; vertical-align:middle" scope="col">
+                                                @emp.cta_position
+                                            </td>
+                                            <td style="text-align:center; font-size:10px; padding:3px" scope="col">
+                                                <input type="text" style="width:80%" name="name" value="" />
+                                            </td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-bottom:5px">
+                        <div class="col-md-2" style="padding:0px 30px 0px 30px">Management</div>
+                        <div class="col-md-10"><input type="text" name="name" value="" /></div>
+                    </div>
+                    <div class="row" style="margin-bottom:5px">
+                        <div class="col-md-2" style="padding:0px 30px 0px 30px">Signature</div>
+                        <div class="col-md-10"><input type="text" name="name" value="" /></div>
+                    </div>
+                    <div class="row" style="margin-bottom:15px">
+                        <div class="col-md-2" style="padding:0px 30px 0px 30px">Date</div>
+                        <div class="col-md-10"><input type="text" name="name" value="@System.DateTime.Today.ToString("dddd dd MMM, yyyy")" /></div>
+                    </div>
+
+                </div>
+                <div class="modal-footer" style="padding:2px 10px 2px 5px">
+                    <button data-dismiss="modal" class="btn btn-danger" style="padding:0px 20px 0px 20px">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     <script>
         $(document).ready(function () {
-            techEfficiency();
-        });
-
-        $("#ToggleFromTechToSales").on('change', function() {
-            if ($(this).is(':checked')) {
-                salesPerformance()
-                $('#salesText').css("font-weight", "bold")
-                $('#techText').css("font-weight", "normal")
-                $('#techType').css("display", "none")
-            }
-            else {
-                techEfficiency();
-                $('#techText').css("font-weight", "bold")
-                $('#salesText').css("font-weight", "normal")
-                $('#techType').css("display", "block")
-            }
-        });
-
-        function techEfficiency() {
-            var emp_id = $('#employees').val();
-            var year = $('#year').val();
-            var loc_id = $('#Location').val();
-            var techType = $('#techType').val();
-
-            var effInfo = "";
-
-            if (emp_id == "All") {
-                $.ajax({
-                    url: '@Url.Action("TechnicianEfficiencyPerPayrollAll", "Management")',
-                    data: { loc: loc_id, year: year, tech: techType },
-                    async: false,
-                    success: function (data) {
-                        effInfo = data;
-                    }
-                });
-
-                var payIDs = effInfo.split('~')[0].split(';');
-                var effPerc = effInfo.split('~')[1].split(',');
-
-
-                var payrollIDData = [
-                ];
-
-                for (i = 0; i < payIDs.length; i++) {
-                    payrollIDData.push({label: payIDs[i].substring(2, 4)})
-                }
-
-                var percentData = [
-                ];
-
-                var jsn = JSON.parse(effPerc);
-
-                var items = [];
-
-                for (i = 0; i < jsn.length; i++) {
-                    items.push({ seriesname: jsn[i].component, data: calculatePercentages(jsn[i].color)})                    
-                }
-
-
-                $('#tech').css("background-color", "#3088fc").css("color", "white")
-                $('#sales').css("background-color", "white").css("color", "black")
-
-            
-                var percent = "";
-                $.ajax({
-                    url: '@Url.Action("TechnicianEfficiency", "Management")',
-                    data: { emp: emp_id, year: year },
-                    async: false,
-                    success: function (data) {
-                        percent = data;
-                    }
-                });
-
-                const dataSource = {
-                    chart: {
-                        yaxisname: "Efficiency %",
-                        showhovereffect: "1",
-                        numbersuffix: "",
-                        drawcrossline: "1",
-                        plottooltext: "<b>$dataValue</b>",
-                        theme: "fusion",
-                        "legendIconSides": "5",
-                        "legendIconStartAngle": "60",
-                    },
-                    categories: [
-                        {
-                            category: [
-                            {
-                              label: ""
-                            },
-                            {
-                              label: "Jan"
-                            },
-                            {
-                              label: ""
-                            },
-                            {
-                                label: "Feb"
-                            },
-                            {
-                              label: ""
-                            },
-                            {
-                              label: "Mar"
-                            },
-                            {
-                              label: ""
-                            },
-                            {
-                              label: "Apr"
-                            },
-                            {
-                              label: ""
-                            },
-                            {
-                              label: "May"
-                            },
-                            {
-                              label: ""
-                            },
-                            {
-                              label: "Jun"
-                            },
-                            {
-                              label: ""
-                            },
-                            {
-                              label: "Jul"
-                            },
-                            {
-                              label: ""
-                            },
-                            {
-                              label: "Aug"
-                            },
-                            {
-                              label: ""
-                            },
-                            {
-                              label: "Sept"
-                            },
-                            {
-                              label: ""
-                            },
-                            {
-                              label: "Oct"
-                            },
-                            {
-                              label: ""
-                            },
-                            {
-                              label: "Nov"
-                            },
-                            {
-                              label: ""
-                            },
-                            {
-                              label: "Dec"
-                            }
-                          ]
-                        }
-                    ],
-                    dataset: items
-                };
-
-                FusionCharts.ready(function () {
-                    var myChart = new FusionCharts({
-                        type: "msline",
-                        renderAt: "chart-container",
-                        width: "100%",
-                        height: "100%",
-                        dataFormat: "json",
-                        dataSource
-                    }).render();
-                });
-
-            }
-            else {
-                $.ajax({
-                    url: '@Url.Action("TechnicianEfficiencyPerPayroll", "Management")',
-                    data: { emp: emp_id, year: year },
-                    async: false,
-                    success: function (data) {
-                        effInfo = data;
-                    }
-                });
-
-                var payIDs = effInfo.split('~')[0].split(';');
-                var effPerc = effInfo.split('~')[1].split(';');
-
-                var payrollIDData = [
-                ];
-
-                for (i = 0; i < payIDs.length; i++) {
-                    payrollIDData.push({label: payIDs[i].substring(2, 4)})
-                }
-
-                var percentData = [
-                ];
-
-                for (i = 0; i < effPerc.length; i++) {
-                    percentData.push({value: effPerc[i]})
-                }
-
-                //alert(percentData);
-
-                $('#tech').css("background-color", "#3088fc").css("color", "white")
-                $('#sales').css("background-color", "white").css("color", "black")
-
-            
-                var percent = "";
-                $.ajax({
-                    url: '@Url.Action("TechnicianEfficiency", "Management")',
-                    data: { emp: emp_id, year: year },
-                    async: false,
-                    success: function (data) {
-                        percent = data;
-                    }
-                });
-
-                const dataSource = {
-                    chart: {
-                        yaxisname: "Efficiency %",
-                        showhovereffect: "1",
-                        numbersuffix: "",
-                        drawcrossline: "1",
-                        plottooltext: "<b>$dataValue</b>",
-                        theme: "fusion"
-                    },
-                    categories: [
-                        {
-                            category: payrollIDData
-                        }
-                    ],
-                    dataset: [
-                        {
-                            seriesname: "Technician Efficiency",
-                            data: percentData
-                        }
-                    ]
-                };
-
-                FusionCharts.ready(function () {
-                    var myChart = new FusionCharts({
-                        type: "msline",
-                        renderAt: "chart-container",
-                        width: "100%",
-                        height: "100%",
-                        dataFormat: "json",
-                        dataSource
-                    }).render();
-                });
-            }
-            
-
-            
-        }
-
-        function calculatePercentages(effInfo) { 
-            var percentData = [];
-            effInfo.split(';').forEach(function (data) {
-                percentData.push({value: data})
-            })
-            return percentData;
-        }
-
-        function salesPerformance() {
-
-            var loc_id = $('#Location').val();
-            var year = $('#year').val();
-            var sales = "";
-            $.ajax({
-                url: '@Url.Action("getSalesOfLocation", "Management")',
-                data: { loc: loc_id, yar: year },
-                async: false,
-                success: function (data) {
-                    sales = data;
-                }
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
             });
-            var arr = sales.split('~')[0].split(';');
-            var arrp = sales.split('~')[1].split(';');
-            $('#sales').css("background-color", "#3088fc").css("color", "white")
-            $('#tech').css("background-color", "white").css("color", "black")
-            const dataSource = {
-                chart: {
-                    caption: "Sales Summary",
-                    xaxisname: "Months",
-                    yaxisname: "Sales ($ k)",
-                    formatnumberscale: "1",
-                        /*
-                         plottooltext:
-                          "<b>$dataValue</b> apps were available on <b>$seriesName</b> in $label",
-                         */
-                    theme: "fusion",
-                    drawcrossline: "1"
-                },
-                categories: [
-                    {
-                        category: [
-                            {
-                              label: "January"
-                            },
-                            {
-                              label: "February"
-                            },
-                            {
-                              label: "March"
-                            },
-                            {
-                              label: "April"
-                            },
-                            {
-                              label: "May"
-                            },
-                            {
-                              label: "June"
-                            },
-                            {
-                              label: "July"
-                            },
-                            {
-                              label: "August"
-                            },
-                            {
-                              label: "September"
-                            },
-                            {
-                              label: "October"
-                            },
-                            {
-                              label: "November"
-                            },
-                            {
-                              label: "December"
-                            }
-                        ]
-                    }
-                ],
-                dataset: [
-                    {
-                        seriesname: String(parseInt(year)-1),
-                        data: [
-                            {
-                                value: arrp[0]
-                            },
-                            {
-                                value: arrp[1]
-                            },
-                            {
-                                value: arrp[2]
-                            },
-                            {
-                                value: arrp[3]
-                            },
-                            {
-                                value: arrp[4]
-                            },
-                            {
-                                value: arrp[5]
-                            },
-                            {
-                                value: arrp[6]
-                            },
-                            {
-                                value: arrp[7]
-                            },
-                            {
-                                value: arrp[8]
-                            },
-                            {
-                                value: arrp[9]
-                            },
-                            {
-                                value: arrp[10]
-                            },
-                            {
-                                value: arrp[11]
-                            }
-                        ]
-                    },
-                    {
-                        seriesname: year,
-                        data: [
-                            {
-                                value: arr[0]
-                            },
-                            {
-                                value: arr[1]
-                            },
-                            {
-                                value: arr[2]
-                            },
-                            {
-                                value: arr[3]
-                            },
-                            {
-                                value: arr[4]
-                            },
-                            {
-                                value: arr[5]
-                            },
-                            {
-                                value: arr[6]
-                            },
-                            {
-                                value: arr[7]
-                            },
-                            {
-                                value: arr[8]
-                            },
-                            {
-                                value: arr[9]
-                            },
-                            {
-                                value: arr[10]
-                            },
-                            {
-                                value: arr[11]
-                            }
-                        ]
-                    }
-                    
-                ]
-            };
 
-                FusionCharts.ready(function() {
-                  var myChart = new FusionCharts({
-                    type: "mscolumn2d",
-                    renderAt: "chart-container",
-                    width: "100%",
-                    height: "100%",
-                    dataFormat: "json",
-                    dataSource
-                  }).render();
-                });
+        });
+
+        $('#div a').click(function (e) {
+            e.preventDefault()
+            $that = $(this);
+            $that.parent().find('a');
+            var seleccionado = $(this).children("span").html();
+            console.log(seleccionado);
+            $('#modal_content').attr('src', seleccionado);
+
+        });
+
+        document.getElementById("btnPrint").onclick = function () {
+            printElement(document.getElementById("printThis"));
+        }
+
+        function printElement(elem) {
+            var domClone = elem.cloneNode(true);
+
+            var $printSection = document.getElementById("printSection");
+
+            if (!$printSection) {
+                var $printSection = document.createElement("div");
+                $printSection.id = "printSection";
+                document.body.appendChild($printSection);
             }
+
+            $printSection.innerHTML = "";
+            $printSection.appendChild(domClone);
+            window.print();
+        }
 
     </script>
 
+    <script>
+
+        document.getElementById("btnPrint").onclick = function () {
+            printElement(document.getElementById("printThis"));
+        }
+
+        function printElement(elem) {
+            var domClone = elem.cloneNode(true);
+
+            var $printSection = document.getElementById("printSection");
+
+            if (!$printSection) {
+                var $printSection = document.createElement("div");
+                $printSection.id = "printSection";
+                document.body.appendChild($printSection);
+            }
+
+            $printSection.innerHTML = "";
+            $printSection.appendChild(domClone);
+            window.print();
+        }
+    </script>
+
 </body>
+
 </html>
-
-

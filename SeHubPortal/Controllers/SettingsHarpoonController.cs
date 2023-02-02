@@ -356,8 +356,7 @@ namespace SeHubPortal.Controllers
             {
                 modal.locIDorName = false;
             }
-
-
+            
             var clientID = userdetails.client_id;
 
             modal.client_info = db.tbl_harpoon_clients.Where(x => x.client_id == clientID).FirstOrDefault();
@@ -583,6 +582,7 @@ namespace SeHubPortal.Controllers
 
             }
 
+            (modal.Categories_client, modal.Categories) = populateTimesheetCategories(modal.client.client_id);
 
 
             return View(modal);
@@ -1622,8 +1622,6 @@ namespace SeHubPortal.Controllers
                     {
                         image.Save(m, image.RawFormat);
                         imageBytes = m.ToArray();
-
-                        string base64String = Convert.ToBase64String(imageBytes);
                     }
                 }
             }
@@ -1648,13 +1646,41 @@ namespace SeHubPortal.Controllers
                 client.client_website = model.editClient.client_website;
                 if(imageBytes != null)
                 {
-                    client.client_logo = model.editClient.client_logo;
+                    client.client_logo = imageBytes;
                 }
             }
             
 
             db.SaveChanges();
             return RedirectToAction("System");
+        }
+
+        private static (List<SelectListItem>, List<tbl_source_harpoon_timesheet_categories>) populateTimesheetCategories(string clientID)
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+            List<tbl_source_harpoon_timesheet_categories> categories_full = new List<tbl_source_harpoon_timesheet_categories>();
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            var categories = db.tbl_source_harpoon_timesheet_categories.ToList();
+            var category_selection = db.tbl_source_harpoon_timesheet_category_selection.Where(x => x.client_id == clientID).FirstOrDefault();
+
+            foreach (var cat in categories)
+            {
+                string state = category_selection.GetType().GetProperty(cat.category).GetValue(category_selection).ToString();
+
+                if (bool.Parse(state))
+                {
+                    items.Add(new SelectListItem
+                    {
+                        Text = cat.category,
+                        Value = cat.category
+                    });
+
+                    categories_full.Add(categories.Where(x => x.category == cat.category).FirstOrDefault());
+                }
+
+            }
+            return (items, categories_full);
         }
 
     }

@@ -21,5 +21,6 @@ namespace SeHubPortal.Models
         public string ip_address { get; set; }
         public string version_id { get; set; }
         public Nullable<System.DateTime> time_stamp { get; set; }
+        public string display_color { get; set; }
     }
 }

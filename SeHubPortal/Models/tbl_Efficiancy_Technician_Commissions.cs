@@ -18,8 +18,8 @@ namespace SeHubPortal.Models
         public string loc_id { get; set; }
         public string payroll_id { get; set; }
         public double door_rate { get; set; }
-        public Nullable<double> commissionable_sales_due { get; set; }
+        public Nullable<double> commissionable_sales { get; set; }
         public string commission_plan { get; set; }
-        public string commissions { get; set; }
+        public string commission_due { get; set; }
     }
 }

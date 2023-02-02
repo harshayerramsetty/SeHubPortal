@@ -287,6 +287,19 @@
             scrollbar-width: none; /* Firefox */
         }
 
+        .fc-prev-button{
+            display:none;
+        }
+
+        .fc-next-button{
+            display:none;
+        }
+
+        .fc-center > h2{
+            color: #007afd;
+        }
+
+
         @@media screen {
             #printSection {
                 display: none;
@@ -295,19 +308,43 @@
             #dontshow {
                 display: none;
             }
+
+            .dontshow {
+                display: none;
+            }
         }
 
         @@media print {
 
+            .printdiv{
+                height:auto
+            }
+
+            #btnPrint {
+                display: none;
+            }
 
             .dontShowInPrint {
                 display: none;
             }
 
+            body * {
+                visibility: hidden;
+                background-color:white;
+            }
+
             #printSection, #printSection * {
                 visibility: visible;
             }
+            
+            #printSection {
+                background-color:white;
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
         }
+
     </style>
 </head>
 <body>
@@ -318,7 +355,7 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb breadCrumb" style="background-color:white;height:100%;margin-top:0px;">
                             <li class="breadcrumb-item"><a href="@Url.Action("ProductionReport", "TreadTracker")">Tread Tracker</a></li>
-                            <li class="breadcrumb-item " aria-current="page">Production Report</li>
+                            <li class="breadcrumb-item " aria-current="page">Reporting</li>
                         </ol>
                     </nav>
                 </div>
@@ -332,138 +369,76 @@
     </div>
 
 
-    <div class="row" style="margin-left:15px">
-        <div class="col-lg-3">
+    <div class="row dontShowInPrint" style="margin-left:15px; margin-right:15px">
+        <div class="col-lg-12">
             <div class="row" style="background-color:white; padding:15px 0px 15px 0px">
-                <div class="col-lg-12">
-                    <div class="dontShowInPrint btn" id="calender" style="width:100%; background-color:white"></div>
+                <div class="col-lg-12" style="display:flex; justify-content:space-around">
+
+                    <button class="btn btn-primary" id="next" style="visibility: hidden;border: none;outline: none;padding: 0px 15px 0px 15px;height: 34px;margin-top: 1px;font-size: 20px;font-weight: bolder">
+                        <
+                    </button>
+                    <div class="dontShowInPrint btn" id="calender2" style="background-color:white; margin-right:25px; padding:0px"></div>
+                    <div class="dontShowInPrint btn" id="calender0" style="background-color:white; margin-left:25px; padding:0px"></div>
+                    <button class="btn btn-primary" id="prev" style="border:none; outline: none; padding:0px 15px 0px 15px; height:34px; margin-top:1px; font-size:20px; font-weight:bolder">
+                        >
+                    </button>
+
+                    <input type="number" name="name" value="0" id="counter" style="display:none" />
                 </div>
             </div>
-            <div class="row">
-                <button onclick="location.href='@Url.Action("PopulateTreadTracker", "Tools")';" >Populate TreadTracker</button>
-            </div>
+            @*
+                <div class="row">
+                    <button onclick="location.href='@Url.Action("PopulateTreadTracker", "Tools")';" >Populate TreadTracker</button>
+                </div>
+            *@
+
         </div>
-        <div class="col-lg-9" id="rightWindow" style="display:none; padding-right:30px">
-            <div class="card">
-                <div class="card-header dontShowInPrint" style="padding-bottom: 5px; ">@*background-color: white*@
-                    <div class="row">
-                        <div class="col-lg-6">
-                        </div>
-                        <div class="col-lg-6">
-                            <input class="btn btn-primary dontShowInPrint" id="btnPrint" style="margin-top:0px; width:100px; height:30px; float:right" type="text" readonly name="name" value="print" />
-                            <input class="btn btn-primary dontShowInPrint" id="closeWindow" style="margin-right:10px; width:100px; height:30px; float:right" type="text" readonly name="name" value="close" />
+
+    </div>
+
+
+    <div class="modal fade" data-backdrop="static" id="rightWindow" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" style="width:1000px;">
+
+                <div id="printsect">
+                    <div class="modal-header" style="display:flex; justify-content:space-between">
+                        <div></div>
+                        <input class="btn btn-primary dontShowInPrint" id="btnPrint" style="margin-right:0px; margin-top:0px; width:100px; height:30px; " type="text" readonly name="name" value="Print" />
+                    </div>
+                    <div class="modal-body">       
+                        <div class="row example printdiv" style="height:700px; overflow-y:auto; background-color:white; overflow-x:hidden" id="printThis">
                         </div>
                     </div>
-
                 </div>
-                <div class="card-body" style="padding:0px 15px 15px 15px">                    
 
-                    <table class="text-center" id="dontshow" style="margin-top:10px; width:100%;">
-                        <tr>
-                            <td style="padding:10px; width:25%">
-                                
-                            </td>
-                            <td style="padding:10px; width:50%">
-                                <img src="~/Content/LoginLogo.png" style="width:350px;">
-                            </td>
-                            <td style="width:25%">
-
-                                <div class="row">
-                                    <div class="col-lg-12 text-right">
-                                        <p style="margin: 0px; padding: 0px; line-height : 10px">
-                                            <font size="2">
-                                                @Model.addressSTREET1,
-                                                @if (Model.addressSTREET2 != null)
-                                                {
-                                                    @Model.addressSTREET2
-                                                }
-                                            </font>
-                                        </p>
-                                        <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">@Model.addressCITY, @Model.addressPROVINCE, @Model.addressPOSTAL</font></p>
-                                        <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Phone : @Model.locPHONE</font></p>
-                                        <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Fax : @Model.locFAX</font></p>
-                                        <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">www.citytire.com</font></p>
-
-                                    </div>
-
-                                </div>
-                                
-                            </td>
-                        </tr>
-                    </table>
-
-                    <table style="margin-top:10px; width:100%; border:1px solid #dee0e3">
-                        <tr>
-                            <td style="padding:10px; width:5%">
-                                <img style="width:80px" src="~/Content/trdIcon.png" alt="Alternate Text" />
-                            </td>
-                            <td style="padding:10px; width:23%">
-
-                                <div class="row">
-                                    <div class="col-lg-12 text-left">
-                                        <h4>TREAD</h4>
-                                    </div>
-
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-12 text-left">
-                                        <h4>TRACKER</h4>
-                                    </div>
-                                </div>
-                            </td>
-                            <td style="padding:10px; width:33%">
-                                <div class="row">
-                                    <div class="col-lg-12 text-center">
-                                        <h3>PRODUCTION REPORT</h3>
-                                    </div>
-
-                                </div>
-                            </td>
-                            <td style="padding:10px; width:33%">
-                                <div class="row">
-                                    <div class="col-lg-12 text-right">
-                                        <h5 style="text-transform: uppercase;" id="dateText"></h5>
-                                        
-                                    </div>
-
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-lg-12 text-right">
-                                        <h5 style="text-transform: uppercase;" id="TotalProduction"></h5>                                        
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-
-                    <div class="row example printdiv" style="height:550px; overflow-x:hidden; overflow-y:auto">
-                        <div class="col-lg-12" style="padding:0px; " id="printThis">
-                        </div>
-                    </div>
-
-
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" style="padding:2px 20px 2px 20px" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
 
-
-
     <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
 
     <script>
 
+        $("#prev").click(function () {
+            $("#counter").val(parseInt($("#counter").val()) + 1)
+            $('.fc-prev-button').click();
+            $("#next").css("visibility", "visible")
+        });
 
-        document.getElementById("btnPrint").onclick = function () {
-
-            $('.printdiv').css("height", "auto")
-            print();
-            $('.printdiv').css("height", "550px")
-        }
-
-        $('#closeWindow').click(function () {
-            $('#rightWindow').fadeOut();
+        $("#next").click(function () {
+            $("#counter").val(parseInt($("#counter").val()) - 1)
+            $('.fc-next-button').click();
+            if ($("#counter").val() == 0) {
+                $("#next").css("visibility", "hidden")
+            }
+            else {
+                $("#next").css("visibility", "visible")
+            }
         });
 
         $(document).ready(function () {
@@ -471,33 +446,67 @@
                 $.ajax({
                     type: "GET",
                     url: "/TreadTracker/GetInspectionDates",
+                    async: false,
                     success: function (data) {
                         $.each(data, function (i, v) {
 
-                            var d = new Date();
-                            var year = moment(v).format("YYYY");
-                            var date1 = moment(v).add(1, 'days').calendar();
-
                             events.push({
                                 start: moment(v).add(1, 'days').format("YYYY-MM-DD"),
-                                color: 'white',
-                                imageurl: '/Content/tire1.png',
+                                color: 'transparent',
+                                description: 'PR',
+                                imageurl: 'https://ctasehub.blob.core.windows.net/sehub-content/tire_production_report.png',
                             });
+                            /*
+                             
+                             events.push({
+                                start: moment(v).add(1, 'days').format("YYYY-MM-DD"),
+                                color: 'transparent',
+                                description: 'TR',
+                                imageurl: 'https://ctasehub.blob.core.windows.net/sehub-content/transfer_report_icon.png',
+                            });
+                             
+                             */
                         })
 
-                        GenerateCalender(events);
+                        
                     },
                     error: function (error) {
                         alert('failed');
                     }
                 })
 
-                function GenerateCalender(events) {
-                    $('#calender').fullCalendar('destroy');
+                $.ajax({
+                    type: "GET",
+                    url: "/TreadTracker/GetInspectionDatesCasingCredit",
+                    async: false,
+                    success: function (data) {
+                        $.each(data, function (i, v) {
+                            
+                            events.push({
+                                start: moment(v).add(1, 'days').format("YYYY-MM-DD"),
+                                color: 'transparent',
+                                description: 'CC',
+                                imageurl: 'https://ctasehub.blob.core.windows.net/sehub-content/credit_production_report.png',
+                            });
+                        })
 
-                    $('#calender').fullCalendar({
-                        contentHeight: 450,
-                        defaultDate: new Date(),
+                        
+                    },
+                    error: function (error) {
+                        alert('failed');
+                    }
+                })
+
+                GenerateCalender(events);
+                
+
+                function GenerateCalender(events) {
+
+                    $('#calender0').fullCalendar('destroy');
+                    var startDate0 = moment().subtract(1, 'month');
+                    $('#calender0').fullCalendar({
+                        defaultDate: startDate0,
+                        contentHeight: 650,
                         timeFormat: 'h(:mm)a',
                         displayEventTime: false,
                         header: {
@@ -505,7 +514,7 @@
                             center: 'title',
                             right: 'next'
                         },
-
+                        showNonCurrentDates: false,
                         eventLimit: true,
                         eventColor: '#378006',
                         events: events,
@@ -513,7 +522,7 @@
 
                         eventRender: function(event, eventElement) {
                         if (event.imageurl) {
-                            eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl +"' width='32' height='30'>");
+                            eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl +"' width='21' height='21'>");
                             }
                         },
 
@@ -547,65 +556,160 @@
                         eventClick: function (calEvent, jsEvent, view) {
                             //alert(moment(calEvent.start).add(-1, 'days').format("YYYY-MM-DD"));
 
-                            var d = new Date(moment(calEvent.start).add(1, 'days').format("YYYY-MM-DD"));
-
-                            var date = d.toString();
-
-                            var shortDay = date.substring(0, 3);
-                            var longDay = "";
-
-                            if (shortDay == "Mon") {
-                                longDay = "Monday"
+                            if (calEvent.description == 'PR') {
+                                $.ajax({
+                                    url: '@Url.Action("PopulateProductionReport", "TreadTracker")',
+                                    data: { inspDate: moment(calEvent.start).add(0, 'days').format("YYYY-MM-DD") }, // before publishing make change -1 to 0
+                                    type: 'GET',
+                                    success: function (data) {
+                                        $("#printThis").html(data);
+                                        $('#rightWindow').modal();
+                                    }
+                                });
                             }
-                            else if (shortDay == "Tue")
-                            {
-                                longDay = "Tuesday"
+                            else if (calEvent.description == 'TR') {
+                                $.ajax({
+                                    url: '@Url.Action("PopulateTransferReport", "TreadTracker")',
+                                    data: { inspDate: moment(calEvent.start).add(0, 'days').format("YYYY-MM-DD") }, // before publishing make change -1 to 0
+                                    type: 'GET',
+                                    success: function (data) {
+                                        $("#printThis").html(data);
+                                        $('#rightWindow').modal();
+                                    }
+                                });
                             }
-                            else if (shortDay == "Wed")
-                            {
-                                longDay = "Wednesday"
+                            else if (calEvent.description == 'CC') {
+                                $.ajax({
+                                    url: '@Url.Action("PopulateCasingCreditReport", "TreadTracker")',
+                                    data: { inspDate: moment(calEvent.start).add(0, 'days').format("YYYY-MM-DD") }, // before publishing make change -1 to 0
+                                    type: 'GET',
+                                    success: function (data) {
+                                        $("#printThis").html(data);
+                                        $('#rightWindow').modal();
+                                    }
+                                });
                             }
-                            else if (shortDay == "Thu")
-                            {
-                                longDay = "Thursday"
+                        },
+                    })
+
+
+                    $('#calender2').fullCalendar('destroy');
+                    $('#calender2').fullCalendar({
+                        contentHeight: 650,
+                        defaultDate: new Date(),
+                        timeFormat: 'h(:mm)a',
+                        displayEventTime: false,
+                        header: {
+                            left: 'prev',
+                            center: 'title',
+                            right: 'next'
+                        },
+                        showNonCurrentDates: false,
+                        eventLimit: true,
+                        eventColor: '#378006',
+                        events: events,
+
+
+                        eventRender: function(event, eventElement) {
+                        if (event.imageurl) {
+                            eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl +"' width='21' height='21'>");
                             }
-                            else if (shortDay == "Fri")
-                            {
-                                longDay = "Friday"
+                        },
+
+                        viewRender: function(view, element) {
+
+                            curdate = new Date();
+                            viewdate = new Date(view.start);
+
+                            // PREV - force minimum display month to current month
+                            if (new Date(viewdate.getFullYear(), viewdate.getMonth() + 1, 1).getTime() <=
+                                new Date(2018, 0, 1).getTime()){
+                                $('.fc-prev-button').prop('disabled', true);
+                                $('.fc-prev-button').css('opacity', 0.5);
                             }
-                            else if (shortDay == "Sat")
-                            {
-                                longDay = "Saturday"
-                            }
-                            else if (shortDay == "Sun")
-                            {
-                                longDay = "Sunday"
+                            else {
+                                $('.fc-prev-button').prop('disabled', false);
+                                $('.fc-prev-button').css('opacity', 1);
                             }
 
-                            var month = date.substring(4, 7);
+                            // NEXT - force max display month to a year from current month
+                            if (new Date(viewdate.getFullYear(), viewdate.getMonth() + 1).getTime() >=
+                                new Date(curdate.getFullYear(), curdate.getMonth()).getTime()){
+                                $('.fc-next-button').prop('disabled', true);
+                                $('.fc-next-button').css('opacity', 0.5);
+                            } else {
+                                $('.fc-next-button').prop('disabled', false);
+                                $('.fc-next-button').css('opacity', 1);
+                            }
+                        },
 
-                            var dateNum = date.substring(8, 10);
 
-                            var yearNum = date.substring(11, 15);
+                        eventClick: function (calEvent, jsEvent, view) {
+                            //alert(moment(calEvent.start).add(-1, 'days').format("YYYY-MM-DD"));
 
-                            $('#dateText').html(longDay + " - " + month + " " + dateNum + ", " + yearNum);
-
-                            $.ajax({
-                                url: '@Url.Action("PopulateProductionReport", "TreadTracker")',
-                                data: { inspDate: moment(calEvent.start).add(0, 'days').format("YYYY-MM-DD") }, // before publishing make change -1 to 0
-                                type: 'GET',
-                                success: function (data) {
-                                    $('#rightWindow').fadeIn();
-                                    $("#printThis").html(data);
-                                    //alert("Reached")
-                                }
-                            });
+                            if (calEvent.description == 'PR') {
+                                $.ajax({
+                                    url: '@Url.Action("PopulateProductionReport", "TreadTracker")',
+                                    data: { inspDate: moment(calEvent.start).add(0, 'days').format("YYYY-MM-DD") }, // before publishing make change -1 to 0
+                                    type: 'GET',
+                                    success: function (data) {
+                                        $("#printThis").html(data);
+                                        $('#rightWindow').modal();
+                                    }
+                                });
+                            }
+                            else if (calEvent.description == 'TR') {
+                                $.ajax({
+                                    url: '@Url.Action("PopulateTransferReport", "TreadTracker")',
+                                    data: { inspDate: moment(calEvent.start).add(0, 'days').format("YYYY-MM-DD") }, // before publishing make change -1 to 0
+                                    type: 'GET',
+                                    success: function (data) {
+                                        $("#printThis").html(data);
+                                        $('#rightWindow').modal();
+                                    }
+                                });
+                            }
+                            else if (calEvent.description == 'CC') {
+                                $.ajax({
+                                    url: '@Url.Action("PopulateCasingCreditReport", "TreadTracker")',
+                                    data: { inspDate: moment(calEvent.start).add(0, 'days').format("YYYY-MM-DD") }, // before publishing make change -1 to 0
+                                    type: 'GET',
+                                    success: function (data) {
+                                        $("#printThis").html(data);
+                                        $('#rightWindow').modal();
+                                    }
+                                });
+                            }
                         },
                     })
                 }
         });
 
+    </script>
 
+    <script>
+
+        document.getElementById("btnPrint").onclick = function () {
+            $('#printThis').css('height', 'auto');
+            printElement(document.getElementById("printsect"));
+            $('#printThis').css('height', '700px');
+        }
+
+        function printElement(elem) {
+            var domClone = elem.cloneNode(true);
+
+            var $printSection = document.getElementById("printSection");
+
+            if (!$printSection) {
+                var $printSection = document.createElement("div");
+                $printSection.id = "printSection";
+                document.body.appendChild($printSection);
+            }
+
+            $printSection.innerHTML = "";
+            $printSection.appendChild(domClone);
+            window.print();
+        }
     </script>
 
 </body>

@@ -328,7 +328,7 @@
                                                         @Model.customerDetails.customer_number
                                                     </div>
                                                 </div>
-                                                <div class="row" style="display:none; margin-bottom:5px">
+                                                <div class="row" style="display:none; margin-bottom:40px">
                                                     <div class="col-md-5 text-right">
                                                         Customer Name
                                                     </div>
@@ -358,37 +358,6 @@
                                                     </div>
                                                     <div class="col-md-7">
                                                         @Model.customerDetails.reporting_frequency
-                                                    </div>
-                                                </div>
-                                                <div class="row" style="margin-bottom:5px">
-                                                    <div class="col-md-5 text-right">
-                                                        Mileage Required
-                                                    </div>
-                                                    <div class="col-md-7">
-                                                        @if (@Model.customerDetails.mileage_required == 0)
-                                                        {
-                                                            <input type="checkbox" onclick="return false" />
-                                                        }
-                                                        else
-                                                        {
-                                                            <input type="checkbox" checked onclick="return false" />
-                                                        }
-                                                    </div>
-                                                </div>
-
-                                                <div class="row" style="margin-bottom:5px">
-                                                    <div class="col-md-7 text-right">
-                                                        Inspection Date Required
-                                                    </div>
-                                                    <div class="col-md-5">
-                                                        @if (@Model.customerDetails.exp_date_required == 0)
-                                                        {
-                                                            <input type="checkbox" onclick="return false" />
-                                                        }
-                                                        else
-                                                        {
-                                                            <input type="checkbox" checked onclick="return false" />
-                                                        }
                                                     </div>
                                                 </div>
 
@@ -514,7 +483,7 @@
                                                             <tr>
 
                                                                 <td style="padding:0px; text-align:center">
-                                                                    <input id="@item.unit_number" type="checkbox" checked name="name" value="" />
+                                                                    <input class="commonCheck" id="@item.unit_number.Replace(" ", "")" type="checkbox" checked name="name" value="" />
                                                                 </td>
                                                                 <td style="padding:0px; text-align:center">
                                                                     @item.unit_number
@@ -743,36 +712,6 @@
                                                     @Model.customerDetails.reporting_frequency
                                                 </div>
                                             </div>
-                                            <div class="row" style="margin-top:55px; margin-bottom:5px">
-                                                <div class="col-md-5">
-                                                    Mileage Required
-                                                </div>
-                                                <div class="col-md-7 text-left" style="font-weight:bold">
-                                                    @if (Model.customerDetails.mileage_required == 0)
-                                                    {
-                                                        <span>No</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span>Yes</span>
-                                                    }
-                                                </div>
-                                            </div>
-                                            <div class="row" style="margin-bottom:10px">
-                                                <div class="col-md-5">
-                                                    Inspenction Date Required
-                                                </div>
-                                                <div class="col-md-7 text-left" style="font-weight:bold">
-                                                    @if (Model.customerDetails.exp_date_required == 0)
-                                                    {
-                                                        <span>No</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span>Yes</span>
-                                                    }
-                                                </div>
-                                            </div>
                                         </div>
                                         <div class="col-md-3" style="padding:15px 25px 0px 0px">
 
@@ -818,7 +757,7 @@
                                                             <td style="padding:0px">Steer</td>
                                                             <td style="padding:0px">@Model.SteerTiresCount</td>
                                                             <td style="padding:0px">
-                                                                @if (@Model.customerDetails.pull_point_1 == 0.12)
+                                                                @if (Model.customerDetails.pull_point_1 == 0.12)
                                                                 {
                                                                     <span>
                                                                         4/32
@@ -836,7 +775,7 @@
                                                             <td style="padding:0px">Drive</td>
                                                             <td style="padding:0px">@Model.DriveTiresCount</td>
                                                             <td style="padding:0px">
-                                                                @if (@Model.customerDetails.pull_point_2 == 0.12)
+                                                                @if (Model.customerDetails.pull_point_2 == 0.12)
                                                                 {
                                                                     <span>
                                                                         4/32
@@ -854,7 +793,7 @@
                                                             <td style="padding:0px">Trailer</td>
                                                             <td style="padding:0px">@Model.trailerTiresCount</td>
                                                             <td style="padding:0px">
-                                                                @if (@Model.customerDetails.pull_point_3 == 0.12)
+                                                                @if (Model.customerDetails.pull_point_3 == 0.12)
                                                                 {
                                                                     <span>
                                                                         4/32
@@ -884,9 +823,31 @@
                                 </div>
                             </div>
 
+                            <div style="border:2px solid #dee0e3">
+                                <div class="row" style="margin-top:15px">
+                                    <div class="col-md-12 text-center">
+                                        <h4><b>Fleet</b></h4>
+                                    </div>
+                                </div>
+
+                                <div class="row" style="margin-bottom:40px; padding:20px; margin:0px">
+                                    @foreach (var unit in Model.UnitsForCustomer)
+                                    {
+                                        <div class="col-md-3 @string.Concat(unit.unit_number.Replace(" ", ""), "_name") commoncodename">
+                                            <span>@unit.unit_number - @unit.unit_name</span>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="row" style="margin-bottom:15px">
+                                    <div class="col-md-12 text-center" style="font-size:10px; font-weight:bold; color:crimson">
+                                        *** Bold means unit included in Report ***
+                                    </div>
+                                </div>
+                            </div>
+
                             
 
-                            <table style="margin:0px 15px 0px 15px; width:100%">
+                            <table style="margin:40px 15px 0px 15px; width:100%">
                                 <tr>
                                     <td style="width:33%">
                                     </td>
@@ -1031,18 +992,19 @@
                                             </div>
 
                                             @{
-                                                double infletTotal;
 
-                                                if (Model.LatestSurvey.Where(x => x.customer_number == Model.Customer && x.inflation != null).Count() == 0)
-                                                {
-                                                    infletTotal = 1;
-                                                }
-                                                else
-                                                {
-                                                    infletTotal = Model.LatestSurvey.Where(x => x.customer_number == Model.Customer && x.inflation <= 79).Count();
-                                                }
+                                                double greeninftot;
+                                                double orangeinftot;
+                                                double redinftot;
 
-                                                <tlx-chart style="margin:0px; padding:0px" chart-options="${{colors: ['red','orange','green']}}" chart-type="PieChart" chart-columns="${['Element','Percentage']}" chart-data="${[['< 79%',@infletTotal],['80-89%',@Model.LatestSurvey.Where(x => x.customer_number == Model.Customer && x.inflation <= 89 && x.inflation >= 80).Count()],['> 90%',@Model.LatestSurvey.Where(x => x.customer_number == Model.Customer && x.inflation >= 90).Count()]]}">
+
+                                                greeninftot = Model.LatestSurvey.Where(x => x.customer_number == Model.Customer && x.spec_psi != 0 && x.actual_psi * 100 / x.spec_psi <= 79).Count();
+
+                                                orangeinftot = Model.LatestSurvey.Where(x => x.customer_number == Model.Customer && x.spec_psi != 0 && x.actual_psi * 100 / x.spec_psi <= 89 && x.actual_psi * 100 / x.spec_psi >= 80).Count();
+
+                                                redinftot = Model.LatestSurvey.Where(x => x.customer_number == Model.Customer && x.spec_psi != 0 && x.actual_psi * 100 / x.spec_psi >= 90).Count();
+                                                
+                                                <tlx-chart style="margin:0px; padding:0px" chart-options="${{colors: ['red','orange','green']}}" chart-type="PieChart" chart-columns="${['Element','Percentage']}" chart-data="${[['< 79%',@greeninftot],['80-89%',@orangeinftot],['> 90%',@redinftot]]}">
 
                                                 </tlx-chart>
 
@@ -1120,35 +1082,6 @@
 
                                             tireCondition = tireCondition + final + ",";
                                         }
-
-                                        <div class="row" style="overflow-x:hidden; overflow-y:hidden">
-                                            <div class="col-md-4">
-                                                <div class="row" style="margin-top:10px">
-                                                    <b style="margin-left:auto; margin-right:auto">Valve Cap Distribution</b>
-                                                </div>
-
-                                                <tlx-chart style="margin:0px; padding:0px" chart-type="PieChart" chart-columns="${['Element','Percentage']}" chart-data="${[@valdistr]}">
-
-                                                </tlx-chart>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="row" style="margin-top:10px">
-                                                    <b style="margin-left:auto; margin-right:auto">Tire Condition</b>
-                                                </div>
-                                                <tlx-chart style="margin:0px; padding:0px" chart-options="${{colors: ['#ff7700','green','red']}}" chart-type="PieChart" chart-columns="${['Element','Percentage']}" chart-data="${[@tireCondition]}">
-
-                                                </tlx-chart>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="row" style="margin-top:10px">
-                                                    <b style="margin-left:auto; margin-right:auto">Wheel Condition</b>
-                                                </div>
-                                                <tlx-chart style="margin:0px; padding:0px" chart-options="${{colors: ['#ff7700','green','red']}}" chart-type="PieChart" chart-columns="${['Element','Percentage']}" chart-data="${[@wheelCondition]}">
-
-                                                </tlx-chart>
-                                            </div>
-                                        </div>
-
                                     }
                                 </div>
                             </div>
@@ -1157,7 +1090,7 @@
                                 @foreach (var item in Model.UnitsForCustomer)
                                 {
                                     <text>
-                                        @item.unit_number,
+                                        @item.unit_number.Replace(" ", ""),
                                     </text>
                                 }
                             </span>
@@ -1168,11 +1101,12 @@
 
                                 if (config != null && Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number).Count() > 0)
                                 {
-                                    <div class="row pagebreak @unit.unit_number commonClass" style="border: 2px solid #dee0e3;padding: 15px; margin-left: 0px; margin-right: 0px; margin-bottom: 20px">
+                                    <div class="row pagebreak @unit.unit_number.Replace(" ", "") commonClass" style="border: 2px solid #dee0e3;padding: 15px; margin-left: 0px; margin-right: 0px; margin-bottom: 20px">
                                         <div class="col-md-12 pagebreak" style="padding-bottom: 0px">
 
                                             @{
-                                                double totalDays = (DateTime.Today - Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number).OrderByDescending(x => x.survey_date).Select(x => x.survey_date).FirstOrDefault()).TotalDays;
+                                                DateTime latestSurveyDate = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number).OrderByDescending(x => x.survey_date).Select(x => x.survey_date).FirstOrDefault();
+                                                double totalDays = (DateTime.Today - latestSurveyDate).TotalDays;
                                             }
 
                                             <div class="row">
@@ -1185,35 +1119,63 @@
 
                                                 <table style="margin: 0px 0px 10px 0px; width: 100%;">
                                                     <tr id="title">
-                                                        <td style="padding-left:15px; width:27%">
+                                                        @*
+        <td style="padding-left:15px; width:27%">
 
-                                                            @{
+            @{
 
-                                                                string base64ProfilePic = "";
-                                                                if (unit.unit_image is null)
-                                                                {
-                                                                    base64ProfilePic = "";
-                                                                }
-                                                                else
-                                                                {
-                                                                    base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(unit.unit_image);
-                                                                }
-                                                            }
+                string base64ProfilePic = "";
+                if (unit.unit_image is null)
+                {
+                    base64ProfilePic = "";
+                }
+                else
+                {
+                    base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(unit.unit_image);
+                }
+            }
 
-                                                            <div class="row" style=" padding:0px 30px 0px 30px; margin-right:0px; border-radius:5px; border:2px solid #dee0e3; height:160px">
-                                                                @if (base64ProfilePic != "")
-                                                                {
-                                                                    <img style="margin-left:auto; margin-right:auto; border-radius:30px; width:200px" alt="profilePic" src="@base64ProfilePic" />
-                                                                }
-                                                            </div>
-                                                        </td>
-                                                        <td style="padding:0px 15px 0px 30px; width:16%">
+            <div class="row" style=" padding:0px 30px 0px 30px; margin-right:0px; border-radius:5px; border:2px solid #dee0e3; height:160px">
+                @if (base64ProfilePic != "")
+                {
+                    <img style="margin-left:auto; margin-right:auto; border-radius:30px; width:200px" alt="profilePic" src="@base64ProfilePic" />
+                }
+            </div>
+        </td>
+                                                        *@
+                                                        <td style="padding:0px 15px 0px 30px; width:16%; color:#aeafb0">
                                                             <div class="row" style="margin-top:10px">
                                                                 Unit Number
                                                             </div>
                                                             <div class="row" style="margin-top:5px">
                                                                 Unit Name
                                                             </div>
+                                                        </td>
+                                                        <td style="padding:0px 15px 0px 30px; width:16%; font-weight:bold">
+                                                            <div class="row" style="margin-top:10px">
+                                                                <input type="text" readonly name="name" value="@unit.unit_number" style="height:25px" />
+                                                            </div>
+                                                            <div class="row" style="margin-top:5px">
+                                                                <input type="text" readonly name="name" value="@unit.unit_name" style="height:25px" />
+                                                            </div>
+                                                        </td>
+                                                        <td style="padding:0px 15px 0px 30px; width:16%; color:#aeafb0">
+                                                            <div class="row" style="margin-top:5px">
+                                                                Plate Number
+                                                            </div>
+                                                            <div class="row" style="margin-top:5px">
+                                                                VIN
+                                                            </div>
+                                                        </td>
+                                                        <td style="padding: 0px 15px 0px 15px; width: 20%; font-weight:bold">
+                                                            <div class="row" style="margin-top:5px">
+                                                                <input type="text" readonly name="name" value="@unit.plate_number" style="height:25px" />
+                                                            </div>
+                                                            <div class="row" style="margin-top:5px">
+                                                                <input type="text" readonly name="name" value="@unit.VIN" style="height:25px" />
+                                                            </div>
+                                                        </td>
+                                                        <td style="padding:0px 15px 0px 30px; width:16%; color:#aeafb0">
                                                             <div class="row" style="margin-top: 5px">
                                                                 Year
                                                             </div>
@@ -1224,13 +1186,7 @@
                                                                 Model
                                                             </div>
                                                         </td>
-                                                        <td style="padding: 0px 15px 0px 15px; width: 20%">
-                                                            <div class="row" style="margin-top:10px">
-                                                                <input type="text" readonly name="name" value="@unit.unit_number" style="height:25px" />
-                                                            </div>
-                                                            <div class="row" style="margin-top:5px">
-                                                                <input type="text" readonly name="name" value="@unit.unit_name" style="height:25px" />
-                                                            </div>
+                                                        <td style="padding:0px 15px 0px 15px; width:20%; font-weight:bold">
                                                             <div class="row" style="margin-top:5px">
                                                                 <input type="text" readonly name="name" value="@unit.year" style="height:25px" />
                                                             </div>
@@ -1239,48 +1195,6 @@
                                                             </div>
                                                             <div class="row" style="margin-top:5px">
                                                                 <input type="text" readonly name="name" value="@unit.model" style="height:25px" />
-                                                            </div>
-                                                        </td>
-                                                        <td style="padding:0px 15px 0px 30px; width:16%">
-                                                            <div class="row" style="margin-top:5px">
-                                                                Plate Number
-                                                            </div>
-                                                            <div class="row" style="margin-top:5px">
-                                                                VIN
-                                                            </div>
-                                                            <div class="row" style="margin-top:5px">
-                                                                Mileage
-                                                            </div>
-                                                            <div class="row" style="margin-top:5px">
-                                                                Engine Hours
-                                                            </div>
-                                                            <div class="row" style="margin-top:5px">
-                                                                Date Expired
-                                                            </div>
-                                                        </td>
-                                                        <td style="padding:0px 15px 0px 15px; width:20%">
-                                                            <div class="row" style="margin-top:5px">
-                                                                <input type="text" readonly name="name" value="@unit.plate_number" style="height:25px" />
-                                                            </div>
-                                                            <div class="row" style="margin-top:5px">
-                                                                <input type="text" readonly name="name" value="@unit.VIN" style="height:25px" />
-                                                            </div>
-                                                            <div class="row" style="margin-top:5px">
-                                                                <input type="text" readonly name="name" value="@unit.mileage" style="height:25px" />
-                                                            </div>
-                                                            <div class="row" style="margin-top:5px">
-                                                                <input type="text" readonly name="name" value="" style="height:25px" />
-                                                            </div>
-                                                            <div class="row" style="margin-top:5px">
-                                                                @if (unit.date_expired.HasValue)
-                                                                {
-                                                                    <input type="text" readonly name="name" value="@unit.date_expired.Value.ToString("dd-MMM-yyyy")" style="height:25px" />
-                                                                }
-                                                                else
-                                                                {
-                                                                    <input type="date" readonly name="name" value="" style="width:182px; height:25px" />
-                                                                }
-
                                                             </div>
                                                         </td>
 
@@ -1299,13 +1213,10 @@
                                                             <th style="text-align:center; font-size:10px; padding:0px" scope="col">Spec PSI</th>
                                                             <th style="text-align:center; font-size:10px; padding:0px" scope="col">New 32nds</th>
                                                             <th style="text-align:center; font-size:10px; padding:0px" scope="col">32nds</th>
-                                                            <th style="text-align: center; font-size: 10px; padding: 0px" scope="col">Brand</th>
+                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Brand</th>
                                                             <th style="text-align:center; font-size:10px; padding:0px" scope="col">Model</th>
                                                             <th style="text-align:center; font-size:10px; padding:0px" scope="col">Size</th>
                                                             <th style="text-align:center; font-size:10px; padding:0px" scope="col">Tire Wear</th>
-                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Tire Condition</th>
-                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Valve</th>
-                                                            <th style="text-align:center; font-size:10px; padding:0px" scope="col">Wheel Condition</th>
                                                             <th style="text-align:center; font-size:10px; padding:0px" scope="col">% Worn</th>
                                                         </tr>
                                                     </thead>
@@ -1313,7 +1224,7 @@
 
                                                         @if (config.one_lo != 0)
                                                         {
-                                                            var lo_1 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "1_lo").FirstOrDefault();
+                                                            var lo_1 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "1_lo" && x.survey_date == latestSurveyDate).FirstOrDefault();
 
                                                             if (lo_1 != null)
                                                             {
@@ -1340,13 +1251,22 @@
                                                                     <td style="padding:0px">@lo_1.model</td>
                                                                     <td style="padding:0px">@lo_1.size</td>
                                                                     <td style="padding:0px">@lo_1.condition_wear</td>
-                                                                    <td style="padding: 0px">@lo_1.condition_tire</td>
-                                                                    <td style="padding: 0px">@lo_1.valve</td>
-                                                                    <td style="padding:0px">@lo_1.condition_wheel</td>
                                                                     <td style="padding: 0px">
                                                                         @if (lo_1.percent_worn != null)
                                                                         {
-                                                                            @lo_1.percent_worn
+                                                                            if (lo_1.percent_worn >= 100)
+                                                                            {
+                                                                                <span>100</span>
+                                                                            }
+                                                                            else if (lo_1.percent_worn <= 0)
+                                                                            {
+                                                                                <span>0</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @lo_1.percent_worn.Value.ToString("N0");
+                                                                            }
+
                                                                         }
                                                                         else
                                                                         {
@@ -1364,7 +1284,7 @@
                                                         @if (config.one_li != 0)
                                                         {
 
-                                                            var li_1 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "1_li").FirstOrDefault();
+                                                            var li_1 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "1_li" && x.survey_date == latestSurveyDate).FirstOrDefault();
 
                                                             if (li_1 != null)
                                                             {
@@ -1391,13 +1311,21 @@
                                                                     <td style="padding:0px">@li_1.model</td>
                                                                     <td style="padding:0px">@li_1.size</td>
                                                                     <td style="padding:0px">@li_1.condition_wear</td>
-                                                                    <td style="padding:0px">@li_1.condition_tire</td>
-                                                                    <td style="padding:0px">@li_1.valve</td>
-                                                                    <td style="padding:0px">@li_1.condition_wheel</td>
                                                                     <td style="padding: 0px">
                                                                         @if (li_1.percent_worn != null)
                                                                         {
-                                                                            @li_1.percent_worn
+                                                                            if (li_1.percent_worn >= 100)
+                                                                            {
+                                                                                <span>100</span>
+                                                                            }
+                                                                            else if (li_1.percent_worn <= 0)
+                                                                            {
+                                                                                <span>0</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @li_1.percent_worn.Value.ToString("N0");
+                                                                            }
                                                                         }
                                                                         else
                                                                         {
@@ -1415,7 +1343,7 @@
                                                         @if (config.one_ri != 0)
                                                         {
 
-                                                            var ri_1 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "1_ri").FirstOrDefault();
+                                                            var ri_1 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "1_ri" && x.survey_date == latestSurveyDate).FirstOrDefault();
 
                                                             if (ri_1 != null)
                                                             {
@@ -1442,13 +1370,21 @@
                                                                     <td style="padding:0px">@ri_1.model</td>
                                                                     <td style="padding:0px">@ri_1.size</td>
                                                                     <td style="padding:0px">@ri_1.condition_wear</td>
-                                                                    <td style="padding:0px">@ri_1.condition_tire</td>
-                                                                    <td style="padding:0px">@ri_1.valve</td>
-                                                                    <td style="padding:0px">@ri_1.condition_wheel</td>
                                                                     <td style="padding: 0px">
                                                                         @if (ri_1.percent_worn != null)
                                                                         {
-                                                                            @ri_1.percent_worn
+                                                                            if (ri_1.percent_worn >= 100)
+                                                                            {
+                                                                                <span>100</span>
+                                                                            }
+                                                                            else if (ri_1.percent_worn <= 0)
+                                                                            {
+                                                                                <span>0</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @ri_1.percent_worn.Value.ToString("N0");
+                                                                            }
                                                                         }
                                                                         else
                                                                         {
@@ -1466,7 +1402,7 @@
                                                         @if (config.one_ro != 0)
                                                         {
 
-                                                            var ro_1 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "1_ro").FirstOrDefault();
+                                                            var ro_1 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "1_ro" && x.survey_date == latestSurveyDate).FirstOrDefault();
 
                                                             if (ro_1 != null)
                                                             {
@@ -1493,13 +1429,21 @@
                                                                     <td style="padding:0px">@ro_1.model</td>
                                                                     <td style="padding:0px">@ro_1.size</td>
                                                                     <td style="padding:0px">@ro_1.condition_wear</td>
-                                                                    <td style="padding:0px">@ro_1.condition_tire</td>
-                                                                    <td style="padding:0px">@ro_1.valve</td>
-                                                                    <td style="padding:0px">@ro_1.condition_wheel</td>
                                                                     <td style="padding: 0px">
                                                                         @if (ro_1.percent_worn != null)
                                                                         {
-                                                                            @ro_1.percent_worn
+                                                                            if (ro_1.percent_worn >= 100)
+                                                                            {
+                                                                                <span>100</span>
+                                                                            }
+                                                                            else if (ro_1.percent_worn <= 0)
+                                                                            {
+                                                                                <span>0</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @ro_1.percent_worn.Value.ToString("N0");
+                                                                            }
                                                                         }
                                                                         else
                                                                         {
@@ -1517,7 +1461,7 @@
                                                         @if (config.two_lo != 0)
                                                         {
 
-                                                            var lo_2 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "2_lo").FirstOrDefault();
+                                                            var lo_2 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "2_lo" && x.survey_date == latestSurveyDate).FirstOrDefault();
 
                                                             if (lo_2 != null)
                                                             {
@@ -1544,13 +1488,21 @@
                                                                     <td style="padding:0px">@lo_2.model</td>
                                                                     <td style="padding:0px">@lo_2.size</td>
                                                                     <td style="padding:0px">@lo_2.condition_wear</td>
-                                                                    <td style="padding:0px">@lo_2.condition_tire</td>
-                                                                    <td style="padding:0px">@lo_2.valve</td>
-                                                                    <td style="padding:0px">@lo_2.condition_wheel</td>
                                                                     <td style="padding: 0px">
                                                                         @if (lo_2.percent_worn != null)
                                                                         {
-                                                                            @lo_2.percent_worn
+                                                                            if (lo_2.percent_worn >= 100)
+                                                                            {
+                                                                                <span>100</span>
+                                                                            }
+                                                                            else if (lo_2.percent_worn <= 0)
+                                                                            {
+                                                                                <span>0</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @lo_2.percent_worn.Value.ToString("N0");
+                                                                            }
                                                                         }
                                                                         else
                                                                         {
@@ -1567,7 +1519,7 @@
 
                                                         @if (config.two_li != 0)
                                                         {
-                                                            var li_2 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "2_li").FirstOrDefault();
+                                                            var li_2 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "2_li" && x.survey_date == latestSurveyDate).FirstOrDefault();
 
                                                             if (li_2 != null)
                                                             {
@@ -1594,13 +1546,21 @@
                                                                     <td style="padding:0px">@li_2.model</td>
                                                                     <td style="padding:0px">@li_2.size</td>
                                                                     <td style="padding:0px">@li_2.condition_wear</td>
-                                                                    <td style="padding:0px">@li_2.condition_tire</td>
-                                                                    <td style="padding:0px">@li_2.valve</td>
-                                                                    <td style="padding:0px">@li_2.condition_wheel</td>
                                                                     <td style="padding: 0px">
                                                                         @if (li_2.percent_worn != null)
                                                                         {
-                                                                            @li_2.percent_worn
+                                                                            if (li_2.percent_worn >= 100)
+                                                                            {
+                                                                                <span>100</span>
+                                                                            }
+                                                                            else if (li_2.percent_worn <= 0)
+                                                                            {
+                                                                                <span>0</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @li_2.percent_worn.Value.ToString("N0");
+                                                                            }
                                                                         }
                                                                         else
                                                                         {
@@ -1618,7 +1578,7 @@
                                                         @if (config.two_ri != 0)
                                                         {
 
-                                                            var ri_2 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "2_ri").FirstOrDefault();
+                                                            var ri_2 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "2_ri" && x.survey_date == latestSurveyDate).FirstOrDefault();
 
                                                             if (ri_2 != null)
                                                             {
@@ -1645,13 +1605,21 @@
                                                                     <td style="padding:0px">@ri_2.model</td>
                                                                     <td style="padding:0px">@ri_2.size</td>
                                                                     <td style="padding:0px">@ri_2.condition_wear</td>
-                                                                    <td style="padding:0px">@ri_2.condition_tire</td>
-                                                                    <td style="padding:0px">@ri_2.valve</td>
-                                                                    <td style="padding:0px">@ri_2.condition_wheel</td>
                                                                     <td style="padding: 0px">
                                                                         @if (ri_2.percent_worn != null)
                                                                         {
-                                                                            @ri_2.percent_worn
+                                                                            if (ri_2.percent_worn >= 100)
+                                                                            {
+                                                                                <span>100</span>
+                                                                            }
+                                                                            else if (ri_2.percent_worn <= 0)
+                                                                            {
+                                                                                <span>0</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @ri_2.percent_worn.Value.ToString("N0");
+                                                                            }
                                                                         }
                                                                         else
                                                                         {
@@ -1669,13 +1637,13 @@
                                                         @if (config.two_ro != 0)
                                                         {
 
-                                                            var ro_2 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "2_ro").FirstOrDefault();
+                                                            var ro_2 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "2_ro" && x.survey_date == latestSurveyDate).FirstOrDefault();
 
                                                             if (ro_2 != null)
                                                             {
                                                                 <tr>
                                                                     <td style="padding:0px">
-                                                                        1Ro
+                                                                        2Ro
                                                                     </td>
                                                                     <td style="padding:0px">@ro_2.actual_psi</td>
                                                                     <td style="padding:0px">@ro_2.spec_psi</td>
@@ -1696,13 +1664,21 @@
                                                                     <td style="padding:0px">@ro_2.model</td>
                                                                     <td style="padding:0px">@ro_2.size</td>
                                                                     <td style="padding:0px">@ro_2.condition_wear</td>
-                                                                    <td style="padding:0px">@ro_2.condition_tire</td>
-                                                                    <td style="padding:0px">@ro_2.valve</td>
-                                                                    <td style="padding:0px">@ro_2.condition_wheel</td>
                                                                     <td style="padding: 0px">
                                                                         @if (ro_2.percent_worn != null)
                                                                         {
-                                                                            @ro_2.percent_worn
+                                                                            if (ro_2.percent_worn >= 100)
+                                                                            {
+                                                                                <span>100</span>
+                                                                            }
+                                                                            else if (ro_2.percent_worn <= 0)
+                                                                            {
+                                                                                <span>0</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @ro_2.percent_worn.Value.ToString("N0");
+                                                                            }
                                                                         }
                                                                         else
                                                                         {
@@ -1719,7 +1695,7 @@
 
                                                         @if (config.three_lo != 0)
                                                         {
-                                                            var lo_3 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "3_lo").FirstOrDefault();
+                                                            var lo_3 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "3_lo" && x.survey_date == latestSurveyDate).FirstOrDefault();
 
                                                             if (lo_3 != null)
                                                             {
@@ -1746,13 +1722,21 @@
                                                                     <td style="padding:0px">@lo_3.model</td>
                                                                     <td style="padding:0px">@lo_3.size</td>
                                                                     <td style="padding:0px">@lo_3.condition_wear</td>
-                                                                    <td style="padding:0px">@lo_3.condition_tire</td>
-                                                                    <td style="padding:0px">@lo_3.valve</td>
-                                                                    <td style="padding:0px">@lo_3.condition_wheel</td>
                                                                     <td style="padding: 0px">
                                                                         @if (lo_3.percent_worn != null)
                                                                         {
-                                                                            @lo_3.percent_worn
+                                                                            if (lo_3.percent_worn >= 100)
+                                                                            {
+                                                                                <span>100</span>
+                                                                            }
+                                                                            else if (lo_3.percent_worn <= 0)
+                                                                            {
+                                                                                <span>0</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @lo_3.percent_worn.Value.ToString("N0");
+                                                                            }
                                                                         }
                                                                         else
                                                                         {
@@ -1769,7 +1753,7 @@
 
                                                         @if (config.three_li != 0)
                                                         {
-                                                            var li_3 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "3_li").FirstOrDefault();
+                                                            var li_3 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "3_li" && x.survey_date == latestSurveyDate).FirstOrDefault();
 
                                                             if (li_3 != null)
                                                             {
@@ -1796,13 +1780,21 @@
                                                                     <td style="padding:0px">@li_3.model</td>
                                                                     <td style="padding:0px">@li_3.size</td>
                                                                     <td style="padding: 0px">@li_3.condition_wear</td>
-                                                                    <td style="padding:0px">@li_3.condition_tire</td>
-                                                                    <td style="padding:0px">@li_3.valve</td>
-                                                                    <td style="padding:0px">@li_3.condition_wheel</td>
                                                                     <td style="padding: 0px">
                                                                         @if (li_3.percent_worn != null)
                                                                         {
-                                                                            @li_3.percent_worn
+                                                                            if (li_3.percent_worn >= 100)
+                                                                            {
+                                                                                <span>100</span>
+                                                                            }
+                                                                            else if (li_3.percent_worn <= 0)
+                                                                            {
+                                                                                <span>0</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @li_3.percent_worn.Value.ToString("N0");
+                                                                            }
                                                                         }
                                                                         else
                                                                         {
@@ -1818,7 +1810,7 @@
 
                                                         @if (config.three_ri != 0)
                                                         {
-                                                            var ri_3 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "3_ri").FirstOrDefault();
+                                                            var ri_3 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "3_ri" && x.survey_date == latestSurveyDate).FirstOrDefault();
 
                                                             if (ri_3 != null)
                                                             {
@@ -1845,13 +1837,21 @@
                                                                     <td style="padding:0px">@ri_3.model</td>
                                                                     <td style="padding: 0px">@ri_3.size</td>
                                                                     <td style="padding:0px">@ri_3.condition_wear</td>
-                                                                    <td style="padding:0px">@ri_3.condition_tire</td>
-                                                                    <td style="padding: 0px">@ri_3.valve</td>
-                                                                    <td style="padding:0px">@ri_3.condition_wheel</td>
                                                                     <td style="padding: 0px">
                                                                         @if (ri_3.percent_worn != null)
                                                                         {
-                                                                            @ri_3.percent_worn
+                                                                            if (ri_3.percent_worn >= 100)
+                                                                            {
+                                                                                <span>100</span>
+                                                                            }
+                                                                            else if (ri_3.percent_worn <= 0)
+                                                                            {
+                                                                                <span>0</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @ri_3.percent_worn.Value.ToString("N0");
+                                                                            }
                                                                         }
                                                                         else
                                                                         {
@@ -1868,7 +1868,7 @@
 
                                                         @if (config.three_ro != 0)
                                                         {
-                                                            var ro_3 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "3_ro").FirstOrDefault();
+                                                            var ro_3 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "3_ro" && x.survey_date == latestSurveyDate).FirstOrDefault();
 
                                                             if (ro_3 != null)
                                                             {
@@ -1895,13 +1895,21 @@
                                                                     <td style="padding:0px">@ro_3.model</td>
                                                                     <td style="padding:0px">@ro_3.size</td>
                                                                     <td style="padding:0px">@ro_3.condition_wear</td>
-                                                                    <td style="padding:0px">@ro_3.condition_tire</td>
-                                                                    <td style="padding:0px">@ro_3.valve</td>
-                                                                    <td style="padding:0px">@ro_3.condition_wheel</td>
                                                                     <td style="padding: 0px">
                                                                         @if (ro_3.percent_worn != null)
                                                                         {
-                                                                            @ro_3.percent_worn
+                                                                            if (ro_3.percent_worn >= 100)
+                                                                            {
+                                                                                <span>100</span>
+                                                                            }
+                                                                            else if (ro_3.percent_worn <= 0)
+                                                                            {
+                                                                                <span>0</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @ro_3.percent_worn.Value.ToString("N0");
+                                                                            }
                                                                         }
                                                                         else
                                                                         {
@@ -1918,7 +1926,7 @@
 
                                                         @if (config.four_lo != 0)
                                                         {
-                                                            var lo_4 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "4_lo").FirstOrDefault();
+                                                            var lo_4 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "4_lo" && x.survey_date == latestSurveyDate).FirstOrDefault();
 
                                                             if (lo_4 != null)
                                                             {
@@ -1945,13 +1953,21 @@
                                                                     <td style="padding:0px">@lo_4.model</td>
                                                                     <td style="padding:0px">@lo_4.size</td>
                                                                     <td style="padding:0px">@lo_4.condition_wear</td>
-                                                                    <td style="padding:0px">@lo_4.condition_tire</td>
-                                                                    <td style="padding:0px">@lo_4.valve</td>
-                                                                    <td style="padding:0px">@lo_4.condition_wheel</td>
                                                                     <td style="padding: 0px">
                                                                         @if (lo_4.percent_worn != null)
                                                                         {
-                                                                            @lo_4.percent_worn
+                                                                            if (lo_4.percent_worn >= 100)
+                                                                            {
+                                                                                <span>100</span>
+                                                                            }
+                                                                            else if (lo_4.percent_worn <= 0)
+                                                                            {
+                                                                                <span>0</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @lo_4.percent_worn.Value.ToString("N0");
+                                                                            }
                                                                         }
                                                                         else
                                                                         {
@@ -1968,7 +1984,7 @@
 
                                                         @if (config.four_li != 0)
                                                         {
-                                                            var li_4 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "4_li").FirstOrDefault();
+                                                            var li_4 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "4_li" && x.survey_date == latestSurveyDate).FirstOrDefault();
 
                                                             if (li_4 != null)
                                                             {
@@ -1995,13 +2011,21 @@
                                                                     <td style="padding:0px">@li_4.model</td>
                                                                     <td style="padding:0px">@li_4.size</td>
                                                                     <td style="padding:0px">@li_4.condition_wear</td>
-                                                                    <td style="padding:0px">@li_4.condition_tire</td>
-                                                                    <td style="padding:0px">@li_4.valve</td>
-                                                                    <td style="padding:0px">@li_4.condition_wheel</td>
                                                                     <td style="padding: 0px">
                                                                         @if (li_4.percent_worn != null)
                                                                         {
-                                                                            @li_4.percent_worn
+                                                                            if (li_4.percent_worn >= 100)
+                                                                            {
+                                                                                <span>100</span>
+                                                                            }
+                                                                            else if (li_4.percent_worn <= 0)
+                                                                            {
+                                                                                <span>0</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @li_4.percent_worn.Value.ToString("N0");
+                                                                            }
                                                                         }
                                                                         else
                                                                         {
@@ -2018,7 +2042,7 @@
 
                                                         @if (config.four_ri != 0)
                                                         {
-                                                            var ri_4 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "4_ri").FirstOrDefault();
+                                                            var ri_4 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "4_ri" && x.survey_date == latestSurveyDate).FirstOrDefault();
 
                                                             if (ri_4 != null)
                                                             {
@@ -2045,13 +2069,21 @@
                                                                     <td style="padding:0px">@ri_4.model</td>
                                                                     <td style="padding:0px">@ri_4.size</td>
                                                                     <td style="padding:0px">@ri_4.condition_wear</td>
-                                                                    <td style="padding:0px">@ri_4.condition_tire</td>
-                                                                    <td style="padding:0px">@ri_4.valve</td>
-                                                                    <td style="padding:0px">@ri_4.condition_wheel</td>
                                                                     <td style="padding: 0px">
                                                                         @if (ri_4.percent_worn != null)
                                                                         {
-                                                                            @ri_4.percent_worn
+                                                                            if (ri_4.percent_worn >= 100)
+                                                                            {
+                                                                                <span>100</span>
+                                                                            }
+                                                                            else if (ri_4.percent_worn <= 0)
+                                                                            {
+                                                                                <span>0</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @ri_4.percent_worn.Value.ToString("N0");
+                                                                            }
                                                                         }
                                                                         else
                                                                         {
@@ -2068,7 +2100,7 @@
 
                                                         @if (config.four_ro != 0)
                                                         {
-                                                            var ro_4 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "4_ro").FirstOrDefault();
+                                                            var ro_4 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "4_ro" && x.survey_date == latestSurveyDate).FirstOrDefault();
 
                                                             if (ro_4 != null)
                                                             {
@@ -2095,13 +2127,21 @@
                                                                     <td style="padding:0px">@ro_4.model</td>
                                                                     <td style="padding:0px">@ro_4.size</td>
                                                                     <td style="padding:0px">@ro_4.condition_wear</td>
-                                                                    <td style="padding:0px">@ro_4.condition_tire</td>
-                                                                    <td style="padding:0px">@ro_4.valve</td>
-                                                                    <td style="padding:0px">@ro_4.condition_wheel</td>
                                                                     <td style="padding: 0px">
                                                                         @if (ro_4.percent_worn != null)
                                                                         {
-                                                                            @ro_4.percent_worn
+                                                                            if (ro_4.percent_worn >= 100)
+                                                                            {
+                                                                                <span>100</span>
+                                                                            }
+                                                                            else if (ro_4.percent_worn <= 0)
+                                                                            {
+                                                                                <span>0</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @ro_4.percent_worn.Value.ToString("N0");
+                                                                            }
                                                                         }
                                                                         else
                                                                         {
@@ -2118,7 +2158,7 @@
 
                                                         @if (config.five_lo != 0)
                                                         {
-                                                            var lo_5 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "5_lo").FirstOrDefault();
+                                                            var lo_5 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "5_lo" && x.survey_date == latestSurveyDate).FirstOrDefault();
 
                                                             if (lo_5 != null)
                                                             {
@@ -2145,13 +2185,21 @@
                                                                     <td style="padding:0px">@lo_5.model</td>
                                                                     <td style="padding:0px">@lo_5.size</td>
                                                                     <td style="padding:0px">@lo_5.condition_wear</td>
-                                                                    <td style="padding:0px">@lo_5.condition_tire</td>
-                                                                    <td style="padding:0px">@lo_5.valve</td>
-                                                                    <td style="padding:0px">@lo_5.condition_wheel</td>
                                                                     <td style="padding: 0px">
                                                                         @if (lo_5.percent_worn != null)
                                                                         {
-                                                                            @lo_5.percent_worn
+                                                                            if (lo_5.percent_worn >= 100)
+                                                                            {
+                                                                                <span>100</span>
+                                                                            }
+                                                                            else if (lo_5.percent_worn <= 0)
+                                                                            {
+                                                                                <span>0</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @lo_5.percent_worn.Value.ToString("N0");
+                                                                            }
                                                                         }
                                                                         else
                                                                         {
@@ -2168,7 +2216,7 @@
 
                                                         @if (config.five_li != 0)
                                                         {
-                                                            var li_5 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "5_li").FirstOrDefault();
+                                                            var li_5 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "5_li" && x.survey_date == latestSurveyDate).FirstOrDefault();
 
                                                             if (li_5 != null)
                                                             {
@@ -2195,13 +2243,21 @@
                                                                     <td style="padding:0px">@li_5.model</td>
                                                                     <td style="padding:0px">@li_5.size</td>
                                                                     <td style="padding:0px">@li_5.condition_wear</td>
-                                                                    <td style="padding:0px">@li_5.condition_tire</td>
-                                                                    <td style="padding:0px">@li_5.valve</td>
-                                                                    <td style="padding:0px">@li_5.condition_wheel</td>
                                                                     <td style="padding: 0px">
                                                                         @if (li_5.percent_worn != null)
                                                                         {
-                                                                            @li_5.percent_worn
+                                                                            if (li_5.percent_worn >= 100)
+                                                                            {
+                                                                                <span>100</span>
+                                                                            }
+                                                                            else if (li_5.percent_worn <= 0)
+                                                                            {
+                                                                                <span>0</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @li_5.percent_worn.Value.ToString("N0");
+                                                                            }
                                                                         }
                                                                         else
                                                                         {
@@ -2218,7 +2274,7 @@
 
                                                         @if (config.five_ri != 0)
                                                         {
-                                                            var ri_5 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "5_ri").FirstOrDefault();
+                                                            var ri_5 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "5_ri" && x.survey_date == latestSurveyDate).FirstOrDefault();
 
                                                             if (ri_5 != null)
                                                             {
@@ -2245,13 +2301,21 @@
                                                                     <td style="padding:0px">@ri_5.model</td>
                                                                     <td style="padding:0px">@ri_5.size</td>
                                                                     <td style="padding:0px">@ri_5.condition_wear</td>
-                                                                    <td style="padding:0px">@ri_5.condition_tire</td>
-                                                                    <td style="padding:0px">@ri_5.valve</td>
-                                                                    <td style="padding:0px">@ri_5.condition_wheel</td>
                                                                     <td style="padding: 0px">
                                                                         @if (ri_5.percent_worn != null)
                                                                         {
-                                                                            @ri_5.percent_worn
+                                                                            if (ri_5.percent_worn >= 100)
+                                                                            {
+                                                                                <span>100</span>
+                                                                            }
+                                                                            else if (ri_5.percent_worn <= 0)
+                                                                            {
+                                                                                <span>0</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @ri_5.percent_worn.Value.ToString("N0");
+                                                                            }
                                                                         }
                                                                         else
                                                                         {
@@ -2268,7 +2332,7 @@
 
                                                         @if (config.five_ro != 0)
                                                         {
-                                                            var ro_5 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "5_ro").FirstOrDefault();
+                                                            var ro_5 = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.position == "5_ro" && x.survey_date == latestSurveyDate).FirstOrDefault();
 
                                                             if (ro_5 != null)
                                                             {
@@ -2295,13 +2359,21 @@
                                                                     <td style="padding:0px">@ro_5.model</td>
                                                                     <td style="padding:0px">@ro_5.size</td>
                                                                     <td style="padding:0px">@ro_5.condition_wear</td>
-                                                                    <td style="padding:0px">@ro_5.condition_tire</td>
-                                                                    <td style="padding:0px">@ro_5.valve</td>
-                                                                    <td style="padding:0px">@ro_5.condition_wheel</td>
                                                                     <td style="padding: 0px">
                                                                         @if (ro_5.percent_worn != null)
                                                                         {
-                                                                            @ro_5.percent_worn
+                                                                            if (ro_5.percent_worn >= 100)
+                                                                            {
+                                                                                <span>100</span>
+                                                                            }
+                                                                            else if (ro_5.percent_worn <= 0)
+                                                                            {
+                                                                                <span>0</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @ro_5.percent_worn.Value.ToString("N0");
+                                                                            }
                                                                         }
                                                                         else
                                                                         {
@@ -2335,10 +2407,10 @@
 
                                                         int i = 0;
 
-                                                        foreach (string brand in Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number).Select(x => x.brand).Distinct())
+                                                        foreach (string brand in Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.survey_date == latestSurveyDate).Select(x => x.brand).Distinct())
                                                         {
                                                             string brandName = brand;
-                                                            string count = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.brand == brand).Count().ToString();
+                                                            string count = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.brand == brand && x.survey_date == latestSurveyDate).Count().ToString();
 
 
                                                             string final = "['" + brandName + "'," + count + "]";
@@ -2365,60 +2437,29 @@
                                                     }
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div class="row" style="margin-top:10px">
-                                                        <b style="margin-left:auto; margin-right:auto">Inflation Distribution</b>
-                                                    </div>
+
                                                     @{
-                                                        double inflation;
                                                         double greeninf;
                                                         double orangeinf;
                                                         double redinf;
 
-                                                        if (Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.inflation != null).Count() == 0)
-                                                        {
-                                                            inflation = 1;
-                                                        }
-                                                        else
-                                                        {
-                                                            inflation = 0;
-                                                        }
 
-                                                        if (Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.inflation <= 79).Count() == 0)
-                                                        {
-                                                            greeninf = 0;
-                                                        }
-                                                        else
-                                                        {
-                                                            greeninf = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.inflation <= 79).Count();
-                                                        }
+                                                        greeninf = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.spec_psi != 0 && x.actual_psi * 100 / x.spec_psi <= 79 && x.survey_date == latestSurveyDate).Count();
 
-                                                        if (Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.inflation <= 89 && x.inflation >= 80).Count() == 0)
-                                                        {
-                                                            orangeinf = 0;
-                                                        }
-                                                        else
-                                                        {
-                                                            orangeinf = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.inflation <= 89 && x.inflation >= 80).Count();
-                                                        }
+                                                        orangeinf = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.spec_psi != 0 && x.actual_psi * 100 / x.spec_psi <= 89 && x.actual_psi * 100 / x.spec_psi >= 80 && x.survey_date == latestSurveyDate).Count();
 
-                                                        if (Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.inflation >= 90).Count() == 0)
+                                                        redinf = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.spec_psi != 0 && x.actual_psi * 100 / x.spec_psi >= 90 && x.survey_date == latestSurveyDate).Count();
+
+                                                        if (greeninf != 0 || orangeinf != 0 || redinf != 0)
                                                         {
-                                                            redinf = 0;
+                                                            <div class="row" style="margin-top:10px">
+                                                                <b style="margin-left:auto; margin-right:auto">Inflation Distribution</b>
+                                                            </div>
+
+                                                            <tlx-chart style="margin:0px; padding:0px" chart-options="${{colors: ['red','orange','green']}}" chart-type="PieChart" chart-columns="${['Element','Percentage']}" chart-data="${[['< 79%',@greeninf],['80-89%',@orangeinf],['> 90%',@redinf]]}">
+
+                                                            </tlx-chart>
                                                         }
-                                                        else
-                                                        {
-                                                            redinf = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.inflation >= 90).Count();
-                                                        }
-
-                                                        if (inflation == 1)
-                                                        {
-                                                            greeninf = inflation;
-                                                        }
-
-                                                        <tlx-chart style="margin:0px; padding:0px" chart-options="${{colors: ['red','orange','green']}}" chart-type="PieChart" chart-columns="${['Element','Percentage']}" chart-data="${[['< 79%',@greeninf],['80-89%',@orangeinf],['> 90%',@redinf]]}">
-
-                                                        </tlx-chart>
-
                                                     }
                                                 </div>
                                                 <div class="col-md-4">
@@ -2426,14 +2467,13 @@
                                                         <b style="margin-left:auto; margin-right:auto">% Worn Distribution</b>
                                                     </div>
 
-
                                                     @{
                                                         double worn;
                                                         double greenworn;
                                                         double orangeworn;
                                                         double redworn;
 
-                                                        if (Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.percent_worn != null).Count() == 0)
+                                                        if (Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.percent_worn != null && x.survey_date == latestSurveyDate).Count() == 0)
                                                         {
                                                             worn = 1;
                                                         }
@@ -2442,31 +2482,31 @@
                                                             worn = 0;
                                                         }
 
-                                                        if (Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.percent_worn <= 50).Count() == 0)
+                                                        if (Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.percent_worn <= 50 && x.survey_date == latestSurveyDate).Count() == 0)
                                                         {
                                                             greenworn = 0;
                                                         }
                                                         else
                                                         {
-                                                            greenworn = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.percent_worn <= 50).Count();
+                                                            greenworn = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.percent_worn <= 50 && x.survey_date == latestSurveyDate).Count();
                                                         }
 
-                                                        if (Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.percent_worn <= 75 && x.percent_worn >= 51).Count() == 0)
+                                                        if (Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.percent_worn <= 75 && x.percent_worn >= 51 && x.survey_date == latestSurveyDate).Count() == 0)
                                                         {
                                                             orangeworn = 0;
                                                         }
                                                         else
                                                         {
-                                                            orangeworn = @Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.percent_worn <= 75 && x.percent_worn >= 51).Count();
+                                                            orangeworn = @Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.percent_worn <= 75 && x.percent_worn >= 51 && x.survey_date == latestSurveyDate).Count();
                                                         }
 
-                                                        if (Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.percent_worn <= 100 && x.percent_worn >= 76).Count() == 0)
+                                                        if (Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.percent_worn >= 76 && x.survey_date == latestSurveyDate).Count() == 0)
                                                         {
                                                             redworn = 0;
                                                         }
                                                         else
                                                         {
-                                                            redworn = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.percent_worn <= 100 && x.percent_worn >= 76).Count();
+                                                            redworn = Model.LatestSurvey.Where(x => x.unit_number == unit.unit_number && x.percent_worn >= 76 && x.survey_date == latestSurveyDate).Count();
                                                         }
 
                                                         if (worn == 1)
@@ -2495,18 +2535,32 @@
         </div>
     </div>
 
+
+    <script>
+        $("#ToggleForFailureCodes").on('change', function() {
+            if ($(this).is(':checked')) {
+                $('.commonCheck').prop('checked', true);
+            }
+            else {
+                $('.commonCheck').prop('checked', false);
+            }
+        });
+    </script>
+
     <script>
         $('#build').click(function(){
             $('#RightPane').css("display" , "block")
             $('.commonClass').css("display" , "none");
-            var obj = $('#span').html().split(",");        
+            var obj = $('#span').html().split(",");     
+            $('.commoncodename').css("font-weight" , "normal")
             obj.forEach(function (code) {
                 if (document.getElementById(code.trim()).checked == true)
                 {
 
                     let codeclass = code.replace(/\s+/g, '');    
                     //alert("+" + codeclass + "+")
-                    $('.'+codeclass).css("display" , "block")
+                    $('.'+codeclass).css("display" , "block")                    
+                    $('.'+codeclass+'_name').css("font-weight" , "bold")
                 }
 
             });

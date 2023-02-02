@@ -28,11 +28,9 @@ namespace SeHubPortal.Models
         public virtual DbSet<tbl_customer_list> tbl_customer_list { get; set; }
         public virtual DbSet<tbl_employee> tbl_employee { get; set; }
         public virtual DbSet<tbl_employee_credentials> tbl_employee_credentials { get; set; }
-        public virtual DbSet<tbl_treadtracker_barcode> tbl_treadtracker_barcode { get; set; }
         public virtual DbSet<tbl_treadtracker_workorder> tbl_treadtracker_workorder { get; set; }
         public virtual DbSet<tbl_treadtracker_casing_brands> tbl_treadtracker_casing_brands { get; set; }
         public virtual DbSet<tbl_treadtracker_casing_sizes> tbl_treadtracker_casing_sizes { get; set; }
-        public virtual DbSet<tbl_employee_attendance> tbl_employee_attendance { get; set; }
         public virtual DbSet<tbl_employee_personal> tbl_employee_personal { get; set; }
         public virtual DbSet<tbl_payroll_category_selection> tbl_payroll_category_selection { get; set; }
         public virtual DbSet<tbl_vehicle_info> tbl_vehicle_info { get; set; }
@@ -85,7 +83,6 @@ namespace SeHubPortal.Models
         public virtual DbSet<tbl_source_DOT_sizecodes> tbl_source_DOT_sizecodes { get; set; }
         public virtual DbSet<tbl_harpoon_clients> tbl_harpoon_clients { get; set; }
         public virtual DbSet<tbl_pricelist> tbl_pricelist { get; set; }
-        public virtual DbSet<tbl_Efficiancy_Technician_Commissions> tbl_Efficiancy_Technician_Commissions { get; set; }
         public virtual DbSet<tbl_harpoon_users> tbl_harpoon_users { get; set; }
         public virtual DbSet<tbl_harpoon_source_locationZone> tbl_harpoon_source_locationZone { get; set; }
         public virtual DbSet<tbl_harpoon_source_serialNumbers> tbl_harpoon_source_serialNumbers { get; set; }
@@ -121,5 +118,50 @@ namespace SeHubPortal.Models
         public virtual DbSet<tbl_harpoon_departments> tbl_harpoon_departments { get; set; }
         public virtual DbSet<tbl_salesReport_branch_monthly> tbl_salesReport_branch_monthly { get; set; }
         public virtual DbSet<tbl_data_logger_temperature> tbl_data_logger_temperature { get; set; }
+        public virtual DbSet<tbl_location_departments> tbl_location_departments { get; set; }
+        public virtual DbSet<tbl_Efficiancy_Technician_Commissions> tbl_Efficiancy_Technician_Commissions { get; set; }
+        public virtual DbSet<tbl_source_mediumTruckTires> tbl_source_mediumTruckTires { get; set; }
+        public virtual DbSet<tbl_tread_tracker_chamber_data_logger> tbl_tread_tracker_chamber_data_logger { get; set; }
+        public virtual DbSet<tbl_treadTracker_chamber_senser> tbl_treadTracker_chamber_senser { get; set; }
+        public virtual DbSet<tbl_source_treadtracker_cap_count> tbl_source_treadtracker_cap_count { get; set; }
+        public virtual DbSet<tbl_source_treadtracker_creditSchedule> tbl_source_treadtracker_creditSchedule { get; set; }
+        public virtual DbSet<tbl_source_treadtracker_freightSchedule> tbl_source_treadtracker_freightSchedule { get; set; }
+        public virtual DbSet<tbl_treadtracker_customer_retread_spec> tbl_treadtracker_customer_retread_spec { get; set; }
+        public virtual DbSet<tbl_source_labour_rates> tbl_source_labour_rates { get; set; }
+        public virtual DbSet<tbl_cta_locations_reporting> tbl_cta_locations_reporting { get; set; }
+        public virtual DbSet<tbl_source_treadtracker_consumables_TreadRubber> tbl_source_treadtracker_consumables_TreadRubber { get; set; }
+        public virtual DbSet<Contact> Contacts { get; set; }
+        public virtual DbSet<tbl_customer_list_bakp> tbl_customer_list_bakp { get; set; }
+        public virtual DbSet<tbl_data_logger_pressure> tbl_data_logger_pressure { get; set; }
+        public virtual DbSet<tbl_employee_leave_annual_calculations> tbl_employee_leave_annual_calculations { get; set; }
+        public virtual DbSet<tbl_GTX_customer_list> tbl_GTX_customer_list { get; set; }
+        public virtual DbSet<tbl_source_treadtracker_consumables_nonTreadRubber> tbl_source_treadtracker_consumables_nonTreadRubber { get; set; }
+        public virtual DbSet<tbl_source_workStation_info> tbl_source_workStation_info { get; set; }
+        public virtual DbSet<tbl_timeclock_clients> tbl_timeclock_clients { get; set; }
+        public virtual DbSet<tbl_treadtracker_barcode_bck_20200412> tbl_treadtracker_barcode_bck_20200412 { get; set; }
+        public virtual DbSet<tbl_treadtracker_customer_TT200_spec> tbl_treadtracker_customer_TT200_spec { get; set; }
+        public virtual DbSet<tbl_treadtracker_inventory_treadRubber> tbl_treadtracker_inventory_treadRubber { get; set; }
+        public virtual DbSet<tbl_treadtracker_LineCode_PlantProcess> tbl_treadtracker_LineCode_PlantProcess { get; set; }
+        public virtual DbSet<tbl_treadtracker_workorder_bck_20200412> tbl_treadtracker_workorder_bck_20200412 { get; set; }
+        public virtual DbSet<tblCity> tblCities { get; set; }
+        public virtual DbSet<tblEmployee> tblEmployees { get; set; }
+        public virtual DbSet<tbl_customer_list_bkp> tbl_customer_list_bkp { get; set; }
+        public virtual DbSet<tbl_employee_attendance_bck> tbl_employee_attendance_bck { get; set; }
+        public virtual DbSet<tbl_employee_bck2> tbl_employee_bck2 { get; set; }
+        public virtual DbSet<tbl_treadtracker_barcode_bck> tbl_treadtracker_barcode_bck { get; set; }
+        public virtual DbSet<tblLocationBkp> tblLocationBkps { get; set; }
+        public virtual DbSet<tblServiceEstimate_new> tblServiceEstimate_new { get; set; }
+        public virtual DbSet<tblServiceEstimateLastDay> tblServiceEstimateLastDays { get; set; }
+        public virtual DbSet<tbl_reporting_sales_labour_daily> tbl_reporting_sales_labour_daily { get; set; }
+        public virtual DbSet<tbl_treadtracker_barcode> tbl_treadtracker_barcode { get; set; }
+        public virtual DbSet<tbl_source_fuelLog_chargeAccount> tbl_source_fuelLog_chargeAccount { get; set; }
+        public virtual DbSet<tbl_source_treadtracker_creditSchedule_revision> tbl_source_treadtracker_creditSchedule_revision { get; set; }
+        public virtual DbSet<tbl_source_treadtracker_freightSchedule_revision> tbl_source_treadtracker_freightSchedule_revision { get; set; }
+        public virtual DbSet<tbl_source_treadtracker_casingTire> tbl_source_treadtracker_casingTire { get; set; }
+        public virtual DbSet<tbl_source_harpoon_timesheet_categories> tbl_source_harpoon_timesheet_categories { get; set; }
+        public virtual DbSet<tbl_source_harpoon_timesheet_category_selection> tbl_source_harpoon_timesheet_category_selection { get; set; }
+        public virtual DbSet<tbl_harpoon_timesheet> tbl_harpoon_timesheet { get; set; }
+        public virtual DbSet<tbl_employee_attendance> tbl_employee_attendance { get; set; }
+        public virtual DbSet<tbl_treadtracker_production_log> tbl_treadtracker_production_log { get; set; }
     }
 }

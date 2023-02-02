@@ -19,5 +19,6 @@ namespace SeHubPortal.Models
         public bool casingCredit { get; set; }
         public Nullable<int> casingCredit_value { get; set; }
         public Nullable<int> casingCredit_ageLimit { get; set; }
+        public string circumference { get; set; }
     }
 }

@@ -773,6 +773,7 @@ namespace SeHubPortal.Controllers
             data.non_sig_number = Convert.ToString(TADetails["non_sig_number"]);
             data.location_id = Convert.ToString(TADetails["location_id"]);
             data.replacement_invoice = Convert.ToString(TADetails["replacement_invoice"]);
+            data.original_purchase_invoice = Convert.ToString(TADetails["original_purchase_invoice"]);
 
             //Trace.WriteLine("Reached till here 3 ");
 
@@ -966,7 +967,7 @@ namespace SeHubPortal.Controllers
             }
             else
             {
-                return " ";
+                return "Chinese-ALL";
             }
 
             
@@ -1064,10 +1065,26 @@ namespace SeHubPortal.Controllers
 
             var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
             model.SehubAccess = empDetails;
+            model.ChargeAccounts = PopulateChargeAccounts();
 
             if (loc == null || loc == "")
             {
-                loc = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
+                var empRememberLocation = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
+                if (empRememberLocation != null)
+                {
+                    if (empRememberLocation.loc_current != null)
+                    {
+                        loc = empRememberLocation.loc_current;
+                    }
+                    else
+                    {
+                        loc = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
+                    }                    
+                }
+                else
+                {
+                    loc = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
+                }
             }
 
             var result = db.tbl_employee.Where(a => a.employee_id.Equals(empId)).FirstOrDefault();
@@ -1083,13 +1100,12 @@ namespace SeHubPortal.Controllers
 
             if (VIN == null || VIN == "")
             {
-                VIN = db.tbl_vehicle_info.Where(x => x.loc_id == loc && x.vehicle_status == 1).Select(x => x.VIN).FirstOrDefault();
-                
+                VIN = db.tbl_vehicle_info.Where(x => x.loc_id == loc && x.vehicle_status == 1).Select(x => x.VIN).FirstOrDefault();                
             }
 
             model.selectedVIN = VIN;
             model.SelectedVehicleInfo = db.tbl_vehicle_info.Where(x => x.VIN == VIN).FirstOrDefault();
-            model.fuelLogList = db.tbl_fuel_log_fleet.Where(x => x.VIN == model.selectedVIN).OrderByDescending(x => x.date_of_purchase).ToList();
+            model.fuelLogList = db.tbl_fuel_log_fleet.Where(x => x.VIN == model.selectedVIN).OrderByDescending(x => x.date_of_purchase).ThenByDescending(x => x.odometer).ToList();
 
             List<tbl_vehicle_info> VehicleDetails = new List<tbl_vehicle_info>();
             if (loc != null && loc != "")
@@ -1533,7 +1549,15 @@ namespace SeHubPortal.Controllers
 
             if (locId is null || locId == "")
             {
-                location = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
+                var empRememberLocation = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
+                if (empRememberLocation != null)
+                {
+                    location = empRememberLocation.loc_current;
+                }
+                else
+                {
+                    location = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
+                }
                 model.MatchedLocID = location;
             }
             else
@@ -2146,8 +2170,20 @@ namespace SeHubPortal.Controllers
                 }
                 else
                 {
-                    location = "and a.location_id = '" + db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault() + "'";
-                    modal.MatchedLocID = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
+
+                    var empRememberLocation = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
+                    if (empRememberLocation != null)
+                    {
+                        location = "and a.location_id = '" + empRememberLocation.loc_current + "'";
+                        modal.MatchedLocID = empRememberLocation.loc_current;
+                    }
+                    else
+                    {
+                        location = "and a.location_id = '" + db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault() + "'";
+                        modal.MatchedLocID = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
+                    }
+
+                    
                 }
             }
 
@@ -2393,6 +2429,28 @@ namespace SeHubPortal.Controllers
 
             return items;
         }
+
+        private static List<SelectListItem> PopulateChargeAccounts()
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            var accounts = db.tbl_source_fuelLog_chargeAccount.ToList();
+
+            foreach (var act in accounts)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = act.Account,
+                    Value = act.Account
+                });
+            }
+
+
+            return items;
+        }
+
+
 
         [HttpPost]
         public ActionResult AddNewTADetails(CustomerReportingViewModel model)

@@ -240,8 +240,32 @@
     }
 
 
+    @if (Model.twoActivePayrolls)
+    {
+        <style>
+            #payroll_id_dropdown option:nth-child(2) {
+                font-weight: bold;
+                font-style: italic;
+                background-color: #28a746;
+                color: white;
+            }
+        </style>
+    }
+    else
+    {
+        <style>
+            #payroll_id_dropdown option:nth-child(1) {
+                font-weight: bold;
+                font-style: italic;
+                background-color: #28a746;
+                color: white;
+            }
+        </style>
+    }
+
 
     <style type="text/css">
+
 
         #PayrollClicked {
             display: block !important;
@@ -287,9 +311,9 @@
                 margin-top: 8px;
             }
 
-            .card-header h6 {
-                color: black;
-            }
+        .card-header h6 {
+            color: black;
+        }
 
         .mainBody {
             margin-left: 5px;
@@ -313,9 +337,11 @@
             /*background: blue;*/
             height: 100vh;
         }
-        .breadCrumb{
-        background-color:white;
-    }
+
+        .breadCrumb {
+            background-color: white;
+        }
+
         .fright {
             float: right;
             /*background: pink;*/
@@ -757,7 +783,7 @@
                                     <label style="margin: 0px 3px 0px 25px ">Payroll ID :</label>
                                     @using (Html.BeginForm("ChangePayrollID", "Management", FormMethod.Post))
                                     {
-                                        @Html.DropDownListFor(m => m.SelectedPayrollId, Model.PayrollIdList, new { @onChange = "this.form.submit()", @style = "text-align:left; margin-top: 0px; width:200px;height:23px;font-size:15px;margin-left:6px;" })
+                                        @Html.DropDownListFor(m => m.SelectedPayrollId, Model.PayrollIdList, new { @id = "payroll_id_dropdown", @onChange = "this.form.submit()", @style = "text-align:left; margin-top: 0px; width:200px;height:23px;font-size:15px;margin-left:6px;" })
                                         @Html.HiddenFor(m => m.MatchedLocID, new { htmlAttributes = new { @style = "display:none" } })
                                     }
 
@@ -765,9 +791,7 @@
                                     @using (Html.BeginForm("PayrrollChangeLocation", "Management", FormMethod.Post))
                                     {
                                         <div>
-
                                             @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, new { @class = "locationSection", @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:6px;" })
-
                                             <noscript> <input style="display:none" class="btn btn-success" type="submit" value="Search" /></noscript>
                                         </div>
                                     }
@@ -871,9 +895,7 @@
                                                         if (Model.employeepayrollList != null && Model.corpDashboard.Where(x => x.locID == Model.MatchedLocID).Select(x => x.lockStatusbranch).FirstOrDefault() != 1)
                                                         {
 
-                                                            DateTime finalDate = Convert.ToDateTime(@ViewData["finalDay"]);
-
-                                                            if (finalDate < System.DateTime.Today)
+                                                            if (Model.enableBranchPayrollEntry)
                                                             {
                                                                 if (Model.corpDashboard.Where(x => x.locID == Model.MatchedLocID && x.branchSubmitter == "" && x.branchSubmissionDate == "").Count() > 0)
                                                                 {
@@ -1116,78 +1138,162 @@
                                                     <div id="donutChartCorp" style="margin-left:auto; margin-right:auto"></div>
                                                 </div>
 
-
-                                                @using (Html.BeginForm("button1_Click", "Management", new { locId = Model.MatchedLocID, prid = Model.SelectedPayrollId }, FormMethod.Post))
+                                                @if (Model.currentPayRollId != Convert.ToInt32(Model.SelectedPayrollId.Split(';')[0]))
                                                 {
-                                                    var count1 = 0;
-
-                                                    foreach (var items in Model.employeepayrollList)
+                                                    if (Model.enableBranchPayrollEntry)
                                                     {
-                                                        if (items.submissionStatusCorporate == "2")
+                                                        using (Html.BeginForm("button1_Click", "Management", new { locId = Model.MatchedLocID, prid = Model.SelectedPayrollId }, FormMethod.Post))
                                                         {
-                                                            count1 = count1 + 1;
-                                                        }
-                                                    }
+                                                            var count1 = 0;
 
-
-
-                                                    <div class="row text-center">
-                                                        <label style="margin-left:auto; margin-right:auto">@count3 of @Model.corpDashboard.Count complete</label>
-                                                    </div>
-
-                                                    int invalid = 0;
-
-                                                    foreach (var emp in Model.employeeListValidation)
-                                                    {
-                                                        if (emp.submissionStatus != "1")
-                                                        {
-                                                            invalid = +1;
-                                                        }
-                                                    }
-
-
-
-                                                    if (count3 == Model.corpDashboard.Count) //
-                                                    {
-                                                        <div class="row" style=" background-color:white; margin-left:auto;margin-right:auto; margin-top:0px; width:100%">
-                                                            <div class="col-lg-6">
-                                                                @if (invalid > 0)
+                                                            foreach (var items in Model.employeepayrollList)
+                                                            {
+                                                                if (items.submissionStatusCorporate == "2")
                                                                 {
-                                                                    <input type="text" class="btn" style="width: 100%; font-size:14px; border:1px solid black" readonly name="name" value="Validation Required" />
+                                                                    count1 = count1 + 1;
                                                                 }
-                                                                else
-                                                                {
-                                                                    <input type="text" class="btn" style="width: 100%; font-size:14px; border:1px solid black" readonly name="name" value="Validation Complete" />
-                                                                }
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                @if (invalid > 0)
-                                                                {
-                                                                    <button disabled style="padding: 6px 0px 6px 0px; font-size:14px;" class="btn btn-danger">Submit Payroll</button>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <button style="padding: 6px 0px 6px 0px; font-size:14px;" class="btn btn-success">Submit Payroll</button>
-                                                                }
+                                                            }
 
+
+
+                                                            <div class="row text-center">
+                                                                <label style="margin-left:auto; margin-right:auto">@count3 of @Model.corpDashboard.Count complete</label>
                                                             </div>
 
-                                                        </div>
+                                                            int invalid = 0;
+
+                                                            foreach (var emp in Model.employeeListValidation)
+                                                            {
+                                                                if (emp.submissionStatus != "1")
+                                                                {
+                                                                    invalid = +1;
+                                                                }
+                                                            }
+
+
+                                                            if (count3 == Model.corpDashboard.Count) //
+                                                            {
+                                                                <div class="row" style=" background-color:white; margin-left:auto;margin-right:auto; margin-top:0px; width:100%">
+                                                                    <div class="col-lg-6">
+                                                                        @if (invalid > 0)
+                                                                        {
+                                                                            <input type="text" class="btn" style="width: 100%; font-size:14px; border:1px solid black" readonly name="name" value="Validation Required" />
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <input type="text" class="btn" style="width: 100%; font-size:14px; border:1px solid black" readonly name="name" value="Validation Complete" />
+                                                                        }
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        @if (invalid > 0)
+                                                                        {
+                                                                            <button disabled style="padding: 6px 0px 6px 0px; font-size:14px;" class="btn btn-danger">Submit Payroll</button>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <button style="padding: 6px 0px 6px 0px; font-size:14px;" class="btn btn-success">Submit Payroll</button>
+                                                                        }
+
+                                                                    </div>
+
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="row" style="margin-left:auto;margin-right:auto; margin-top:0px; width:100%">
+                                                                    <div class="col-lg-6 text-center" style="">
+                                                                        <input type="text" class="btn" style="width: 100%; font-size:14px; border:1px solid black" readonly name="name" value="Validation Not Required" />
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <button style="padding: 6px 0px 6px 0px; font-size:14px;" disabled class="btn btn-danger">Submit Payroll</button>
+                                                                    </div>
+                                                                </div>
+                                                            }
+
+                                                            <hr style="border-color:#a6a8ab" />
+                                                        }
                                                     }
                                                     else
                                                     {
-                                                        <div class="row" style="margin-left:auto;margin-right:auto; margin-top:0px; width:100%">
-                                                            <div class="col-lg-6 text-center" style="">
-                                                                <input type="text" class="btn" style="width: 100%; font-size:14px; border:1px solid black" readonly name="name" value="Validation Not Required" />
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <button style="padding: 6px 0px 6px 0px; font-size:14px;" disabled class="btn btn-danger">Submit Payroll</button>
-                                                            </div>
-                                                        </div>
-                                                    }
 
-                                                    <hr style="border-color:#a6a8ab" />
+                                                    }
                                                 }
+                                                else
+                                                {
+                                                    using (Html.BeginForm("button1_Click", "Management", new { locId = Model.MatchedLocID, prid = Model.SelectedPayrollId }, FormMethod.Post))
+                                                    {
+                                                        var count1 = 0;
+
+                                                        foreach (var items in Model.employeepayrollList)
+                                                        {
+                                                            if (items.submissionStatusCorporate == "2")
+                                                            {
+                                                                count1 = count1 + 1;
+                                                            }
+                                                        }
+
+
+
+                                                        <div class="row text-center">
+                                                            <label style="margin-left:auto; margin-right:auto">@count3 of @Model.corpDashboard.Count complete</label>
+                                                        </div>
+
+                                                        int invalid = 0;
+
+                                                        foreach (var emp in Model.employeeListValidation)
+                                                        {
+                                                            if (emp.submissionStatus != "1")
+                                                            {
+                                                                invalid = +1;
+                                                            }
+                                                        }
+
+
+                                                        if (count3 == Model.corpDashboard.Count) //
+                                                        {
+                                                            <div class="row" style=" background-color:white; margin-left:auto;margin-right:auto; margin-top:0px; width:100%">
+                                                                <div class="col-lg-6">
+                                                                    @if (invalid > 0)
+                                                                    {
+                                                                        <input type="text" class="btn" style="width: 100%; font-size:14px; border:1px solid black" readonly name="name" value="Validation Required" />
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <input type="text" class="btn" style="width: 100%; font-size:14px; border:1px solid black" readonly name="name" value="Validation Complete" />
+                                                                    }
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    @if (invalid > 0)
+                                                                    {
+                                                                        <button disabled style="padding: 6px 0px 6px 0px; font-size:14px;" class="btn btn-danger">Submit Payroll</button>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <button style="padding: 6px 0px 6px 0px; font-size:14px;" class="btn btn-success">Submit Payroll</button>
+                                                                    }
+
+                                                                </div>
+
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="row" style="margin-left:auto;margin-right:auto; margin-top:0px; width:100%">
+                                                                <div class="col-lg-6 text-center" style="">
+                                                                    <input type="text" class="btn" style="width: 100%; font-size:14px; border:1px solid black" readonly name="name" value="Validation Not Required" />
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <button style="padding: 6px 0px 6px 0px; font-size:14px;" disabled class="btn btn-danger">Submit Payroll</button>
+                                                                </div>
+                                                            </div>
+                                                        }
+
+                                                        <hr style="border-color:#a6a8ab" />
+                                                    }
+                                                }
+
+
+
                                                 <div class="row example" style="margin-top:0px; height:210px; overflow-y:auto; ">
                                                     <div class="col-lg-12 text-center">
                                                         @if (Model.corporateSubmission.Count > 0)
@@ -1529,7 +1635,7 @@
                                                     if (Model.SelectedEmployeeId == items.employeeId)
                                                     {
                                                         <li class="list-group-item" style="background-color:#b3b7bb" onclick="location.href='@Url.Action("Payroll", "Management", new { locId = Model.MatchedLocID, employeeId = @items.employeeId, payrollID = values[0] })';">
-                                                            @if (Model.LockStatusLocation == 1)
+                                                            @if (!Model.enableBranchPayrollEntry)
                                                             {
                                                                 <img class="btn" style="padding-top:3px !important; width:45px; float: left; vertical-align:middle" src="~/Content/Lock_Icon.png" alt="">
                                                             }
@@ -1540,7 +1646,7 @@
                                                     else
                                                     {
                                                         <li class="list-group-item" onclick="location.href='@Url.Action("Payroll", "Management", new { locId = Model.MatchedLocID, employeeId = @items.employeeId, payrollID = values[0] })';">
-                                                            @if (Model.LockStatusLocation == 1)
+                                                            @if (!Model.enableBranchPayrollEntry)
                                                             {
                                                                 <img class="btn" style="padding-top:3px !important; width:45px; float: left; vertical-align:middle" src="~/Content/Lock_Icon.png" alt="">
                                                             }
@@ -1555,7 +1661,7 @@
                                                     {
                                                         <li class="list-group-item" style="background-color:#b3b7bb" onclick="location.href='@Url.Action("Payroll", "Management", new { locId = Model.MatchedLocID, employeeId = @items.employeeId, payrollID = values[0] })';">
                                                             @*<a class="anchorFull" href="@Url.Action("Payroll", "Management", new { locId = Model.MatchedLocID,employeeId=@items.employeeId,payrollID="" })">*@
-                                                            @if (Model.LockStatusLocation == 1)
+                                                            @if (!Model.enableBranchPayrollEntry)
                                                             {
                                                                 <img class="btn" style="padding-top:3px !important; width:45px; float: left; vertical-align:middle" src="~/Content/Lock_Icon.png" alt="">
                                                             }
@@ -1567,7 +1673,7 @@
                                                     {
                                                         <li class="list-group-item" onclick="location.href='@Url.Action("Payroll", "Management", new { locId = Model.MatchedLocID, employeeId = @items.employeeId, payrollID = values[0] })';">
                                                             @*<a class="anchorFull" href="@Url.Action("Payroll", "Management", new { locId = Model.MatchedLocID,employeeId=@items.employeeId,payrollID="" })">*@
-                                                            @if (Model.LockStatusLocation == 1)
+                                                            @if (!Model.enableBranchPayrollEntry)
                                                             {
                                                                 <img class="btn" style="padding-top:3px !important; width:45px; float: left; vertical-align:middle" src="~/Content/Lock_Icon.png" alt="">
                                                             }
@@ -1590,7 +1696,7 @@
                                                     if (Model.SelectedEmployeeId == items.employeeId)
                                                     {
                                                         <li class="list-group-item" style="background-color:#b3b7bb" onclick="location.href='@Url.Action("Payroll", "Management", new { locId = Model.MatchedLocID, employeeId = @items.employeeId, payrollID = Convert.ToInt32(Model.SelectedPayrollId.Split(';')[0]) })';">
-                                                            @if (Model.LockStatusLocation == 1)
+                                                            @if (!Model.enableBranchPayrollEntry)
                                                             {
                                                                 <img class="btn" style="padding-top:3px !important; width:45px; float: left; vertical-align:middle" src="~/Content/Lock_Icon.png" alt="">
                                                             }
@@ -1601,7 +1707,7 @@
                                                     else
                                                     {
                                                         <li class="list-group-item" onclick="location.href='@Url.Action("Payroll", "Management", new { locId = Model.MatchedLocID, employeeId = @items.employeeId, payrollID = Convert.ToInt32(Model.SelectedPayrollId.Split(';')[0]) })';">
-                                                            @if (Model.LockStatusLocation == 1)
+                                                            @if (!Model.enableBranchPayrollEntry)
                                                             {
                                                                 <img class="btn" style="padding-top:3px !important; width:45px; float: left; vertical-align:middle" src="~/Content/Lock_Icon.png" alt="">
                                                             }
@@ -1616,7 +1722,7 @@
                                                     {
                                                         <li class="list-group-item" style="background-color:#b3b7bb" onclick="location.href='@Url.Action("Payroll", "Management", new { locId = Model.MatchedLocID, employeeId = @items.employeeId, payrollID = Convert.ToInt32(Model.SelectedPayrollId.Split(';')[0]) })';">
                                                             @*<a class="anchorFull" href="@Url.Action("Payroll", "Management", new { locId = Model.MatchedLocID,employeeId=@items.employeeId,payrollID="" })">*@
-                                                            @if (Model.LockStatusLocation == 1)
+                                                            @if (!Model.enableBranchPayrollEntry)
                                                             {
                                                                 <img class="btn" style="padding-top:3px !important; width:45px; float: left; vertical-align:middle" src="~/Content/Lock_Icon.png" alt="">
                                                             }
@@ -1628,7 +1734,7 @@
                                                     {
                                                         <li class="list-group-item" onclick="location.href='@Url.Action("Payroll", "Management", new { locId = Model.MatchedLocID, employeeId = @items.employeeId, payrollID = Convert.ToInt32(Model.SelectedPayrollId.Split(';')[0]) })';">
                                                             @*<a class="anchorFull" href="@Url.Action("Payroll", "Management", new { locId = Model.MatchedLocID,employeeId=@items.employeeId,payrollID="" })">*@
-                                                            @if (Model.LockStatusLocation == 1)
+                                                            @if (!Model.enableBranchPayrollEntry)
                                                             {
                                                                 <img class="btn" style="padding-top:3px !important; width:45px; float: left; vertical-align:middle" src="~/Content/Lock_Icon.png" alt="">
                                                             }
@@ -1841,10 +1947,10 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-lg-1">
-                                                                @if (Model.currentPayRollId == Convert.ToInt32(Model.SelectedPayrollId.Split(';')[0]))
+                                                                @if (Model.enableBranchPayrollEntry) // Model.currentPayRollId == Convert.ToInt32(Model.SelectedPayrollId.Split(';')[0])
                                                                 {
                                                                     <div class="row" style=" margin-top: 10px">
-                                                                        @if (Model.LockStatusLocation != 1 && Model.currentPayRollId == Convert.ToInt32(Model.SelectedPayrollId.Split(';')[0]) || (Model.LockStatusLocation != 1 && ViewData["UserEmployeeID"].ToString() == "10901")) //Model.currentPayRollId == Convert.ToInt32(Model.SelectedPayrollId.Split(';')[0])
+                                                                        @if (Model.enableBranchPayrollEntry) //Model.currentPayRollId == Convert.ToInt32(Model.SelectedPayrollId.Split(';')[0])
                                                                         {
                                                                             <input id="PayrollSave" type="submit" class="btn btn-success transcationButtons" style="width:130px; height:45px; visibility:visible" value="Save" />
                                                                         }
@@ -1883,11 +1989,7 @@
                                                                         <div class="col-lg-2 text-left">
                                                                             <div class="row" style="padding: 0px 30px 0px 10px;">
                                                                                 <div class="col-lg-8">
-                                                                                    <label style="        font-size: 18px;
-        margin-bottom: 0px;
-        text-align: center;
-        width: 200px;
-        height: 30px;
+                                                                                    <label style="font-size: 18px;   margin-bottom: 0px; text-align: center;width: 200px;        height: 30px;
         background-color: #b3b7bb;
         color: white;
         font-weight: bold;">Total Hours</label>
@@ -2235,7 +2337,7 @@
                                                                                     </thead>
 
                                                                                     <tbody>
-                                                                                        @if ((Model.LockStatusLocation != 1 && Model.currentPayRollId == Convert.ToInt32(Model.SelectedPayrollId.Split(';')[0]) || (Model.LockStatusLocation != 1 && ViewData["UserEmployeeID"].ToString() == "10901")) && ((Convert.ToDateTime(ViewData["endDate"]) - DateTime.Today).TotalDays) >= Model.payrollSettings)  //Model.currentPayRollId == Convert.ToInt32(Model.SelectedPayrollId.Split(';')[0]) && Convert.ToInt32(ViewData["RemainingDays"].ToString()) > 1 &&
+                                                                                        @if (Model.enableBranchPayrollEntry)  //Model.currentPayRollId == Convert.ToInt32(Model.SelectedPayrollId.Split(';')[0]) && Convert.ToInt32(ViewData["RemainingDays"].ToString()) > 1 &&
                                                                                         { //Model.currentPayRollId == Convert.ToInt32(Model.SelectedPayrollId.Split(';')[0]) && Convert.ToInt32(ViewData["RemainingDays"].ToString()) >= (Convert.ToInt32(Model.payrollSettings) + 1) && Model.branchSubmission.Count == 0 && Model.corporateSubmission.Count == 0
                                                                                             <tr>
 
@@ -3425,16 +3527,16 @@
 
 
 
-    @if (Model.currentPayRollId == Convert.ToInt32(Model.SelectedPayrollId.Split(';')[0]))
+    @if (Model.enableBranchPayrollEntry)
     {
         <div class="row" style=" margin-top: 10px">
-            @if (Model.LockStatusLocation == 1) //Model.currentPayRollId == Convert.ToInt32(Model.SelectedPayrollId.Split(';')[0])
+            @if (Model.enableBranchPayrollEntry) //Model.currentPayRollId == Convert.ToInt32(Model.SelectedPayrollId.Split(';')[0])
             {
                 <input id="PayrollSave" type="submit" class="btn btn-success transcationButtons" style="width:130px; height:45px; visibility:visible" value="Save" />
             }
         </div>
         <div class="row" style="margin-top:15px">
-            @if (Model.LockStatusLocation == 1) //Model.currentPayRollId == Convert.ToInt32(Model.SelectedPayrollId.Split(';')[0])
+            @if (Model.enableBranchPayrollEntry) //Model.currentPayRollId == Convert.ToInt32(Model.SelectedPayrollId.Split(';')[0])
             {
                 <a href="@Url.Action("Payroll", "Management", new { locId = Model.MatchedLocID, employeeId = Model.SelectedEmployeeId, payrollID = Model.SelectedPayrollId.Split(';')[0] })">
                     <input type="button" class="btn btn-danger transcationButtons" style="width:130px; height:45px; visibility:visible" value="Cancel" />
@@ -3786,7 +3888,7 @@
                                 }
                                 else
                                 {
-                                    @Html.EditorFor(m => m.employeepayrollSubmission.adjustmentPay, new { htmlAttributes = new { @id = "adjustmentPay", @readonly = false, @onkeypress = "return onlyNumberKey(event)", @class = "text_field2", @type = "text", @style = "text-align: center; border:1px solid #0094ff; border-radius:5px; font-size :28px;width:175px; height:50px;" } })
+                                    @Html.EditorFor(m => m.employeepayrollSubmission.adjustmentPay, new { htmlAttributes = new { @id = "adjustmentPay", @onkeypress = "return onlyNumberKey(event)", @class = "text_field2", @type = "text", @style = "text-align: center; border:1px solid #0094ff; border-radius:5px; font-size :28px;width:175px; height:50px;" } })
                                 }
 
 
@@ -3859,7 +3961,7 @@
                                 }
                                 else
                                 {
-                                    @Html.EditorFor(m => m.employeepayrollSubmission.adjustmentPay1, new { htmlAttributes = new { @id = "adjustmentPay1", @readonly = false, @onkeypress = "return onlyNumberKey(event)", @class = "text_field2", @type = "text", @style = "text-align: center; border:1px solid #0094ff; border-radius:5px; font-size :28px;width:175px; height:50px;" } })
+                                    @Html.EditorFor(m => m.employeepayrollSubmission.adjustmentPay1, new { htmlAttributes = new { @id = "adjustmentPay1", @onkeypress = "return onlyNumberKey(event)", @class = "text_field2", @type = "text", @style = "text-align: center; border:1px solid #0094ff; border-radius:5px; font-size :28px;width:175px; height:50px;" } })
                                 }
 
                             </div>
@@ -3935,7 +4037,7 @@
                                 }
                                 else
                                 {
-                                    @Html.EditorFor(m => m.employeepayrollSubmission.adjustmentPay2, new { htmlAttributes = new { @id = "adjustmentPay2", @readonly = false, @onkeypress = "return onlyNumberKey(event)", @class = "text_field2", @type = "text", @style = "text-align: center; border:1px solid #0094ff; border-radius:5px; font-size :28px;width:175px; height:50px;" } })
+                                    @Html.EditorFor(m => m.employeepayrollSubmission.adjustmentPay2, new { htmlAttributes = new { @id = "adjustmentPay2", @onkeypress = "return onlyNumberKey(event)", @class = "text_field2", @type = "text", @style = "text-align: center; border:1px solid #0094ff; border-radius:5px; font-size :28px;width:175px; height:50px;" } })
                                 }
                             </div>
                         </div>

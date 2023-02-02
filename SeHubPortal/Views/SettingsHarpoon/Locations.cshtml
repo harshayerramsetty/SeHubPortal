@@ -7,130 +7,138 @@
 @model SeHubPortal.ViewModel.HarpoonLocationsViewModel
 
     <html lang="en">
-        <head>
-            <meta name="viewport" content="width=device-width" />
-            <link href="~/Content/NewOrder.css" rel="stylesheet" type="text/css" />
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <link href="~/Content/NewOrder.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 
-            @if (Model.client_info.employees_page.Value)
-            {
-                <style>
-                    #ManagementClicked {
-                        display: block !important;
-                    }
-                </style>
-            }
-            @if (Model.client_info.fleet_page.Value)
-            {
-                <style>
-                    #VehicleClicked {
-                        display: block !important;
-                    }
-                </style>
-            }
-
+        @if (Model.client_info.employees_page.Value)
+        {
             <style>
-
-                #SettingsClicked {
-                    display: block !important;
-                }
-
                 #ManagementClicked {
                     display: block !important;
                 }
-
-                .example::-webkit-scrollbar {
-                    display: none;
-                }
-
-                .example {
-                    -ms-overflow-style: none; /* IE and Edge */
-                    scrollbar-width: none; /* Firefox */
-                }
-
-                #LocationsClicked {
-                    background-color: #f0f2f5;
-                    color: black;
-                    font-weight: 600;
-                }
-
-                #SettingsClicked {
-                    background-color: #f0f2f5;
-                    color: black;
-                    font-weight: 600;
-                }
-
-                .settingsBtn {
-                    font-weight: bold;
-                }
-
-                #LocationsLink {
-                    color: black;
-                    font-weight: 700;
-                    background-color: #f0f2f5;
-                }
-
-                body {
-                    background-color: #f0f2f5;
-                    padding-right: 0 !important;
-                }
-
-                .heading {
-                    margin: 10px 0px 0px 0px;
-                }
-
-                    .heading h2 {
-                        margin-top: 8px;
-                    }
-
-                .card-header {
-                    background-color: #cde8ca;
-                }
-
-                    .card-header h6 {
-                        color: black;
-                    }
-
-                .imageClass {
-                    width: 100%;
-                    height: 80%;
-                    border-radius: 50%;
-                }
-
-                .card {
-                    border: 1px solid #ededed;
-                    margin-bottom: 30px;
-                    border-radius: 10px;
-                }
-
-                .card {
-                    position: relative;
-                    display: -ms-flexbox;
-                    display: flex;
-                    height: auto;
-                    -ms-flex-direction: column;
-                    flex-direction: column;
-                    min-width: 0;
-                    word-wrap: break-word;
-                    background-color: #fff;
-                    background-clip: border-box;
-                    border: 1px solid rgba(0,0,0,.125);
-                    border-radius: .25rem;
-                }
-
-                p {
-                    font-size: 14px;
-                }
-
-                #MatchedStaffLocID {
-                    height: 30px;
-                    width: 100px;
+            </style>
+        }
+        @if (Model.client_info.fleet_page.Value)
+        {
+            <style>
+                #VehicleClicked {
+                    display: block !important;
                 }
             </style>
-        </head>
+        }
+        @if (Model.client_info.timesheet.Value)
+        {
+            <style>
+                #TimesheetClicked {
+                    display: block !important;
+                }
+            </style>
+        }
+
+        <style>
+
+            #SettingsClicked {
+                display: block !important;
+            }
+
+            #ManagementClicked {
+                display: block !important;
+            }
+
+            .example::-webkit-scrollbar {
+                display: none;
+            }
+
+            .example {
+                -ms-overflow-style: none; /* IE and Edge */
+                scrollbar-width: none; /* Firefox */
+            }
+
+            #LocationsClicked {
+                background-color: #f0f2f5;
+                color: black;
+                font-weight: 600;
+            }
+
+            #SettingsClicked {
+                background-color: #f0f2f5;
+                color: black;
+                font-weight: 600;
+            }
+
+            .settingsBtn {
+                font-weight: bold;
+            }
+
+            #LocationsLink {
+                color: black;
+                font-weight: 700;
+                background-color: #f0f2f5;
+            }
+
+            body {
+                background-color: #f0f2f5;
+                padding-right: 0 !important;
+            }
+
+            .heading {
+                margin: 10px 0px 0px 0px;
+            }
+
+                .heading h2 {
+                    margin-top: 8px;
+                }
+
+            .card-header {
+                background-color: #cde8ca;
+            }
+
+                .card-header h6 {
+                    color: black;
+                }
+
+            .imageClass {
+                width: 100%;
+                height: 80%;
+                border-radius: 50%;
+            }
+
+            .card {
+                border: 1px solid #ededed;
+                margin-bottom: 30px;
+                border-radius: 10px;
+            }
+
+            .card {
+                position: relative;
+                display: -ms-flexbox;
+                display: flex;
+                height: auto;
+                -ms-flex-direction: column;
+                flex-direction: column;
+                min-width: 0;
+                word-wrap: break-word;
+                background-color: #fff;
+                background-clip: border-box;
+                border: 1px solid rgba(0,0,0,.125);
+                border-radius: .25rem;
+            }
+
+            p {
+                font-size: 14px;
+            }
+
+            #MatchedStaffLocID {
+                height: 30px;
+                width: 100px;
+            }
+        </style>
+    </head>
         <body>
 
 

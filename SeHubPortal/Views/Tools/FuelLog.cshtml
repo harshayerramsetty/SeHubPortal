@@ -782,34 +782,8 @@
                                             <div class="col-lg-5 text-right">
                                                 <label style="font-size:14px;">Charge Account</label>
                                             </div>
-                                            <div class="col-lg-7">
-                                                @{
-                                                    List
-                                                    <SelectListItem>
-                                                    listItems = new List
-                                                    <SelectListItem>
-                                                    ();
-                                                    listItems.Add(new SelectListItem
-                                                    {
-                                                        Text = "Select Account",
-                                                    });
-                                                    listItems.Add(new SelectListItem
-                                                    {
-                                                        Text = "Irving Account",
-                                                        Value = "Irving Account"
-                                                    });
-                                                    listItems.Add(new SelectListItem
-                                                    {
-                                                        Text = "Ultramar Account",
-                                                        Value = "Ultramar Account"
-                                                    });
-                                                    listItems.Add(new SelectListItem
-                                                    {
-                                                        Text = "VISA Expense",
-                                                        Value = "VISA Expense"
-                                                    });
-                                                }
-                                                @Html.DropDownListFor(m => m.fuelLogTableValues.change_type, listItems, "Select", new { @class = "text-center", @style = "text-align-last: center; width:100%; height:28px", @required = "required", @id = "Brand" })
+                                            <div class="col-lg-7">                                                
+                                                @Html.DropDownListFor(m => m.fuelLogTableValues.change_type, Model.ChargeAccounts, "Select", new { @class = "text-center", @style = "text-align-last: center; width:100%; height:28px", @required = "required", @id = "Brand" })
                                             </div>
                                         </div>
                                         <div class="row" style="margin-top:15px; margin-bottom:0px">
@@ -906,33 +880,7 @@
                                                 <label style="font-size:14px;">Charge Account</label>
                                             </div>
                                             <div class="col-lg-7">
-                                                @{
-                                                    List
-                                                    <SelectListItem>
-                                                    listItems1 = new List
-                                                    <SelectListItem>
-                                                    ();
-                                                    listItems1.Add(new SelectListItem
-                                                    {
-                                                        Text = "Select Quantity",
-                                                    });
-                                                    listItems1.Add(new SelectListItem
-                                                    {
-                                                        Text = "Irving Account",
-                                                        Value = "Irving Account"
-                                                    });
-                                                    listItems1.Add(new SelectListItem
-                                                    {
-                                                        Text = "Ultramar Account",
-                                                        Value = "Ultramar Account"
-                                                    });
-                                                    listItems1.Add(new SelectListItem
-                                                    {
-                                                        Text = "VISA Expense",
-                                                        Value = "VISA Expense"
-                                                    });
-                                                }
-                                                @Html.DropDownListFor(m => m.editFuelLogTableValues.change_type, listItems1, "Select", new { @class = "text-center audited", @style = "text-align-last: center; width:100%; height:28px", @required = "required", @id = "change_type_edit" })
+                                                @Html.DropDownListFor(m => m.editFuelLogTableValues.change_type, Model.ChargeAccounts, "Select", new { @class = "text-center audited", @style = "text-align-last: center; width:100%; height:28px", @required = "required", @id = "change_type_edit" })
                                             </div>
                                         </div>
                                         <div class="row" style="margin-top:15px; margin-bottom:0px">

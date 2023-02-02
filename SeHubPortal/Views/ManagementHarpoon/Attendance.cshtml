@@ -36,6 +36,14 @@
             }
         </style>
     }
+    @if (Model.client_info.timesheet.Value)
+    {
+        <style>
+            #TimesheetClicked {
+                display: block !important;
+            }
+        </style>
+    }
 
     @if (Model.AccessType == "Administrator")
     {
@@ -499,7 +507,6 @@
         });
 
         function populateEmployeeList(val) {
-            //alert($("#MatchedLocID").val())
             $.ajax({
                 url: '@Url.Action("populateEmployeeList", "ManagementHarpoon")',
                 data: { date: val, loc: $("#MatchedLocID").val() },
@@ -545,16 +552,16 @@
 
             const dDocRead = new Date();
             const currentMonthDocRead = dDocRead.getMonth() + 1;
-
+            yearNumber = new Date().getFullYear();
             //alert(currentMonthDocRead)
 
             var events = [];
                 $.ajax({
                     type: "GET",
                     url: "/ManagementHarpoon/GetAttendanceDates",
-                    data: { empid: @ViewData["auto_emp_id"], mon: currentMonthDocRead},
+                    data: { empid: @ViewData["auto_emp_id"], mon: currentMonthDocRead, yar: yearNumber},
                     success: function (data) {
-
+                        //alert(data)
                         $('#loadingWheel').css("display", "none")
 
                         $.each(data, function (i, v) {
@@ -701,9 +708,17 @@
 
             const d = new Date();
             const existingMonth = getMonthNumber($('.fc-toolbar h2').html().split(" ")[0])
+            var existingMontPadded = ""
+            if (existingMonth.toString().length == 1) {                   
+                existingMontPadded = "0" + existingMonth.toString()
+            }
+            else {
+                existingMontPadded = existingMonth.toString()
+            }
+            const existingYear = $('.fc-toolbar h2').html().split(" ")[1]
             const currentMonth = d.getMonth() + 1;
 
-            //alert(existingMonth)
+            //alert(existingYear + "-" + existingMonth + "-01")
 
 
             $('.commonClass').css("background-color", "transparent")
@@ -713,7 +728,7 @@
                 $.ajax({
                     type: "GET",
                     url: "/ManagementHarpoon/GetAttendanceDates",
-                    data: { empid: val, mon:existingMonth},
+                    data: { empid: val, mon:existingMonth, yar: existingYear},
                     success: function (data) {
                         $.each(data, function (i, v) {
                             const durat = netTime(v.split(";")[0].split(" ")[0], val, getLocID(v.split(";")[1]))
@@ -735,13 +750,12 @@
                         GenerateCalender(events);
                     }
                 })
-
                 function GenerateCalender(events) {
                     $('#calender').fullCalendar('destroy');
 
                     $('#calender').fullCalendar({
                         contentHeight: 630,
-                        defaultDate: new Date(),
+                        //defaultDate: new Date(),
                         timeFormat: 'h(:mm)a',
                         displayEventTime: false,
                         header: {
@@ -749,7 +763,7 @@
                             center: 'title',
                             right: 'next'
                         },
-                        defaultDate: moment().add(existingMonth-currentMonth, "months"),
+                        defaultDate: existingYear + "-" + existingMontPadded + "-01",
 
                         eventLimit: true,
                         eventColor: '#378006',

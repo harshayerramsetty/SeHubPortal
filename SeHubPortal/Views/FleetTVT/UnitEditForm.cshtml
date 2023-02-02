@@ -103,13 +103,11 @@
                                                 Value = "Trailer"
                                             });
                                         }
-                                        @Html.DropDownListFor(m => m.Unit.survey_type, listItems, new { @id = "Type", @class = "text-center", @style = "text-align-last: center; width:100%; height:30px;", @required = "required", @onchange = "jsFunction(this.value);" })
+                                        @Html.DropDownListFor(m => m.Unit.survey_type, listItems, new { @id = "TypeEdit", @class = "text-center", @style = "text-align-last: center; width:100%; height:30px;", @required = "required", @onchange = "jsFunction(this.value);" })
 
                                     </div>
                                     <div class="col-lg-6" style="padding-left:5px">
-                                        @Html.DropDownListFor(m => m.Unit.survey_configuration, Model.ConfigurationsListTractor, new { @class = "text Tractor configuration", @style = "text-align-last: center; width:100%; height:30px", @required = "required", @onchange = "jsFunction(this.value);" })
-                                        @Html.DropDownListFor(m => m.Unit.survey_configuration, Model.ConfigurationsListTrailer, new { @class = "text Trailer configuration", @style = "text-align-last: center; width:100%; height:30px", @required = "required", @onchange = "jsFunction(this.value);" })
-
+                                        @Html.DropDownListFor(m => m.Unit.survey_configuration, Model.ConfigurationsList, new { @class = "text TractorEdit configuration", @style = "text-align-last: center; width:100%; height:30px", @required = "required", @id = "ConfigDropdown" })
                                     </div>
                                 </div>
                             </div>
@@ -231,37 +229,41 @@
                             </div>
                         }
 
-                        @if (Model.Unit.survey_type == "Tractor")
-                        {
-                            <div class="row ts1" style="margin-top:5px">
+                        <div class="tireTypeTrailer" style="@(Model.Unit.survey_type == "Trailer" ? "display: block" : "display: none")">
+                            <div class="row ts3" style="margin-top:5px; ">
                                 <div class="col-lg-5 text-right">
-                                    Steer Tire Size 
-                                </div>
-                                <div class="col-lg-7">
-                                    @Html.DropDownListFor(m => m.Unit.tire_size_1, Model.SizesList, new { @class = "text", @style = "text-align-last: center; width:100%; height:30px", @required = "required" })
-                                </div>
-                            </div>
-                            <div class="row ts2" style="margin-top:5px">
-                                <div class="col-lg-5 text-right">
-                                    Drive Tire Size 
-                                </div>
-                                <div class="col-lg-7">
-                                    @Html.DropDownListFor(m => m.Unit.tire_size_2, Model.SizesList, new { @class = "text", @style = "text-align-last: center; width:100%; height:30px", @required = "required" })
-                                </div>
-                            </div>
-                        }
-
-                        @if (Model.Unit.survey_type == "Trailer")
-                        {
-                            <div class="row ts3" style="margin-top:5px">
-                                <div class="col-lg-5 text-right">
-                                    Tire Size 3
+                                    Trailer Tire Size
                                 </div>
                                 <div class="col-lg-7">
                                     @Html.DropDownListFor(m => m.Unit.tire_size_3, Model.SizesList, new { @class = "text", @style = "text-align-last: center; width:100%; height:30px", @required = "required" })
                                 </div>
                             </div>
-                        }
+                            
+                        </div>
+                        <div class="tireTypeTractor" style="@(Model.Unit.survey_type == "Trailer" ? "display: none" : "display: block")">
+                            <div class="row ts2" style="margin-top:5px; ">
+                                <div class="col-lg-5 text-right">
+                                    Drive Tire Size
+                                </div>
+                                <div class="col-lg-7">
+                                    @Html.DropDownListFor(m => m.Unit.tire_size_2, Model.SizesList, new { @class = "text", @style = "text-align-last: center; width:100%; height:30px", @required = "required" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tireTypeTractor" style="@(Model.Unit.survey_type == "Trailer" ? "display: none" : "display: block")">
+                            <div class="row ts1" style="margin-top:5px; ">
+                                <div class="col-lg-5 text-right">
+                                    Steer Tire Size
+                                </div>
+                                <div class="col-lg-7">
+                                    @Html.DropDownListFor(m => m.Unit.tire_size_1, Model.SizesList, new { @class = "text", @style = "text-align-last: center; width:100%; height:30px", @required = "required" })
+                                </div>
+                            </div>
+                        </div>
+
+                        
+                        
+                        
 
                         <div class="row " style="margin-top:5px">
                             <div class="col-lg-5 text-right">
@@ -312,6 +314,44 @@
                 <button class="btn btn-success" type="submit" style="padding: 3px 30px 3px 30px">Save</button>
             </div>
         }
+
+    <script>
+        $("#TypeEdit").change(function () {
+            var Type = document.getElementById("TypeEdit").value;                       
+            if (Type == "Tractor") {
+                $('.tireTypeTrailer').css('display', 'none')
+                $('.tireTypeTractor').css('display', 'block')
+                $.ajax({
+                    url: '@Url.Action("PullConfig", "FleetTVT")',
+                    data: { type: Type },
+                    type: "POST",
+                    success: function (data) {
+                        var s = '';
+                        for (var i = 0; i < data.length; i++) {
+                            s += '<option value="' + data[i].value + '">' + data[i].text + '</option>';
+                        }
+                        $("#ConfigDropdown").html(s);
+                    }
+                });
+            }
+            if (Type == "Trailer") {
+                $('.tireTypeTrailer').css('display', 'block')
+                $('.tireTypeTractor').css('display', 'none')
+                $.ajax({
+                    url: '@Url.Action("PullConfig", "FleetTVT")',
+                    data: { type: Type },
+                    type: "POST",
+                    success: function (data) {
+                        var s = '';
+                        for (var i = 0; i < data.length; i++) {
+                            s += '<option value="' + data[i].value + '">' + data[i].text + '</option>';
+                        }
+                        $("#ConfigDropdown").html(s);
+                    }
+                });
+            }
+        });
+    </script>
 
     </body>
 

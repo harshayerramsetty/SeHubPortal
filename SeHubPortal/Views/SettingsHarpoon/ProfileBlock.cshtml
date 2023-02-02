@@ -5,7 +5,7 @@
         <title></title>
     </head>
     <body>
-        <div class="row" style="padding:0px; width:300px; ">
+        <div class="row" style="padding:0px; width:12vw; ">
 
             @{
                 string base64ProfilePic = "";
@@ -27,11 +27,11 @@
 
                 @if (base64ProfilePic == "")
                 {
-                    <img class="imageClass" data-toggle="modal" data-target="#upload" style="margin:0px; border-radius:80px; width:80px; height:80px" src="~/Content/profilepic.jpg" alt="ProfilePic" />
+                    <img class="imageClass" data-toggle="modal" data-target="#upload" style="margin:0px; border-radius:50%; width:3vw; height:3vw" src="~/Content/profilepic.jpg" alt="ProfilePic" />
                 }
                 else
                 {
-                    <img class="imageClass" data-toggle="modal" data-target="#upload" style="margin:0px; border-radius:80px; width:65px; height:65px" alt="profilePic" src="@base64ProfilePic" />
+                    <img class="imageClass" data-toggle="modal" data-target="#upload" style="margin:0px; border-radius:50%; width:3vw; height:3vw" alt="profilePic" src="@base64ProfilePic" />
                 }
 
 
@@ -39,8 +39,8 @@
             <div class="col-lg-9 text-left" style="display:flex; align-items:center; padding:0px 0px 0px 10px">
                 <div class="row">
                     <div class="col-lg-12">
-                        <p style="margin:0px; font-size:13px"><span><b>@Model.user.profile</b></span></p>
-                        <p style="margin:0px; font-size:13px">
+                        <p style="margin:0px; font-size:0.7vw"><span><b>@Model.user.profile</b></span></p>
+                        <p style="margin:0px; font-size:0.7vw">
                             @if (@Model.user.email.Length <= 29)
                             {
                                 @Model.user.email
@@ -50,7 +50,7 @@
                                 @Model.user.email.Substring(0, 29)
                             }
                         </p>
-                        <p style="margin:0px; font-size:15px">
+                        <p style="margin:0px; font-size:0.8vw">
                             <b>
                                 @if (Model.client != null)
                                 {

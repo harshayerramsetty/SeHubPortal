@@ -23,5 +23,6 @@ namespace SeHubPortal.ViewModel
         public List<SelectListItem> MatchedVehicals { get; set; }
         public string MatchedVehicle { get; set; }
         public string deleteTransactionNumber { get; set; }
+        public List<SelectListItem> ChargeAccounts { get; set; }
     }
 }

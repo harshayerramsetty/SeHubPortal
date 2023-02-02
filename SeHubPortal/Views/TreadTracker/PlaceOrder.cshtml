@@ -19,8 +19,7 @@
 
 
     <style type="text/css">
-
-
+        
         body {
             background-color: #f0f2f5;
         }
@@ -184,7 +183,11 @@
 
 
         input[type=text] {
-            height:20px
+            height:20px;
+        }
+
+        select{
+            width:150px
         }
 
         #info{
@@ -251,6 +254,7 @@
                 </div>
             </div>
             <div class="card-body" style="padding:0px">
+
                 <div class="row ">
                     <div class="col-md-12">
                         <div>
@@ -258,7 +262,7 @@
                             <div class="orderMainBody">
                                 @*here i remove class - container*@
                                 <div class="row justify-content-between">
-                                    <div class="col-md-5" style="padding-right:6px">
+                                    <div class="col-md-4" style="padding-right:6px">
                                         <div class="card shadow-sm flex-fill grow" style="        margin: 10px 0px 0px 0px;
 ">
                                             <div class="card-body" id="printThis" style="padding-top:10px; padding-bottom:10px">
@@ -293,7 +297,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-7" style="padding-left:6px">
+                                    <div class="col-md-8" style="padding-left:6px">
                                         <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
                                             <div class="card-body" style="padding-top:10px; padding-bottom:10px">
                                                 <div class="row" style="padding:0px 15px 0px 15px">
@@ -305,36 +309,97 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <div class="row" style="margin-bottom:5px">
-                                                            <div class="col-lg-6">
-                                                                Contact
-                                                            </div>
-                                                            <div class="col-lg-6">
 
+                                                    <div class="col-lg-4">
+                                                        <div class="row">
+                                                            <div class="col-lg-8">
+                                                                <div class="row" style="margin-bottom:5px">
+                                                                    <div class="col-lg-12">
+                                                                        Age Limit (Years)
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row" style="margin-bottom:5px">
+                                                                    <div class="col-lg-12">
+                                                                        Brand Name ONLY
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="row" style="margin-bottom:5px">
-                                                            <div class="col-lg-6">
-                                                                Email
-                                                            </div>
-                                                            <div class="col-lg-6">
-
+                                                            <div class="col-lg-4 text-right" style="padding-right:15px">
+                                                                <div class="row" style="margin-bottom:5px">
+                                                                    <div class="col-lg-12 text-right" style="font-weight:bold">
+                                                                        @if (Model.AgeLimit != null)
+                                                                        {
+                                                                            <span>@Model.AgeLimit</span>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span>N/A</span>
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row" style="margin-bottom:5px">
+                                                                    <div class="col-lg-12 text-right" style="font-weight:bold">
+                                                                        @if (Model.BrandRequirements != null)
+                                                                        {
+                                                                            <span>@Model.BrandRequirements</span>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span>N/A</span>
+                                                                        }
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-6 text-right" style="padding-right:15px">
-                                                        <div class="row" style="margin-bottom:5px">
-                                                            <div class="col-lg-12 text-right">
-                                                                @Model.customerInfo.Address1 @Model.customerInfo.Address2
+                                                    <div class="col-lg-8">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <div class="row" style="margin-bottom:5px">
+                                                                    <div class="col-lg-6">
+                                                                        Contact
+                                                                    </div>
+                                                                    <div class="col-lg-6" style="font-weight:bold">
+                                                                        @if (Model.customerContact != null)
+                                                                        {
+                                                                            <span>@Model.customerContact</span>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span>N/A</span>
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row" style="margin-bottom:5px">
+                                                                    <div class="col-lg-6">
+                                                                        Email
+                                                                    </div>
+                                                                    <div class="col-lg-6" style="font-weight:bold">
+                                                                        @if (Model.reportingEmail != null)
+                                                                        {
+                                                                            <span>@Model.reportingEmail</span>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span>N/A</span>
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6 text-right" style="padding-right:15px">
+                                                                <div class="row" style="margin-bottom:5px">
+                                                                    <div class="col-lg-12 text-right" style="font-weight:bold">
+                                                                        @Model.customerInfo.Address1 @Model.customerInfo.Address2
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row" style="margin-bottom:5px">
+                                                                    <div class="col-lg-12 text-right" style="font-weight:bold">
+                                                                        @Model.customerInfo.Address3, @Model.customerInfo.Postcode Canada
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                        <div class="row" style="margin-bottom:5px">
-                                                            <div class="col-lg-12 text-right">
-                                                                @Model.customerInfo.Address3, @Model.customerInfo.Postcode Canada
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    </div>                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -350,21 +415,27 @@
                                     <div class="card-body" style="padding:5px 10px 0px 10px;">
 
                                         @*
-                                            <div class="row justify-content-end TableTransactions">
-                                                <a href="@Url.Action("BackPlaceOrder", "TreadTracker")">
-                                                    <input type="button" class="btn btn-secondary transcationButtons" style="visibility:visible" value="Back" />
-                                                </a>
-                                                &nbsp;
+        <div class="row justify-content-end TableTransactions">
+            <a href="@Url.Action("BackPlaceOrder", "TreadTracker")">
+                <input type="button" class="btn btn-secondary transcationButtons" style="visibility:visible" value="Back" />
+            </a>
+            &nbsp;
 
-                                                &nbsp;
-                                                <a href="@Url.Action("CancelPlaceOrder", "TreadTracker")">
-                                                    <input type="button" class="btn btn-danger transcationButtons" style="visibility:visible" value="Cancel" />
-                                                </a>
-                                            </div>
+            &nbsp;
+            <a href="@Url.Action("CancelPlaceOrder", "TreadTracker")">
+                <input type="button" class="btn btn-danger transcationButtons" style="visibility:visible" value="Cancel" />
+            </a>
+        </div>
                                         *@
-                                        <table class="table table-striped text-center" style="margin:0px">
-                                            @*removing class   table-bordered*@
 
+                                        <div class="row" id="lodWheel" style="width:78vw; display:none; position:absolute">
+                                            <div class="col-md-12" style="width:100%; height: 40vh; display:flex; justify-content:center; align-items:center">
+                                                <img src="https://ctasehub.blob.core.windows.net/sehub-content/giphy.gif" style="height:15vh" alt="Alternate Text" />
+                                            </div>
+                                        </div>
+
+                                        <table class="table table-striped text-center" style="margin:0px" id="contentTable">
+                                            @*removing class   table-bordered*@
                                             <thead class="thead-dark">
                                                 <tr>
                                                     <th scope="col" style="font-size:8px; padding:0px" class="text-center">#</th>
@@ -373,7 +444,7 @@
                                                     <th scope="col" style="font-size:8px; padding:0px" class="text-center">Serial/DOT</th>
                                                     <th scope="col" style="font-size:8px; padding:0px" class="text-center">Size</th>
                                                     <th scope="col" style="font-size:8px; padding:0px" class="text-center">Brand</th>
-                                                    <th scope="col" style="font-size:8px; padding:0px" class="text-center">Virgin</th>
+                                                    <th scope="col" style="font-size:8px; padding:0px" class="text-center">Cap Count</th>
                                                     <th scope="col" style="font-size:8px; padding:0px" class="text-center">Tread</th>
                                                     <th scope="col" style="font-size:8px; padding:0px" class="text-center">Status</th>
                                                     <th scope="col" style="font-size:8px; padding:0px" class="text-center">Unit ID</th>
@@ -382,70 +453,88 @@
 
                                             <tbody style="font-size:13px">
                                                 <tr>
-                                                    <td style="padding:0px 10px; vertical-align:middle">
+                                                    <td style="padding:5px 10px; vertical-align:middle">
                                                         1
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <input type="text" id="line1" name="line1" maxlength="2" onkeypress="return onlyNumberKey(event)" class="lineStyle" onfocusout="line1Out()">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <select id="line1" name="line1" onchange="line1Out()" style="text-align-last:center; width:60px; visibility:visible">
+                                                            <option value=""></option>
+                                                            <option value="1">1</option>
+                                                            <option value="5">5</option>
+                                                            <option value="6">6</option>
+                                                            <option value="7">7</option>
+                                                            <option value="9">9</option>
+                                                            <option value="10">10</option>
+                                                        </select>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <input class="barcode" type="text" id="barcode1" onfocusout="validateBarcode(this.value, '#barcode1')" name="barcode1" maxlength="8" onkeypress="return onlyNumberKey(event)">
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <input class="serialDot" type="text" id="serial1" name="serial1" maxlength="9" style="text-transform:uppercase">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <input class="serialDot" type="text" id="serial1" name="serial1" maxlength="9" style="text-transform:uppercase" onfocusout="line1SerialOut(this.value, this.id)">
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="casing1Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Brand1Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <div id="Virgin1Div">
-                                                            <input type="checkbox" id="virgin1" name="virgin1">
-                                                        </div>
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <div id="CapCount1Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Tread1Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Status1Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <input type="text" id="unit1" name="unit1">
                                                     </td>
                                                 </tr>
+
                                                 <tr>
                                                     <td style="padding:0px 10px; vertical-align:middle">
                                                         2
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <input class="lineStyle" type="text" id="line2" name="line2" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line2Out()">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        @*
+                                                        <input class="lineStyle" type="text" id="line2" name="line2" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line2Out()">    
+                                                        *@
+                                                        
+                                                        <select id="line2" name="line2" onchange="line2Out()" style="text-align-last:center; width:95%; visibility:visible">
+                                                            <option value=""></option>
+                                                            <option value="1">1</option>
+                                                            <option value="5">5</option>
+                                                            <option value="6">6</option>
+                                                            <option value="7">7</option>
+                                                            <option value="9">9</option>
+                                                            <option value="10">10</option>
+                                                        </select>
+
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <input class="barcode" type="text" id="barcode2" onfocusout="validateBarcode(this.value, '#barcode2')" name="barcode2" maxlength="8" onkeypress="return onlyNumberKey(event)">
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <input class="serialDot" type="text" id="serial2" name="serial2" maxlength="8" style="text-transform:uppercase">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <input class="serialDot" type="text" id="serial2" name="serial2" maxlength="8" style="text-transform:uppercase" onfocusout="line1Seria2Out(this.value, this.id)">
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="casing2Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Brand2Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <div id="Virgin2Div">
-                                                            <input type="checkbox" id="virgin2" name="virgin2">
-                                                        </div>
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <div id="CapCount2Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Tread2Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Status2Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <input type="text" id="unit2" name="unit2">
                                                     </td>
                                                 </tr>
@@ -453,33 +542,39 @@
                                                     <td style="padding:0px 10px; vertical-align:middle">
                                                         3
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <input class="lineStyle" type="text" id="line3" name="line3" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line3Out()">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <select id="line3" name="line3" onchange="line3Out()" style="text-align-last:center; width:95%; visibility:visible">
+                                                            <option value=""></option>
+                                                            <option value="1">1</option>
+                                                            <option value="5">5</option>
+                                                            <option value="6">6</option>
+                                                            <option value="7">7</option>
+                                                            <option value="9">9</option>
+                                                            <option value="10">10</option>
+                                                        </select>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <input class="barcode" type="text" id="barcode3" onfocusout="validateBarcode(this.value, '#barcode3')" maxlength="8" name="barcode3" onkeypress="return onlyNumberKey(event)">
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <input class="serialDot" type="text" id="serial3" name="serial3" maxlength="8" style="text-transform: uppercase">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <input class="serialDot" type="text" id="serial3" name="serial3" maxlength="8" style="text-transform: uppercase" onfocusout="line3SerialOut(this.value, this.id)">
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="casing3Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Brand3Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <div id="Virgin3Div">
-                                                            <input type="checkbox" id="virgin3" name="virgin3">
-                                                        </div>
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <div id="CapCount3Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Tread3Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Status3Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <input type="text" id="unit3" name="unit3">
                                                     </td>
                                                 </tr>
@@ -487,33 +582,39 @@
                                                     <td style="padding:0px 10px; vertical-align:middle">
                                                         4
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <input class="lineStyle" type="text" id="line4" name="line4" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line4Out()">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <select id="line4" name="line4" onchange="line4Out()" style="text-align-last:center; width:95%; visibility:visible">
+                                                            <option value=""></option>
+                                                            <option value="1">1</option>
+                                                            <option value="5">5</option>
+                                                            <option value="6">6</option>
+                                                            <option value="7">7</option>
+                                                            <option value="9">9</option>
+                                                            <option value="10">10</option>
+                                                        </select>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <input class="barcode" type="text" id="barcode4" onfocusout="validateBarcode(this.value, '#barcode4')" maxlength="8" name="barcode4" onkeypress="return onlyNumberKey(event)">
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <input class="serialDot" type="text" id="serial4" name="serial4" maxlength="8" style=" text-transform: uppercase ">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <input class="serialDot" type="text" id="serial4" name="serial4" maxlength="8" style=" text-transform: uppercase " onfocusout="line4SerialOut(this.value, this.id)">
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="casing4Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Brand4Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <div id="Virgin4Div">
-                                                            <input type="checkbox" id="virgin4" name="virgin4">
-                                                        </div>
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <div id="CapCount4Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Tread4Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Status4Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <input type="text" id="unit4" name="unit4">
                                                     </td>
                                                 </tr>
@@ -521,33 +622,39 @@
                                                     <td style="padding:0px 10px; vertical-align:middle">
                                                         5
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <input class="lineStyle" type="text" id="line5" name="line5" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line5Out()">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <select id="line5" name="line5" onchange="line5Out()" style="text-align-last:center; width:95%; visibility:visible">
+                                                            <option value=""></option>
+                                                            <option value="1">1</option>
+                                                            <option value="5">5</option>
+                                                            <option value="6">6</option>
+                                                            <option value="7">7</option>
+                                                            <option value="9">9</option>
+                                                            <option value="10">10</option>
+                                                        </select>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <input class="barcode" type="text" id="barcode5" onfocusout="validateBarcode(this.value, '#barcode5')" name="barcode5" maxlength="8" onkeypress="return onlyNumberKey(event)">
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <input class="serialDot" type="text" id="serial5" name="serial5" maxlength="8" style="text-transform:uppercase">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <input class="serialDot" type="text" id="serial5" name="serial5" maxlength="8" style="text-transform:uppercase" onfocusout="line5SerialOut(this.value, this.id)">
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="casing5Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Brand5Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <div id="Virgin5Div">
-                                                            <input type="checkbox" id="virgin5" name="virgin5">
-                                                        </div>
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <div id="CapCount5Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Tread5Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Status5Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <input type="text" id="unit5" name="unit5">
                                                     </td>
                                                 </tr>
@@ -555,33 +662,39 @@
                                                     <td style="padding:0px 10px; vertical-align:middle">
                                                         6
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <input class="lineStyle" type="text" id="line6" name="line6" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line6Out()">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <select id="line6" name="line6" onchange="line6Out()" style="text-align-last:center; width:95%; visibility:visible">
+                                                            <option value=""></option>
+                                                            <option value="1">1</option>
+                                                            <option value="5">5</option>
+                                                            <option value="6">6</option>
+                                                            <option value="7">7</option>
+                                                            <option value="9">9</option>
+                                                            <option value="10">10</option>
+                                                        </select>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <input class="barcode" type="text" id="barcode6" onfocusout="validateBarcode(this.value, '#barcode6')" name="barcode6" maxlength="8" onkeypress="return onlyNumberKey(event)">
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <input class="serialDot" type="text" id="serial6" name="serial6" maxlength="8" style="text-transform:uppercase">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <input class="serialDot" type="text" id="serial6" name="serial6" maxlength="8" style="text-transform:uppercase" onfocusout="line6SerialOut(this.value, this.id)">
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="casing6Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Brand6Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <div id="Virgin6Div">
-                                                            <input type="checkbox" id="virgin6" name="virgin6">
-                                                        </div>
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <div id="CapCount6Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Tread6Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Status6Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <input type="text" id="unit6" name="unit6">
                                                     </td>
                                                 </tr>
@@ -589,72 +702,79 @@
                                                     <td style="padding:0px 10px; vertical-align:middle">
                                                         7
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <input class="lineStyle" type="text" id="line7" name="line7" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line7Out()">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <select id="line7" name="line7" onchange="line7Out()" style="text-align-last:center; width:95%; visibility:visible">
+                                                            <option value=""></option>
+                                                            <option value="1">1</option>
+                                                            <option value="5">5</option>
+                                                            <option value="6">6</option>
+                                                            <option value="7">7</option>
+                                                            <option value="9">9</option>
+                                                            <option value="10">10</option>
+                                                        </select>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <input class="barcode" type="text" id="barcode7" onfocusout="validateBarcode(this.value, '#barcode7')" name="barcode7" maxlength="8" onkeypress="return onlyNumberKey(event)">
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <input class="serialDot" type="text" id="serial7" name="serial7" maxlength="8" style="text-transform:uppercase">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <input class="serialDot" type="text" id="serial7" name="serial7" maxlength="8" style="text-transform:uppercase" onfocusout="line7SerialOut(this.value, this.id)">
                                                     </td>
-                                                    <td style="        padding: 0px;
-        vertical-align: middle">
+                                                    <td style="padding:5px 0px; vertical-align: middle">
                                                         <div id="casing7Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Brand7Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <div id="Virgin7Div">
-                                                            <input type="checkbox" id="virgin7" name="virgin7">
-                                                        </div>
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <div id="CapCount7Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Tread7Div"></div>
                                                     </td>
-                                                    <td style="        padding: 0px;
-        vertical-align: middle">
+                                                    <td style="padding:5px 0px; vertical-align: middle">
                                                         <div id="Status7Div"></div>
                                                     </td>
-                                                    <td style="        padding: 0px;
-        vertical-align: middle">
+                                                    <td style="padding:5px 0px; vertical-align: middle">
                                                         <input type="text" id="unit7" name="unit7">
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="        padding: 0px 10px;
-        vertical-align: middle">
+                                                    <td style="padding: 0px 10px; vertical-align: middle">
                                                         8
                                                     </td>
-                                                    <td style="        padding: 0px;
-        vertical-align: middle">
-                                                        <input class="lineStyle" type="text" id="line8" name="line8" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line8Out()">
+                                                    <td style="padding:5px 0px; vertical-align: middle">
+                                                        <select id="line8" name="line8" onchange="line8Out()" style="text-align-last:center; width:95%; visibility:visible">
+                                                            <option value=""></option>
+                                                            <option value="1">1</option>
+                                                            <option value="5">5</option>
+                                                            <option value="6">6</option>
+                                                            <option value="7">7</option>
+                                                            <option value="9">9</option>
+                                                            <option value="10">10</option>
+                                                        </select>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <input class="barcode" type="text" id="barcode8" onfocusout="validateBarcode(this.value, '#barcode8')" name="barcode8" maxlength="8" onkeypress="return onlyNumberKey(event)">
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <input class="serialDot" type="text" id="serial8" name="serial8" maxlength="8" style="text-transform:uppercase">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <input class="serialDot" type="text" id="serial8" name="serial8" maxlength="8" style="text-transform:uppercase" onfocusout="line8SerialOut(this.value, this.id)">
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="casing8Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Brand8Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <div id="Virgin8Div">
-                                                            <input type="checkbox" id="virgin8" name="virgin8">
-                                                        </div>
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <div id="CapCount8Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Tread8Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Status8Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <input type="text" id="unit8" name="unit8">
                                                     </td>
                                                 </tr>
@@ -662,33 +782,39 @@
                                                     <td style="padding:0px 10px; vertical-align:middle">
                                                         9
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <input class="lineStyle" type="text" id="line9" name="line9" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line9Out()">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <select id="line9" name="line9" onchange="line9Out()" style="text-align-last:center; width:95%; visibility:visible">
+                                                            <option value=""></option>
+                                                            <option value="1">1</option>
+                                                            <option value="5">5</option>
+                                                            <option value="6">6</option>
+                                                            <option value="7">7</option>
+                                                            <option value="9">9</option>
+                                                            <option value="10">10</option>
+                                                        </select>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <input class="barcode" type="text" id="barcode9" onfocusout="validateBarcode(this.value, '#barcode9')" name="barcode9" maxlength="8" onkeypress="return onlyNumberKey(event)">
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <input class="serialDot" type="text" id="serial9" name="serial9" maxlength="8" style="text-transform:uppercase">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <input class="serialDot" type="text" id="serial9" name="serial9" maxlength="8" style="text-transform:uppercase" onfocusout="line9SerialOut(this.value, this.id)">
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="casing9Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Brand9Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <div id="Virgin9Div">
-                                                            <input type="checkbox" id="virgin9" name="virgin9">
-                                                        </div>
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <div id="CapCount9Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Tread9Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Status9Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <input type="text" id="unit9" name="unit9">
                                                     </td>
                                                 </tr>
@@ -696,33 +822,39 @@
                                                     <td style="padding:0px 10px; vertical-align:middle">
                                                         10
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <input class="lineStyle" type="text" id="line10" name="line10" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line10Out()">
+                                                    <td style="padding:5px 0px; vertical-align: middle">
+                                                        <select id="line10" name="line10" onchange="line10Out()" style="text-align-last:center; width:95%; visibility:visible">
+                                                            <option value=""></option>
+                                                            <option value="1">1</option>
+                                                            <option value="5">5</option>
+                                                            <option value="6">6</option>
+                                                            <option value="7">7</option>
+                                                            <option value="9">9</option>
+                                                            <option value="10">10</option>
+                                                        </select>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <input class="barcode" type="text" id="barcode10" onfocusout="validateBarcode(this.value, '#barcode10')" name="barcode10" maxlength="8" onkeypress="return onlyNumberKey(event)">
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <input class="serialDot" type="text" id="serial10" name="serial10" maxlength="8" style="text-transform:uppercase">
+                                                    <td style="padding:5px 0px; vertical-align: middle">
+                                                        <input class="serialDot" type="text" id="serial10" name="serial10" maxlength="8" style="text-transform:uppercase" onfocusout="line10SerialOut(this.value, this.id)">
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="casing10Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Brand10Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <div id="Virgin10Div">
-                                                            <input type="checkbox" id="virgin10" name="virgin10">
-                                                        </div>
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <div id="CapCount10Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align: middle">
                                                         <div id="Tread10Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Status10Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align: middle">
                                                         <input type="text" id="unit10" name="unit10">
                                                     </td>
                                                 </tr>
@@ -730,33 +862,39 @@
                                                     <td style="padding:0px 10px; vertical-align:middle">
                                                         11
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <input class="lineStyle" type="text" id="line11" name="line11" maxlength="2" onkeypress="return onlyNumberKey(event)" onfocusout="line11Out()">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <select id="line11" name="line11" onchange="line11Out()" style="text-align-last:center; width:95%; visibility:visible">
+                                                            <option value=""></option>
+                                                            <option value="1">1</option>
+                                                            <option value="5">5</option>
+                                                            <option value="6">6</option>
+                                                            <option value="7">7</option>
+                                                            <option value="9">9</option>
+                                                            <option value="10">10</option>
+                                                        </select>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <input class="barcode" type="text" id="barcode11" onfocusout="validateBarcode(this.value, '#barcode11')" name="barcode11" maxlength="8" onkeypress="return onlyNumberKey(event)">
                                                     </td>
-                                                    <td style=" padding:0px; vertical-align:middle">
-                                                        <input class="serialDot" type="text" id="serial11" name="serial11" maxlength="8" style="        text-transform: uppercase">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <input class="serialDot" type="text" id="serial11" name="serial11" maxlength="8" style="text-transform: uppercase" onfocusout="line11SerialOut(this.value, this.id)">
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="casing11Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Brand11Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
-                                                        <div id="Virgin11Div">
-                                                            <input type="checkbox" id="virgin11" name="virgin11">
-                                                        </div>
+                                                    <td style="padding:5px 0px; vertical-align:middle">
+                                                        <div id="CapCount11Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align: middle">
                                                         <div id="Tread11Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="Status11Div"></div>
                                                     </td>
-                                                    <td style="padding:0px; vertical-align:middle">
+                                                    <td style="padding:5px 0px; vertical-align:middle">
                                                         <input type="text" id="unit11" name="unit11">
                                                     </td>
                                                 </tr>
@@ -764,7 +902,7 @@
                                         </table>
 
                                         <div class="row" style=" color:#b4b6b8; padding:10px">
-                                            <div class="col-md-12" style="display:flex; justify-content:space-evenly; align-items:center">
+                                            <div class="col-md-12" style="display: flex; justify-content: space-evenly; align-items: center">
                                                 <span>1 - RET (Retread Only)</span>
                                                 <span>5 - RPO (Repair Only)</span>
                                                 <span>6 - CCR (Casing Credit)</span>
@@ -782,10 +920,9 @@
                                     <div class="card-header" style="        padding: 3px 3px 3px 15px">
                                         <h6 class="card-title mb-0 d-inline-block">Comments</h6>
                                     </div>
-                                    <div class="card-body" style="        padding: 10px
-">
+                                    <div class="card-body" style=" padding: 10px ">
                                         <div style="width:100%">
-                                            <textarea id="comments"></textarea>
+                                            @Html.TextAreaFor(m => m.comments, new { @class = "text", @id = "comments" })
                                         </div>
                                     </div>
                                 </div>
@@ -793,9 +930,7 @@
                                 <div class="modal BarcodeValidation" data-backdrop="static" data-keyboard="false" id="BarcodeValidation">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
-                                            <div class="modal-header" style="        background-color: #ff4a4a;
-        padding: 5px 2px 0px 2px
-">
+                                            <div class="modal-header" style="background-color: #ff4a4a; padding: 5px 2px 0px 2px">
                                                 <h5 style="margin-left:auto; margin-right:auto; color:white">Acknowledgment</h5>
                                             </div>
                                             <div class="modal-body">
@@ -805,7 +940,7 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer" style="padding: 3px 0px 3px 0px">
-                                                <button style="padding:2px 40px 2px 40px; margin-left:auto; margin-right:auto" class="btn btn-primary" onclick="okClick()" data-dismiss="modal">OK</button>
+                                                <button style="padding: 2px 40px 2px 40px; margin-left: auto; margin-right: auto" class="btn btn-primary" onclick="okClick()" data-dismiss="modal">OK</button>
                                             </div>
                                         </div>
                                     </div>
@@ -827,9 +962,41 @@
 
     <script>
         $(".serialDot").focusout(function () {
+
+            $('#lodWheel').css('display', 'block')
+            $('#contentTable').css('opacity', '0.1')
+
             var code = $(this).val().substr(0, 2)
             var idis = $(this).attr('id')
-            var lastChar = idis[idis.length - 1];
+            var lastChar = idis.replace("serial", "");
+
+            var lineNum = idis.replace("serial", "line");
+            var lineNumTread = idis.replace("serial", "tread");
+
+            var year = new Date().getFullYear().toString();
+
+            /*
+             Below code is for checking if the serial dot is older than 7 years and changing the line code and other features.
+             */
+
+            /*
+             
+             if (parseInt(year.substr(year.length - 2)) - parseInt($(this).val().substr($(this).val().length - 2)) >= 7) {
+                $('#' + lineNum).val(6);
+
+                let element = document.getElementById(lineNumTread);
+
+                var option = document.createElement("option");
+                option.text = "TBD";
+                option.value = "TBD";
+                element.appendChild(option);
+                element.value = "TBD";
+
+                $('#' + lineNumTread).prop('disabled', true);
+            }
+             
+             */
+
 
             $.ajax({
                 url: '@Url.Action("getDropdownOptions", "Tools")',
@@ -873,14 +1040,18 @@
                         sizeID = '#casing' + lastChar
                         $(sizeID).val(data)
                     }
-                    
+
+                    $('#lodWheel').css('display', 'none')
+                    $('#contentTable').css('opacity', '1')
                 }
             });
+
 
         });
     </script>
 
     <script>
+
 
         document.getElementById("btnPrint").onclick = function () {
             window.print();
@@ -1044,6 +1215,7 @@
             $('#casing1').prop('required',true);
             $('#brand1').prop('required',true);
             $('#tread1').prop('required',true);
+            $('#capCount1').prop('required',true);
             commonLineFunction("1", lineValue);
             document.getElementById("barcode1").focus();
         }
@@ -1054,7 +1226,8 @@
             $('#serial2').prop('required', true);
             $('#casing2').prop('required',true);
             $('#brand2').prop('required',true);
-            $('#tread2').prop('required',true);
+            $('#tread2').prop('required', true);
+            $('#capCount2').prop('required',true);
             commonLineFunction("2", lineValue);
             document.getElementById("barcode2").focus();
         }
@@ -1064,7 +1237,8 @@
             $('#serial3').prop('required', true);
             $('#casing3').prop('required',true);
             $('#brand3').prop('required',true);
-            $('#tread3').prop('required',true);
+            $('#tread3').prop('required', true);
+            $('#capCount3').prop('required',true);
             commonLineFunction("3", lineValue);
             document.getElementById("barcode3").focus();
         }
@@ -1074,7 +1248,8 @@
             $('#serial4').prop('required', true);
             $('#casing4').prop('required',true);
             $('#brand4').prop('required',true);
-            $('#tread4').prop('required',true);
+            $('#tread4').prop('required', true);
+            $('#capCount4').prop('required',true);
             commonLineFunction("4", lineValue);
             document.getElementById("barcode4").focus();
         }
@@ -1085,7 +1260,8 @@
             $('#serial5').prop('required', true);
             $('#casing5').prop('required',true);
             $('#brand5').prop('required',true);
-            $('#tread5').prop('required',true);
+            $('#tread5').prop('required', true);
+            $('#capCount5').prop('required',true);
             commonLineFunction("5", lineValue);
             document.getElementById("barcode5").focus();
         }
@@ -1096,7 +1272,8 @@
             $('#serial6').prop('required', true);
             $('#casing6').prop('required',true);
             $('#brand6').prop('required',true);
-            $('#tread6').prop('required',true);
+            $('#tread6').prop('required', true);
+            $('#capCount6').prop('required',true);
             commonLineFunction("6", lineValue);
             document.getElementById("barcode6").focus();
         }
@@ -1107,7 +1284,8 @@
             $('#serial7').prop('required', true);
             $('#casing7').prop('required',true);
             $('#brand7').prop('required',true);
-            $('#tread7').prop('required',true);
+            $('#tread7').prop('required', true);
+            $('#capCount7').prop('required',true);
             commonLineFunction("7", lineValue);
             document.getElementById("barcode7").focus();
         }
@@ -1118,7 +1296,8 @@
             $('#serial8').prop('required', true);
             $('#casing8').prop('required',true);
             $('#brand8').prop('required',true);
-            $('#tread8').prop('required',true);
+            $('#tread8').prop('required', true);
+            $('#capCount8').prop('required',true);
             commonLineFunction("8", lineValue);
             document.getElementById("barcode8").focus();
         }
@@ -1129,7 +1308,8 @@
             $('#serial9').prop('required', true);
             $('#casing9').prop('required',true);
             $('#brand9').prop('required',true);
-            $('#tread9').prop('required',true);
+            $('#tread9').prop('required', true);
+            $('#capCount9').prop('required',true);
             commonLineFunction("9", lineValue);
             document.getElementById("barcode9").focus();
         }
@@ -1140,7 +1320,8 @@
             $('#serial10').prop('required', true);
             $('#casing10').prop('required',true);
             $('#brand10').prop('required',true);
-            $('#tread10').prop('required',true);
+            $('#tread10').prop('required', true);
+            $('#capCount10').prop('required',true);
             commonLineFunction("10", lineValue);
             document.getElementById("barcode10").focus();
         }
@@ -1151,7 +1332,8 @@
             $('#serial11').prop('required', true);
             $('#casing11').prop('required',true);
             $('#brand11').prop('required',true);
-            $('#tread11').prop('required',true);
+            $('#tread11').prop('required', true);
+            $('#capCount11').prop('required',true);
             commonLineFunction("11", lineValue);
             document.getElementById("barcode11").focus();
         }
@@ -1164,7 +1346,7 @@
             var serial = "serial" + lineNum;
             var casing = "casing" + lineNum;
             var brand = "brand" + lineNum;
-            var virgin = "virgin" + lineNum;
+            var capCount = "capCount" + lineNum;
             var tread = "tread" + lineNum;
             var status = "status" + lineNum;
             var unit = "unit" + lineNum;
@@ -1184,7 +1366,7 @@
                 document.getElementById(barcode).style.visibility = "visible";
                 document.getElementById(serial).style.visibility = "visible";
                 document.getElementById(brand).style.visibility = "visible";
-                document.getElementById(virgin).style.visibility = "visible";
+                document.getElementById(capCount).style.visibility = "visible";
                 document.getElementById(unit).style.visibility = "visible";
                 document.getElementById(tread).style.visibility = "visible";
                 document.getElementById(status).style.visibility = "visible";
@@ -1200,6 +1382,7 @@
 
                 if (lineValue == 9) {
                     document.getElementById(status).style.visibility = "visible";
+                    document.getElementById(status).required = true;
                     //document.getElementById(casing).required = true;
                 }
                 else {
@@ -1278,6 +1461,7 @@
                 document.getElementById(casing).removeAttribute("required");
                 document.getElementById(brand).removeAttribute("required");
                 document.getElementById(tread).removeAttribute("required");
+                document.getElementById(capCount).removeAttribute("required");
 
 
                 document.getElementById(barcode).style.visibility = "hidden";
@@ -1287,7 +1471,7 @@
                 document.getElementById(unit).style.visibility = "hidden";
                 document.getElementById(tread).style.visibility = "hidden";
                 document.getElementById(status).style.visibility = "hidden";
-                document.getElementById(virgin).style.visibility = "hidden";
+                document.getElementById(capCount).style.visibility = "hidden";
                 var test = "line2";
                 console.log(document.getElementById(line).value.length)
                 console.log(document.getElementById(line).value)
@@ -1350,6 +1534,7 @@
                     var casing = ["--Select--", "11R24.5", "285/75R24.5", "275/80R24.5", "11R22.5", "12R22.5", "315/80R22.5", "295/80R22.5", "295/75R22.5", "275/80R22.5", "275/70R22.5", "265/75R22.5", "255/70R22.5", "265/70R19.5", "245/70R19.5", "225/70R19.5"];
                     var status = ["--Select--", "PL1-TOO OLD", "RE1-TOO MANY NALL HOLES", "SWB-SIDEWALL BULGE", "SWC-SIDEWALL CURB DAMAGE / ABRASION", "SWZ-ZIPPER", "SH1-SHOULDER IMPACT BREAK", "SW1-SIDE WALL FATIGUE", "SW2-SIDE WALL CUT", "SW3-SIDE WALL HOLE", "SW6-SIDEWALL IMPACT BRK", "SW8-WEATHER CRACKING  / OZONE", "TR1-EXPOSED BELTS", "TR3-EXCESSIVE WEAR", "TR6-TREAD IMPACT BREAK", ];
                     var brands = ["--Select--", "BFGoodrich", "Bridgestone", "Continental", "Dayton", "Dunlop", "Firestone", "General", "Goodyear", "Kelly", "Michelin", "Nokian", "Sumitomo", "Toyo", "Uniroyal", "Yokohama", "Chinese-ALL"];
+                    var capCounts = ["--Select--", "Virgin", "Capped Prior 1", "Capped Prior 2+"];
                     var tread =  data;
                     var treadCustomer = data
 
@@ -1379,6 +1564,12 @@
                     selectstatusList1.setAttribute("name", "status1");
                     status1Div.appendChild(selectstatusList1);
 
+                    var CapCount1Div = document.getElementById("CapCount1Div");
+                    var selectCapCountList1 = document.createElement("select");
+                    selectCapCountList1.setAttribute("id", "capCount1");
+                    selectCapCountList1.setAttribute("name", "capCount1");
+                    CapCount1Div.appendChild(selectCapCountList1);
+
                     //Row 1 - End
 
                     //Row 2 - Start
@@ -1405,6 +1596,12 @@
                     selectstatusList2.setAttribute("id", "status2");
                     selectstatusList2.setAttribute("name", "status2");
                     status2Div.appendChild(selectstatusList2);
+
+                    var CapCount2Div = document.getElementById("CapCount2Div");
+                    var selectCapCountList2 = document.createElement("select");
+                    selectCapCountList2.setAttribute("id", "capCount2");
+                    selectCapCountList2.setAttribute("name", "capCount2");
+                    CapCount2Div.appendChild(selectCapCountList2);
 
                     //Row 2 - End
 
@@ -1433,6 +1630,12 @@
                     selectstatusList3.setAttribute("name", "status3");
                     status3Div.appendChild(selectstatusList3);
 
+                    var CapCount3Div = document.getElementById("CapCount3Div");
+                    var selectCapCountList3 = document.createElement("select");
+                    selectCapCountList3.setAttribute("id", "capCount3");
+                    selectCapCountList3.setAttribute("name", "capCount3");
+                    CapCount3Div.appendChild(selectCapCountList3);
+
                     //Row 3 - End
 
                     //Row 4 - Start
@@ -1459,6 +1662,12 @@
                     selectstatusList4.setAttribute("id", "status4");
                     selectstatusList4.setAttribute("name", "status4");
                     status4Div.appendChild(selectstatusList4);
+
+                    var CapCount4Div = document.getElementById("CapCount4Div");
+                    var selectCapCountList4 = document.createElement("select");
+                    selectCapCountList4.setAttribute("id", "capCount4");
+                    selectCapCountList4.setAttribute("name", "capCount4");
+                    CapCount4Div.appendChild(selectCapCountList4);
 
                     //Row 4 - End
 
@@ -1487,6 +1696,12 @@
                     selectstatusList5.setAttribute("name", "status5");
                     status5Div.appendChild(selectstatusList5);
 
+                    var CapCount5Div = document.getElementById("CapCount5Div");
+                    var selectCapCountList5 = document.createElement("select");
+                    selectCapCountList5.setAttribute("id", "capCount5");
+                    selectCapCountList5.setAttribute("name", "capCount5");
+                    CapCount5Div.appendChild(selectCapCountList5);
+
                     //Row 5 - End
 
                     //Row 6 - Start
@@ -1513,6 +1728,12 @@
                     selectstatusList6.setAttribute("id", "status6");
                     selectstatusList6.setAttribute("name", "status6");
                     status6Div.appendChild(selectstatusList6);
+
+                    var CapCount6Div = document.getElementById("CapCount6Div");
+                    var selectCapCountList6 = document.createElement("select");
+                    selectCapCountList6.setAttribute("id", "capCount6");
+                    selectCapCountList6.setAttribute("name", "capCount6");
+                    CapCount6Div.appendChild(selectCapCountList6);
 
                     //Row 6 - End
 
@@ -1541,6 +1762,12 @@
                     selectstatusList7.setAttribute("name", "status7");
                     status7Div.appendChild(selectstatusList7);
 
+                    var CapCount7Div = document.getElementById("CapCount7Div");
+                    var selectCapCountList7 = document.createElement("select");
+                    selectCapCountList7.setAttribute("id", "capCount7");
+                    selectCapCountList7.setAttribute("name", "capCount7");
+                    CapCount7Div.appendChild(selectCapCountList7);
+
                     //Row 7 - End
 
                     //Row 8 - Start
@@ -1567,6 +1794,12 @@
                     selectstatusList8.setAttribute("id", "status8");
                     selectstatusList8.setAttribute("name", "status8");
                     status8Div.appendChild(selectstatusList8);
+
+                    var CapCount8Div = document.getElementById("CapCount8Div");
+                    var selectCapCountList8 = document.createElement("select");
+                    selectCapCountList8.setAttribute("id", "capCount8");
+                    selectCapCountList8.setAttribute("name", "capCount8");
+                    CapCount8Div.appendChild(selectCapCountList8);
 
                     //Row 8 - End
 
@@ -1595,6 +1828,12 @@
                     selectstatusList9.setAttribute("name", "status9");
                     status9Div.appendChild(selectstatusList9);
 
+                    var CapCount9Div = document.getElementById("CapCount9Div");
+                    var selectCapCountList9 = document.createElement("select");
+                    selectCapCountList9.setAttribute("id", "capCount9");
+                    selectCapCountList9.setAttribute("name", "capCount9");
+                    CapCount9Div.appendChild(selectCapCountList9);
+
                     //Row 9 - End
 
                     //Row 10 - Start
@@ -1622,6 +1861,12 @@
                     selectstatusList10.setAttribute("name", "status10");
                     status10Div.appendChild(selectstatusList10);
 
+                    var CapCount10Div = document.getElementById("CapCount10Div");
+                    var selectCapCountList10 = document.createElement("select");
+                    selectCapCountList10.setAttribute("id", "capCount10");
+                    selectCapCountList10.setAttribute("name", "capCount10");
+                    CapCount10Div.appendChild(selectCapCountList10);
+
                     //Row 10 - End
 
                     //Row 11 - Start
@@ -1648,6 +1893,12 @@
                     selectstatusList11.setAttribute("id", "status11");
                     selectstatusList11.setAttribute("name", "status11");
                     status11Div.appendChild(selectstatusList11);
+
+                    var CapCount11Div = document.getElementById("CapCount11Div");
+                    var selectCapCountList11 = document.createElement("select");
+                    selectCapCountList11.setAttribute("id", "capCount11");
+                    selectCapCountList11.setAttribute("name", "capCount11");
+                    CapCount11Div.appendChild(selectCapCountList11);
 
                     //Row 11 - End
 
@@ -1783,7 +2034,7 @@
                             option1.text = status[i];
                         }
                         else {
-                            option1.setAttribute("value", status[i]);
+                            option1.setAttribute("value", status[i].split('-')[0]);
                             option1.text = status[i];
                         }
                         selectstatusList1.appendChild(option1);
@@ -1794,7 +2045,7 @@
                             option2.text = status[i];
                         }
                         else {
-                            option2.setAttribute("value", status[i]);
+                            option2.setAttribute("value", status[i].split('-')[0]);
                             option2.text = status[i];
                         }
                         selectstatusList2.appendChild(option2);
@@ -1805,7 +2056,7 @@
                             option3.text = status[i];
                         }
                         else {
-                            option3.setAttribute("value", status[i]);
+                            option3.setAttribute("value", status[i].split('-')[0]);
                             option3.text = status[i];
                         }
                         selectstatusList3.appendChild(option3);
@@ -1816,7 +2067,7 @@
                             option4.text = status[i];
                         }
                         else {
-                            option4.setAttribute("value", status[i]);
+                            option4.setAttribute("value", status[i].split('-')[0]);
                             option4.text = status[i];
                         }
                         selectstatusList4.appendChild(option4);
@@ -1827,7 +2078,7 @@
                             option5.text = status[i];
                         }
                         else {
-                            option5.setAttribute("value", status[i]);
+                            option5.setAttribute("value", status[i].split('-')[0]);
                             option5.text = status[i];
                         }
                         selectstatusList5.appendChild(option5);
@@ -1838,7 +2089,7 @@
                             option6.text = status[i];
                         }
                         else {
-                            option6.setAttribute("value", status[i]);
+                            option6.setAttribute("value", status[i].split('-')[0]);
                             option6.text = status[i];
                         }
                         selectstatusList6.appendChild(option6);
@@ -1850,7 +2101,7 @@
                             option7.text = status[i];
                         }
                         else {
-                            option7.setAttribute("value", status[i]);
+                            option7.setAttribute("value", status[i].split('-')[0]);
                             option7.text = status[i];
                         }
                         selectstatusList7.appendChild(option7);
@@ -1861,7 +2112,7 @@
                             option8.text = status[i];
                         }
                         else {
-                            option8.setAttribute("value", status[i]);
+                            option8.setAttribute("value", status[i].split('-')[0]);
                             option8.text = status[i];
                         }
                         selectstatusList8.appendChild(option8);
@@ -1872,7 +2123,7 @@
                             option9.text = status[i];
                         }
                         else {
-                            option9.setAttribute("value", status[i]);
+                            option9.setAttribute("value", status[i].split('-')[0]);
                             option9.text = status[i];
                         }
                         selectstatusList9.appendChild(option9);
@@ -1883,7 +2134,7 @@
                             option10.text = status[i];
                         }
                         else {
-                            option10.setAttribute("value", status[i]);
+                            option10.setAttribute("value", status[i].split('-')[0]);
                             option10.text = status[i];
                         }
                         selectstatusList10.appendChild(option10);
@@ -1894,7 +2145,7 @@
                             option11.text = status[i];
                         }
                         else {
-                            option11.setAttribute("value", status[i]);
+                            option11.setAttribute("value", status[i].split('-')[0]);
                             option11.text = status[i];
                         }
                         selectstatusList11.appendChild(option11);
@@ -2022,6 +2273,130 @@
                             option11.text = brands[i];
                         }
                         selectbrandList11.appendChild(option11);
+                    }
+
+                    for (i = 0; i < capCounts.length; i++) {
+                        var option1 = document.createElement("option");
+                        if (capCounts[i] == "--Select--") {
+                            option1.setAttribute("value", "");
+                            option1.text = capCounts[i];
+                        }
+                        else {
+                            option1.setAttribute("value", capCounts[i]);
+                            option1.text = capCounts[i];
+                        }
+                        selectCapCountList1.appendChild(option1);
+
+                        var option2 = document.createElement("option");
+                        if (capCounts[i] == "--Select--") {
+                            option2.setAttribute("value", "");
+                            option2.text = capCounts[i];
+                        }
+                        else {
+                            option2.setAttribute("value", capCounts[i]);
+                            option2.text = capCounts[i];
+                        }
+                        selectCapCountList2.appendChild(option2);
+
+                        var option3 = document.createElement("option");
+                        if (capCounts[i] == "--Select--") {
+                            option3.setAttribute("value", "");
+                            option3.text = capCounts[i];
+                        }
+                        else {
+                            option3.setAttribute("value", capCounts[i]);
+                            option3.text = capCounts[i];
+                        }
+                        selectCapCountList3.appendChild(option3);
+
+                        var option4 = document.createElement("option");
+                        if (capCounts[i] == "--Select--") {
+                            option4.setAttribute("value", "");
+                            option4.text = capCounts[i];
+                        }
+                        else {
+                            option4.setAttribute("value", capCounts[i]);
+                            option4.text = capCounts[i];
+                        }
+                        selectCapCountList4.appendChild(option4);
+
+                        var option5 = document.createElement("option");
+                        if (capCounts[i] == "--Select--") {
+                            option5.setAttribute("value", "");
+                            option5.text = capCounts[i];
+                        }
+                        else {
+                            option5.setAttribute("value", capCounts[i]);
+                            option5.text = capCounts[i];
+                        }
+                        selectCapCountList5.appendChild(option5);
+
+                        var option6 = document.createElement("option");
+                        if (capCounts[i] == "--Select--") {
+                            option6.setAttribute("value", "");
+                            option6.text = capCounts[i];
+                        }
+                        else {
+                            option6.setAttribute("value", capCounts[i]);
+                            option6.text = capCounts[i];
+                        }
+                        selectCapCountList6.appendChild(option6);
+
+                        var option7 = document.createElement("option");
+                        if (capCounts[i] == "--Select--") {
+                            option7.setAttribute("value", "");
+                            option7.text = capCounts[i];
+                        }
+                        else {
+                            option7.setAttribute("value", capCounts[i]);
+                            option7.text = capCounts[i];
+                        }
+                        selectCapCountList7.appendChild(option7);
+
+                        var option8 = document.createElement("option");
+                        if (capCounts[i] == "--Select--") {
+                            option8.setAttribute("value", "");
+                            option8.text = capCounts[i];
+                        }
+                        else {
+                            option8.setAttribute("value", capCounts[i]);
+                            option8.text = capCounts[i];
+                        }
+                        selectCapCountList8.appendChild(option8);
+
+                        var option9 = document.createElement("option");
+                        if (capCounts[i] == "--Select--") {
+                            option9.setAttribute("value", "");
+                            option9.text = capCounts[i];
+                        }
+                        else {
+                            option9.setAttribute("value", capCounts[i]);
+                            option9.text = capCounts[i];
+                        }
+                        selectCapCountList9.appendChild(option9);
+
+                        var option10 = document.createElement("option");
+                        if (capCounts[i] == "--Select--") {
+                            option10.setAttribute("value", "");
+                            option10.text = capCounts[i];
+                        }
+                        else {
+                            option10.setAttribute("value", capCounts[i]);
+                            option10.text = capCounts[i];
+                        }
+                        selectCapCountList10.appendChild(option10);
+
+                        var option11 = document.createElement("option");
+                        if (capCounts[i] == "--Select--") {
+                            option11.setAttribute("value", "");
+                            option11.text = capCounts[i];
+                        }
+                        else {
+                            option11.setAttribute("value", capCounts[i]);
+                            option11.text = capCounts[i];
+                        }
+                        selectCapCountList11.appendChild(option11);
+
                     }
 
                     if ($('#customerNumber').html() == '0578749') {
@@ -2276,9 +2651,6 @@
                     }
                 }
             });
-
-
-
         }
     </script>
 </body>

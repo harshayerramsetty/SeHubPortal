@@ -130,7 +130,14 @@
         </style>
     }
 
-
+    @if (Convert.ToInt32(ViewData["usrid"]) == 61000)
+    {
+        <style>
+            #TALink {
+                display: none !important;
+            }
+        </style>
+    }
 
 
 
@@ -174,11 +181,11 @@
             text-align: center;
         }
 
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button { 
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             -moz-appearance: none;
-            appearance: none; 
+            appearance: none;
         }
 
 
@@ -312,7 +319,7 @@
                 </ol>
             </nav>
         </div>
-        <button type="button" id="clickThis" class="btn" style=" margin-bottom: 14px;">
+        <button type="button" id="clickThis" class="btn" style=" margin-bottom:14px;">
             <i class="fa fa-bars" style="font-size: 25px "></i>
             <span class="sr-only">Toggle Menu</span>
         </button>
@@ -390,8 +397,8 @@
                                         <tbody>
                                             <tr>
                                                 <td class="text-center" style="padding:0px">@Html.EditorFor(m => m.Tire_Adjustment_id, new { htmlAttributes = new { @autocomplete = "off", @id = "TAnumber", @readonly = "true", @class = "text-center clear", @required = "required", @style = "border:0px solid transparent; height:28px; width:255px" } })</td>
-                                                <td class="text-center" id="TAdate" style="padding:0px">@System.DateTime.Today.Date.ToString("dd/MM/yyyy")</td>
-                                                <td class="text-center" style="padding:0px"><input type="text" name="name" value="" /></td>
+                                                <td class="text-center" id="TAdate" style="padding:0px">@System.DateTime.Today.Date.ToString("dd-MM-yyyy")</td>
+                                                <td class="text-center" style="padding:0px">@Html.EditorFor(m => m.original_purchase_invoice, new { htmlAttributes = new { @autocomplete = "off", @class = "text-center clear", @id = "original_purchase_invoice", @style = "height:28px; border:0px solid transparent; outline:none" } })</td>
                                                 <td class="text-center" id="TAemployee" style="padding:0px">@Model.cta_employee_name</td>
                                                 <td class="text-center" id="TAnonSig" style="padding:0px">@Model.non_sig_number</td>
                                                 <td class="text-center" id="TAlocation" style="padding:0px">@Model.location_id</td>
@@ -745,7 +752,7 @@
                                             Additional Comments
                                         </div>
                                         <div class="card-body" style="padding:0px; height:150px">
-                                            @Html.TextAreaFor(m => m.additional_comments, new { @style = "width:100%; height:150px", htmlAttributes = new { @id = "TAcomments", @style = "width:400px; height:250px" } })
+                                            @Html.TextAreaFor(m => m.additional_comments, new { @class = "text", @style = "width:100%; height:150px", @id = "additional_comments" })
                                         </div>
                                     </div>
                                 </div>
@@ -1707,6 +1714,7 @@
                 "non_sig_number": $("#TAnonSig").html(),
                 "location_id": $("#TAlocation").html(),
                 "replacement_invoice": $("#replacement_invoice").val(),
+                "original_purchase_invoice": $("#original_purchase_invoice").val(),
                 "street": $("#TAstreet").val(),
                 "city": $("#TAcity").val(),
                 "province": $("#TAprovince").val(),
@@ -1773,11 +1781,10 @@
                 "repl_cost_5": $("#repl_cost_5").val(),
                 "reason_for_removal_5": $("#reason_for_removal_5").val(),
 
-                "commentsSection": $("#TAcomments").html(),
+                "additional_comments": $("#additional_comments").val(),
 
             }
             console.log(TA)
-
 
             $.ajax({
                 url: '@Url.Action("SaveTireAdjustment", "Tools")',
@@ -1834,7 +1841,7 @@
             $("#thirty_seconds_3").prop({ disabled: true});
             $('#mileage_3').prop({ disabled: true});
             $("#percent_worn_3").prop({ disabled: true});
-            $("#repl_cost_3").prop({ disabled: true});
+            $("#repl_cost_3").prop({ disabled: true});JSON.parse
             $("#reason_for_removal_3").prop({ disabled: true});
 
             $("#dot_4").prop({ disabled: true});
@@ -1881,6 +1888,7 @@
                         $("#TAnonSig").html(TAdetails.non_sig_number);
                         $("#TAlocation").html(TAdetails.location_id);
                         $("#replacement_invoice").val(TAdetails.replacement_invoice);
+                        $("#original_purchase_invoice").val(TAdetails.original_purchase_invoice);
 
                         $("#TAname").val(TAdetails.name);
                         $("#TAphone").val(TAdetails.phone);
@@ -1950,7 +1958,7 @@
                         $("#repl_cost_5").val(TAdetails.repl_cost_5);
                         $("#reason_for_removal_5").val(TAdetails.reason_for_removal_5);
 
-                        $("#TAcomments").html("commentsSection");
+                        $("#additional_comments").val(TAdetails.additional_comments);
 
 
                                     if (TAdetails.manufacture_approval != null && TAdetails.manufacture_approval != "") {

@@ -16,5 +16,11 @@ namespace SeHubPortal.ViewModel
 
         public tbl_sehub_access SehubAccess { get; set; }
 
+        public int? AgeLimit { get; set; }
+        public bool? BrandRequirements { get; set; }
+
+        public string customerContact { get; set; }
+        public string reportingEmail { get; set; }
+        public string comments { get; set; }
     }
 }

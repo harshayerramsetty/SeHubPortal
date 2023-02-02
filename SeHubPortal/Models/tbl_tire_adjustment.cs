@@ -80,5 +80,6 @@ namespace SeHubPortal.Models
         public Nullable<double> repl_cost_5 { get; set; }
         public string reason_for_removal_5 { get; set; }
         public string additional_comments { get; set; }
+        public string original_purchase_invoice { get; set; }
     }
 }

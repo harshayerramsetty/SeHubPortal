@@ -3,12 +3,9 @@ using SeHubPortal.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.SqlClient;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.Azure.Storage.Blob;
@@ -30,6 +27,28 @@ namespace SeHubPortal.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public string pullConfigImage(string type, string con)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            var configuration = db.tbl_fleettvt_configurations.Where(x => x.Type == type && x.Configuration == con).FirstOrDefault();
+
+            string base64ProfilePic = "";
+            if (configuration.configuration_image is null)
+            {
+                base64ProfilePic = "";
+            }
+            else
+            {
+                base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(configuration.configuration_image);
+            }
+
+            return base64ProfilePic;
+        }
+
+
 
         public JsonResult GetSurveyDates(string unit)
         {
@@ -86,9 +105,16 @@ namespace SeHubPortal.Controllers
             UnitInfo.spec_psi_1 = model.Unit.spec_psi_1;
             UnitInfo.spec_psi_2 = model.Unit.spec_psi_2;
             UnitInfo.spec_psi_3 = model.Unit.spec_psi_3;
-            UnitInfo.tire_size_1 = model.Unit.tire_size_1;
-            UnitInfo.tire_size_2 = model.Unit.tire_size_2;
-            UnitInfo.tire_size_3 = model.Unit.tire_size_3;
+            if (UnitInfo.survey_type == "Trailer")
+            {
+                UnitInfo.tire_size_3 = model.Unit.tire_size_3;
+            }
+            else if (UnitInfo.survey_type == "Tractor")
+            {
+                UnitInfo.tire_size_1 = model.Unit.tire_size_1;
+                UnitInfo.tire_size_2 = model.Unit.tire_size_2;
+            }
+                        
             UnitInfo.short_description = model.Unit.short_description;
             UnitInfo.last_survey = model.Unit.last_survey;
             UnitInfo.Active = model.Unit.Active;
@@ -141,10 +167,6 @@ namespace SeHubPortal.Controllers
             UnitInfo.make = model.AddUnit.make;
             UnitInfo.model = model.AddUnit.model;
             UnitInfo.plate_number = model.AddUnit.plate_number;
-            UnitInfo.mileage = model.AddUnit.mileage;
-            UnitInfo.hours = model.AddUnit.hours;
-            UnitInfo.length = model.AddUnit.length;
-            UnitInfo.date_expired = model.AddUnit.date_expired;
             UnitInfo.spec_psi_1 = model.AddUnit.spec_psi_1;
             UnitInfo.spec_psi_2 = model.AddUnit.spec_psi_2;
             UnitInfo.spec_psi_3 = model.AddUnit.spec_psi_3;
@@ -153,6 +175,7 @@ namespace SeHubPortal.Controllers
             UnitInfo.tire_size_3 = model.AddUnit.tire_size_3;
             UnitInfo.short_description = model.AddUnit.short_description;
             UnitInfo.last_survey = model.AddUnit.last_survey;
+            UnitInfo.VIN = model.AddUnit.VIN;
             UnitInfo.Active = 1;
 
             if (imageBytes != null)
@@ -173,10 +196,15 @@ namespace SeHubPortal.Controllers
             if(UnitNum != null)
             {
                 model.Unit = db.tbl_fleetTVT_unit.Where(x => x.unit_number == UnitNum).FirstOrDefault();
+                if (model.Unit.survey_type == "Tractor")
+                {
+                    model.ConfigurationsList = populateConfigurationsTractor();
+                }
+                else
+                {
+                    model.ConfigurationsList = populateConfigurationsTrailer();
+                }
             }
-
-            model.ConfigurationsListTractor = populateConfigurationsTractor();
-            model.ConfigurationsListTrailer = populateConfigurationsTrailer();
 
             model.SizesList = populateTruckSizes();
 
@@ -339,7 +367,9 @@ namespace SeHubPortal.Controllers
             if(custDetails != null)
             {
                 custDetails.customer_number = cust_list.CustomerName;
+                custDetails.fleet_size = db.tbl_fleetTVT_unit.Where(x => x.customer_number == value).Count().ToString();
             }
+            
             var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
             string custDetailsJson = serializer.Serialize(custDetails);
 
@@ -373,7 +403,7 @@ namespace SeHubPortal.Controllers
             string customerNumber = value;
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
 
-            var units = db.tbl_fleetTVT_unit.Where(x => x.customer_number == customerNumber).ToList();
+            var units = db.tbl_fleetTVT_unit.Where(x => x.customer_number == customerNumber && x.Active == 1).ToList();
 
             return Json(units.Select(x => new
             {
@@ -383,13 +413,13 @@ namespace SeHubPortal.Controllers
         }
         
         [HttpPost]
-        public ActionResult PullEmployeesChangeLocation()
+        public ActionResult PullEmployeesChangeLocation(string loc)
         {
-            Trace.WriteLine("Reached till here");
+            Trace.WriteLine("Reached till here " + loc);
 
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
 
-            var units = db.tbl_employee.Where(x => x.status == 1).OrderBy(x => x.full_name).ToList();
+            var units = db.tbl_employee.Where(x => x.status == 1 && x.loc_ID == loc).OrderBy(x => x.full_name).ToList();
 
             return Json(units.Select(x => new
             {
@@ -401,7 +431,7 @@ namespace SeHubPortal.Controllers
         [HttpPost]
         public string GetConfigurationDetails(string type, string config)
         {
-            Debug.WriteLine("This is the type : " + type + " and this is the configuration " + config);
+            //Debug.WriteLine("This is the type : " + type + " and this is the configuration " + config);
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             var configur = db.tbl_fleettvt_configurations.Where(x => x.Type == type && x.Configuration == config).FirstOrDefault();
             var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
@@ -447,7 +477,7 @@ namespace SeHubPortal.Controllers
         }
 
         [HttpPost]
-        public string InsertRecordToFleetSurveyTire(string cust, string unt, string dat, string pn, string pres, string trdDpth, string wr, string brnd, string mdl, string sze, string vlv, string com)
+        public string InsertRecordToFleetSurveyTire(string cust, string unt, string dat, string pn, string pres, string trdDpth, string wr, string brnd, string mdl, string sze, string vlv, string com, string wc, string tc)
         {
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
 
@@ -468,6 +498,8 @@ namespace SeHubPortal.Controllers
             tireDetails.size = sze;
             tireDetails.valve = vlv;
             tireDetails.comments = com;
+            tireDetails.condition_wheel = wc;
+            tireDetails.condition_tire = tc;
 
 
             db.tbl_fleetTVT_fieldsurvey_tire.Add(tireDetails);
@@ -477,7 +509,7 @@ namespace SeHubPortal.Controllers
         }
 
         [HttpPost]
-        public string UpdateRecordToFleetSurveyTire(string cust, string unt, string dat, string pn, string pres, string trdDpth, string wr, string brnd, string mdl, string sze, string vlv, string com)
+        public string UpdateRecordToFleetSurveyTire(string cust, string unt, string dat, string pn, string pres, string trdDpth, string wr, string brnd, string mdl, string sze, string com)
         {
 
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
@@ -494,7 +526,6 @@ namespace SeHubPortal.Controllers
             tire.brand = brnd;
             tire.model = mdl;
             tire.size = sze;
-            tire.valve = vlv;
             tire.comments = com;
 
             //Trace.WriteLine("This is the brand " + brnd);
@@ -505,22 +536,16 @@ namespace SeHubPortal.Controllers
         }
 
         [HttpPost]
-        public string InsertRecordToFleetSurveyUnit(string cu, string un, string mlg, string loct, string dat, string empl, string cmts, string sdat)
+        public string InsertRecordToFleetSurveyUnit(string cu, string un, string loct, string empl, string cmts, string sdat)
         {
 
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             tbl_fleetTVT_fieldsurvey_unit unitSurveyDetails = new tbl_fleetTVT_fieldsurvey_unit();
 
-
             unitSurveyDetails.customer_number = cu;
 
             unitSurveyDetails.unit_number = un;
 
-
-            if (mlg != "")
-            {
-                //unitSurveyDetails.mileage = Convert.ToInt32(mlg);
-            }
 
             if (loct != null)
             {
@@ -537,12 +562,6 @@ namespace SeHubPortal.Controllers
             if (empl != null)
             {
                 unitSurveyDetails.employee_id = Convert.ToInt32(empl);
-            }
-            
-
-            if (dat != "")
-            {
-                //unitSurveyDetails.date_expired = Convert.ToDateTime(dat);
             }
             
 
@@ -1251,6 +1270,21 @@ namespace SeHubPortal.Controllers
             return items;
         }
 
+        [HttpPost]
+        public ActionResult PullConfig(string type)
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            Trace.WriteLine("This is the type" + type);
+            var units = db.tbl_fleettvt_configurations.Where(x => x.Type == type).ToList();
+
+            return Json(units.Select(x => new
+            {
+                value = x.Configuration,
+                text = x.Configuration
+            }).ToList(), JsonRequestBehavior.AllowGet);
+        }
+
         private static List<SelectListItem> populateConfigurationsTrailer()
         {
             List<SelectListItem> items = new List<SelectListItem>();
@@ -1260,12 +1294,14 @@ namespace SeHubPortal.Controllers
 
             foreach (var val in config)
             {
+                //Trace.WriteLine("This is the configuration" + val.Configuration);
                 items.Add(new SelectListItem
                 {
                     Text = val.Configuration,
                     Value = Convert.ToString(val.Configuration)
                 });
             }
+
             return items;
         }
 
@@ -1274,7 +1310,7 @@ namespace SeHubPortal.Controllers
             List<SelectListItem> items = new List<SelectListItem>();
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
 
-            var config = db.tbl_source_commercial_tire_manufacturers.Where(x => x.fleetTVT == 1 && x.manufacturers != "CTA Retread" && x.manufacturers != "Other").ToList();
+            var config = db.tbl_source_mediumTruckTires.OrderBy(x => x.brand).Select(x => x.brand).Distinct().ToList();
 
             items.Add(new SelectListItem
             {
@@ -1286,8 +1322,8 @@ namespace SeHubPortal.Controllers
             {
                 items.Add(new SelectListItem
                 {
-                    Text = val.manufacturers,
-                    Value = Convert.ToString(val.manufacturers)
+                    Text = val,
+                    Value = Convert.ToString(val)
                 });
             }
 
@@ -1378,9 +1414,8 @@ namespace SeHubPortal.Controllers
         public string SelectModel(string brand, string size)
         {
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
-            List<string> model = db.tbl_source_tire.Where(x => x.manufacturer == brand && x.size == size).Select(x => x.model).ToList();
+            List<string> model = db.tbl_source_mediumTruckTires.Where(x => x.brand == brand).Select(x => x.model).Distinct().ToList();
             model.Add("Other");
-
 
             var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
             string custDetailsJson = serializer.Serialize(model);
@@ -1393,7 +1428,7 @@ namespace SeHubPortal.Controllers
             List<SelectListItem> items = new List<SelectListItem>();
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
 
-            var model = db.tbl_source_tire.Select(x => x.model).Distinct().ToList();
+            var model = db.tbl_source_mediumTruckTires.Select(x => x.model).Distinct().ToList();
 
             foreach (var val in model)
             {
@@ -1578,12 +1613,167 @@ namespace SeHubPortal.Controllers
 
                     if (config != null)
                     {
-                        model.SteerTiresCount = config.steerTiresCount.Value;
-                        model.DriveTiresCount = config.driveTiresCount.Value;
-                        model.trailerTiresCount = config.trailerTiresCount.Value;
+                        model.SteerTiresCount += config.steerTiresCount.Value;
+                        model.DriveTiresCount += config.driveTiresCount.Value;
+                        model.trailerTiresCount += config.trailerTiresCount.Value;
                     }
 
                 }
+
+                var surveyItems = db.tbl_fleetTVT_fieldsurvey_tire.ToList();
+
+                List<tbl_fleetTVT_fieldsurvey_tire> listFildSurvey = new List<tbl_fleetTVT_fieldsurvey_tire>();
+
+                foreach (var survey in surveyItems)
+                {
+                    tbl_fleetTVT_fieldsurvey_tire fieldSurvey = new tbl_fleetTVT_fieldsurvey_tire();
+                    fieldSurvey = survey;
+
+                    var brand = db.tbl_source_mediumTruckTires.Where(x => x.brand == survey.brand && x.model == survey.model).FirstOrDefault();
+                    if (brand != null)
+                    {
+                        fieldSurvey.new_32nds = Convert.ToDouble(brand.original32nds);
+                    }
+
+                    Trace.WriteLine("This is the Unit number " + survey.unit_number);
+
+                    var unit = db.tbl_fleetTVT_unit.Where(x => x.unit_number == survey.unit_number).FirstOrDefault();
+
+                    //Trace.WriteLine("This is the survey type " + unit.survey_type + " And this is the config " + unit.survey_configuration);
+
+                    var config = db.tbl_fleettvt_configurations.Where(x => x.Type == unit.survey_type && x.Configuration == unit.survey_configuration).FirstOrDefault();
+
+                    double tire_type;
+
+                    if (survey.position == "1_lo")
+                    {
+                        tire_type = config.one_lo.Value;
+                    }
+                    else if (survey.position == "1_li")
+                    {
+                        tire_type = config.one_li.Value;
+                    }
+                    else if (survey.position == "1_ri")
+                    {
+                        tire_type = config.one_ri.Value;
+                    }
+                    else if (survey.position == "1_ro")
+                    {
+                        tire_type = config.one_ro.Value;
+                    }
+                    else if (survey.position == "2_lo")
+                    {
+                        tire_type = config.two_lo.Value;
+                    }
+                    else if (survey.position == "2_li")
+                    {
+                        tire_type = config.two_li.Value;
+                    }
+                    else if (survey.position == "2_ri")
+                    {
+                        tire_type = config.two_ri.Value;
+                    }
+                    else if (survey.position == "2_ro")
+                    {
+                        tire_type = config.two_ro.Value;
+                    }
+                    else if (survey.position == "3_lo")
+                    {
+                        tire_type = config.three_lo.Value;
+                    }
+                    else if (survey.position == "3_li")
+                    {
+                        tire_type = config.three_li.Value;
+                    }
+                    else if (survey.position == "3_ri")
+                    {
+                        tire_type = config.three_ri.Value;
+                    }
+                    else if (survey.position == "3_ro")
+                    {
+                        tire_type = config.three_ro.Value;
+                    }
+                    else if (survey.position == "4_lo")
+                    {
+                        tire_type = config.four_lo.Value;
+                    }
+                    else if (survey.position == "4_li")
+                    {
+                        tire_type = config.four_li.Value;
+                    }
+                    else if (survey.position == "4_ri")
+                    {
+                        tire_type = config.four_ri.Value;
+                    }
+                    else if (survey.position == "4_ro")
+                    {
+                        tire_type = config.four_ro.Value;
+                    }
+                    else if (survey.position == "5_lo")
+                    {
+                        tire_type = config.five_lo.Value;
+                    }
+                    else if (survey.position == "5_li")
+                    {
+                        tire_type = config.five_li.Value;
+                    }
+                    else if (survey.position == "5_ri")
+                    {
+                        tire_type = config.five_ri.Value;
+                    }
+                    else if (survey.position == "5_ro")
+                    {
+                        tire_type = config.five_ro.Value;
+                    }
+                    else
+                    {
+                        tire_type = 0;
+                    }
+
+
+                    if (fieldSurvey.new_32nds.HasValue)
+                    {
+                        //Trace.WriteLine(tire_type);
+                        if (tire_type == 1)
+                        {
+                            fieldSurvey.percent_worn = Math.Round((1 - (fieldSurvey.actual_32nds.Value - model.customerDetails.pull_point_1.Value) / (fieldSurvey.new_32nds.Value - model.customerDetails.pull_point_1.Value)) * 100, 1);
+
+                        }
+                        else if (tire_type == 2)
+                        {
+                            fieldSurvey.percent_worn = Math.Round((1 - (fieldSurvey.actual_32nds.Value - model.customerDetails.pull_point_2.Value) / (fieldSurvey.new_32nds.Value - model.customerDetails.pull_point_2.Value)) * 100, 1);
+
+                        }
+                        else
+                        {
+                            fieldSurvey.percent_worn = Math.Round((1 - (fieldSurvey.actual_32nds.Value - model.customerDetails.pull_point_3.Value) / (fieldSurvey.new_32nds.Value - model.customerDetails.pull_point_3.Value)) * 100, 1);
+
+                        }
+                    }
+
+                    if (tire_type == 1)
+                    {
+                        fieldSurvey.spec_psi = Convert.ToInt32(unit.spec_psi_1);
+                    }
+                    else if (tire_type == 2)
+                    {
+                        fieldSurvey.spec_psi = Convert.ToInt32(unit.spec_psi_2);
+                    }
+                    else if (tire_type == 3)
+                    {
+                        fieldSurvey.spec_psi = Convert.ToInt32(unit.spec_psi_3);
+                    }
+                    else
+                    {
+                        fieldSurvey.spec_psi = 0;
+                    }
+           
+                    listFildSurvey.Add(fieldSurvey);
+
+                }
+
+                model.LatestSurvey = listFildSurvey;
+
             }
             else
             {
@@ -1610,159 +1800,6 @@ namespace SeHubPortal.Controllers
             model.Location = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
 
             model.ConfigurationsTable = db.tbl_fleettvt_configurations.ToList();
-
-            var surveyItems = db.tbl_fleetTVT_fieldsurvey_tire.ToList();
-
-            List<tbl_fleetTVT_fieldsurvey_tire> listFildSurvey = new List<tbl_fleetTVT_fieldsurvey_tire>();
-
-            foreach (var survey in surveyItems)
-            {
-                tbl_fleetTVT_fieldsurvey_tire fieldSurvey = new tbl_fleetTVT_fieldsurvey_tire();
-                fieldSurvey = survey;
-
-                var brand = db.tbl_source_tire.Where(x => x.manufacturer == survey.brand && x.model == survey.model).FirstOrDefault();
-                if(brand != null)
-                {
-                    fieldSurvey.new_32nds = brand.thirty_two_nds;
-                }
-
-                var unit = db.tbl_fleetTVT_unit.Where(x => x.unit_number == survey.unit_number).FirstOrDefault();
-
-                var config = db.tbl_fleettvt_configurations.Where(x => x.Type == unit.survey_type && x.Configuration == unit.survey_configuration).FirstOrDefault();
-
-                double tire_type;
-
-                if (survey.position == "1_lo")
-                {
-                    tire_type = config.one_lo.Value;
-                }
-                else if (survey.position == "1_li")
-                {
-                    tire_type = config.one_li.Value;
-                }
-                else if (survey.position == "1_ri")
-                {
-                    tire_type = config.one_ri.Value;
-                }
-                else if (survey.position == "1_ro")
-                {
-                    tire_type = config.one_ro.Value;
-                }
-                else if (survey.position == "2_lo")
-                {
-                    tire_type = config.two_lo.Value;
-                }
-                else if (survey.position == "2_li")
-                {
-                    tire_type = config.two_li.Value;
-                }
-                else if (survey.position == "2_ri")
-                {
-                    tire_type = config.two_ri.Value;
-                }
-                else if (survey.position == "2_ro")
-                {
-                    tire_type = config.two_ro.Value;
-                }
-                else if (survey.position == "3_lo")
-                {
-                    tire_type = config.three_lo.Value;
-                }
-                else if (survey.position == "3_li")
-                {
-                    tire_type = config.three_li.Value;
-                }
-                else if (survey.position == "3_ri")
-                {
-                    tire_type = config.three_ri.Value;
-                }
-                else if (survey.position == "3_ro")
-                {
-                    tire_type = config.three_ro.Value;
-                }
-                else if (survey.position == "4_lo")
-                {
-                    tire_type = config.four_lo.Value;
-                }
-                else if (survey.position == "4_li")
-                {
-                    tire_type = config.four_li.Value;
-                }
-                else if (survey.position == "4_ri")
-                {
-                    tire_type = config.four_ri.Value;
-                }
-                else if (survey.position == "4_ro")
-                {
-                    tire_type = config.four_ro.Value;
-                }
-                else if (survey.position == "5_lo")
-                {
-                    tire_type = config.five_lo.Value;
-                }
-                else if (survey.position == "5_li")
-                {
-                    tire_type = config.five_li.Value;
-                }
-                else if (survey.position == "5_ri")
-                {
-                    tire_type = config.five_ri.Value;
-                }
-                else if (survey.position == "5_ro")
-                {
-                    tire_type = config.five_ro.Value;
-                }
-                else
-                {
-                    tire_type = 0;
-                }
-
-
-                if (fieldSurvey.new_32nds.HasValue)
-                {
-                    if (tire_type == 1)
-                    {
-                        fieldSurvey.percent_worn = Math.Round((1 - (fieldSurvey.actual_32nds.Value - 5) / (fieldSurvey.new_32nds.Value - 5)) * 100, 1);
-                    }
-                    else if (tire_type == 2)
-                    {
-                        fieldSurvey.percent_worn = Math.Round((1 - (fieldSurvey.actual_32nds.Value - 6) / (fieldSurvey.new_32nds.Value - 6)) * 100, 1);
-                    }
-                    else
-                    {
-                        fieldSurvey.percent_worn = Math.Round((1 - (fieldSurvey.actual_32nds.Value - 4) / (fieldSurvey.new_32nds.Value - 4)) * 100, 1);
-                    }
-                }
-
-                if (fieldSurvey.spec_psi.HasValue)
-                {
-                    /*
-                    if (tire_type == 1)
-                    {
-                        
-                    }
-                    else if (tire_type == 2)
-                    {
-                        fieldSurvey.inflation = (fieldSurvey.actual_psi.Value / fieldSurvey.spec_psi.Value) * 100;
-                    }
-                    else
-                    {
-                        fieldSurvey.inflation = (fieldSurvey.actual_psi.Value / fieldSurvey.spec_psi.Value) * 100;
-                    }
-                     */
-
-
-                    fieldSurvey.inflation = (fieldSurvey.actual_psi.Value * 100) / fieldSurvey.spec_psi.Value;
-
-
-                }
-
-
-                listFildSurvey.Add(fieldSurvey);
-
-            }
-
-            model.LatestSurvey = listFildSurvey;
 
             model.tireCondition = db.tbl_source_tire_condition.ToList();
             model.wheelCondition = db.tbl_source_wheel_condition.ToList();

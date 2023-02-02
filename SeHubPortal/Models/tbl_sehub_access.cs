@@ -75,5 +75,6 @@ namespace SeHubPortal.Models
         public Nullable<int> loc_347 { get; set; }
         public Nullable<int> loc_AHO { get; set; }
         public Nullable<int> treadTracker_customers { get; set; }
+        public string loc_current { get; set; }
     }
 }

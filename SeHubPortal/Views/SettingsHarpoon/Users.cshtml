@@ -33,6 +33,14 @@
             }
         </style>
     }
+    @if (Model.client_info.timesheet.Value)
+    {
+        <style>
+            #TimesheetClicked {
+                display: block !important;
+            }
+        </style>
+    }
 
 
 
@@ -476,7 +484,7 @@
                                 <img src="~/Content/mgr_icon.png" style="margin-bottom:10px;width:200px;">
                             </div>
                             <div class="col-lg-2 text-left" style="padding-left:0px; padding-top:0px">
-                                <button type="button" onclick="DeleteEdit()" class="btn" style="border: none; outline: none; background-color: transparent">
+                                <button type="button" data-dismiss="modal" onclick="DeleteEdit()" class="btn" style="border: none; outline: none; background-color: transparent">
                                     <img style="width:30px" src="~/Content/Trash Can.png" alt="Alternate Text" />
                                 </button>
                             </div>
@@ -573,7 +581,6 @@
                             <button style="padding:5px 35px 5px 35px" type="button" onclick="yesclick()" id="yes" class="btn btn-success">Yes</button>
                         </div>
                         <div class="col-lg-4 text-center">
-
                             <button style="padding:5px 40px 5px 40px" type="button" data-dismiss="modal" id="no" class="btn btn-danger">No</button>
                         </div>
                         <div class="col-lg-2"></div>
@@ -584,6 +591,7 @@
 
         </div>
     </div>
+
 
     <div class="modal" id="DeleteAlert" data-backdrop="static" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
@@ -842,6 +850,7 @@
             }
 
             function yesclick() {
+
                 $.ajax({
                     url: '@Url.Action("deleteUser", "SettingsHarpoon")',
                     data: { value: $('#user_email').val() },

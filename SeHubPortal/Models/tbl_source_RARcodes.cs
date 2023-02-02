@@ -21,5 +21,6 @@ namespace SeHubPortal.Models
         public Nullable<int> TT200 { get; set; }
         public Nullable<int> TT400 { get; set; }
         public Nullable<int> TT600 { get; set; }
+        public Nullable<int> TT300 { get; set; }
     }
 }

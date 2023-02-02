@@ -504,18 +504,15 @@ namespace SeHubPortal.Controllers
             string locationid = "";
             if (LocId == "" || LocId is null)
             {
-                //Debug.WriteLine("empId:" + empId);
-                var result = db.tbl_employee.Where(a => a.employee_id.Equals(empId)).FirstOrDefault();
-
-                if (result != null)
+                var empRememberLocation = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
+                if (empRememberLocation != null)
                 {
-                    locationid = result.loc_ID;
+                    locationid = empRememberLocation.loc_current;
                 }
                 else
                 {
-                    locationid = "";
+                    locationid = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
                 }
-
             }
             else
             {
@@ -990,6 +987,8 @@ namespace SeHubPortal.Controllers
             modal.DataResources = pdates.OrderByDescending(x => x.payroll_Id).ToList();
             modal.ImportHistory = db.tbl_data_import_history.ToList();
 
+            modal.LabourRatesList = db.tbl_source_labour_rates.ToList();
+
             return View(modal);
         }
 
@@ -1181,7 +1180,7 @@ namespace SeHubPortal.Controllers
             }
             
             tbl_data_import_history importInfo = new tbl_data_import_history();
-            importInfo.data_type = "BranchSalesReport";
+            importInfo.data_type = "BranchSalesReport" + ";" + month1;
             importInfo.performed_by = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.full_name).FirstOrDefault();
             importInfo.import_date = System.DateTime.Now;
             db.tbl_data_import_history.Add(importInfo);

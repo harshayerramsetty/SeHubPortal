@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
+ 
 namespace SeHubPortal.ViewModel
 {
     public class EditOrderModel
@@ -16,6 +16,15 @@ namespace SeHubPortal.ViewModel
         public List<SelectListItem> CustomersList { get; set; }
         public string ChangedCustomerId { get; set; }
         public tbl_sehub_access SehubAccess { get; set; }
+
+
+        public int? AgeLimit { get; set; }
+        public bool? BrandRequirements { get; set; }
+
+        public string customerContact { get; set; }
+        public string reportingEmail { get; set; }
+
+        public List<SelectListItem> Cap_count_list { get; set; }
 
     }
 }

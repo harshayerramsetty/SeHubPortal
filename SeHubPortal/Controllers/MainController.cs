@@ -176,7 +176,7 @@ namespace SeHubPortal.Controllers
 
         public JsonResult GetBirthdayEventsMonth()
         {
-            Trace.WriteLine("Reached till here GetBirthdayEventsMonth");
+            //Trace.WriteLine("Reached till here GetBirthdayEventsMonth");
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             DateTime start = System.DateTime.Today;
             var employees = db.tbl_employee.Where(x => x.status == 1 && x.Date_of_birth != null && x.Date_of_birth.Value.Month == start.Month).ToList();
@@ -399,7 +399,7 @@ namespace SeHubPortal.Controllers
 
             employee = db.tbl_employee.Where(x => x.employee_id == empId).FirstOrDefault();
 
-            Trace.WriteLine("Reached till here " + employee.full_name);
+            //Trace.WriteLine("Reached till here " + employee.full_name);
 
             return PartialView(employee) ;
         }
@@ -449,11 +449,11 @@ namespace SeHubPortal.Controllers
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
 
             var EmployeeInfo = db.tbl_employee.Where(a => a.employee_id == empId).FirstOrDefault();
-            //var img = db.tbl_treadTracker_workStations.Where(x => x.station == "Repair").FirstOrDefault();
+            //var pic = db.tbl_fleettvt_configurations.Where(x => x.Type == "Trailer" && x.Configuration == "4A/8T").FirstOrDefault();
 
             if (imageBytes != null)
             {
-                //img.icon = imageBytes;
+                //pic.configuration_image = imageBytes;
                 EmployeeInfo.profile_pic = imageBytes;
             }
 

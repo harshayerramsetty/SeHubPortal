@@ -14,9 +14,9 @@ namespace SeHubPortal.Models
     
     public partial class tbl_employee_attendance
     {
-        public string rfid_number { get; set; }
         public bool at_work { get; set; }
         public string at_work_location { get; set; }
         public int employee_id { get; set; }
+        public string rfid_number { get; set; }
     }
 }

@@ -28,5 +28,6 @@ namespace SeHubPortal.Models
         public Nullable<int> ship_to { get; set; }
         public Nullable<int> consumables { get; set; }
         public Nullable<int> reprint { get; set; }
+        public Nullable<int> cap_count { get; set; }
     }
 }

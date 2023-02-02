@@ -13,6 +13,10 @@ namespace SeHubPortal.ViewModel
         public tbl_harpoon_clients client { get; set; }
         public tbl_harpoon_clients editClient { get; set; }
         public List<SelectListItem> Locations { get; set; }
+        public List<SelectListItem> Categories_client { get; set; }
+        public List<tbl_source_harpoon_timesheet_categories> Categories { get; set; }
+        public string Categories_client_select { get; set; }
+        public string Categories_select { get; set; }
 
 
         public string listOfLocations { get; set; }

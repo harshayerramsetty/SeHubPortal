@@ -48,5 +48,12 @@ namespace SeHubPortal.Models
         public Nullable<System.DateTime> TT500_date { get; set; }
         public string TT600_result { get; set; }
         public Nullable<System.DateTime> TT600_date { get; set; }
+        public string cap_count { get; set; }
+        public string TT300_patch { get; set; }
+        public string TT300_rope { get; set; }
+        public string TT400_cushion { get; set; }
+        public string TT400_strip { get; set; }
+        public string TT400_rope { get; set; }
+        public string TT400_tread { get; set; }
     }
 }

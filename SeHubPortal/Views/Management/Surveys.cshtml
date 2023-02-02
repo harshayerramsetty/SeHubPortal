@@ -1,0 +1,395 @@
+﻿@model SeHubPortal.ViewModel.FileURL
+@{
+    ViewBag.Title = "Surveys";
+    Layout = "~/Views/Shared/_ManagementLayout.cshtml";
+}
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/NewOrder.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" rel="stylesheet" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.css" rel="stylesheet" media="print" />
+    <link href="~/Content/fullcalendar.css" rel="stylesheet" />
+
+    @if (Model.SehubAccess.plant > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.plant > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.tools > 0)
+    {
+        <style>
+            #toolsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.payroll > 0)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.fleetTVT > 0)
+    {
+        <style>
+            #FleetTVTClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTracker > 0)
+    {
+        <style>
+            #treadTrackereClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.library_access > 0)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.main > 0)
+    {
+        <style>
+            #mainClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings == 3)
+    {
+        <style>
+            #SettingsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.my_staff > 0)
+    {
+        <style>
+            #MyStaffLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.management_dashboard > 0)
+    {
+        <style>
+            #DashboardLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.attendance > 0)
+    {
+        <style>
+            #AttendanceLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.vacation_schedule > 0)
+    {
+        <style>
+            #LeaveSchedulerLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.asset_control > 0)
+    {
+        <style>
+            #AssetControlLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.employee_folder > 0)
+    {
+        <style>
+            #EmployeeFilesLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    <style>
+
+        .commonMainNavigation {
+            display: block !important;
+        }
+
+        #DevelopmentClicked {
+            display: block !important;
+        }
+
+        #SurveysLink {
+            display: block !important;
+        }
+
+        #ManagementClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #managementBtn {
+            color: black;
+            font-weight: 600;
+        }
+
+        #SurveysLink {
+            color: black;
+            font-weight: 700;
+            background-color: #f0f2f5;
+        }
+
+        body {
+            background-color: #f0f2f5;
+        }
+
+        #Document {
+            padding-left: 10%
+        }
+    </style>
+
+</head>
+    <body>
+
+        <div class="row" style="padding:10px 30px 0px 30px">
+            <div class="col-md-4" style="padding:10px 10px 10px 20px; background-color:white; vertical-align:middle">
+                <a href="@Url.Action("Surveys", "Management")">Management</a> / Surveys
+            </div>
+            <div class="col-md-4" style="background-color:white; vertical-align:middle">
+            </div>
+            <div class="col-md-4 text-right" style="background-color:white; vertical-align:middle; display:flex; align-items:center; justify-content:space-between">
+                <div></div>
+                @using (Html.BeginForm("Survey_ChangeLocation", "Management", FormMethod.Post))
+                {
+                    @Html.DropDownListFor(m => m.Location_ID, Model.LocationsList, new { @onChange = "this.form.submit()", @class = "text-center", @style = "font-weight:bold; text-align-last: center; width:150px; height:100%;", @required = "required", @id = "Location" }) @*, @onchange = "salesPerformance()"*@
+                }
+            </div>
+        </div>
+
+        <div style="width:100%; height:83vh; padding:10px">
+            <div style="width:100%; height:100%; display:flex">
+                <div style="flex:3; background-color:white; display:flex; flex-direction:column; margin:5px; margin-right:30px; border-radius:10px; border:1px solid #a9afb8">
+                    <div style="width:100%; display:flex; justify-content:center; background-color:#3b8df7; border-top-left-radius:10px; border-top-right-radius:10px; padding:5px 0px">
+                        <span style="font-size:25px; font-weight:bold; color: white"><i>Retail Customer</i></span>
+                    </div>
+
+                    @if (Model.customer_satisfaction_survey != null)
+                    {
+                        <div id="@Model.customer_satisfaction_survey" onclick="openPDF(this.id)" style="display:flex; justify-content:center">
+                            <div class="shadow-lg" style="width:65%; height:25vh; margin-top:8vh; border:2px solid #b1d2fc; border-radius:10px; display:flex; justify-content:center; align-items:center; flex-direction:column">
+                                <img src="https://ctasehub.blob.core.windows.net/sehub-content/Qr_code.png" style="width:55%; object-fit:contain" alt="Alternate Text" />
+                                <span style="font-size:18px; font-weight:bold; margin:15px; color:black">Open Survey Document</span>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="@Model.customer_satisfaction_survey" onclick="openPDF(this.id)" style="display:flex; justify-content:center">
+                            <div class="shadow-lg" style="width:65%; height:25vh; margin-top:8vh; border:2px solid #b1d2fc; border-radius:10px; display:flex; justify-content:center; align-items:center; flex-direction:column; background-color:#cacbcc; opacity:0.6">
+                                <img src="https://ctasehub.blob.core.windows.net/sehub-content/Qr_code.png" style="width:55%; object-fit:contain" alt="Alternate Text" />
+                                <span style="font-size:18px; font-weight:bold; margin:15px; color:black">Open Survey Document</span>
+                            </div>
+                        </div>
+                    }
+
+
+
+                    @if (Model.customerSurvey_read != null)
+                    {
+                        <a href="@Model.customerSurvey_read" target="_blank">
+                            <div style="display: flex; justify-content: center">
+                                <div class="shadow-lg" style="width: 65%; height: 25vh; margin-top: 8vh; border: 2px solid #b1d2fc; border-radius: 10px; display: flex; justify-content: center; align-items: center; flex-direction: column">
+                                    <img src="https://ctasehub.blob.core.windows.net/sehub-content/email_survey.png" style="width:55%; object-fit:contain; margin-bottom:15px" alt="Alternate Text" />
+                                    <span style="font-size:20px; font-weight:bold; margin:10px; color:black">View Results</span>
+                                </div>
+                            </div>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="@Model.customerSurvey_read" target="_blank">
+                            <div style="display: flex; justify-content: center;">
+                                <div class="shadow-lg" style="width: 65%; height: 25vh; margin-top: 8vh; border: 2px solid #b1d2fc; border-radius: 10px; display: flex; justify-content: center; align-items: center; flex-direction: column; background-color:#cacbcc; opacity:0.6">
+                                    <img src="https://ctasehub.blob.core.windows.net/sehub-content/email_survey.png" style="width:55%; object-fit:contain; margin-bottom:15px" alt="Alternate Text" />
+                                    <span style="font-size:20px; font-weight:bold; margin:10px; color:black">View Results</span>
+                                </div>
+                            </div>
+                        </a>
+                    }
+
+                </div>
+                <div style="flex:3; background-color:white; display:flex; flex-direction:column; margin:5px; margin-right:30px; border-radius:10px; border:1px solid #a9afb8">
+                    <div style="width:100%; display:flex; justify-content:center; background-color:#3b8df7; border-top-left-radius:10px; border-top-right-radius:10px; padding:5px 0px">
+                        <span style="font-size: 25px;font-weight: bold;margin-left: auto;margin-right: auto; color: white"><i>Commercial Customer</i></span>
+                    </div>
+
+                    @if (Model.commercialCustomerSurvey_link != null)
+                    {
+                        <a href="mailto:?subject=Your Feedback is How We Improve&body=We are very Interested in Your Opinion! %0D %0DThe link below will direct you to a Customer Satisfaction Survey via SurveyMonkey. This survey will take less than 4 minutes to complete.%0D @Model.commercialCustomerSurvey_link %0D %0D Thank you for your time and your business.%0D %0D Sincerely,%0D @Model.employeeFullName,%0D @Model.Position." style="display:flex; justify-content:center">
+                            <div class="shadow-lg" style="width: 65%; height: 25vh; margin-top: 8vh; border: 2px solid #b1d2fc; border-radius: 10px; display: flex; justify-content: center; align-items: center; flex-direction: column">
+                                <img src="https://ctasehub.blob.core.windows.net/sehub-content/results.png" style="width:55%; object-fit:contain" alt="Alternate Text" />
+                                <span style="font-size:18px; font-weight:bold; margin:15px; color:black">Forward VIA Email</span>
+                            </div>
+                        </a>
+                    }
+                    else
+                    {
+                        <a style="display:flex; justify-content:center;">
+                            <div class="shadow-lg" style="width:65%; height:25vh; margin-top:8vh; border:2px solid #b1d2fc; border-radius:10px; display:flex; justify-content:center; align-items:center; flex-direction:column; background-color:#cacbcc; opacity:0.6">
+                                <img src="https://ctasehub.blob.core.windows.net/sehub-content/results.png" style="width:55%; object-fit:contain" alt="Alternate Text" />
+                                <span style="font-size:18px; font-weight:bold; margin:15px; color:black">Forward VIA Email</span>
+                            </div>
+                        </a>
+                    }
+
+
+                    @if (Model.commercialCustomerSurvey_read != null)
+                    {
+                        <a href="@Model.commercialCustomerSurvey_read" target="_blank">
+                            <div style="display: flex; justify-content: center">
+                                <div class="shadow-lg" style="width: 65%; height: 25vh; margin-top: 8vh; border: 2px solid #b1d2fc; border-radius: 10px; display: flex; justify-content: center; align-items: center; flex-direction: column">
+                                    <img src="https://ctasehub.blob.core.windows.net/sehub-content/email_survey.png" style="width:55%; object-fit:contain; margin-bottom:15px" alt="Alternate Text" />
+                                    <span style="font-size:20px; font-weight:bold; margin:10px; color:black">View Results</span>
+                                </div>
+                            </div>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="@Model.commercialCustomerSurvey_read" target="_blank">
+                            <div style="display: flex; justify-content: center">
+                                <div class="shadow-lg" style="width: 65%; height: 25vh; margin-top: 8vh; border: 2px solid #b1d2fc; border-radius: 10px; display: flex; justify-content: center; align-items: center; flex-direction: column; background-color:#cacbcc; opacity:0.6">
+                                    <img src="https://ctasehub.blob.core.windows.net/sehub-content/email_survey.png" style="width:55%; object-fit:contain; margin-bottom:15px" alt="Alternate Text" />
+                                    <span style="font-size:20px; font-weight:bold; margin:10px; color:black">View Results</span>
+                                </div>
+                            </div>
+                        </a>
+                    }
+
+                </div>
+                <div style="flex:3; background-color:white; display:flex; flex-direction:column; margin:5px; margin-right:30px; border-radius:10px; border:1px solid #a9afb8">
+                    <div style="width:100%; display:flex; justify-content:center; background-color:#3b8df7; border-top-left-radius:10px; border-top-right-radius:10px; padding:5px 0px">
+                        <span style="font-size: 25px; font-weight: bold; margin-left: auto; margin-right: auto; color: white"><i>Workplace </i></span>
+                    </div>
+
+                    @if (Model.work_place_survey != null)
+                    {
+                        <div id="@Model.work_place_survey" onclick="openPDF(this.id)" style="display:flex; justify-content:center">
+                            <div class="shadow-lg" style="width:65%; height:25vh; margin-top:8vh; border:2px solid #b1d2fc; border-radius:10px; display:flex; justify-content:center; align-items:center; flex-direction:column">
+                                <img src="https://ctasehub.blob.core.windows.net/sehub-content/Qr_code.png" style="width:55%; object-fit:contain" alt="Alternate Text" />
+                                <span style="font-size:18px; font-weight:bold; margin:15px; color:black">Open Survey Document</span>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="@Model.work_place_survey" onclick="openPDF(this.id)" style="display:flex; justify-content:center; ">
+                            <div class="shadow-lg" style="width:65%; height:25vh; margin-top:8vh; border:2px solid #b1d2fc; border-radius:10px; display:flex; justify-content:center; align-items:center; flex-direction:column; background-color:#cacbcc; opacity:0.6">
+                                <img src="https://ctasehub.blob.core.windows.net/sehub-content/Qr_code.png" style="width:55%; object-fit:contain" alt="Alternate Text" />
+                                <span style="font-size:18px; font-weight:bold; margin:15px; color:black">Open Survey Document</span>
+                            </div>
+                        </div>
+                    }
+
+
+                    @if (Model.employeeSurvey_read != null)
+                    {
+                        <a href="@Model.employeeSurvey_read" target="_blank">
+                            <div style="display: flex; justify-content: center">
+                                <div class="shadow-lg" style="width: 65%; height: 25vh; margin-top: 8vh; border: 2px solid #b1d2fc; border-radius: 10px; display: flex; justify-content: center; align-items: center; flex-direction: column">
+                                    <img src="https://ctasehub.blob.core.windows.net/sehub-content/email_survey.png" style="width:55%; object-fit:contain; margin-bottom:15px" alt="Alternate Text" />
+                                    <span style="font-size:20px; font-weight:bold; margin:10px; color:black">View Results</span>
+                                </div>
+                            </div>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="@Model.employeeSurvey_read" target="_blank">
+                            <div style="display: flex; justify-content: center">
+                                <div class="shadow-lg" style="width: 65%; height: 25vh; margin-top: 8vh; border: 2px solid #b1d2fc; border-radius: 10px; display: flex; justify-content: center; align-items: center; flex-direction: column; background-color:#cacbcc; opacity:0.6">
+                                    <img src="https://ctasehub.blob.core.windows.net/sehub-content/email_survey.png" style="width:55%; object-fit:contain; margin-bottom:15px" alt="Alternate Text" />
+                                    <span style="font-size:20px; font-weight:bold; margin:10px; color:black">View Results</span>
+                                </div>
+                            </div>
+                        </a>
+                    }
+
+
+                </div>
+                <div style="flex: 3; display: flex; flex-direction: column; margin: 5px; padding: 10px">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="Document" tabindex="-1" role="dialog" aria-labelledby="DocumentLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" style="width:650px">
+                    <div class="modal-body" style="padding:0px">
+                        <div>
+                            <iframe id="modal_content" src="" style="width:100%;height:93vh;"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+            function openPDF(val) {
+                if (val != "") {
+                    $('#modal_content').attr('src', val);
+                    $('#Document').modal();
+                }                
+            }
+
+        </script>
+
+    </body>
+</html>
+

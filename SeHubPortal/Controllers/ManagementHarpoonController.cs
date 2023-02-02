@@ -310,7 +310,7 @@ namespace SeHubPortal.Controllers
                 {
                     connection.Open();
                     StringBuilder sb = new StringBuilder();
-                    sb.Append("INSERT INTO tbl_harpoon_attendance_log VALUES (@auto_loc_id, @auto_emp_id, @event_id, @time_stamp , @client_id, @job_id)");
+                    sb.Append("INSERT INTO tbl_harpoon_attendance_log VALUES (@auto_loc_id, @auto_emp_id, @event_id, @time_stamp , @client_id, @job_id, @comments)");
 
                     string sql = sb.ToString();
                     using (SqlCommand command = new SqlCommand(sql, connection))
@@ -341,6 +341,15 @@ namespace SeHubPortal.Controllers
                         else
                         {
                             command.Parameters.AddWithValue("@job_id", "");
+                        }
+
+                        if (model.CreateEvent.comments != null)
+                        {
+                            command.Parameters.AddWithValue("@comments", model.CreateEvent.comments);
+                        }
+                        else
+                        {
+                            command.Parameters.AddWithValue("@comments", "");
                         }
 
                         command.ExecuteNonQuery();
@@ -457,12 +466,13 @@ namespace SeHubPortal.Controllers
             }
 
             DateTime current = new DateTime(System.DateTime.Now.Year, System.DateTime.Now.Month, 1);
+            DateTime lastDay = new DateTime(current.Year, current.Month, DateTime.DaysInMonth(current.Year, current.Month));
 
             List<KeyValuePair<int, string>> keyValuePair = new List<KeyValuePair<int, string>>();
             string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             using (SqlConnection con = new SqlConnection(constr))
             {
-                string query = "select distinct a.auto_emp_id, b.first_name, b.last_name, b.status from tbl_harpoon_attendance_log a, tbl_harpoon_employee b where "+ queryString + " a.auto_emp_id = b.auto_emp_id and time_stamp > '" + current + "' and time_stamp < '" + current.AddDays(28) + "'";
+                string query = "select distinct a.auto_emp_id, b.first_name, b.last_name, b.status from tbl_harpoon_attendance_log a, tbl_harpoon_employee b where "+ queryString + " a.auto_emp_id = b.auto_emp_id and time_stamp > '" + current + "' and time_stamp < '" + lastDay + "'";
   
                 using (SqlCommand cmd = new SqlCommand(query))
                 {
@@ -675,10 +685,10 @@ namespace SeHubPortal.Controllers
             return View(model);
         }
 
-        public JsonResult GetAttendanceDates(string empid, int mon)
+        public JsonResult GetAttendanceDates(string empid, int mon, int yar)
         {
-            string startDate = System.DateTime.Today.Year.ToString() + "-" + mon.ToString() + "-" + "1";
-            string endDate = System.DateTime.Today.Year.ToString() + "-" + mon.ToString() + "-" + System.DateTime.DaysInMonth(System.DateTime.Today.Year, mon) + " 23:00:00.000";
+            string startDate = yar.ToString() + "-" + mon.ToString() + "-" + "1";
+            string endDate = yar.ToString() + "-" + mon.ToString() + "-" + System.DateTime.DaysInMonth(yar, mon) + " 23:00:00.000";
             Trace.WriteLine(endDate + " isthe end date");
             var itemslist = new List<string>();
 
@@ -1192,6 +1202,8 @@ namespace SeHubPortal.Controllers
 
         public ActionResult populateEmployeeList(DateTime date, string loc)
         {
+            DateTime lastDay = new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month));
+
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             string uesrEmail = Session["userID"].ToString();
 
@@ -1205,7 +1217,7 @@ namespace SeHubPortal.Controllers
             {
                 using (SqlConnection con = new SqlConnection(constr))
                 {
-                    string query = "select distinct a.auto_emp_id, b.first_name, b.last_name, b.status from tbl_harpoon_attendance_log a, tbl_harpoon_employee b where a.client_id = '" + user.client_id + "' and a.auto_emp_id = b.auto_emp_id and time_stamp > '" + date + "' and time_stamp < '" + date.AddDays(28) + "'";
+                    string query = "select distinct a.auto_emp_id, b.first_name, b.last_name, b.status from tbl_harpoon_attendance_log a, tbl_harpoon_employee b where a.client_id = '" + user.client_id + "' and b.auto_loc_id = '" + loc + "' and a.auto_emp_id = b.auto_emp_id and time_stamp > '" + date + "' and time_stamp < '" + lastDay + "'";
 
                     using (SqlCommand cmd = new SqlCommand(query))
                     {
@@ -1244,7 +1256,7 @@ namespace SeHubPortal.Controllers
             {
                 using (SqlConnection con = new SqlConnection(constr))
                 {
-                    string query = "select distinct a.auto_emp_id, b.first_name, b.last_name, b.status from tbl_harpoon_attendance_log a, tbl_harpoon_employee b where a.client_id = '" + loc + "' and a.auto_emp_id = b.auto_emp_id and time_stamp > '" + date + "' and time_stamp < '" + date.AddDays(28) + "'";
+                    string query = "select distinct a.auto_emp_id, b.first_name, b.last_name, b.status from tbl_harpoon_attendance_log a, tbl_harpoon_employee b where a.client_id = '" + user.client_id + "' and a.auto_emp_id = b.auto_emp_id and time_stamp > '" + date + "' and time_stamp < '" + lastDay + "'";
         
                     using (SqlCommand cmd = new SqlCommand(query))
                     {
@@ -1284,7 +1296,7 @@ namespace SeHubPortal.Controllers
             
             using (SqlConnection con = new SqlConnection(constr))
             {
-                string query = "select distinct a.auto_emp_id, b.first_name, b.last_name, b.status from tbl_harpoon_attendance_log a, tbl_harpoon_employee b where a.auto_loc_id = '"+ loc +"' and a.auto_emp_id = b.auto_emp_id and time_stamp > '" + date + "' and time_stamp < '" + date.AddDays(28) + "'";
+                string query = "select distinct a.auto_emp_id, b.first_name, b.last_name, b.status from tbl_harpoon_attendance_log a, tbl_harpoon_employee b where a.auto_loc_id = '"+ loc +"' and a.auto_emp_id = b.auto_emp_id and time_stamp > '" + date + "' and time_stamp < '" + lastDay + "'";
       
                 using (SqlCommand cmd = new SqlCommand(query))
                 {
@@ -1322,7 +1334,7 @@ namespace SeHubPortal.Controllers
             {
                 value = x.Key,
                 text = x.Value
-            }).OrderBy(x => x.text).ToList(), JsonRequestBehavior.AllowGet);
+            }).OrderBy(x => x.text).Distinct().ToList(), JsonRequestBehavior.AllowGet);
         }
 
         public string populateEmployeeDetails(int auto_id)

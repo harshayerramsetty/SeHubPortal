@@ -1,85 +1,185 @@
 ﻿@model SeHubPortal.ViewModel.PopulateProductionReport
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title></title>
-</head>
-<body style="background-color:aqua">
 
-    @{ 
-        var workorders = Model.barcodeInfo.OrderBy(x => x.retread_workorder).Select(x => x.retread_workorder).Distinct().ToList();
-        var barcodes = Model.barcodeInfo.Select(x => x.barcode).Distinct().ToList();
-    }
-       
-    <div class="row" style="padding:0px 15px 0px 15px; ">
-        <div class="col-lg-12">
-                       
+@{
+    //var workorders = Model.barcodeInfo.OrderBy(x => x.retread_workorder).Select(x => x.retread_workorder).Distinct().ToList();
+    var barcodes = Model.barcodeInfo.Select(x => x.barcode).Distinct().ToList();
+    var failedBarcodes = Model.barcodeInfo.Where(x => x.TT600_result != "GOOD").Select(x => x.barcode).Distinct().ToList();
+}
 
-            @foreach (var item in workorders)
-            {
 
-                string custNum = Model.workOrderInfo.Where(x => x.retread_workorder == item).Select(x => x.customer_number).FirstOrDefault();
-                string custName = Model.customerInfo.Where(x => x.CustomerCode.ToString() == custNum).Select(x => x.CustomerName).FirstOrDefault().ToString();
+<div class="row" style="padding:0px 15px 0px 15px">
+    <div class="col-lg-12">
 
-                <div class="row" style="padding:20px 15px 0px 15px">
-                    <table class="table table-bordered" style="border-radius: 5px; margin-bottom:0px">
-                        <tbody>
-                            <tr>
-                                <td style="width:50%; font-size:17px; font-weight:bold; text-align:left; padding:10px"> Work Order Number : @item </td>
-                                <td style="width:50%; font-size:13px; text-align:right; padding:10px">
-                                    <div class="row">
-                                        <div class="col-lg-12 text-right">
-                                            <span><b>@custName</b></span>
-                                        </div>
-                                        
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-12 text-right">
-                                            <span><b>@custNum</b></span>
-                                        </div>                                                                                
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+        <table class="text-center" id="dontshow" style="margin-top:10px 30px; width:100%;">
+            <tr>
+                <td style="padding:10px; width:25%">
+                </td>
+                <td style="padding:10px; width:50%">
+                    <img src="~/Content/LoginLogo.png" style="width:350px;">
+                </td>
+                <td style="width:25%">
 
-                <table class="table table-bordered" style="border-radius: 5px;">
-                    <thead style="background-color:#84888c; color:white">
-                        <tr>
-                            <th scope="col" style="width:50px; font-size:10px; padding:0px; margin:0px;" class="text-center">Line #</th>
-                            <th scope="col" style="width:50px; font-size:10px; padding:0px; margin:0px;" class="text-center">Line Code</th>
-                            <th scope="col" style="width:170px; font-size:10px; padding:0px; margin:0px;" class="text-center">Barcode</th>
-                            <th scope="col" style="width:170px; font-size:10px; padding:0px; margin:0px;" class="text-center">Serial/Dot</th>
-                            <th scope="col" style="width:170px; font-size:10px; padding:0px; margin:0px;" class="text-center">Size</th>
-                            <th scope="col" style="width:170px; font-size:10px; padding:0px; margin:0px;" class="text-center">Brand</th>
-                            <th scope="col" style="width:150px; font-size:10px; padding:0px; margin:0px;" class="text-center">Tread</th>
-                            <th scope="col" style="width:100px; font-size:10px; padding:0px; margin:0px;" class="text-center">Ship To</th>
-                        </tr>
-                    </thead>
+                    <div class="row">
+                        <div class="col-lg-12 text-right">
+                            <p style="margin: 0px; padding: 0px; line-height : 10px">
+                                <font size="2">
+                                    @Model.locInfo.cta_street1,
+                                    @if (Model.locInfo.cta_street2 != null)
+                                    {
+                                        @Model.locInfo.cta_street2
+                                    }
+                                </font>
+                            </p>
+                            <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">@Model.locInfo.cta_city, @Model.locInfo.cta_province, @Model.locInfo.cta_postal_code</font></p>
+                            <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Phone : @Model.locInfo.cta_phone</font></p>
+                            <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Fax : @Model.locInfo.cta_fax</font></p>
+                            <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">www.citytire.com</font></p>
+
+                        </div>
+
+                    </div>
+
+                </td>
+            </tr>
+        </table>
+
+        <table style="margin-top:10px 15px; width:100%; border:1px solid #dee0e3">
+            <tr>
+                <td style="padding:10px; width:5%">
+                    <img style="width:80px" src="~/Content/trdIcon.png" alt="Alternate Text" />
+                </td>
+                <td style="padding: 10px; width: 23%">
+
+                    <div class="row">
+                        <div class="col-lg-12 text-left">
+                            <h4>TREAD</h4>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 text-left">
+                            <h4>TRACKER</h4>
+                        </div>
+                    </div>
+                </td>
+                <td style="padding:10px; width:33%">
+                    <div class="row">
+                        <div class="col-lg-12 text-center">
+                            <h3>PRODUCTION REPORT</h3>
+                        </div>
+
+                    </div>
+                </td>
+                <td style="padding:10px; width:33%">
+                    <div class="row">
+                        <div class="col-lg-12 text-right">
+                            <h5 style="text-transform: uppercase;" id="dateText">
+                                @Model.date.ToString("dddd - MMM dd, yyyy")
+                            </h5>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12 text-right">
+                            <h5 style="text-transform: uppercase;" id="TotalProduction">Total Production: @(barcodes.Count - failedBarcodes.Count)</h5>
+                        </div>
+                    </div>
+
+                    @if (failedBarcodes.Count != 0)
+                    {
+                        <div class="row">
+                            <div class="col-lg-12 text-right">
+                                <h5 style="text-transform: uppercase; color:#f01405" id="TotalProduction">Total Failed: @failedBarcodes.Count</h5>
+                            </div>
+                        </div>
+                    }
+
+                </td>
+            </tr>
+        </table>
+
+
+        @foreach (var item in Model.workOrderInfo)
+        {
+
+            string custNum = Model.workOrderInfo.Where(x => x.retread_workorder == item.retread_workorder).Select(x => x.customer_number).FirstOrDefault();
+            string custName = Model.customerInfo.Where(x => x.CustomerCode.ToString() == custNum).Select(x => x.CustomerName).FirstOrDefault().ToString();
+
+            <div class="row" style="padding:20px 15px 0px 15px">
+                <table class="table table-bordered" style="border-radius: 5px; margin-bottom:0px">
                     <tbody>
-                        @foreach (var barcode in Model.barcodeInfo.Where(x => x.retread_workorder == item))
-                        {
-                            <tr>
-                                <td style="font-size:13px; text-align:center; padding:10px">@barcode.line_number</td>
-                                <td style="font-size:13px; text-align:center; padding:10px">@barcode.line_code</td>
-                                <td style="font-size:13px; text-align:center; padding:10px">@barcode.barcode</td>
-                                <td style="font-size:13px; text-align:center; padding:10px">@barcode.serial_dot</td>
-                                <td style="font-size:13px; text-align:center; padding:10px">@barcode.casing_size</td>
-                                <td style="font-size:13px; text-align:center; padding:10px">@barcode.casing_brand</td>
-                                <td style="font-size:13px; text-align:center; padding:10px">@barcode.retread_design</td>
-                                <td style="font-size:13px; text-align:center; padding:10px">@barcode.ship_to_location</td>
-                            </tr>
-                        }
+                        <tr>
+                            <td style="width:50%; font-size:20px; font-weight:bold; text-align:left; padding:10px"> Work Order Number : @item.retread_workorder </td>
+                            <td style="width:50%; font-size:15px; text-align:right; padding:10px">
+                                <div class="row">
+                                    <div class="col-lg-12 text-right">
+                                        <span><b>@custName</b></span>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 text-right">
+                                        <span><b>@custNum</b></span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
-            }
+            </div>
 
-        </div>
-        
+            <table class="table table-bordered" style="border-radius: 5px;">
+                <thead style="background-color:#84888c; color:white">
+                    <tr>
+                        <th scope="col" style="width:50px; font-size:10px; padding:0px; margin:0px;" class="text-center">Line #</th>
+                        <th scope="col" style="width:50px; font-size:10px; padding:0px; margin:0px;" class="text-center">Line Code</th>
+                        <th scope="col" style="width:170px; font-size:10px; padding:0px; margin:0px;" class="text-center">Barcode</th>
+                        <th scope="col" style="width:170px; font-size:10px; padding:0px; margin:0px;" class="text-center">Serial/Dot</th>
+                        <th scope="col" style="width:170px; font-size:10px; padding:0px; margin:0px;" class="text-center">Size</th>
+                        <th scope="col" style="width:170px; font-size:10px; padding:0px; margin:0px;" class="text-center">Brand</th>
+                        <th scope="col" style="width:150px; font-size:10px; padding:0px; margin:0px;" class="text-center">Tread</th>
+                        <th scope="col" style="        width: 100px;
+        font-size: 10px;
+        padding: 0px;
+        margin: 0px;" class="text-center">Ship To</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var barcode in Model.barcodeInfo.Where(x => x.retread_workorder == item.retread_workorder && x.TT600_result == "GOOD"))
+                    {
+                        <tr>
+                            <td style="font-size:15px; text-align:center; padding:10px">@barcode.line_number</td>
+                            <td style="font-size:15px; text-align:center; padding:10px">@barcode.line_code</td>
+                            <td style="font-size:15px; text-align:center; padding:10px">@barcode.barcode</td>
+                            <td style="font-size:15px; text-align:center; padding:10px">@barcode.serial_dot</td>
+                            <td style="font-size:15px; text-align:center; padding:10px">@barcode.casing_size</td>
+                            <td style="font-size:15px; text-align:center; padding:10px">@barcode.casing_brand</td>
+                            <td style="font-size:15px; text-align:center; padding:10px">@barcode.retread_design</td>
+                            <td style="font-size:15px; text-align:center; padding:10px">@barcode.ship_to_location</td>
+                        </tr>
+                    }
+
+                    @foreach (var barcode in Model.barcodeInfo.Where(x => x.retread_workorder == item.retread_workorder && x.TT600_result != "GOOD"))
+                    {
+                        <tr style="color:#f01405">
+                            <td style="font-size:15px; text-align:center; padding:10px;">@barcode.line_number</td>
+                            <td style="font-size:15px; text-align:center; padding:10px;">@barcode.line_code</td>
+                            <td style="font-size:15px; text-align:center; padding:10px">@barcode.barcode</td>
+                            <td style="font-size:15px; text-align:center; padding:10px">@barcode.serial_dot</td>
+                            <td style="font-size:15px; text-align:center; padding:10px">@barcode.casing_size</td>
+                            <td style="font-size:15px; text-align:center; padding:10px">@barcode.casing_brand</td>
+                            <td style="font-size:15px; text-align:center; padding:10px">@barcode.retread_design</td>
+                            <td style="font-size:15px; text-align:center; padding:10px">FAIL</td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+
+        }
+
     </div>
-    <script>
-        $('#TotalProduction').html('Total Production : ' + @barcodes.Count)
-    </script>
-</body>
-
-</html>
+</div>

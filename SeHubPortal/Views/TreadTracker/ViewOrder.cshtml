@@ -357,45 +357,110 @@
                                             </div>
                                         </div>
                                         <div class="col-md-7" style="padding-left:6px">
+
                                             <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
                                                 <div class="card-body" style="padding-top:10px; padding-bottom:10px">
-                                                    <div class="row" style="padding:0px 15px 0px 15px">
-                                                        <div class="col-lg-7" style="padding:0px">
+                                                    
+                                                    <div class="row">
+                                                        <div class="col-md-12" style="display:flex; justify-content:space-between">
                                                             <h4>@Model.CustomerInfo.CustomerName</h4>
-                                                        </div>
-                                                        <div class="col-lg-5 text-right" style="padding:0px">
-                                                            <h4>@Model.CustomerInfo.CustomerCode</h4>
+                                                            <h4 id="customerNumber">@Model.CustomerInfo.CustomerCode</h4>
                                                         </div>
                                                     </div>
+
+                                                    @{
+                                                        String address1 = "" + Model.CustomerInfo.Address1 + Model.CustomerInfo.Address2;
+                                                        String address2 = "" + Model.CustomerInfo.Address3 + "," + Model.CustomerInfo.Postcode + "Canada";
+                                                    }
                                                     <div class="row">
-                                                        <div class="col-lg-6">
-                                                            <div class="row" style="margin-bottom:5px">
-                                                                <div class="col-lg-6">
-                                                                    Contact
-                                                                </div>
-                                                                <div class="col-lg-6">
-
-                                                                </div>
+                                                        <div class="col-md-12" style="display:flex; justify-content:space-between">
+                                                            <div style="display:flex; justify-content:space-between; flex:4">
+                                                                <span>
+                                                                    Age Limit (Years)
+                                                                </span>
+                                                                <span>
+                                                                    @if (Model.AgeLimit != null)
+                                                                    {
+                                                                        <b>@Model.AgeLimit</b>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <b>N/A</b>
+                                                                    }
+                                                                </span>
                                                             </div>
-                                                            <div class="row" style="margin-bottom:5px">
-                                                                <div class="col-lg-6">
-                                                                    Email
-                                                                </div>
-                                                                <div class="col-lg-6">
-
-                                                                </div>
+                                                            <div style="flex:0.5"></div>
+                                                            <div style="display:flex; justify-content:space-between; flex:4">
+                                                                <span>Contact</span>
+                                                                <span>
+                                                                    @if (Model.customerContact != null)
+                                                                    {
+                                                                        <b>@Model.customerContact</b>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <b>N/A</b>
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                            <div style="display:flex; justify-content:space-between; flex:5">
+                                                                <span></span>
+                                                                <span>
+                                                                    @if (address1.Length > 23)
+                                                                    {
+                                                                        <b>@address1.Substring(0, 22)</b>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <b>@address1</b>
+                                                                    }
+                                                                </span>
                                                             </div>
                                                         </div>
-                                                        <div class="col-lg-6 text-right" style="padding-right:15px">
-                                                            <div class="row" style="margin-bottom:5px">
-                                                                <div class="col-lg-12 text-right">
-                                                                    @Model.CustomerInfo.Address1 @Model.CustomerInfo.Address2
-                                                                </div>
+                                                    </div>
+                                                    <div class="row" style="margin-top:10px">
+                                                        <div class="col-md-12" style="display:flex; justify-content:space-between">
+                                                            <div style="display:flex; justify-content:space-between; flex:4">
+                                                                <span>
+                                                                    Brand Name ONLY
+                                                                </span>
+                                                                <span>
+                                                                    @if (Model.BrandRequirements != null)
+                                                                    {
+                                                                        <b>@Model.BrandRequirements</b>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <b>N/A</b>
+                                                                    }
+                                                                </span>
                                                             </div>
-                                                            <div class="row" style="margin-bottom:5px">
-                                                                <div class="col-lg-12 text-right">
-                                                                    @Model.CustomerInfo.Address2, @Model.CustomerInfo.Address3 @Model.CustomerInfo.Postcode Canada
-                                                                </div>
+                                                            <div style="flex:0.5"></div>
+                                                            <div style="display:flex; justify-content:space-between; flex:4">
+                                                                <span>Email</span>
+                                                                <span>
+                                                                    @if (Model.reportingEmail != null)
+                                                                    {
+                                                                        <b>@Model.reportingEmail</b>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <b>N/A</b>
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                            <div style="display:flex; justify-content:space-between; flex:5">
+                                                                <span></span>
+                                                                <span>
+                                                                    @if (address2.Length > 23)
+                                                                    {
+                                                                        <b>@address2.Substring(0, 22)</b>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <b>@address2</b>
+                                                                    }
+                                                                </span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -421,7 +486,7 @@
                                                             <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Serial/DOT</th>
                                                             <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Size</th>
                                                             <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Brand</th>
-                                                            <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Virgin</th>
+                                                            <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Cap Count</th>
                                                             <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Tread</th>
                                                             <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Unit ID</th>
                                                             <th scope="col" style="height:18px; font-size:10px; padding:0px !important; margin:0px;" class="text-center">Status</th>
@@ -476,7 +541,7 @@
                                                                         @*<div id="Brand1Div"></div>*@
                                                                         @*@Html.EditorFor(modelItem => barcodes.casing_brand)*@
                                                                         @*@Html.DropDownListFor(modelItem => barcodes.casing_brand, new SelectList(ViewBag.CasingBrandList, "brand_id", "casing_brand", barcodes.brand_id))*@
-                                                                        @Html.CheckBoxFor(m => m.BarcodeInformation[i].virgin, new { onclick = "return false", @style = "margin:0px" })
+                                                                        @Html.DisplayFor(m => m.BarcodeInformation[i].cap_count)
                                                                     </td>
                                                                 }
                                                                 else
@@ -496,47 +561,47 @@
                                                                 </td>
 
                                                                 <td style="padding:3px; vertical-align:middle">
-                                                                    @if (Model.BarcodeInformation[i].final_inspection_result == null)
+                                                                    @if (Model.BarcodeInformation[i].TT600_result == null)
                                                                     {
-                                                                        if (Model.BarcodeInformation[i].buffer_builder_result == null)
+                                                                        if (Model.BarcodeInformation[i].TT200_result == null)
                                                                         {
-                                                                            if (Model.BarcodeInformation[i].ndt_machine_result == null)
+                                                                            if (Model.BarcodeInformation[i].TT100_result == null)
                                                                             {
-                                                                                @Model.BarcodeInformation[i].preliminary_inspection_result
+                                                                                @Model.BarcodeInformation[i].TT050_result
                                                                             }
                                                                             else
                                                                             {
-                                                                                @Model.BarcodeInformation[i].ndt_machine_result
+                                                                                @Model.BarcodeInformation[i].TT100_result
                                                                             }
                                                                         }
                                                                         else
                                                                         {
-                                                                            @Model.BarcodeInformation[i].buffer_builder_result
+                                                                            @Model.BarcodeInformation[i].TT200_result
                                                                         }
 
                                                                     }
                                                                     else
                                                                     {
-                                                                        if (Model.BarcodeInformation[i].final_inspection_result == "GOOD")
+                                                                        if (Model.BarcodeInformation[i].TT600_result == "GOOD")
                                                                         {
                                                                             <lable>COMPLETE</lable>
                                                                         }
                                                                         else
                                                                         {
-                                                                            <lable>@Model.BarcodeInformation[i].final_inspection_result</lable>
+                                                                            <lable>@Model.BarcodeInformation[i].TT600_result</lable>
                                                                         }
                                                                     }
                                                                 </td>
                                                                 @if (Model.BarcodeInformation[i].barcode != null)
                                                                 {
                                                                     <td style="width:270px; padding:3px; vertical-align:middle">
-                                                                        @if (Model.BarcodeInformation[i].final_inspection_result == null)
+                                                                        @if (Model.BarcodeInformation[i].TT600_result == null)
                                                                         {
-                                                                            if (Model.BarcodeInformation[i].buffer_builder_result == null)
+                                                                            if (Model.BarcodeInformation[i].TT200_result == null)
                                                                             {
-                                                                                if (Model.BarcodeInformation[i].ndt_machine_result == null)
+                                                                                if (Model.BarcodeInformation[i].TT100_result == null)
                                                                                 {
-                                                                                    if (Model.BarcodeInformation[i].preliminary_inspection_result.ToUpper() == "GOOD")
+                                                                                    if (Model.BarcodeInformation[i].TT050_result.ToUpper() == "GOOD")
                                                                                     {
                                                                                         <div class="progress" style="margin-right:10px">
                                                                                             <div class="progress-bar bg-success  progress-bar-animated" role="progressbar" style="width:25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
@@ -552,7 +617,7 @@
                                                                                 }
                                                                                 else
                                                                                 {
-                                                                                    if (Model.BarcodeInformation[i].ndt_machine_result.ToUpper() == "GOOD")
+                                                                                    if (Model.BarcodeInformation[i].TT100_result.ToUpper() == "GOOD")
                                                                                     {
                                                                                         <div class="progress" style="margin-right:10px">
                                                                                             <div class="progress-bar bg-success  progress-bar-animated" role="progressbar" style="width:50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
@@ -568,7 +633,7 @@
                                                                             }
                                                                             else
                                                                             {
-                                                                                if (Model.BarcodeInformation[i].buffer_builder_result.ToUpper() == "GOOD")
+                                                                                if (Model.BarcodeInformation[i].TT200_result.ToUpper() == "GOOD")
                                                                                 {
                                                                                     <div class="progress" style="margin-right:10px">
                                                                                         <div class="progress-bar bg-success  progress-bar-animated" role="progressbar" style="width:75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
@@ -586,11 +651,15 @@
                                                                         }
                                                                         else
                                                                         {
-                                                                            if (Model.BarcodeInformation[i].final_inspection_result.ToUpper() == "GOOD")
+                                                                            if (Model.BarcodeInformation[i].TT600_result.ToUpper() == "GOOD")
                                                                             {
-                                                                                <div class="progress" style="margin-right:10px">
-                                                                                    <div class="progress-bar bg-success progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                                </div>
+                                                                                if (Model.BarcodeInformation[i].TT600_date != null)
+                                                                                {
+                                                                                    <span>@Model.BarcodeInformation[i].TT600_date.Value.ToString("MMM dd, yyyy")</span>
+                                                                                }
+                                                                                else{
+                                                                                    <span>Date Unavailable</span>
+                                                                                }
                                                                             }
                                                                             else
                                                                             {
@@ -638,44 +707,55 @@
                                         <div class="card-body" style="padding:10px">
                                             <div class="row" style="padding:0px 15px 10px 0px">
                                                 <div class="col-md-12" style="max-height :50px">
+
+                                                    @{ 
+                                                        List<string> failurecodes = new List<string>();
+                                                    }
+
                                                     @for (int i = 0; i < Model.BarcodeInformation.Count; i++)
                                                     {
-                                                        if (Model.BarcodeInformation[i].final_inspection_result == null)
+                                                        if (Model.BarcodeInformation[i].TT600_result == null)
                                                         {
-                                                            if (Model.BarcodeInformation[i].buffer_builder_result == null)
+                                                            if (Model.BarcodeInformation[i].TT200_result == null)
                                                             {
-                                                                if (Model.BarcodeInformation[i].ndt_machine_result == null)
+                                                                if (Model.BarcodeInformation[i].TT100_result == null)
                                                                 {
-                                                                    if (Model.BarcodeInformation[i].preliminary_inspection_result != "GOOD" && Model.BarcodeInformation[i].preliminary_inspection_result != "Good" && Model.BarcodeInformation[i].preliminary_inspection_result != null)
+                                                                    if (Model.BarcodeInformation[i].TT050_result != "GOOD" && Model.BarcodeInformation[i].TT050_result != "Good" && Model.BarcodeInformation[i].TT050_result != null)
                                                                     {
-                                                                        <span style="margin:0px 15px 0px 15px">[@Model.BarcodeInformation[i].preliminary_inspection_result] --> @Model.FailureCodesBarcodeInformation.Where(x => x.code == Model.BarcodeInformation[i].preliminary_inspection_result).Select(x => x.description).FirstOrDefault()</span>
+                                                                        failurecodes.Add(Model.BarcodeInformation[i].TT050_result);
                                                                     }
                                                                 }
                                                                 else
                                                                 {
-                                                                    if (Model.BarcodeInformation[i].ndt_machine_result != "GOOD" && Model.BarcodeInformation[i].ndt_machine_result != "Good" && Model.BarcodeInformation[i].ndt_machine_result != null)
+                                                                    if (Model.BarcodeInformation[i].TT100_result != "GOOD" && Model.BarcodeInformation[i].TT100_result != "Good" && Model.BarcodeInformation[i].TT100_result != null)
                                                                     {
-                                                                        <span style="margin:0px 15px 0px 15px">[@Model.BarcodeInformation[i].ndt_machine_result] --> @Model.FailureCodesBarcodeInformation.Where(x => x.code == Model.BarcodeInformation[i].ndt_machine_result).Select(x => x.description).FirstOrDefault()</span>
+                                                                        failurecodes.Add(Model.BarcodeInformation[i].TT100_result);
                                                                     }
                                                                 }
                                                             }
                                                             else
                                                             {
-                                                                if (Model.BarcodeInformation[i].buffer_builder_result != "GOOD" && Model.BarcodeInformation[i].buffer_builder_result != "Good" && Model.BarcodeInformation[i].buffer_builder_result != null)
+                                                                if (Model.BarcodeInformation[i].TT200_result != "GOOD" && Model.BarcodeInformation[i].TT200_result != "Good" && Model.BarcodeInformation[i].TT200_result != null)
                                                                 {
-                                                                    <span style="margin:0px 15px 0px 15px">[@Model.BarcodeInformation[i].buffer_builder_result] --> @Model.FailureCodesBarcodeInformation.Where(x => x.code == Model.BarcodeInformation[i].buffer_builder_result).Select(x => x.description).FirstOrDefault()</span>
+                                                                    failurecodes.Add(Model.BarcodeInformation[i].TT200_result);
                                                                 }
                                                             }
 
                                                         }
                                                         else
                                                         {
-                                                            if (Model.BarcodeInformation[i].final_inspection_result != "GOOD" && Model.BarcodeInformation[i].final_inspection_result != "Good" && Model.BarcodeInformation[i].final_inspection_result != null)
+                                                            if (Model.BarcodeInformation[i].TT600_result != "GOOD" && Model.BarcodeInformation[i].TT600_result != "Good" && Model.BarcodeInformation[i].TT600_result != null)
                                                             {
-                                                                <span style="margin:0px 15px 0px 15px">[@Model.BarcodeInformation[i].final_inspection_result] --> @Model.FailureCodesBarcodeInformation.Where(x => x.code == Model.BarcodeInformation[i].final_inspection_result).Select(x => x.description).FirstOrDefault()</span>
+                                                                failurecodes.Add(Model.BarcodeInformation[i].TT600_result);
                                                             }
                                                         }
                                                     }
+
+                                                    @foreach(var cod in failurecodes.Distinct())
+                                                    {
+                                                        <span>@cod  --> @Model.FailureCodesBarcodeInformation.Where(x => x.code == cod).Select(x => x.description).FirstOrDefault()</span>
+                                                    }
+
                                                 </div>
 
                                             </div>
@@ -820,9 +900,6 @@
 
         function email() {
             let div = document.getElementById('printThis'); 
-
-            
-
             $('#dontshowemail').show();
 
             html2canvas(div).then(
@@ -845,8 +922,6 @@
                 }
             )
         }
-
-
     </script>
 </body>
 </html>

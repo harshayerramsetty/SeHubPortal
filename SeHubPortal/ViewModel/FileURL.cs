@@ -29,6 +29,8 @@ namespace SeHubPortal.ViewModel
         public int editVacationEmployee { get; set; }
          
         public List<TechnicianEfficiencyViewModel> techefficiencyList { get; set; }
+        public List<SelectListItem> TechnicianTypeList { get; set; }
+        public string TechnicianType { get; set; }
         public string SortBy { get; set; }
         public string Year { get; set; }
 
@@ -48,5 +50,17 @@ namespace SeHubPortal.ViewModel
 
         public List<SelectListItem> Positions { get; set; }
         public tbl_harpoon_clients client_info { get; set; }
+
+        public string signature { get; set; }
+        public bool mailTo { get; set; }
+
+        public string work_place_survey { get; set; }
+        public string customer_satisfaction_survey { get; set; }
+
+
+        public string employeeSurvey_read { get; set; }
+        public string customerSurvey_read { get; set; }
+        public string commercialCustomerSurvey_read { get; set; }
+
     }
 }

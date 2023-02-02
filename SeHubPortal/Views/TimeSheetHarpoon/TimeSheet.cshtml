@@ -1,28 +1,18 @@
-﻿@model SeHubPortal.ViewModel.FileURL
+﻿@model SeHubPortal.ViewModel.HarpoonTimesheetViewModel
 @{
     ViewBag.Title = "TimeSheet";
     Layout = "~/Views/Shared/_LayoutHarpoon.cshtml";
 }
 
-<!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta name="viewport" content="width=device-width" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" rel="stylesheet" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.css" rel="stylesheet" media="print" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/1.1.9/js/libs/jquery-1.10.2.min.js"></script>
 
     @if (Model.client_info.employees_page.Value)
     {
@@ -42,151 +32,1050 @@
     }
 
     <style>
+            .nav-link {
+                width: 100%;
+                font-size: 0.8vw;
+                font-weight: bolder
+            }
 
-        #TimesheetClicked {
-            display: block !important;
-        }
+            #SettingsClicked {
+                display: block !important;
+            }
 
-        #TimesheetClicked {
-            background-color: #f0f2f5;
-            color: black;
-            font-weight: 600;
-        }
+            .fc-disabled-day {
+                background-color: #d2d2d2;
+            }
 
-        #timesheetBtn {
-            color: black;
-            font-weight: 600;
-        }
+            .fc-day {
+                background-color: white;
+            }
+
+            .fc-toolbar h2 {
+                color: #008ce3;
+                font-style:italic;
+                font-size:1.5vw;
+                font-weight:bold
+            }
+
+            @*
+
+            .fc-left {
+                background-color: #008ce3;
+                color: white;
+                border-radius: 0.3vw
+            }
+
+            .fc-right {
+                background-color: #008ce3;
+                color: white;
+                border-radius: 0.3vw
+            }
+
+                *@
 
 
-        body {
-            background-color: #f0f2f5;
-        }
+            .fc-widget-header {
+                background-color: #b1d2fc;
+                color: black;
+                font-size:0.6vw
+            }
+
+            #TimesheetClicked {
+                display: block !important;
+            }
+
+            #TimesheetClicked {
+                background-color: #f0f2f5;
+                color: black;
+                font-weight: 600;
+            }
+
+            #timesheetBtn {
+                color: black;
+                font-weight: 600;
+            }
 
 
-        .example::-webkit-scrollbar {
-            display: none;
-        }
+            body {
+                background-color: #f0f2f5;
+            }
 
-        /* Hide scrollbar for IE, Edge and Firefox */
-        .example {
-            -ms-overflow-style: none; /* IE and Edge */
-            scrollbar-width: none; /* Firefox */
-        }
+
+            .example::-webkit-scrollbar {
+                display: none;
+            }
+
+            /* Hide scrollbar for IE, Edge and Firefox */
+            .example {
+                -ms-overflow-style: none; /* IE and Edge */
+                scrollbar-width: none; /* Firefox */
+            }
+
+            .selectedEmployee {
+                background-color: dimgray;
+                color: white;
+                font-weight: bolder;
+            }
+
+            .empButton {
+                border: 1px solid dimgray;
+                border-radius: 4px;
+                cursor: pointer;
+                padding: 0.7vw;
+                width: 100%;
+                font-style: italic;
+                box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.55);
+                -webkit-box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.55);
+                -moz-box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.55);
+            }
+
+            .tab-content {
+                height: 83vh;
+                background-color: white;
+                margin: 0px;
+                padding: 0px;
+                border-left: 1px solid #d1d1d1;
+                border-bottom: 1px solid #d1d1d1;
+                border-right: 1px solid #d1d1d1
+            }
+
+            .heading {
+                margin: 10px 0px 0px 0px;
+            }
+
+            .heading-left {
+                margin: 0px 5px 15px 15px;
+                padding: 10px;
+                background-color: white;
+            }
+
+            .nav-item {
+                width: 10vw;
+                font-size: 0.8vw;
+                text-align: center;
+            }
+
+            .lineStile {
+                width: 3.2vw;
+                height: 1.7vw;
+                text-align: center
+            }
+
+            .lineStileModal{
+                text-align-last:center;
+                text-align:center;
+                margin:10px;
+                font-weight:bold;
+                font-style:italic;
+                font-size:45px;
+                width:40%
+            }
+
+            td {
+                text-align: center;
+                vertical-align: middle;
+                text-align-last: center;
+                font-size: 0.8vw
+            }
+
+            th {
+                flex-direction: column;
+            }
+
+            .card {
+                border: 2px solid #b1d2fc
+            }
+
+            .card-header, .modal-header {
+                padding: 5px 15px;
+                background-color: #b1d2fc;
+                font-size: 1vw;
+                font-style: italic;
+                font-weight: bolder
+            }
+
+            .summaryLable {
+                justify-content: center;
+                width: 70%;
+                display: flex;
+                align-items: center;
+                border: 2px solid dimgray;
+                padding: 3px 0px;
+                font-weight: bold;
+                font-style: italic;
+                font-size: 0.7vw;
+                height: 2vw
+            }
+
+            .summaryValue {
+                justify-content: center;
+                width: 30%;
+                display: flex;
+                align-items: center;
+                background-color: dimgray;
+                color: white;
+                font-size: 20px;
+                padding: 3px 5px;
+                font-weight: bold;
+                font-style: italic;
+                font-size: 1.1vw;
+                height: 2vw
+            }
+
+            .summaryItem {
+                margin-bottom: 1vw;
+            }
+
+            .optionDetails {
+                font-size: 0.7vw;
+                padding: 0px;
+                display: flex;
+                justify-content: space-between;
+                font-style: italic;
+                font-weight: bold
+            }
+
+            .dayName {
+                font-size: 0.8vw;
+                font-weight: bold
+            }
+
+            .shortDate {
+                font-size: 0.5vw;
+            }
+
+            li > a {
+                font-weight: bold
+            }
+
+            .spaceBetweenNav {
+                flex-grow: 100
+            }
+
+            .timesheetBody {
+                padding: 0.5vw 1.1vw
+            }
+
+            .locationNav {
+                background-color: white;
+                border: 1px solid #f0f2f5;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .locationDropdown {
+                text-align-last: center;
+                flex-grow:100;
+                height: 1.2vw;
+                font-size: 0.8vw
+            }
+
+            .timesheetMain {
+                padding: 0.8vw 0;
+                display: flex
+            }
+
+            .employeeList {
+                flex: 2;
+                margin: 0px 0px 0px 0.8vw;
+                padding-right:0px
+            }
+
+            .timesheetEntry {
+                padding-left: 0px;
+                flex: 10;
+                margin: 0px 0.8vw
+            }
+
+            #lodingWheel {
+                display: none;
+                width: 100%;
+                height: 100%;
+            }
+
+            .loadingWheelContainer {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center
+            }
+
+            .loadingImage {
+                width: 100px;
+            }
+
+            #timesheetBody {
+                width: 100%;
+                height: 100%;
+            }
+
+            .firstRow {
+                display: flex;
+                margin-bottom: 0.8vw
+            }
+
+            .firstRowLeft {
+                flex: 5.23;
+                border: 2px solid dimgray;
+                border-radius: 5px;
+                padding: 0.8vw;
+                margin-right:0.8vw
+            }
+
+            .employeeName {
+                font-weight: bolder;
+                font-size: 1.5vw;
+                font-style: italic
+            }
+
+            .firstRowRight {
+                flex: 5;
+                border: 2px solid dimgray;
+                border-radius: 5px;
+                padding: 0.8vw
+            }
+
+            .empListOverflow {
+                height: 80vh;
+                overflow-y: auto;
+                font-size: 0.7vw
+            }
+
+            .totalHoursContainer {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                height:100%;
+                border: 2px solid dimgray;
+            }
+
+            .totalHoursLable {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                background-color: dimgray;
+                color: white;
+                font-weight: bolder;
+                font-size: 1vw;
+                font-style: italic;
+                padding: 0.3vw
+            }
+
+            .totalHoursValue {
+                width: 100%;
+                flex-grow: 100;
+                font-size: 7vw;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-weight: bolder;
+                color: dimgray;
+            }
+
+            .hoursSagrigation {
+                flex: 7;
+            }
+
+            .timesheetOverflow {
+                height: 70vh;
+                overflow-y: auto
+            }
+
+            .firstCard {
+                margin-top: 0px
+            }
+
+                .firstCard > .card-body {
+                    padding-right: 0px
+                }
+
+            .timesheetSummary {
+                display: flex;
+                padding: 0px 0.8vw
+            }
+
+            .hoursSagrigationRows {
+                display: flex;
+                justify-content: space-between
+            }
+
+            .timesheetEntryTable {
+                border-bottom: 2px solid #e8e8e8;
+            }
+
+                .timesheetEntryTable > thead > tr > th {
+                    text-align: center;
+                }
+
+            .attendanceHelperTable > tbody > .attendanceHelperTableFirstRow > td {
+                border-top: none
+            }
+
+            .attendanceHelperTable > tbody > tr > td > input {
+                width: 3.2vw;
+                text-align: center;
+                border: none;
+                outline: none
+            }
+
+            .attendanceHelperTable > tbody > tr > td {
+                padding: 3px
+            }
+
+            .sideLable {
+                width: 5vw
+            }
+
+            .hoursSagrigationLeft {
+                flex: 3
+            }
+
+            .comments {
+                width: 100%;
+                height: 5vw;
+            }
+
+            .fc-scroller {
+              height: auto !important;
+            }
+
+            ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+              color: dimgray;
+              opacity: 0.3; /* Firefox */
+            }
+
+            :-ms-input-placeholder { /* Internet Explorer 10-11 */
+              color: dimgray;
+            }
+
+            ::-ms-input-placeholder { /* Microsoft Edge */
+              color: dimgray;
+            }
+
+            .fc-event{
+                padding:0px;
+                font-size: 0.6vw;
+                font-weight:bolder;
+                margin:0px;
+                display:flex;
+                justify-content:center;
+                align-items:center
+            }
+
+            .fc-button{
+                padding:0px 1vw !important;
+                font-size:0.7vw !important;
+                font-weight:bolder !important;
+            }
+
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+              -webkit-appearance: none;
+              margin: 0;
+            }
+
+            /* Firefox */
+            input[type=number] {
+              -moz-appearance: textfield;
+            }
+
+            .displayNone{
+                display:none;
+            }
 
     </style>
+
 </head>
 <body>
+    <div class="row timesheetBody">
+        <div class="col-md-12">
 
+        </div>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="true">Dashboard</button>
+            </li>
+            <li class="nav-item timesheetLink" role="presentation">
+                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#timesheet" type="button" role="tab" aria-controls="timesheet" aria-selected="false">Timesheet</button>
+            </li>
+            <li class="spaceBetweenNav"></li>
+            <li class="nav-item locationNav" role="presentation">
+                @using (Html.BeginForm("ChangeTimeSheetID", "TimeSheetHarpoon", FormMethod.Post))
+                {
+                    @Html.DropDownListFor(m => m.Timesheet_id, Model.Timeshet_ids, new { @id = "timesheet_id", @onChange = "this.form.submit()", @type = "text", @class = "locationDropdown" })
+                    @Html.HiddenFor(m => m.MatchedLocID)
+                    @Html.HiddenFor(m => m.SelectedEmployeeId)
+                }
+            </li>
+            <li class="nav-item locationNav" role="presentation">
+                @using (Html.BeginForm("ChangeLocTimeSheet", "TimeSheetHarpoon", FormMethod.Post))
+                {
+                    @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "Select", new { @onChange = "this.form.submit()", @type = "text", @class = "locationDropdown" })
+                    
+                }
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="home-tab">
+                <div class="row" style="display:flex; padding:0.7vw 1.4vw">
+                    <div style="flex:3; border: 2px solid dimgray; border-radius:0.5vw; height:80vh; margin-right:0.5vw; display:flex; flex-direction:column">
 
-    <div class="row heading" style="margin:10px 0px 0px 0px">
-        <div class="col" style="margin:0px 5px 15px 15px; padding:10px; background-color:white">
+                        <div style="font-size:1.3vw; font-style:italic; font-weight:bolder; display:flex; justify-content:center; padding:1vw 0 0 0">
+                            Timesheet Chart
+                        </div>
+                        <hr style="border:1px solid #b1d2fc" />
+                        <div style="width:100%; height:40%; display:flex;">
+                            <div id="donutchart" style="margin-left:auto; margin-right:auto; width:65%; background-color:transparent"></div>
+                        </div>
 
-            <div style="display:flex; justify-content:space-between; align-items:center">
-                <div>
-                    <a href="@Url.Action("TimeSheet", "TimeSheetHarpoon")">Timesheet</a>
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center">
-                    <div></div>
-                    <div style="display:flex; align-items:center">
-                        <label>Location</label>
-                        @using (Html.BeginForm("ChangeLocTimeSheet", "TimeSheetHarpoon", FormMethod.Post))
-                        {
-                            <div>
-                                @Html.DropDownListFor(m => m.Location_ID, Model.LocationsList, "Select", new { @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:150px;height:23px;font-size:15px;margin-left:6px;" })
-                                <noscript> <input style="display:none" class="btn btn-success" type="submit" value="Search" /></noscript>
-                            </div>
-                        }
+                        <div style="        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 1vw
+">
+                            <button disabled style="padding: 0.3vw 2.5vw; font-size: 0.8vw" class="btn btn-danger">Submit Timesheet</button>
+                        </div>
+                        <hr style="border: 1px solid #b1d2fc" />
+                        <div style="font-size:1.2vw; font-style:italic; font-weight:bolder; display:flex; justify-content:center; padding: 0">
+                            Submission History
+                        </div>
+
+                        <table class="table table-bordered" style="margin-left:auto; margin-right:auto; width:21vw">
+                            <thead style="background-color:#a2a5a8; color:white">
+                                <tr>
+                                    <th style="padding:0px; font-size:0.5vw; text-align:center" scope="col">Submitted by</th>
+                                    <th style="padding:0px; font-size:0.5vw; text-align:center" scope="col"> Date and time</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-left">
+                                <tr>
+                                    <td style="text-align:center; padding:0px">
+                                        <span style="visibility:hidden">
+                                            gfhj
+                                        </span>
+                                    </td>
+                                    <td style="text-align:center; padding:0px">
+                                        <span style="visibility:hidden">
+                                            hjk
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="flex:9; border: 2px solid dimgray; border-radius:0.5vw; height:80vh; display:flex; flex-direction:column">
+
+                        <div style="font-size:1.3vw; font-style:italic; font-weight:bolder; display:flex; justify-content:center; padding:1vw 0 0 0">
+                            Timesheet Totals
+                        </div>
+                        <hr style="border:1px solid #b1d2fc" />
+                        <div class="row">
+                            @foreach (var cat in Model.categories_full)
+                            {
+                                <div class="col-md-3 col-sm-3 col-lg-3" style="margin-bottom:1vw">
+                                    <div class="card">
+                                        <div class="card-header text-center" style="padding: 0.1vw; font-weight:bolder; color:white; font-size:0.7vw">
+                                            @cat.name (Hrs)
+                                        </div>
+                                        <div class="card-body text-center" style="padding:0.8vw">
+                                            <label style="font-size:3vw; color:#7d7e80">0</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
                     </div>
                 </div>
             </div>
-        </div>
-        <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
-            <i class="fa fa-bars" style="font-size:25px"></i>
-            <span class="sr-only">Toggle Menu</span>
-        </button>
+            <div class="tab-pane fade" id="timesheet" role="tabpanel" aria-labelledby="profile-tab">
+                <div class="row timesheetMain">
+                    <div class="employeeList">
+                        <div class="row">
+                            <div class="col-lg-12 example empListOverflow">
+                                @foreach (var items in Model.employeepayrollList)
+                                {
+                                    if (Model.SelectedEmployeeId == items.employeeId)
+                                    {
+                                        <div class="empButton selectedEmployee">
+                                            @items.fullName
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="empButton" onclick="location.href='@Url.Action("Timesheet", "TimesheetHarpoon", new {locId = Model.MatchedLocID, employeeId = items.employeeId, timesheetID = Model.Timesheet_id})';">
+                                            @items.fullName
+                                        </div>
+                                    }
 
-    </div>
-
-    <div class="row" style="padding:0px 15px 0px 15px">
-        <div class="col-md-12">
-            <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#dashboard">Dashboard</a></li>
-                <li><a data-toggle="tab" href="#timesheet">Timesheet Entry</a></li>
-            </ul>
-            <div class="tab-content" style="background-color:white; margin:0px; padding:0px">
-                <div id="dashboard" class="tab-pane fade in active">
-                    <div class="row" style="height:70vh">
-
+                                }
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div id="timesheet" class="tab-pane fade">
-                    <div class="payRollMainBody example">
-                        <div class="row" style="padding:0px 30px 0px 30px">
-                            <div class="col-lg-2">
-                                <div class="row example" style="height:78vh; overflow-y:auto">
-                                    <div class="col-lg-12">
-                                        @foreach (var items in Model.employeeList)
-                                        {
-                                            if (Model.SelectedEmployeeId == items.employeeId.Split(';')[0])
-                                            {
-                                                if (items.employeeId.Split(';')[1] == "1")
-                                                {
-                                                    <div class="row empButton active" style="        cursor: pointer;
-        font-weight: bold;
-        padding: 15px;
-        background-color: white" onclick="location.href='@Url.Action("EmployeeFolder", "ManagementHarpoon", new { locId = Model.Location_ID, employeeId = @items.employeeId.Split(';')[0] })';">
-                                                        @items.fullName
-                                                    </div>
-                                                }
-                                                else
-                                                {
-                                                    <div class="row empButton inactive" style="display:none; cursor: pointer; font-weight: bold; padding: 15px; background-color: white" onclick="location.href='@Url.Action("EmployeeFolder", "ManagementHarpoon", new { locId = Model.Location_ID, employeeId = @items.employeeId.Split(';')[0] })';">
-                                                        @items.fullName
-                                                    </div>
-                                                }
-
-                                            }
-                                            else
-                                            {
-
-                                                if (items.employeeId.Split(';')[1] == "1")
-                                                {
-                                                    <div class="row empButton active" style="cursor:pointer; padding:15px; " onclick="location.href='@Url.Action("EmployeeFolder", "ManagementHarpoon", new { locId = Model.Location_ID, employeeId=@items.employeeId.Split(';')[0]})';">
-                                                        @items.fullName
-                                                    </div>
-                                                }
-                                                else
-                                                {
-                                                    <div class="row empButton inactive" style="display:none; cursor:pointer; padding:15px; " onclick="location.href='@Url.Action("EmployeeFolder", "ManagementHarpoon", new { locId = Model.Location_ID, employeeId=@items.employeeId.Split(';')[0]})';">
-                                                        @items.fullName
-                                                    </div>
-                                                }
-
-
-                                            }
-
-                                        }
+                    <div class="timesheetEntry">
+                        <div id="lodingWheel">
+                            <div class="loadingWheelContainer">
+                                <img src="~/Content/giphy.gif" class="loadingImage" alt="Alternate Text" />
+                            </div>
+                        </div>
+                        <div id="timesheetBody">
+                            <div class="firstRow">
+                                <div class="firstRowLeft">
+                                    <div class="employeeName">
+                                        @Model.employeepayrollList.Where(x => x.employeeId == Model.SelectedEmployeeId).Select(x => x.fullName).FirstOrDefault()
                                     </div>
                                 </div>
+                                <div class="firstRowRight"></div>
                             </div>
+                            <div class="example timesheetOverflow">
+                                @*
 
-                            <script>
-                                $('.empButton').click(function () { $('#lodingWheel').css("display", "block") })
-                            </script>
-
-                            <div class="col-lg-10" style="background-color:white">
-                                <div id="AttendanceRightBody">
-                                    <div class="row" style="height:740px; overflow-y: auto; overflow-x: hidden;">
-
-                                        <div id="lodingWheel" style="display:none; width:100%">
-                                            <div style="width:100%; height:75vh; display:flex; justify-content:center; align-items:center">
-                                                <img src="~/Content/giphy.gif" style="width:100px; margin-left:auto; margin-right:auto" alt="Alternate Text" />
+                                    <div class="card shadow-lg firstCard">
+                                        <div class="card-header">
+                                            Timesheet Summary (Hours)
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row timesheetSummary">
+                                                <div class="hoursSagrigationLeft">
+                                                    <div class="totalHoursContainer">
+                                                        <div class="totalHoursLable">
+                                                            Total Hours
+                                                        </div>
+                                                        <div class="totalHoursValue">
+                                                            80.0
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="hoursSagrigation">
+                                                    <div class="row">
+                                                        @foreach (var cat in Model.categories_full)
+                                                        {
+                                                            <div class="col-md-3 col-sm-3 col-lg-3 summaryItem" style="display:flex">
+                                                                <div class="summaryLable">
+                                                                    @cat.name
+                                                                </div>
+                                                                <div class="summaryValue">
+                                                                    0
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-
                                     </div>
+
+                                *@
+
+
+
+                                <div class="firstRow">
+                                    <div class="card shadow-lg" style="flex:5; margin-right:0.8vw; padding:0.8vw">
+                                        <div id="calendar"></div>
+                                    </div>
+                                    <div style="display:flex; flex:5; flex-direction:column; justify-content:space-between">
+                                        <div class="card shadow-lg firstCard" style="height:100%">
+                                            <div class="card-header">
+                                                Timesheet Summary (Hours)
+                                            </div>
+                                            <div class="card-body" style="padding:0.8vw; display:flex">
+                                                <div style="flex:5; margin-right:0.8vw">
+                                                    <div class="totalHoursContainer">
+                                                        <div class="totalHoursLable">
+                                                            Total Hours
+                                                        </div>
+                                                        <div class="totalHoursValue" id="total">
+                                                            0.0
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="example" style="flex:5; display:flex; flex-direction:column; max-height:20vw; overflow-y:auto">
+                                                    @foreach (var cat in Model.categories_full)
+                                                    {
+                                                        <div class="summaryItem" style="display:flex;width:100%">
+                                                            <div class="summaryLable">
+                                                                @cat.name
+                                                            </div>
+                                                            <div class="summaryValue" id="@cat.category">
+                                                                0
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="card shadow-lg" style="margin-top:0.8vw">
+                                            <div class="card-header">
+                                                Comments
+                                            </div>
+                                            <div class="card-body" style="padding:0.8vw">
+                                                <textarea class="comments"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
+
+
+
+                                @*
+
+                                                                            <div class="card shadow-lg">
+                                                                            <div class="card-header">
+                                                                                Timesheet Entry
+                                                                            </div>
+                                                                            <div class="card-body">
+                                                                                <table class="table table-responsive-sm timesheetEntryTable">
+                                                                                    <thead>
+                                                                                        <tr style="font-style:italic">
+                                                                                            <th>
+                                                                                            </th>
+                                                                                            <th>
+                                                                                                <div class="dayName">Sun</div>
+                                                                                                <div class="shortDate">1-Jan</div>
+                                                                                            </th>
+                                                                                            <th>
+                                                                                                <div class="dayName">Mon</div>
+                                                                                                <div class="shortDate">2-Jan</div>
+                                                                                            </th>
+                                                                                            <th>
+                                                                                                <div class="dayName">Tue</div>
+                                                                                                <div class="shortDate">3-Jan</div>
+                                                                                            </th>
+                                                                                            <th>
+                                                                                                <div class="dayName">Wed</div>
+                                                                                                <div class="shortDate">4-Jan</div>
+                                                                                            </th>
+                                                                                            <th>
+                                                                                                <div class="dayName">Thu</div>
+                                                                                                <div class="shortDate">5-Jan</div>
+                                                                                            </th>
+                                                                                            <th>
+                                                                                                <div class="dayName">Fri</div>
+                                                                                                <div class="shortDate">6-Jan</div>
+                                                                                            </th>
+                                                                                            <th>
+                                                                                                <div class="dayName">Sat</div>
+                                                                                                <div class="shortDate">7-Jan</div>
+                                                                                            </th>
+                                                                                            <th>
+                                                                                                <div class="dayName">Sun</div>
+                                                                                                <div class="shortDate">8-Jan</div>
+                                                                                            </th>
+                                                                                            <th>
+                                                                                                <div class="dayName">Mon</div>
+                                                                                                <div class="shortDate">9-Jan</div>
+                                                                                            </th>
+                                                                                            <th>
+                                                                                                <div class="dayName">Tue</div>
+                                                                                                <div class="shortDate">10-Jan</div>
+                                                                                            </th>
+                                                                                            <th>
+                                                                                                <div class="dayName">Wed</div>
+                                                                                                <div class="shortDate">11-Jan</div>
+                                                                                            </th>
+                                                                                            <th>
+                                                                                                <div class="dayName">Thu</div>
+                                                                                                <div class="shortDate">12-Jan</div>
+                                                                                            </th>
+                                                                                            <th>
+                                                                                                <div class="dayName">Fri</div>
+                                                                                                <div class="shortDate">13-Jan</div>
+                                                                                            </th>
+                                                                                            <th>
+                                                                                                <div class="dayName">Sat</div>
+                                                                                                <div class="shortDate">14-Jan</div>
+                                                                                            </th>
+                                                                                        </tr>
+                                                                                    </thead>
+
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td class="sideLable">
+                                                                                                Regular
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr class="table-secondary">
+                                                                                            <td class="sideLable">
+                                                                                                Other
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                @Html.DropDownListFor(m => m.SelectedCategory, Model.Categories, new { @class = "lineStile" })
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                @Html.DropDownListFor(m => m.SelectedCategory, Model.Categories, new { @class = "lineStile" })
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                @Html.DropDownListFor(m => m.SelectedCategory, Model.Categories, new { @class = "lineStile" })
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                @Html.DropDownListFor(m => m.SelectedCategory, Model.Categories, new { @class = "lineStile" })
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                @Html.DropDownListFor(m => m.SelectedCategory, Model.Categories, new { @class = "lineStile" })
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                @Html.DropDownListFor(m => m.SelectedCategory, Model.Categories, new { @class = "lineStile" })
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                @Html.DropDownListFor(m => m.SelectedCategory, Model.Categories, new { @class = "lineStile" })
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                @Html.DropDownListFor(m => m.SelectedCategory, Model.Categories, new { @class = "lineStile" })
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                @Html.DropDownListFor(m => m.SelectedCategory, Model.Categories, new { @class = "lineStile" })
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                @Html.DropDownListFor(m => m.SelectedCategory, Model.Categories, new { @class = "lineStile" })
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                @Html.DropDownListFor(m => m.SelectedCategory, Model.Categories, new { @class = "lineStile" })
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                @Html.DropDownListFor(m => m.SelectedCategory, Model.Categories, new { @class = "lineStile" })
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                @Html.DropDownListFor(m => m.SelectedCategory, Model.Categories, new { @class = "lineStile" })
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                @Html.DropDownListFor(m => m.SelectedCategory, Model.Categories, new { @class = "lineStile" })
+                                                                                            </td>
+
+                                                                                        </tr>
+                                                                                        <tr class="table-secondary">
+                                                                                            <td class="sideLable">
+                                                                                                Hours
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input class="lineStile" type="text" name="name" value="" />
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td class="sideLable">
+                                                                                                Total
+                                                                                            </td>
+                                                                                            <td style="border-top:thin">
+                                                                                                <input class="lineStile" type="text" readonly name="name" value="" />
+                                                                                            </td>
+                                                                                            <td style="        border-top: thin
+                                    ">
+                                                                                                <input class="lineStile" type="text" readonly name="name" value="" />
+                                                                                            </td>
+                                                                                            <td style="border-top:thin">
+                                                                                                <input class="lineStile" type="text" readonly name="name" value="" />
+                                                                                            </td>
+                                                                                            <td style="border-top:thin">
+                                                                                                <input class="lineStile" type="text" readonly name="name" value="" />
+                                                                                            </td>
+                                                                                            <td style="border-top:thin">
+                                                                                                <input class="lineStile" type="text" readonly name="name" value="" />
+                                                                                            </td>
+                                                                                            <td style="border-top:thin">
+                                                                                                <input class="lineStile" type="text" readonly name="name" value="" />
+                                                                                            </td>
+                                                                                            <td style="border-top: thin">
+                                                                                                <input class="lineStile" type="text" readonly name="name" value="" />
+                                                                                            </td>
+                                                                                            <td style="        border-top: thin">
+                                                                                                <input class="lineStile" type="text" readonly name="name" value="" />
+                                                                                            </td>
+                                                                                            <td style="border-top:thin">
+                                                                                                <input class="lineStile" type="text" readonly name="name" value="" />
+                                                                                            </td>
+                                                                                            <td style="border-top:thin">
+                                                                                                <input class="lineStile" type="text" readonly name="name" value="" />
+                                                                                            </td>
+                                                                                            <td style="border-top:thin">
+                                                                                                <input class="lineStile" type="text" readonly name="name" value="" />
+                                                                                            </td>
+                                                                                            <td style="border-top:thin">
+                                                                                                <input class="lineStile" type="text" readonly name="name" value="" />
+                                                                                            </td>
+                                                                                            <td style="border-top:thin">
+                                                                                                <input class="lineStile" type="text" readonly name="name" value="" />
+                                                                                            </td>
+                                                                                            <td style="border-top:thin">
+                                                                                                <input class="lineStile" type="text" readonly name="name" value="" />
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                                <div class="row optionDetails">
+                                                                                    @foreach (var cat in Model.categories_full)
+                                                                                    {
+                                                                                        <div>@cat.category - @cat.name</div>
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="card shadow-lg">
+                                                                            <div class="card-header">
+                                                                                Attendance Helper
+                                                                            </div>
+                                                                            <div class="card-body">
+                                                                                <table class="table table-responsive-sm attendanceHelperTable">
+                                                                                    <tbody>
+                                                                                        <tr class="attendanceHelperTableFirstRow">
+                                                                                            <td class="sideLable">
+                                                                                                Clock-In
+                                                                                            </td>
+
+                                                                                            @foreach (var attendanceEvent in Model.AttendanceHelper)
+                                                                                            {
+                                                                                                if (attendanceEvent.Start.ToString("HH:mm") != "00:00")
+                                                                                                {
+                                                                                                    <td>
+                                                                                                        <input type="text" readonly name="name" value=@attendanceEvent.Start.ToString("HH:mm") />
+                                                                                                    </td>
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    <td>
+                                                                                                        <input type="text" readonly name="name" value="" />
+                                                                                                    </td>
+                                                                                                }
+                                                                                            }
+
+
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td class="sideLable">
+                                                                                                Clock-Out
+                                                                                            </td>
+                                                                                            @foreach (var attendanceEvent in Model.AttendanceHelper)
+                                                                                            {
+                                                                                                if (attendanceEvent.End.ToString("HH:mm") != "00:00")
+                                                                                                {
+                                                                                                    <td>
+                                                                                                        <input type="text" readonly name="name" value=@attendanceEvent.End.ToString("HH:mm") />
+                                                                                                    </td>
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    <td>
+                                                                                                        <input type="text" readonly name="name" value="" />
+                                                                                                    </td>
+                                                                                                }
+
+                                                                                            }
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td class="sideLable">
+                                                                                                Total
+                                                                                            </td>
+                                                                                            @foreach (var attendanceEvent in Model.AttendanceHelper)
+                                                                                            {
+                                                                                                if (attendanceEvent.End.ToString(@"hh\:mm") != "12:00")
+                                                                                                {
+                                                                                                    <td>
+                                                                                                        <input type="text" readonly name="name" value=@attendanceEvent.End.ToString(@"hh\:mm") />
+                                                                                                    </td>
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    <td>
+                                                                                                        <input type="text" readonly name="name" value="" />
+                                                                                                    </td>
+                                                                                                }
+                                                                                            }
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+
+
+
+                                *@
+
+
+
                             </div>
                         </div>
                     </div>
@@ -195,13 +1084,245 @@
         </div>
     </div>
 
-    
+    <div class="displayNone">
+        <input type="text" id="timeSheet_start" name="name" value=@Model.timesheet_start.ToString("yyyy-MM-dd") />
+        <input type="text" id="timeSheet_middle" name="name" value=@Model.timesheet_start.AddDays(7).ToString("yyyy-MM-dd") />
+        <input type="text" id="timeSheet_end" name="name" value=@Model.timesheet_end.ToString("yyyy-MM-dd") />
+        <input type="text" id="TempDate" name="name" value="" />
+        <input type="text" id="TempReg" name="name" value="" />
+        <input type="text" id="TempOpt" name="name" value="" />
+        <input type="text" id="TempOptVal" name="name" value="" />
+        <input type="text" id="Auto_emp_id" name="name" value=@Model.SelectedEmployeeId />
+    </div>    
 
-    
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 2px 10px">
+                    <h5 class="modal-title" style="color:black"><strong><span id="eventTitle">  </span></strong></h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-lg-12 text-center" style="display:flex; flex-direction:column; justify-content:space-evenly; align-items:center">
+                            <input readonly class="lineStileModal" id="timeDuration" type="text" name="name" value="" />
+                            <input id="regularValue" autocomplete="nope" class="lineStileModal" placeholder="Regular" type="number" name="name" value="" />
+                            @Html.DropDownListFor(m => m.SelectedCategory, Model.Categories, "Select", new { @id = "OptValue", @class = "lineStileModal", @style = "font-size:25px; height:70px" })
+                            <input id="OtherValue" autocomplete="nope" class="lineStileModal" placeholder="Other" type="number" name="name" value="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:2px 10px">
+                    <button type="button" style="padding:0px 20px" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <button onclick="saveEvents()" type="button" style="padding:0px 20px" class="btn btn-success" data-bs-dismiss="modal">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+
+    <script type="text/javascript">
+        google.charts.load("current", { packages: ["corechart"] });
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Complete', 'Not Complete'],
+                ['All', 100],
+            ]);
+
+            var options = {
+                pieHole: 0.4,
+                pieSliceText: "none",
+                'chartArea': { 'width': '90%', 'height': '90%' },
+                legend: 'none',
+                slices: [{ color: '#3366cc' }, { color: '#dc3a12' }],
+                tooltip: {
+                    textStyle: {
+                        fontSize: 12
+                    }
+                }
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+            chart.draw(data, options);
+        }
+    </script>
+
+    <script>
+        $(window).resize(function () {
+            google.charts.load("current", { packages: ["corechart"] });
+            google.charts.setOnLoadCallback(drawChart);
+        });
+    </script>
+
+    <script>
+
+        function saveEvents() {
+            $('#TempReg').val($('#regularValue').val())
+            $('#TempOpt').val($('#OptValue').val())
+            $('#TempOptVal').val($('#OtherValue').val())
+
+            if ($('#TempOpt').val() == '' || $('#TempOptVal').val() == '') {
+                $('#TempOptVal').val('0')
+            }
+
+
+            $.ajax({
+                url: '@Url.Action("SaveTimesheetRecord", "TimeSheetHarpoon")',
+                data: { Re: $('#TempReg').val(), Opt: $('#TempOpt').val(), OptVal: $('#TempOptVal').val(), dat: $('#TempDate').val(), emp: $('#Auto_emp_id').val(), tid : $('#timesheet_id').val()},
+                async: false,
+                success: function (data) {
+                    renderCalendar()
+                }
+            });
+
+            updateSummary()
+        }
+
+        function updateSummary() {
+            $.ajax({
+                url: '@Url.Action("UpdateSummary", "TimeSheetHarpoon")',
+                data: {emp: $('#Auto_emp_id').val(), timeSheei_id: $('#timesheet_id').val()},
+                success: function (data) {
+                    let details = JSON.parse(data)
+                    $('#Re').html(details.Re_type)
+                    $('#Br').html(details.Br_type)
+                    $('#Nl').html(details.Nl_type)
+                    $('#Ot').html(details.Ot_type)
+                    $('#Pl').html(details.Pl_type)
+                    $('#Si').html(details.Si_type)
+                    $('#St').html(details.St_type)
+                    $('#Va').html(details.Va_type)
+                    if (details.total != '') {
+                        $('#total').html(details.total)
+                    }
+                    else {
+                        $('#total').html('0.00')
+                    }
+                    
+                }
+            });
+        }
+
+        $(".timesheetLink").click(function () {
+            renderCalendar()
+        });
+
+    </script>
+    <script>
+
+        function renderCalendar() {
+            setTimeout(function () {
+                GetEvents()
+            }, 100);
+        }
+
+        function GetEvents() {
+            var events = [];
+            $.ajax({
+                type: "GET",
+                url: "/TimeSheetHarpoon/GetAttendanceDates",
+                data: { empid: $('#Auto_emp_id').val(), start: $('#timeSheet_start').val(), end: $('#timeSheet_end').val() },
+                success: function (data) {
+                    $.each(data, function (i, v) {
+
+                        if (!(v.Value.startsWith('0') || v.Value.startsWith('1'))) {
+                            events.push({
+                                start: v.Key,
+                                title: v.Value,
+                                color: 'transparent', //#fcf2ae
+                                imageurl: 'https://ctasehub.blob.core.windows.net/sehub-content/red_dollar.png',
+                            });
+                        }
+                        else {
+                            events.push({
+                                start: v.Key,
+                                title: v.Value,
+                                color: 'transparent', //#fcf2ae
+                                imageurl: '/Content/clockHarpoonn.png',
+                            });
+                        }
+
+                        eventOrder: 'color,start'
+
+                    })
+
+                    GenerateCalender(events);
+                },
+                error: function (error) {
+                    GenerateCalender(events);
+                }
+            })
+        }
+
+        function GenerateCalender(events) {
+            $('#calendar').fullCalendar('destroy')
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'title',
+                    center: '',
+                    right: 'basicWeek month prev,next'
+                },
+                height: 'auto',
+                //defaultView: 'month',
+                defaultDate: $('#timeSheet_middle').val(),
+                dayClick: function (date, jsEvent, view) {
+                    if (moment(date.format("YYYY-MM-DD")).isBetween($('#timeSheet_start').val(), $('#timeSheet_end').val())) {
+                        populatePop_up(date.format("YYYY-MM-DD"))
+                    }                    
+                },
+                events: events,
+
+                eventRender: function (event, eventElement) {
+                    if (event.imageurl) {
+                        eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl + "' style='padding-bottom:0.15vw; margin:0; width:0.6vw; object-fit:contain'>");
+                    }
+                },
+
+                dayRender: function (date, cell) {
+                    if (moment(date.format("YYYY-MM-DD")).isBetween($('#timeSheet_start').val(), $('#timeSheet_end').val())) {
+                        if (events.filter(function (el) { return el.start == date.format("YYYY-MM-DD") && el.title.includes('Re') }).length > 0) {
+                            cell.css("background", "#c9ffcd");
+                        }
+                        else {
+                            cell.css("background", "#ffccc9");
+                        }
+                    }                    
+                },
+
+                eventClick: function (calEvent, jsEvent, view) {
+                    populatePop_up(calEvent.start.format("YYYY-MM-DD"));
+                }
+            });
+        }
+
+        function populatePop_up(dat) {
+
+            $.ajax({
+                url: '@Url.Action("GetDateDetails", "TimeSheetHarpoon")',
+                data: { dat: dat, emp: $('#Auto_emp_id').val()},
+                success: function (data) {
+                    let details = JSON.parse(data)
+                    $('#timeDuration').val(details.timeduration);
+                    $('#eventTitle').html('Timesheet for date: ' + dat);
+                    $('#myModal').modal('show');
+                    $('#TempDate').val(dat);
+                    $('#regularValue').val(details.reg)
+                    $('#OptValue').val(details.opt)
+                    $('#OtherValue').val(details.optVal)
+                }
+            });
+        }
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            updateSummary()
+        });
+    </script>
 
 </body>
-
 </html>
-
 

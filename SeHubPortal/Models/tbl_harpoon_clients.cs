@@ -31,5 +31,6 @@ namespace SeHubPortal.Models
         public Nullable<bool> employees_page { get; set; }
         public Nullable<bool> fleet_page { get; set; }
         public Nullable<System.DateTime> start_date { get; set; }
+        public Nullable<bool> timesheet { get; set; }
     }
 }

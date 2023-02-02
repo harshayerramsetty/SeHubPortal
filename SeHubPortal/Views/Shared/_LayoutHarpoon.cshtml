@@ -20,179 +20,179 @@
             overflow-y: hidden;
         }
 
-
-        #TabLinks {
-            margin-left: 7%;
-        }
-
-        .tabLinksSpace {
-            margin-left: 40px;
-        }
-
-        #mainButton:focus {
-            box-shadow: none;
-        }
-
-        #libraryBtn:focus {
-            box-shadow: none;
-        }
-
-        #treadTrackerButton:focus {
-            box-shadow: none;
-        }
-
-        #managementBtn:focus {
-            box-shadow: none;
-        }
-
-        #toolsBtn:focus {
-            box-shadow: none;
-        }
-
-        #payrollBtn:focus {
-            box-shadow: none;
-        }
-
         #upload {
             padding-left: 10%
         }
+
+        .topbar{
+            width:100%; background-color:white; display:flex; justify-content:space-between;
+        }
+
+        .harpoonLogoContainer{
+            flex:1; display:flex; justify-content:center; align-items:center; padding:0.5vw
+        }
+
+        .harpoonLogo{
+            width:10vw;
+        }
+
+        .topbarMenuItemsContainer{
+            flex:5; display:flex; align-items:center; padding:0.5vw
+        }
+
+        .maenuItemContainer{
+            display:none; cursor:pointer
+        }
+
+        .maenuItem{
+            margin:0vw 0.5vw; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:0.5vw; border-radius:0.3vw
+        }
+
+        .maenuItemLabel{
+            margin:0; font-size:1vw; cursor:pointer
+        }
+
+        .profileBlockContainer{
+            flex:1.2; display:flex; justify-content:space-between; align-items:center;
+        }
+
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-md navbar-light bg-white" style="border:2px solid  #f0f2f5">
-        @*<a href="#" class="navbar-brand">City Tire</a>*@
-        <img id="harpoonMainLogo" src="~/Content/HarpoonLongg.png" style="height:90px;" class="navbar-brand" />
 
-
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <div class="navbar-nav" id="TabLinks">
-
-                <a id="ManagementClicked" href="@Url.Action("TimeClockEvents", "ManagementHarpoon")" style="display:none; margin-left: 20px;margin-right: 20px;padding: 10px;border-radius: 5px" class="text-center">
-                    <div style="display:flex; flex-direction:column; justify-content:center; align-items:center">
-                        <img src="~/Content/employees_harpoon.png" style="margin-bottom:5px; height:30px;" />
-                        <span id="managementBtn" style="font-size:18px; color:black; margin:0px 10px">Employees</span>
-                    </div>
-                </a>
-
-                <a id="VehicleClicked" href="@Url.Action("Dashboard", "VehicleHarpoon")" style="display:none; margin-left: 20px;margin-right: 20px;padding: 10px;border-radius: 5px" class="text-center">
-                    <div style="display:flex; flex-direction:column; justify-content:center; align-items:center">
-                        <img src="~/Content/vehicles_harpoon.png" style="margin-bottom:0px; height:35px;" />
-                        <span id="vehicleBtn" style="font-size:18px; color:black; margin:0px 10px">Fleet</span>
-                    </div>
-                </a>
-
-                <a id="SettingsClicked" href="@Url.Action("System", "SettingsHarpoon")" style="display:block; margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center">
-                    <div style="display:flex; flex-direction:column; justify-content:center; align-items:center">
-                        <img src="~/Content/settings.png" style="margin:5px; height:25px;" />
-                        <span id="settingsBtn" style="font-size:18px; color:black; margin:0px 10px">Settings</span>
-                    </div>
-                </a>
-
-                <a id="TimesheetClicked" href="@Url.Action("Timesheet", "TimesheetHarpoon")" style="display:block; margin-left:20px; margin-right:20px; padding:10px; border-radius:5px" class="text-center">
-                    <div style="display:flex; flex-direction:column; justify-content:center; align-items:center">
-                        <img src="~/Content/payroll.png" style="margin:5px; height:25px;" />
-                        <span id="timesheetBtn" style="font-size:18px; color:black; margin:0px 10px">Timesheet</span>
-                    </div>
-                </a>
-
-            </div>
+    <div class="topbar">
+        <div class="harpoonLogoContainer">
+            <img class="harpoonLogo" src="~/Content/HarpoonLongg.png"/>
         </div>
-        <div class="flex-grow-0" id="profileBlock" style="display:flex; align-items:center; width:270px; padding:0px !important">
-
-        </div>
-        <div style="        display: flex;
-        flex-direction: column
-">
-            <a style="float:right" href="@Url.Action("HarpoonLogin", "Login")" class="btn">
-                <img src="~/Content/power.png" />
-            </a>
-            <a style="float:right" data-toggle="modal" data-target="#ResetProfilePassword" class="btn">
-                <img style="width:30px" src="~/Content/profile.png" />
-            </a>
-        </div>
-
-        <div class="modal fade" id="upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content" style="width:300px">
-
-                    @using (Html.BeginForm("UploadProfileImage", "Main", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                    {
-                        <div class="modal-header text-center" style="padding:3px 3px 0px 3px">
-                            <h5 style="margin-left:auto; margin-right:auto">Upload Profile Picture</h5>
-                        </div>
-                        <div class="modal-body text-center">
-                            <input style="display:none" name="EmployeeImage" type='file' id="imgInp" />
-                            <input for="imgInp" type="text" readonly style="margin-bottom:15px; height:23px; width:100px;" value="Upload" class="btn btn-primary" onclick="document.getElementById('imgInp').click()" />
-                            <img id="UploatImage" style="border-radius:100%; width:200px" src="~/Content/profilepic.jpg" alt="ProfilePic" />
-
-                        </div>
-                        <div class="modal-footer" style="padding:3px">
-                            <button type="button" class="btn btn-danger" style="padding:2px 22px 2px 22px" data-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-success" style="padding:2px 30px 2px 30px">Save</button>
-                        </div>
-                    }
-
+        <div class="topbarMenuItemsContainer">
+            <div class="maenuItemContainer" id="ManagementClicked" onclick="location.href='@Url.Action("TimeClockEvents", "ManagementHarpoon")'">
+                <div class="maenuItem">
+                    <img style="width:1.5vw" src="~/Content/employees_harpoon.png" alt="Alternate Text" />
+                    <label class="maenuItemLabel" id="managementBtn">
+                        Employees
+                    </label>
                 </div>
             </div>
+            <div class="maenuItemContainer" id="VehicleClicked" onclick="location.href='@Url.Action("Dashboard", "VehicleHarpoon")'">
+                <div class="maenuItem">
+                    <img style="width: 1.5vw" src="~/Content/vehicles_harpoon.png" alt="Alternate Text" />
+                    <label class="maenuItemLabel" id="vehicleBtn">
+                        Fleet
+                    </label>
+                </div>
+            </div>
+
+            <div class="maenuItemContainer" id="SettingsClicked" onclick="location.href='@Url.Action("System", "SettingsHarpoon")'">
+                <div class="maenuItem">
+                    <img style="width:1.3vw" src="~/Content/settings.png" alt="Alternate Text" />
+                    <label class="maenuItemLabel" id="settingsBtn">
+                        Settings
+                    </label>
+                </div>
+            </div>
+
+            <div class="maenuItemContainer" style="display:block" id="TimesheetClicked" onclick="location.href='@Url.Action("Timesheet", "TimesheetHarpoon")'">
+                <div class="maenuItem">
+                    <img style="width: 1.4vw" src="~/Content/payroll.png" alt="Alternate Text" />
+                    <label class="maenuItemLabel" id="timesheetBtn">
+                        Timesheet
+                    </label>
+                </div>
+            </div>
+
         </div>
+        <div class="profileBlockContainer">
+            <div id="profileBlock">
 
+            </div>
+            <div style="display:flex; flex-direction:column">
+                <a style="float:right" href="@Url.Action("HarpoonLogin", "Login")" class="btn">
+                    <img style="width: 1.4vw" src="~/Content/power.png" />
+                </a>
+                <a style="float:right" data-toggle="modal" data-target="#ResetProfilePassword" class="btn">
+                    <img style="width: 1.4vw" src="~/Content/profile.png" />
+                </a>
+            </div>
+        </div>
+    </div>
 
+    <div class="modal fade" id="upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width:300px">
 
-        <div class="modal fade " id="ResetProfilePassword" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" id="editProfile" role="document">
+                @using (Html.BeginForm("UploadProfileImage", "Main", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="modal-header text-center" style="padding:3px 3px 0px 3px">
+                        <h5 style="        margin-left: auto;
+        margin-right: auto
+">Upload Profile Picture</h5>
+                    </div>
+                    <div class="modal-body text-center">
+                        <input style="display:none" name="EmployeeImage" type='file' id="imgInp" />
+                        <input for="imgInp" type="text" readonly style="margin-bottom:15px; height:23px; width:100px;" value="Upload" class="btn btn-primary" onclick="document.getElementById('imgInp').click()" />
+                        <img id="UploatImage" style="border-radius:100%; width:200px" src="~/Content/profilepic.jpg" alt="ProfilePic" />
+
+                    </div>
+                    <div class="modal-footer" style="padding:3px">
+                        <button type="button" class="btn btn-danger" style="padding:2px 22px 2px 22px" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success" style="padding:2px 30px 2px 30px">Save</button>
+                    </div>
+                }
 
             </div>
         </div>
+    </div>
 
 
 
+    <div class="modal fade " id="ResetProfilePassword" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" id="editProfile" role="document">
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        </div>
+    </div>
 
-        <script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <script>
             $.ajax({
                 url: '@Url.Action("ProfileBlock", "SettingsHarpoon")',
                 success: function (data) {
                     $('#profileBlock').html(data)
                 }
             });
-        </script>
+    </script>
 
-        <script>
+    <script>
             $.ajax({
                 url: '@Url.Action("EditProfile", "Login")',
                 success: function (data) {
                     $('#editProfile').html(data)
                 }
             });
-        </script>
+    </script>
 
-        <script>
+    <script>
 
 
-            function readURL(input) {
-                if (input.files && input.files[0]) {
-                    var reader = new FileReader();
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
 
-                    reader.onload = function (e) {
-                        $('#UploatImage').attr('src', e.target.result);
-                    }
-
-                    reader.readAsDataURL(input.files[0]); // convert to base64 string
+                reader.onload = function (e) {
+                    $('#UploatImage').attr('src', e.target.result);
                 }
+
+                reader.readAsDataURL(input.files[0]); // convert to base64 string
             }
+        }
 
-            $("#imgInp").change(function () {
-                readURL(this);
-            });
-
-
-        </script>
+        $("#imgInp").change(function () {
+            readURL(this);
+        });
 
 
+    </script>
 
-
-    </nav>
     <div id="MainDiv">
         @RenderBody()
     </div>

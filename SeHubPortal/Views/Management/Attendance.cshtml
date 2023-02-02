@@ -342,7 +342,6 @@
     <div class="row" id="mainRow">
         <div class="col-md-12">
             <div>
-
                 <div class="row heading">
                     <div class="col" style="margin:0px 5px 15px 15px; padding:10px; background-color:white">
 
@@ -504,6 +503,7 @@
             $('#loadingWheel').css("display", "block")
             $('.fc-prev-button').click();
             $('#titleText').html($('.fc-center h2').html())
+            //alert($('.fc-center h2').html())
             populateEmployeeList($('.fc-center h2').html().split(" ")[1] + "-" + getMonthNumber($('.fc-center h2').html().split(" ")[0]) + "-01");
         });
 
@@ -555,13 +555,13 @@
             const dDocRead = new Date();
             const currentMonthDocRead = dDocRead.getMonth() + 1;
 
-            //alert(currentMonthDocRead)
-
+            yearNumber = new Date().getFullYear();
+            
             var events = [];
                 $.ajax({
                     type: "GET",
                     url: "/Management/GetAttendanceDates",
-                    data: { empid: @ViewData["employee_id"], mon: currentMonthDocRead},
+                    data: { empid: @ViewData["employee_id"], mon: currentMonthDocRead, yar: yearNumber},
                     success: function (data) {
 
                         $('#loadingWheel').css("display", "none")
@@ -715,7 +715,18 @@
 
             const d = new Date();
             const existingMonth = getMonthNumber($('.fc-toolbar h2').html().split(" ")[0])
+            var existingMontPadded = ""
+            if (existingMonth.toString().length == 1) {                   
+                existingMontPadded = "0" + existingMonth.toString()
+            }
+            else {
+                existingMontPadded = existingMonth.toString()
+            }
+            const existingYear = $('.fc-toolbar h2').html().split(" ")[1]
             const currentMonth = d.getMonth() + 1;
+
+
+            //alert(existingYear + "-" + existingMonth + "-01")
 
             $('.commonClass').css("background-color", "transparent")
             $('.'+val).css("background-color", "white")
@@ -724,7 +735,7 @@
                 $.ajax({
                     type: "GET",
                     url: "/Management/GetAttendanceDates",
-                    data: { empid: val, mon:existingMonth},
+                    data: { empid: val, mon:existingMonth, yar: existingYear},
                     success: function (data) {
                         $.each(data, function (i, v) {
                             const durat = netTime(v.split(";")[0].split(" ")[0], val, v.split(";")[1])
@@ -749,10 +760,9 @@
 
                 function GenerateCalender(events) {
                     $('#calender').fullCalendar('destroy');
-
+                    //alert(moment().add(existingMonth-currentMonth, "months"))
                     $('#calender').fullCalendar({
                         contentHeight: 630,
-                        defaultDate: new Date(),
                         timeFormat: 'h(:mm)a',
                         displayEventTime: false,
                         header: {
@@ -760,7 +770,7 @@
                             center: 'title',
                             right: 'next'
                         },
-                        defaultDate: moment().add(existingMonth-currentMonth, "months"),
+                        defaultDate: existingYear + "-" + existingMontPadded + "-01",
 
                         eventLimit: true,
                         eventColor: '#378006',
@@ -816,7 +826,6 @@
                                             if (i % 2 == 0) {
                                             }
                                             else {
-
                                                 let startTime = Date.parse(data[i - 1].split(">")[0]);
                                                 let endTime = Date.parse(data[i].split(">")[0]);
 
@@ -874,8 +883,7 @@
                             var ms = moment(sessionend, "DD/MM/YYYY HH:mm:ss").diff(moment(sessionstart, "DD/MM/YYYY HH:mm:ss"));
                             var d = moment.duration(ms);
                             var timeelapsed = Math.floor(d.asHours()) + moment.utc(ms).format(":mm:ss");
-                            duration = duration + moment.duration(timeelapsed).as('milliseconds')
-                            
+                            duration = duration + moment.duration(timeelapsed).as('milliseconds')                            
                         }
                     }
                 }

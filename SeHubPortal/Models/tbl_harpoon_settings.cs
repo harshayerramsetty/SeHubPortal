@@ -25,5 +25,8 @@ namespace SeHubPortal.Models
         public Nullable<int> MasterLoc_OnOff { get; set; }
         public string MasterLoc_id { get; set; }
         public Nullable<int> job_id_clocking { get; set; }
+        public Nullable<System.DateTime> timeSheet_start { get; set; }
+        public string timeSheet_type { get; set; }
+        public Nullable<int> timeSheet_delay { get; set; }
     }
 }

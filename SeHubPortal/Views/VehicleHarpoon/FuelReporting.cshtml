@@ -9,120 +9,127 @@
 
 <html>
 
-    <head>
-        <meta name="viewport" content="width=device-width" />
-        <title>Dashboard</title>
-        <meta charset="utf-8">
-        @*<link rel="shortcut icon" type="image/x-icon" href="~/Content/title_logo64.png">*@
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Dashboard</title>
+    <meta charset="utf-8">
+    @*<link rel="shortcut icon" type="image/x-icon" href="~/Content/title_logo64.png">*@
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
-        @if (Model.client_info.employees_page.Value)
-        {
-            <style>
-                #ManagementClicked {
-                    display: block !important;
-                }
-            </style>
-        }
-        @if (Model.client_info.fleet_page.Value)
-        {
-            <style>
-                #VehicleClicked {
-                    display: block !important;
-                }
-            </style>
-        }
-
+    @if (Model.client_info.employees_page.Value)
+    {
         <style>
-            .breadCrumb {
-                background-color: white;
-            }
-
-            #TimeClockLink {
-                display: block !important;
-            }
-
-            #SettingsClicked {
-                display: block !important;
-            }
-
             #ManagementClicked {
                 display: block !important;
             }
-
-            #VehicleClicked {
-                background-color: #f0f2f5;
-                color: black;
-                font-weight: 600;
-            }
-
-            #FuelReportingLink {
-                background-color: #f0f2f5;
-                color: black;
-                font-weight: 600;
-            }
-
-            .settingsBtn {
-                font-weight: bold;
-            }
-
-            #TimeClockLink {
-                color: black;
-                font-weight: 700;
-                background-color: #f0f2f5;
-                border-color: white;
-            }
-
-            body {
-                background-color: #f0f2f5;
-            }
-
-            .card-header {
-                background-color: #cde8ca;
-                padding: 5px;
-            }
-
-            table tr:hover {
-                background: lightgray;
-            }
-
-            input[type=number]::-webkit-inner-spin-button,
-            input[type=number]::-webkit-outer-spin-button {
-                opacity: 1;
-            }
-
-            /* Hide scrollbar for Chrome, Safari and Opera */
-            .example::-webkit-scrollbar {
-                display: none;
-            }
-
-            /* Hide scrollbar for IE, Edge and Firefox */
-            .example {
-                -ms-overflow-style: none; /* IE and Edge */
-                scrollbar-width: none; /* Firefox */
-            }
-
-            .dataTables_length {
-                display: none
-            }
-
-            input::-webkit-outer-spin-button,
-            input::-webkit-inner-spin-button {
-              -webkit-appearance: none;
-              margin: 0;
-            }
-
-            /* Firefox */
-            input[type=number] {
-              -moz-appearance: textfield;
-            }
-
         </style>
-    </head>
+    }
+    @if (Model.client_info.fleet_page.Value)
+    {
+        <style>
+            #VehicleClicked {
+                display: block !important;
+            }
+        </style>
+    }
+    @if (Model.client_info.timesheet.Value)
+    {
+        <style>
+            #TimesheetClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    <style>
+        .breadCrumb {
+            background-color: white;
+        }
+
+        #TimeClockLink {
+            display: block !important;
+        }
+
+        #SettingsClicked {
+            display: block !important;
+        }
+
+        #ManagementClicked {
+            display: block !important;
+        }
+
+        #VehicleClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #FuelReportingLink {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        .settingsBtn {
+            font-weight: bold;
+        }
+
+        #TimeClockLink {
+            color: black;
+            font-weight: 700;
+            background-color: #f0f2f5;
+            border-color: white;
+        }
+
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .card-header {
+            background-color: #cde8ca;
+            padding: 5px;
+        }
+
+        table tr:hover {
+            background: lightgray;
+        }
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            opacity: 1;
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .example::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .example {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+
+        .dataTables_length {
+            display: none
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
 
     <body>
 

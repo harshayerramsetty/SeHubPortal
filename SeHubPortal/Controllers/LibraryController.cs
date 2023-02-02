@@ -559,6 +559,14 @@ namespace SeHubPortal.Controllers
         [HttpPost]
         public ActionResult Branch_Shared_drive_ChangeLocation(FileURL model)
         {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+            var empRememberLocation = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
+            if (empRememberLocation != null)
+            {
+                empRememberLocation.loc_current = model.Location_ID;
+                db.SaveChanges();
+            }
             return RedirectToAction("Branch_Shared_drive", new { loc = model.Location_ID });
         }
 
@@ -598,7 +606,15 @@ namespace SeHubPortal.Controllers
             }
             else
             {
-                locatId = empDetails.loc_ID;
+                var empRememberLocation = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
+                if (empRememberLocation != null)
+                {
+                    locatId = empRememberLocation.loc_current;
+                }
+                else
+                {
+                    locatId = empDetails.loc_ID;
+                }
             }
 
             var readPolicy = new SharedAccessBlobPolicy()

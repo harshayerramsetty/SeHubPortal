@@ -52,5 +52,9 @@ namespace SeHubPortal.ViewModel
         public List<KeyValuePair<DateTime, double?>> vacDatesYearly { get; set; }
         public List<KeyValuePair<DateTime, double?>> sicDatesYearly { get; set; }
 
+        public bool enableBranchPayrollEntry { get; set; }
+
+        public bool twoActivePayrolls { get; set; }
+
     }
 }

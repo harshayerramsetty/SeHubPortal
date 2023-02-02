@@ -1,0 +1,302 @@
+﻿
+@model SeHubPortal.ViewModel.PopulateProductionReport
+
+@{
+    //var workorders = Model.barcodeInfo.OrderBy(x => x.retread_workorder).Select(x => x.retread_workorder).Distinct().ToList();
+    var barcodes = Model.barcodeInfo.Select(x => x.barcode).Distinct().ToList();
+}
+
+
+    <div class="col-md-12">
+        <table class="text-center" id="dontshow" style="margin-top:10px 60px; width:100%;">
+            <tr>
+                <td style="padding:10px; width:25%">
+                </td>
+                <td style="padding:10px; width:50%">
+                    <img src="~/Content/LoginLogo.png" style="width:350px;">
+                </td>
+                <td style="width:25%">
+
+                    <div class="row">
+                        <div class="col-lg-12 text-right">
+                            <p style="margin: 0px; padding: 0px; line-height : 10px">
+                                <font size="2">
+                                    @Model.locInfo.cta_street1,
+                                    @if (Model.locInfo.cta_street2 != null)
+                                    {
+                                        @Model.locInfo.cta_street2
+                                    }
+                                </font>
+                            </p>
+                            <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">@Model.locInfo.cta_city, @Model.locInfo.cta_province, @Model.locInfo.cta_postal_code</font></p>
+                            <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Phone : @Model.locInfo.cta_phone</font></p>
+                            <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Fax : @Model.locInfo.cta_fax</font></p>
+                            <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">www.citytire.com</font></p>
+
+                        </div>
+
+                    </div>
+
+                </td>
+            </tr>
+        </table>
+
+        <table style="margin-top:10px 15px; width:100%; border:1px solid #dee0e3">
+            <tr>
+                <td style="padding:10px; width:5%">
+                    <img style="width:80px" src="~/Content/trdIcon.png" alt="Alternate Text" />
+                </td>
+                <td style="padding: 10px; width: 23%">
+
+                    <div class="row">
+                        <div class="col-lg-12 text-left">
+                            <h4>TREAD</h4>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 text-left">
+                            <h4>TRACKER</h4>
+                        </div>
+                    </div>
+                </td>
+                <td style="padding:10px; width:33%">
+                    <div class="row">
+                        <div class="col-lg-12 text-center">
+                            <h3>CASING CREDIT REPORT</h3>
+                        </div>
+
+                    </div>
+                </td>
+                <td style="padding:10px; width:33%">
+                    <div class="row">
+                        <div class="col-lg-12 text-right">
+                            <h5 style="text-transform: uppercase;" id="dateText">
+                                @Model.date.ToString("dddd - MMM dd, yyyy")
+                            </h5>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12 text-right">
+                            
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+    <div class="col-md-12" style="height:100%">
+        @foreach (var item in Model.customerInfo)
+        {
+            int count = 0;
+            var workNum = Model.workOrderInfo.Where(x => x.customer_number == item.CustomerCode.ToString());
+            foreach (var work in workNum)
+            {
+                foreach (var barcode in Model.barcodeInfo.Where(x => x.retread_workorder == work.retread_workorder && x.line_code == 6 && x.cap_count != null && x.cap_count != ""))
+                {
+                    count++;
+                }
+            }
+
+            if (count > 0)
+            {
+
+                <div class="row">
+                    <table class="table table-bordered" style="margin:20px 15px 0px 15px; border-radius: 5px; margin-bottom:0px; width:100%">
+                        <tbody>
+                            <tr>
+                                <td style="width:50%; font-size:15px; text-align:left; padding:10px">
+                                    <div class="row">
+                                        <div class="col-lg-12 text-left">
+                                            <span><b>@item.CustomerName</b></span>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 text-left">
+                                            <span><b>@item.CustomerCode</b></span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                double total = 0;
+                <div class="row">
+                    
+
+                    <table class="table table-bordered" style="margin:0px 15px 20px 15px; border-radius: 5px; width:100%">
+                        <thead style="background-color:#84888c; color:white">
+                            <tr>
+                                <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:13%" class="text-center">Barcode</th>
+                                <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:7%" class="text-center">Origin loc</th>
+                                <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:8%" class="text-center">W/O #</th>
+                                <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:13%" class="text-center">DOT</th>
+                                <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:11%" class="text-center">Size</th>
+                                <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:13%" class="text-center">Brand</th>
+                                <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:14%" class="text-center">Cap Count</th>
+                                <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:7%" class="text-center">Credit</th>
+                                <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:7%" class="text-center">Freight</th>
+                                <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:7%" class="text-center">Sub Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var work in workNum)
+                            {
+                                foreach (var barcode in Model.barcodeInfo.Where(x => x.retread_workorder == work.retread_workorder && x.line_code == 6))
+                                {
+                                    int serialDotYear = Int32.Parse(barcode.serial_dot.Substring(barcode.serial_dot.Length - 2));
+                                    //int serialDotWeek = Int32.Parse(barcode.serial_dot.Substring(4, 2));
+                                    int PrelimInspectYear = Int32.Parse(barcode.TT050_date.Value.Year.ToString().Substring(barcode.TT050_date.Value.Year.ToString().Length - 2));
+                                    //int PrelimInspectWeek = barcode.TT050_date.Value.DayOfYear / 7;
+
+                                    <tr>
+                                        <td style="font-size:15px; text-align:center;">@barcode.barcode</td>
+                                        <td style="font-size:15px; text-align:center;">@work.loc_Id</td>
+                                        <td style="font-size:15px; text-align:center;">@barcode.retread_workorder</td>
+                                        <td style="font-size:15px; text-align:center;">@barcode.serial_dot</td>
+                                        <td style="font-size:15px; text-align:center;">@barcode.casing_size</td>
+                                        <td style="font-size:15px; text-align:center;">@barcode.casing_brand</td>
+                                        <td style="font-size:15px; text-align:center;">@barcode.cap_count</td>
+                                        <td style="font-size:15px; text-align:center;">
+
+                                            @{
+                                                double credit = 0;
+                                                double freight = 0;
+                                                double subTotal = 0;                                                
+                                            }
+
+                                            @if (barcode.cap_count != "" && barcode.cap_count != null)
+                                            {
+                                                string columnName_cap = "_capped1";
+                                                int tire = Model.casingTire.Where(x => x.casing_size == "11R22.5").Select(x => x.tire_id).FirstOrDefault();
+                                                var items_casingCredit = Model.creditSchedule_revision.Where(x => x.revision_date < Model.date && x.tire_id == tire).OrderByDescending(x => x.revision_date).FirstOrDefault();
+
+                                                if (barcode.cap_count == "Virgin")
+                                                {
+                                                    columnName_cap = "_virgin";
+                                                }
+                                                else if (barcode.cap_count == "Capped Prior 1")
+                                                {
+                                                    columnName_cap = "_capped1";
+                                                }
+                                                
+
+                                                if (barcode.casing_brand == "Chinese-ALL")
+                                                {
+                                                    columnName_cap = "creditNonBrand" + columnName_cap;
+                                                }
+                                                else
+                                                {
+                                                    columnName_cap = "creditBrand" + columnName_cap;
+                                                }
+
+                                                
+
+                                                credit = Convert.ToDouble(items_casingCredit.GetType().GetProperty(columnName_cap).GetValue(items_casingCredit).ToString());
+
+                                                int? custVal = Model.customerProfile.Where(x => x.customer_number.ToString() == work.customer_number).Select(x => x.outdatedCasingValue).FirstOrDefault();
+
+                                                if (barcode.casing_brand == "Chinese-ALL")
+                                                {
+                                                    if (serialDotYear < PrelimInspectYear-items_casingCredit.outDated_nonBrand)
+                                                    {
+                                                        if (custVal != null)
+                                                        {
+                                                            credit = custVal.Value;
+                                                        }
+                                                        else
+                                                        {
+                                                            credit = 50;
+                                                        }
+
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    if (serialDotYear < PrelimInspectYear-items_casingCredit.outDated_brand)
+                                                    {
+                                                        if (custVal != null)
+                                                        {
+                                                            credit = custVal.Value;
+                                                        }
+                                                        else
+                                                        {
+                                                            credit = 50;
+                                                        }
+                                                    }
+                                                }
+
+                                                if (barcode.cap_count == "Capped Prior 2+")
+                                                {
+                                                    credit = 50;
+                                                }
+
+                                                <span>@credit.ToString("N2")</span>
+                                            }
+                                            else
+                                            {
+                                                credit = 0;
+                                                <span>@credit.ToString("N2")</span>
+                                            }
+                                        </td>
+                                        <td style="font-size:15px; text-align:center; ">
+                                            @{
+                                                string columnName = "freight_" + work.loc_Id;
+                                                var items = Model.freightSchedule_revision.Where(x => x.revision_date < Model.date).OrderByDescending(x => x.revision_date).FirstOrDefault();
+
+                                                freight = Convert.ToDouble(items.GetType().GetProperty(columnName).GetValue(items).ToString());
+                                            }
+                                            <span>@freight.ToString("N2")</span>
+                                        </td>
+                                        <td style="font-size:15px; text-align:center; ">
+                                            @{
+                                                if (credit == 0)
+                                                {
+                                                    subTotal = 0;
+                                                }
+                                                else
+                                                {
+                                                    subTotal = credit - freight;                                                    
+                                                }
+                                                total = total + subTotal;
+
+                                            }
+                                            <span>
+                                                @subTotal.ToString("N2")
+                                            </span>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row" style="width:100%">
+                    <div class="col-md-12" style="display:flex; justify-content:space-between">
+                        <div></div>
+                        <div style="display:flex; justify-content:space-around; align-items:center">
+                            <span style="font-weight:bolder; font-size:20px; margin-right:15px">
+                                TOTAL
+                            </span>
+                            <input type="text" readonly name="name" value="@total.ToString("N2")" style="font-weight:bolder; font-size:20px; width:135px; outline:none" />
+                        </div>
+                    </div>
+                </div>
+
+                
+
+            }
+
+        }
+    </div>
+
+
+
