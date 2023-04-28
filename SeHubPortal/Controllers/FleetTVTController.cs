@@ -50,15 +50,26 @@ namespace SeHubPortal.Controllers
 
 
 
-        public JsonResult GetSurveyDates(string unit)
+        public JsonResult GetSurveyDates(string unit, string loc)
         {
-            using (CityTireAndAutoEntities dc = new CityTireAndAutoEntities())
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            var events = db.tbl_fleetTVT_fieldsurvey_unit.Where(x => x.unit_number == unit).ToList();
+
+            List<DateTime> surveyDates = new List<DateTime>();
+
+            foreach (var evnt in events)
             {
-                var events = dc.tbl_fleetTVT_fieldsurvey_tire.Where(x => x.unit_number == unit).Select(x => x.survey_date).Distinct().ToList();
-
-
-                return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+                if (db.tbl_employee.Where(x => x.employee_id == evnt.employee_id).Select(x => x.loc_ID).FirstOrDefault() == loc)
+                {
+                    surveyDates.Add(evnt.survey_date);
+                    Trace.WriteLine("This is the event date " + evnt.survey_date);
+                }
             }
+
+
+
+            return new JsonResult { Data = surveyDates, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
 
         [HttpPost]
@@ -193,16 +204,25 @@ namespace SeHubPortal.Controllers
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             int empId = Convert.ToInt32(Session["userID"].ToString());
 
+
+
             if(UnitNum != null)
             {
                 model.Unit = db.tbl_fleetTVT_unit.Where(x => x.unit_number == UnitNum).FirstOrDefault();
+
+                model.ConfigurationTypeList = populateConfigurationType();
+
                 if (model.Unit.survey_type == "Tractor")
                 {
                     model.ConfigurationsList = populateConfigurationsTractor();
                 }
-                else
+                else if (model.Unit.survey_type == "Trailer")
                 {
                     model.ConfigurationsList = populateConfigurationsTrailer();
+                }
+                else
+                {
+                    model.ConfigurationsList = populateConfigurationsForklift();
                 }
             }
 
@@ -320,7 +340,7 @@ namespace SeHubPortal.Controllers
 
             MailMessage msg = new MailMessage();
             msg.To.Add(new MailAddress("IT@citytire.com", "IT Team")); //jordan.blackwood     harsha.yerramsetty     payroll
-            msg.From = new MailAddress("noreply@citytire.com", "Sehub");
+            msg.From = new MailAddress("no_reply@citytire.com", "Sehub");
             msg.Subject = "FleetTVT New Customer";
             msg.Body = "<i><u><b>Customer Number: </b></u></i>" + model.AddCustomer.custNum +
                 "<br /><br />" +
@@ -340,7 +360,7 @@ namespace SeHubPortal.Controllers
             msg.IsBodyHtml = true;
             SmtpClient client = new SmtpClient();
             client.UseDefaultCredentials = false;
-            client.Credentials = new System.Net.NetworkCredential("noreply@citytire.com", "U8LH>WpBdXg}");
+            client.Credentials = new System.Net.NetworkCredential("no_reply@citytire.com", "U@dx/Z8Ry{");
             client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
             client.Host = "smtp.office365.com";
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
@@ -452,8 +472,9 @@ namespace SeHubPortal.Controllers
 
         public string PullEquipmentSurvey(string customer, string unit, string date)
         {
-
-
+            Trace.WriteLine("This is the customer --> " + customer);
+            Trace.WriteLine("This is the unit --> " + unit);
+            Trace.WriteLine("This is the date --> " + date);
             var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
 
@@ -517,7 +538,8 @@ namespace SeHubPortal.Controllers
             DateTime surdat = Convert.ToDateTime(dat);
 
             //Trace.WriteLine("Cust: " + cust + " Unit: " + unt + " date: " + surdat + " posit: " + pn);
-
+            var customer = db.tbl_fleettvt_Customer.Where(x => x.customer_number == cust).FirstOrDefault();
+            var unit = db.tbl_fleetTVT_unit.Where(x => x.customer_number == cust && x.unit_number == unt).FirstOrDefault();
             var tire = db.tbl_fleetTVT_fieldsurvey_tire.Where(x => x.customer_number == cust && x.unit_number == unt && x.survey_date == surdat && x.position == pn).FirstOrDefault();
 
             tire.actual_psi = Convert.ToInt32(pres);
@@ -527,6 +549,11 @@ namespace SeHubPortal.Controllers
             tire.model = mdl;
             tire.size = sze;
             tire.comments = com;
+
+            if (unit.survey_type == "Forklift")
+            {
+                tire.percent_worn = Math.Round((1 - (tire.actual_32nds.Value - customer.pull_point_4.Value) / (16 - customer.pull_point_4.Value)) * 100, 1);
+            }
 
             //Trace.WriteLine("This is the brand " + brnd);
 
@@ -578,56 +605,31 @@ namespace SeHubPortal.Controllers
         }
 
         [HttpPost]
-        public string UpdateRecordToFleetSurveyUnit(string cu, string un, string mlg, string loct, string dat, string empl, string cmts, string sdat)
+        public string UpdateRecordToFleetSurveyUnit(string cu, string un, string loct, string empl, string cmts, string sdat)
         {
-
-            Trace.WriteLine("This is the date " + sdat);
-
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             DateTime surdate = Convert.ToDateTime(sdat);
-
             var unitSurveyDetails = db.tbl_fleetTVT_fieldsurvey_unit.Where(x => x.customer_number == cu && x.unit_number == un && x.survey_date == surdate).FirstOrDefault();
-
-            if (mlg != "")
-            {
-                //unitSurveyDetails.mileage = Convert.ToInt32(mlg);
-            }
-
             if (loct != null)
             {
                 unitSurveyDetails.survey_location = loct;
             }
-            
-
             if (sdat != null)
             {
                 unitSurveyDetails.survey_date = Convert.ToDateTime(sdat);
             }
-            
-
             if (empl != null)
             {
                 unitSurveyDetails.employee_id = Convert.ToInt32(empl);
             }
-            
-
-            if (dat != "")
-            {
-                //unitSurveyDetails.date_expired = Convert.ToDateTime(dat);
-            }
-            
-
             if (cmts != null)
             {
                 unitSurveyDetails.comments = cmts;
             }
-
             db.SaveChanges();
 
             return "";
         }
-
-
 
         public ActionResult Dashboard(FleetTVT model)
         {
@@ -683,9 +685,7 @@ namespace SeHubPortal.Controllers
 
             model.ConfigurationsListTractor = populateConfigurationsTractor();
             model.ConfigurationsListTrailer = populateConfigurationsTrailer();
-
-
-
+            
             var readPolicy = new SharedAccessBlobPolicy()
             {
                 Permissions = SharedAccessBlobPermissions.Read,
@@ -850,6 +850,27 @@ namespace SeHubPortal.Controllers
             return View(model);
         }
 
+        public ActionResult NewSurvey(Field_Survey_Edit_Account model)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();            
+            model.CustomerList = populateCustomers();
+            model.ConfigurationsListTractor = populateConfigurationsTractor();
+            model.ConfigurationsListTrailer = populateConfigurationsTrailer();
+            model.BrandList = populateBrands();
+            model.SizeList = populateSizes();
+            model.LocationList = populateLocations();
+            model.WearList = populateWears();
+            model.ValveList = populateValve();
+            model.TireConditionList = populateTireCondition();
+            model.WheelConditionList = populateWheelCondition();
+            model.ModelList = populateModel();
+
+
+            model.Location = db.tbl_cta_location_info.Select(x => x.loc_id).FirstOrDefault();
+
+            return View(model);
+        }
+
         public ActionResult EditAccount(FleetTvtEditAccount model, string custID, bool active)
         {
             if (Session["userID"] == null)
@@ -921,24 +942,21 @@ namespace SeHubPortal.Controllers
                     model.customerDetails.fleet_size = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 1).Count().ToString();
                 }
 
-                
 
-                if (active != null)
+
+                if (active == true)
                 {
-                    if (active == true)
-                    {
-                        model.UnitsForCustomer = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 0).ToList();
-                        model.tractorCount = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 0 && x.survey_type == "Tractor").Count();
-                        model.trailerCount = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 0 && x.survey_type == "Trailer").Count();
-                        model.Active = true;
-                    }
-                    else
-                    {
-                        model.UnitsForCustomer = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 1).ToList();
-                        model.tractorCount = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 1 && x.survey_type == "Tractor").Count();
-                        model.trailerCount = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 1 && x.survey_type == "Trailer").Count();
-                        model.Active = false;
-                    }
+                    model.UnitsForCustomer = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 0).ToList();
+                    model.tractorCount = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 0 && x.survey_type == "Tractor").Count();
+                    model.trailerCount = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 0 && x.survey_type == "Trailer").Count();
+                    model.Active = true;
+                }
+                else
+                {
+                    model.UnitsForCustomer = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 1).ToList();
+                    model.tractorCount = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 1 && x.survey_type == "Tractor").Count();
+                    model.trailerCount = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 1 && x.survey_type == "Trailer").Count();
+                    model.Active = false;
                 }
 
                 model.SteerTiresCount = 0;
@@ -1238,8 +1256,9 @@ namespace SeHubPortal.Controllers
 
             model.ConfigurationsListTractor = populateConfigurationsTractor();
             model.ConfigurationsListTrailer = populateConfigurationsTrailer();
-
-            model.SizesList = populateTruckSizes();
+            model.ConfigurationsListForklift = populateConfigurationsForklift();
+            model.ConfigurationsType = populateConfigurationType();
+            model.SizesList = populateSizes();
 
             model.Location = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
 
@@ -1299,6 +1318,46 @@ namespace SeHubPortal.Controllers
                 {
                     Text = val.Configuration,
                     Value = Convert.ToString(val.Configuration)
+                });
+            }
+
+            return items;
+        }
+
+        private static List<SelectListItem> populateConfigurationsForklift()
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            var config = db.tbl_fleettvt_configurations.Where(x => x.Type == "Forklift").ToList();
+
+            foreach (var val in config)
+            {
+                //Trace.WriteLine("This is the configuration" + val.Configuration);
+                items.Add(new SelectListItem
+                {
+                    Text = val.Configuration,
+                    Value = Convert.ToString(val.Configuration)
+                });
+            }
+
+            return items;
+        }
+
+        private static List<SelectListItem> populateConfigurationType()
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            var config = db.tbl_fleettvt_configurations.Select(x => x.Type).Distinct().ToList();
+
+            foreach (var val in config)
+            {
+                //Trace.WriteLine("This is the configuration" + val.Configuration);
+                items.Add(new SelectListItem
+                {
+                    Text = val,
+                    Value = val
                 });
             }
 
@@ -1546,6 +1605,7 @@ namespace SeHubPortal.Controllers
             model.LocationList = populateLocationsPermissions(empId);
             model.WearList = populateWears();
             model.ValveList = populateValve();
+            model.ModelList = populateModel();
             model.TireConditionList = populateTireCondition();
             model.WheelConditionList = populateWheelCondition();
             model.Location = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
@@ -1591,6 +1651,7 @@ namespace SeHubPortal.Controllers
                     model.UnitsForCustomer = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 0).ToList();
                     model.tractorCount = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 0 && x.survey_type == "Tractor").Count();
                     model.trailerCount = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 0 && x.survey_type == "Trailer").Count();
+                    model.forkliftCount = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 0 && x.survey_type == "Forklift").Count();
                     model.Active = true;
                 }
                 else
@@ -1598,12 +1659,14 @@ namespace SeHubPortal.Controllers
                     model.UnitsForCustomer = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 1).ToList();
                     model.tractorCount = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 1 && x.survey_type == "Tractor").Count();
                     model.trailerCount = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 1 && x.survey_type == "Trailer").Count();
+                    model.forkliftCount = db.tbl_fleetTVT_unit.Where(x => x.customer_number == custID && x.Active == 1 && x.survey_type == "Forklift").Count();
                     model.Active = false;
                 }
 
                 model.SteerTiresCount = 0;
                 model.DriveTiresCount = 0;
                 model.trailerTiresCount = 0;
+                model.forkliftTiresCount = 0;
 
                 foreach (var unit in model.UnitsForCustomer)
                 {
@@ -1616,11 +1679,14 @@ namespace SeHubPortal.Controllers
                         model.SteerTiresCount += config.steerTiresCount.Value;
                         model.DriveTiresCount += config.driveTiresCount.Value;
                         model.trailerTiresCount += config.trailerTiresCount.Value;
+                        model.forkliftTiresCount += config.forkliftTiresCount.Value;
                     }
 
                 }
 
-                var surveyItems = db.tbl_fleetTVT_fieldsurvey_tire.ToList();
+                var surveyItems = db.tbl_fleetTVT_fieldsurvey_tire.Where(x => x.customer_number == custID).ToList();
+
+                model.survyUnits = db.tbl_fleetTVT_fieldsurvey_unit.Where(x => x.customer_number == custID).ToList();
 
                 List<tbl_fleetTVT_fieldsurvey_tire> listFildSurvey = new List<tbl_fleetTVT_fieldsurvey_tire>();
 
@@ -1639,136 +1705,144 @@ namespace SeHubPortal.Controllers
 
                     var unit = db.tbl_fleetTVT_unit.Where(x => x.unit_number == survey.unit_number).FirstOrDefault();
 
-                    //Trace.WriteLine("This is the survey type " + unit.survey_type + " And this is the config " + unit.survey_configuration);
+                    if (unit != null)
+                    {
+                        Trace.WriteLine("This is the survey type " + unit.survey_type + " And this is the config " + unit.survey_configuration);
 
-                    var config = db.tbl_fleettvt_configurations.Where(x => x.Type == unit.survey_type && x.Configuration == unit.survey_configuration).FirstOrDefault();
+                        var config = db.tbl_fleettvt_configurations.Where(x => x.Type == unit.survey_type && x.Configuration == unit.survey_configuration).FirstOrDefault();
 
-                    double tire_type;
+                        double tire_type;
 
-                    if (survey.position == "1_lo")
-                    {
-                        tire_type = config.one_lo.Value;
-                    }
-                    else if (survey.position == "1_li")
-                    {
-                        tire_type = config.one_li.Value;
-                    }
-                    else if (survey.position == "1_ri")
-                    {
-                        tire_type = config.one_ri.Value;
-                    }
-                    else if (survey.position == "1_ro")
-                    {
-                        tire_type = config.one_ro.Value;
-                    }
-                    else if (survey.position == "2_lo")
-                    {
-                        tire_type = config.two_lo.Value;
-                    }
-                    else if (survey.position == "2_li")
-                    {
-                        tire_type = config.two_li.Value;
-                    }
-                    else if (survey.position == "2_ri")
-                    {
-                        tire_type = config.two_ri.Value;
-                    }
-                    else if (survey.position == "2_ro")
-                    {
-                        tire_type = config.two_ro.Value;
-                    }
-                    else if (survey.position == "3_lo")
-                    {
-                        tire_type = config.three_lo.Value;
-                    }
-                    else if (survey.position == "3_li")
-                    {
-                        tire_type = config.three_li.Value;
-                    }
-                    else if (survey.position == "3_ri")
-                    {
-                        tire_type = config.three_ri.Value;
-                    }
-                    else if (survey.position == "3_ro")
-                    {
-                        tire_type = config.three_ro.Value;
-                    }
-                    else if (survey.position == "4_lo")
-                    {
-                        tire_type = config.four_lo.Value;
-                    }
-                    else if (survey.position == "4_li")
-                    {
-                        tire_type = config.four_li.Value;
-                    }
-                    else if (survey.position == "4_ri")
-                    {
-                        tire_type = config.four_ri.Value;
-                    }
-                    else if (survey.position == "4_ro")
-                    {
-                        tire_type = config.four_ro.Value;
-                    }
-                    else if (survey.position == "5_lo")
-                    {
-                        tire_type = config.five_lo.Value;
-                    }
-                    else if (survey.position == "5_li")
-                    {
-                        tire_type = config.five_li.Value;
-                    }
-                    else if (survey.position == "5_ri")
-                    {
-                        tire_type = config.five_ri.Value;
-                    }
-                    else if (survey.position == "5_ro")
-                    {
-                        tire_type = config.five_ro.Value;
-                    }
-                    else
-                    {
-                        tire_type = 0;
-                    }
-
-
-                    if (fieldSurvey.new_32nds.HasValue)
-                    {
-                        //Trace.WriteLine(tire_type);
-                        if (tire_type == 1)
+                        if (survey.position == "1_lo")
                         {
-                            fieldSurvey.percent_worn = Math.Round((1 - (fieldSurvey.actual_32nds.Value - model.customerDetails.pull_point_1.Value) / (fieldSurvey.new_32nds.Value - model.customerDetails.pull_point_1.Value)) * 100, 1);
-
+                            tire_type = config.one_lo.Value;
                         }
-                        else if (tire_type == 2)
+                        else if (survey.position == "1_li")
                         {
-                            fieldSurvey.percent_worn = Math.Round((1 - (fieldSurvey.actual_32nds.Value - model.customerDetails.pull_point_2.Value) / (fieldSurvey.new_32nds.Value - model.customerDetails.pull_point_2.Value)) * 100, 1);
-
+                            tire_type = config.one_li.Value;
+                        }
+                        else if (survey.position == "1_ri")
+                        {
+                            tire_type = config.one_ri.Value;
+                        }
+                        else if (survey.position == "1_ro")
+                        {
+                            tire_type = config.one_ro.Value;
+                        }
+                        else if (survey.position == "2_lo")
+                        {
+                            tire_type = config.two_lo.Value;
+                        }
+                        else if (survey.position == "2_li")
+                        {
+                            tire_type = config.two_li.Value;
+                        }
+                        else if (survey.position == "2_ri")
+                        {
+                            tire_type = config.two_ri.Value;
+                        }
+                        else if (survey.position == "2_ro")
+                        {
+                            tire_type = config.two_ro.Value;
+                        }
+                        else if (survey.position == "3_lo")
+                        {
+                            tire_type = config.three_lo.Value;
+                        }
+                        else if (survey.position == "3_li")
+                        {
+                            tire_type = config.three_li.Value;
+                        }
+                        else if (survey.position == "3_ri")
+                        {
+                            tire_type = config.three_ri.Value;
+                        }
+                        else if (survey.position == "3_ro")
+                        {
+                            tire_type = config.three_ro.Value;
+                        }
+                        else if (survey.position == "4_lo")
+                        {
+                            tire_type = config.four_lo.Value;
+                        }
+                        else if (survey.position == "4_li")
+                        {
+                            tire_type = config.four_li.Value;
+                        }
+                        else if (survey.position == "4_ri")
+                        {
+                            tire_type = config.four_ri.Value;
+                        }
+                        else if (survey.position == "4_ro")
+                        {
+                            tire_type = config.four_ro.Value;
+                        }
+                        else if (survey.position == "5_lo")
+                        {
+                            tire_type = config.five_lo.Value;
+                        }
+                        else if (survey.position == "5_li")
+                        {
+                            tire_type = config.five_li.Value;
+                        }
+                        else if (survey.position == "5_ri")
+                        {
+                            tire_type = config.five_ri.Value;
+                        }
+                        else if (survey.position == "5_ro")
+                        {
+                            tire_type = config.five_ro.Value;
                         }
                         else
                         {
-                            fieldSurvey.percent_worn = Math.Round((1 - (fieldSurvey.actual_32nds.Value - model.customerDetails.pull_point_3.Value) / (fieldSurvey.new_32nds.Value - model.customerDetails.pull_point_3.Value)) * 100, 1);
-
+                            tire_type = 0;
                         }
-                    }
 
-                    if (tire_type == 1)
-                    {
-                        fieldSurvey.spec_psi = Convert.ToInt32(unit.spec_psi_1);
-                    }
-                    else if (tire_type == 2)
-                    {
-                        fieldSurvey.spec_psi = Convert.ToInt32(unit.spec_psi_2);
-                    }
-                    else if (tire_type == 3)
-                    {
-                        fieldSurvey.spec_psi = Convert.ToInt32(unit.spec_psi_3);
-                    }
-                    else
-                    {
-                        fieldSurvey.spec_psi = 0;
-                    }
-           
-                    listFildSurvey.Add(fieldSurvey);
+
+                        if (fieldSurvey.new_32nds.HasValue)
+                        {
+                            //Trace.WriteLine(tire_type);
+                            if (tire_type == 1)
+                            {
+                                fieldSurvey.percent_worn = Math.Round((1 - (fieldSurvey.actual_32nds.Value - model.customerDetails.pull_point_1.Value) / (fieldSurvey.new_32nds.Value - model.customerDetails.pull_point_1.Value)) * 100, 1);
+
+                            }
+                            else if (tire_type == 2)
+                            {
+                                fieldSurvey.percent_worn = Math.Round((1 - (fieldSurvey.actual_32nds.Value - model.customerDetails.pull_point_2.Value) / (fieldSurvey.new_32nds.Value - model.customerDetails.pull_point_2.Value)) * 100, 1);
+
+                            }
+                            else
+                            {
+                                fieldSurvey.percent_worn = Math.Round((1 - (fieldSurvey.actual_32nds.Value - model.customerDetails.pull_point_3.Value) / (fieldSurvey.new_32nds.Value - model.customerDetails.pull_point_3.Value)) * 100, 1);
+
+                            }
+                        }
+
+                        if (unit.survey_type == "Forklift")
+                        {
+                            fieldSurvey.percent_worn = Math.Round((1 - (fieldSurvey.actual_32nds.Value - model.customerDetails.pull_point_4.Value) / (16 - model.customerDetails.pull_point_4.Value)) * 100, 1);
+                        }
+
+                        if (tire_type == 1)
+                        {
+                            fieldSurvey.spec_psi = Convert.ToInt32(unit.spec_psi_1);
+                        }
+                        else if (tire_type == 2)
+                        {
+                            fieldSurvey.spec_psi = Convert.ToInt32(unit.spec_psi_2);
+                        }
+                        else if (tire_type == 3)
+                        {
+                            fieldSurvey.spec_psi = Convert.ToInt32(unit.spec_psi_3);
+                        }
+                        else
+                        {
+                            fieldSurvey.spec_psi = 0;
+                        }
+
+                        listFildSurvey.Add(fieldSurvey);
+                    }                    
 
                 }
 
@@ -1911,7 +1985,7 @@ namespace SeHubPortal.Controllers
 
                         MailMessage mm = new MailMessage();
                         mm.To.Add(new MailAddress(email, "IT Team")); //jordan.blackwood      harsha.yerramsetty      payroll
-                        mm.From = new MailAddress("noreply@citytire.com", "Sehub");
+                        mm.From = new MailAddress("no_reply@citytire.com", "Sehub");
                         mm.Subject = "";
                         mm.Body = "";
                         mm.Attachments.Add(new Attachment(new MemoryStream(bytespdf), "FleetSnapshot.pdf"));
@@ -1920,7 +1994,7 @@ namespace SeHubPortal.Controllers
 
                         SmtpClient client = new SmtpClient();
                         client.UseDefaultCredentials = false;
-                        client.Credentials = new System.Net.NetworkCredential("noreply@citytire.com", "U8LH>WpBdXg}");
+                        client.Credentials = new System.Net.NetworkCredential("no_reply@citytire.com", "U@dx/Z8Ry{");
                         client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
                         client.Host = "smtp.office365.com";
                         client.DeliveryMethod = SmtpDeliveryMethod.Network;
@@ -1944,6 +2018,8 @@ namespace SeHubPortal.Controllers
             return "Successfully sent email";
             
         }
+
+        
 
     }
 }

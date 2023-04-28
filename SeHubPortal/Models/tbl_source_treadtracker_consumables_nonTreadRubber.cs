@@ -20,5 +20,6 @@ namespace SeHubPortal.Models
         public Nullable<bool> TT0300 { get; set; }
         public Nullable<bool> TT0400 { get; set; }
         public string measurement { get; set; }
+        public Nullable<double> lb_per_ft { get; set; }
     }
 }

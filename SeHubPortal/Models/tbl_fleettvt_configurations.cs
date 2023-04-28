@@ -40,5 +40,6 @@ namespace SeHubPortal.Models
         public Nullable<int> driveTiresCount { get; set; }
         public Nullable<int> trailerTiresCount { get; set; }
         public byte[] configuration_image { get; set; }
+        public Nullable<double> forkliftTiresCount { get; set; }
     }
 }

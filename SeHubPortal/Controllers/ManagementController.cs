@@ -27,6 +27,9 @@ namespace SeHubPortal.Controllers
         {
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             var payrollSettings = db.tbl_payroll_settings.FirstOrDefault();
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+
+            string loc = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
 
             var CurrentPayroll = db.tbl_employee_payroll_dates.Where(x => x.start_date <= DateTime.Today && x.end_date >= DateTime.Today).FirstOrDefault();
 
@@ -34,7 +37,7 @@ namespace SeHubPortal.Controllers
             {
                 int payID = db.tbl_employee_payroll_dates.Where(x => x.payroll_Id < CurrentPayroll.payroll_Id).OrderByDescending(x => x.payroll_Id).Select(x => x.payroll_Id).FirstOrDefault();
 
-                return RedirectToAction("Payroll", "Management", new { locId = "", employeeId = "", payrollID = payID, ac = "Dashboard" });
+                return RedirectToAction("Payroll", "Management", new { locId = loc, employeeId = "", payrollID = payID, ac = "Dashboard" });
             }
             else
             {
@@ -43,7 +46,6 @@ namespace SeHubPortal.Controllers
             
         }
 
-
         [HttpGet]
         public ActionResult Payroll(string locId, string employeeId, string payrollID)
         {
@@ -51,7 +53,6 @@ namespace SeHubPortal.Controllers
             {
                 return RedirectToAction("SignIn", "Login");
             }
-            Trace.WriteLine("On Payroll Load:" + locId + "  :" + employeeId + ":" + payrollID);
 
             int empId = Convert.ToInt32(Session["userID"].ToString());
 
@@ -85,7 +86,7 @@ namespace SeHubPortal.Controllers
                 location = locId;
             }
             ViewData["LocationList"] = location;
-
+            
             DateTime CurrentDay = DateTime.Today.AddDays(-(db.tbl_payroll_settings.Where(x => x.ID == 1).Select(x => x.payroll_submission).FirstOrDefault().Value));
             //DateTime CurrentDay = DateTime.Today.AddDays(- 0);
 
@@ -97,11 +98,7 @@ namespace SeHubPortal.Controllers
             {
                 PayrollIDInt = CurrentPayrollId.payroll_Id;
             }
-
-            Trace.WriteLine("This is the current date " + CurrentDay + " This is the PayrollID testing " + PayrollIDInt);
-
             
-
             var CurrentEmployeeList = db.tbl_employee.Where(x => x.loc_ID == location).ToList();
 
             List<EmployeePayrollListModel> emplyPayrollList = new List<EmployeePayrollListModel>();
@@ -241,10 +238,7 @@ namespace SeHubPortal.Controllers
                 tempSub.regular = reg + checkAdjustments("Regular Pay", vald.adjustment_type, vald.adjustment_type1, vald.adjustment_type2, vald.plus_minus, vald.plus_minus1, vald.plus_minus2, adp, adp1, adp2);
                 tempSub.ot = ot + checkAdjustments("Over Time", vald.adjustment_type, vald.adjustment_type1, vald.adjustment_type2, vald.plus_minus, vald.plus_minus1, vald.plus_minus2, adp, adp1, adp2);
                 tempSub.location_id = vald.location_id;
-
-
-                //Trace.WriteLine(" This is the vald_Regular" + vald.regular);
-
+                
                 validationWithAdjustment.Add(tempSub);
             }
 
@@ -262,15 +256,6 @@ namespace SeHubPortal.Controllers
                 {
                     adjustment.emp_ID = item.employee_id.ToString();
                     adjustment.loc_ID = item.loc_id;
-
-                    //Trace.WriteLine("empId = " + item.employee_id + " LocID = " + item.loc_id + " Prid " + item.payroll_id);
-
-                    //Trace.WriteLine(adjustmentDetails.adjustmentPay_validate.HasValue + " apv");
-                    //Trace.WriteLine(adjustmentDetails.adjustmentPay_validate1.HasValue + " apv1");
-                    //Trace.WriteLine(adjustmentDetails.adjustmentCategory_validate + " acv");
-                    //Trace.WriteLine(adjustmentDetails.adjustmentCategory_validate1 + " acv1");
-                    //Trace.WriteLine(adjustmentDetails.plus_minus_validate + " pmv");
-                    //Trace.WriteLine(adjustmentDetails.plus_minus_validate1 + " pmv1");
 
                     if (adjustmentDetails.adjustmentPay_validate.HasValue)
                     {
@@ -318,9 +303,7 @@ namespace SeHubPortal.Controllers
 
                         }
                     }
-
-                    //Trace.WriteLine(" This is the Total " + regularTotal);
-
+                    
                     EmployeePayrollListModel empvalid = new EmployeePayrollListModel();  
                     empvalid.employeeId = emp.employee_id.ToString();
                     empvalid.fullName = emp.full_name;
@@ -353,7 +336,7 @@ namespace SeHubPortal.Controllers
             using (SqlConnection con = new SqlConnection(constr))
             {
                 string query = "select distinct employee_id from tbl_attendance_log where time_stamp > '" + Payroll.start_date + "' and time_stamp < '" + Payroll.end_date + "' and loc_id = '" + location + "'";
-                //Trace.WriteLine(query);
+                
                 using (SqlCommand cmd = new SqlCommand(query))
                 {
                     cmd.Connection = con;
@@ -394,9 +377,6 @@ namespace SeHubPortal.Controllers
                             items1.Add(new KeyValuePair<int, string>(Convert.ToInt32(val), EmpSwipedInLocation.full_name));
                         }
                     }
-
-                    
-
                 }
 
             }
@@ -406,7 +386,7 @@ namespace SeHubPortal.Controllers
                 EmployeePayrollListModel obj = new EmployeePayrollListModel(); // ViewModel
                                                                                //Debug.WriteLine(item.employee_id.ToString()+" "+ item.full_name+" "+ item.at_work.ToString());
                                                                                //string[] values = item.ToString().Split(';');
-                Trace.WriteLine("This is the emp change loc" + item.Key.ToString());
+                
 
                 obj.employeeId = item.Key.ToString();
                 obj.fullName = item.Value;
@@ -479,8 +459,6 @@ namespace SeHubPortal.Controllers
 
             }
 
-            //Trace.WriteLine("This is the selected payroll ID" + PayrollIDInt + " and location ID is " + locId);
-
             List<tbl_payroll_submission_branch> branchSubmissionList = new List<tbl_payroll_submission_branch>();
             using (var context = new CityTireAndAutoEntities())
             {
@@ -528,9 +506,7 @@ namespace SeHubPortal.Controllers
             if (employeeId != null)
             {
                 int emid = Convert.ToInt32(employeeId);
-
-                //Trace.WriteLine("This is the location" + location);
-
+                
                 var payrollSubmission = db.tbl_employee_payroll_submission.Where(x => x.employee_id == emid && x.payroll_id == PayrollIDInt && x.location_id == location).FirstOrDefault();
                 if (payrollSubmission != null)
                 {
@@ -636,7 +612,6 @@ namespace SeHubPortal.Controllers
                     {
                         corpstatus = 1;
                     }
-                    //Trace.WriteLine(loc.Value + " has values in table which are of record flag 2 is " + db.tbl_employee_payroll_submission.Where(x => x.location_id == loc.Value && x.payroll_id == PayrollIDInt).Count() + "and" + corporateCompletionsAtLocation.Count());
                 }
 
 
@@ -740,14 +715,7 @@ namespace SeHubPortal.Controllers
 
                 var OT_eligible = db.tbl_position_info.Where(x => x.PositionTitle == position).FirstOrDefault();
 
-
-                //Trace.WriteLine("This is the employee ID " + EmployeeDetails.employee_id);
-
                 var emp_status_data = db.tbl_employee_status.Where(x => x.employee_id == EmployeeDetails.employee_id).FirstOrDefault();
-
-                //Trace.Write("*******************Reached untill here ****************** empID =" + EmployeeDetails.employee_id);
-                //Trace.Write("*******************Reached untill here ****************** empID =" + emp_status_data.vacation);
-
 
                 ViewData["vacation"] = emp_status_data.vacation;
 
@@ -773,11 +741,6 @@ namespace SeHubPortal.Controllers
                     ViewData["OT_eligible"] = "N/A";
                 }
 
-                //Trace.WriteLine("vacation " + emp_status_data.vacation);
-                //Trace.WriteLine("vacationbuyin " + emp_status_data.vacation_buyin);
-                //Trace.WriteLine("compensation_type " + emp_status_data.compensation_type);
-                //DateTime todatDate = DateTime.Parse("2020-04-30");
-                //Debug.WriteLine("Date time today:" + todatDate);
                 int payrollIDInfo = 0;
                 string payrollStartDate = "";
                 string payrollEndDate = "";
@@ -968,12 +931,10 @@ namespace SeHubPortal.Controllers
                         if (positionOfStatDays[1] == 1)
                         {
                             payrollBiWeekDetails.mon_1_sel_id = 3;
-                            //Trace.WriteLine("payrollBiWeekDetails.mon_1_sel_id: 1 " + payrollBiWeekDetails.mon_1_sel_id);
                         }
                         else
                         {
                             payrollBiWeekDetails.mon_1_sel_id = 1;
-                            //Trace.WriteLine("payrollBiWeekDetails.mon_1_sel_id: 2 " + payrollBiWeekDetails.mon_1_sel_id);
                         }
                     }
                     else
@@ -1266,9 +1227,6 @@ namespace SeHubPortal.Controllers
                         payrollBiWeekDetails.thurs_1_sel = payrollBiweekly.thurs_1_sel;
                     }
 
-                    //Trace.WriteLine(" Stat Position info " + positionOfStatDays[5] + " DB selection string " + payrollBiWeekDetails.fri_1_sel + " selection ID " + payrollBiWeekDetails.fri_1_sel_id);
-
-
                     if (positionOfStatDays[5] == 1 || payrollBiWeekDetails.fri_1_sel == "St")
                     {
                         if (payrollBiWeekDetails.fri_1_sel != "St" && payrollBiWeekDetails.recordflag == 2)
@@ -1499,22 +1457,20 @@ namespace SeHubPortal.Controllers
 
             if(YearlyRefined != null)
             {
-                //Trace.WriteLine("This is the Regular " + Yearly.Sum(x => x.reg) + " This is the OT " + Yearly.Sum(x => x.Ot1) + " This is the OT2 " + Yearly.Sum(x => x.Ot2) + " This is the OT3 " + Yearly.Sum(x => x.Ot3));
                 payrollModel.YearlyRegular = YearlyRefined.Sum(x => x.reg).Value;
                 payrollModel.YearlyVac = YearlyRefined.Sum(x => x.vac).Value;
                 payrollModel.YearlySic = YearlyRefined.Sum(x => x.sic).Value;
                 payrollModel.YearlyOT = YearlyRefined.Sum(x => x.Ot1).Value + Yearly.Sum(x => x.Ot2).Value + Yearly.Sum(x => x.Ot3).Value;
             }
 
-            //Trace.WriteLine("Reached1");
+
             List<KeyValuePair<DateTime, double?>> VacDates = new List<KeyValuePair<DateTime, double?>>();
             List<KeyValuePair<DateTime, double?>> SicDates = new List<KeyValuePair<DateTime, double?>>();
 
             List<int> vacPayrollIDs = db.tbl_employee_payroll_final.Where(x => x.employee_id.ToString() == employeeId && ((x.VacationTime_H != 0 && x.VacationTime_H != null) || (x.SickLeave_H != 0 && x.SickLeave_H != null))).Select(x => x.payroll_id).ToList(); ;
-            //Trace.WriteLine("Reached2");
+            
             if (vacPayrollIDs != null)
             {
-                //Trace.WriteLine("Reached3");
                 foreach (int pid in vacPayrollIDs)
                 {
                     var biweekly = db.tbl_employee_payroll_biweekly.Where(x => x.employee_id.ToString() == employeeId && x.payroll_id == pid).FirstOrDefault();
@@ -1522,7 +1478,7 @@ namespace SeHubPortal.Controllers
                     if(biweekly != null)
                     {
                         DateTime payrollStartDate = db.tbl_employee_payroll_dates.Where(x => x.payroll_Id == pid).Select(x => x.start_date).FirstOrDefault().Value;
-                        //Trace.WriteLine("Reached4");
+                        
                         if (biweekly.sun_1_sel == "Va")
                         {
                             VacDates.Add(new KeyValuePair<DateTime, double?>(payrollStartDate, biweekly.sun_1_opt));
@@ -1621,7 +1577,6 @@ namespace SeHubPortal.Controllers
                         {
                             SicDates.Add(new KeyValuePair<DateTime, double?>(payrollStartDate.AddDays(10), biweekly.wed_2_opt));
                         }
-                        //Trace.WriteLine("Reached5");
                         if (biweekly.thurs_2_sel == "Va")
                         {
                             VacDates.Add(new KeyValuePair<DateTime, double?>(payrollStartDate.AddDays(11), biweekly.thurs_2_opt));
@@ -1630,7 +1585,6 @@ namespace SeHubPortal.Controllers
                         {
                             SicDates.Add(new KeyValuePair<DateTime, double?>(payrollStartDate.AddDays(11), biweekly.thurs_2_opt));
                         }
-                        //Trace.WriteLine("Reached6");
                         if (biweekly.fri_2_sel == "Va")
                         {
                             VacDates.Add(new KeyValuePair<DateTime, double?>(payrollStartDate.AddDays(12), biweekly.fri_2_opt));
@@ -1639,7 +1593,6 @@ namespace SeHubPortal.Controllers
                         {
                             SicDates.Add(new KeyValuePair<DateTime, double?>(payrollStartDate.AddDays(12), biweekly.fri_2_opt));
                         }
-                        //Trace.WriteLine("Reached7");
                         if (biweekly.sat_2_sel == "Va")
                         {
                             VacDates.Add(new KeyValuePair<DateTime, double?>(payrollStartDate.AddDays(13), biweekly.sat_2_opt));
@@ -1648,12 +1601,10 @@ namespace SeHubPortal.Controllers
                         {
                             SicDates.Add(new KeyValuePair<DateTime, double?>(payrollStartDate.AddDays(13), biweekly.sat_2_opt));
                         }
-                        //Trace.WriteLine("Reached8");
                     }
 
                 }
             }
-            //Trace.WriteLine("Reached9");
             payrollModel.vacDatesYearly = VacDates;
             payrollModel.sicDatesYearly = SicDates;
 
@@ -1673,9 +1624,6 @@ namespace SeHubPortal.Controllers
                 {
                     payrollModel.enableBranchPayrollEntry = false;
                 } 
-
-
-                Trace.WriteLine(CurrentDay + " This is the current date " + payrollDates.start_date + " This is the payroll start " + payrollDates.end_date + " This is the payroll end ");
 
                 /*
              
@@ -1708,7 +1656,6 @@ namespace SeHubPortal.Controllers
             
             return View(payrollModel);
         }
-
 
         [HttpPost]
         public ActionResult AddDocumentRequest(HttpPostedFileBase Document, TrainingViewModel modal)
@@ -1751,9 +1698,7 @@ namespace SeHubPortal.Controllers
         public ActionResult populateEmployeeList(DateTime date, string loc)
         {
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
-
-            //Trace.WriteLine("This is the date" + date + "This is the location" + loc);
-
+            
             List<KeyValuePair<int, string>> keyValuePair = new List<KeyValuePair<int, string>>();
 
             string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
@@ -1761,7 +1706,7 @@ namespace SeHubPortal.Controllers
             using (SqlConnection con = new SqlConnection(constr))
             {
                 string query = "select distinct a.employee_id, b.full_name, b.status from tbl_attendance_log a, tbl_employee b where a.loc_id = '" + loc + "' and a.employee_id = b.employee_id and time_stamp > '" + date + "' and time_stamp < '" + date.AddDays(28) + "'";
-                //Trace.WriteLine(query);
+                
                 using (SqlCommand cmd = new SqlCommand(query))
                 {
                     cmd.Connection = con;
@@ -1770,7 +1715,6 @@ namespace SeHubPortal.Controllers
                     {
                         while (sdr.Read())
                         {
-                            //Trace.WriteLine("Reached till 2");
                             int emp;
                             string fulnam;
                             string status;
@@ -1787,10 +1731,7 @@ namespace SeHubPortal.Controllers
                             emp = Convert.ToInt32(sdr["employee_id"]);
                             fulnam = Convert.ToString(sdr["full_name"]) + ";" + status;
 
-                            //Trace.WriteLine("This is the emp ID " + emp + " This is the full name" + fulnam);
-
                             keyValuePair.Add(new KeyValuePair<int, string>(emp, fulnam));
-                            //Trace.WriteLine("Reached till 3");
                         }
 
                     }
@@ -1810,9 +1751,7 @@ namespace SeHubPortal.Controllers
         {
 
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
-
-            //Trace.WriteLine("The drag and drop function");
-
+            
             string filePath = string.Empty;
             if (postedFile != null)
             {
@@ -1833,9 +1772,7 @@ namespace SeHubPortal.Controllers
 
                 string date1 = csvData.Substring(93, 10);
                 string date2 = csvData.Substring(109, 10);
-
-                //Trace.WriteLine(date1 + ";" + date2);
-
+                
                 DateTime datetime1 = DateTime.ParseExact(date1, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 DateTime datetime2 = DateTime.ParseExact(date2, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
@@ -1863,7 +1800,7 @@ namespace SeHubPortal.Controllers
                                             sales.loc_id = db.tbl_employee.Where(x => x.employee_id == sales.employee_id).Select(x => x.loc_ID).FirstOrDefault();
                                             sales.payroll_id = db.tbl_employee_payroll_dates.Where(x => x.start_date == datetime1 && x.end_date == datetime2).Select(x => x.payroll_Id).FirstOrDefault().ToString();
                                             sales.door_rate = Convert.ToDouble(db.tbl_pricelist.Where(x => x.loc_id == sales.loc_id).Select(x => x.door_rate).FirstOrDefault());
-                                            //Trace.WriteLine(cell[9]);
+                                            
                                             sales.commissionable_sales = Convert.ToDouble(cell[9].Replace(",", ""));
                                             sales.commission_plan = cell[3];
                                             sales.commission_due = cell[10];
@@ -1876,11 +1813,9 @@ namespace SeHubPortal.Controllers
                                     {
                                         if (cell[0].All(char.IsDigit))
                                         {
-                                            //Trace.WriteLine(cell[0] + "Test");
                                             sales.employee_id = Convert.ToInt32(cell[0]);
                                             sales.loc_id = db.tbl_employee.Where(x => x.employee_id == sales.employee_id).Select(x => x.loc_ID).FirstOrDefault();
                                             sales.payroll_id = db.tbl_employee_payroll_dates.Where(x => x.start_date == datetime1 && x.end_date == datetime2).Select(x => x.payroll_Id).FirstOrDefault().ToString();
-                                            //Trace.WriteLine(Convert.ToDouble(db.tbl_pricelist.Where(x => x.loc_id == sales.loc_id).Select(x => x.door_rate).FirstOrDefault()));
                                             sales.door_rate = Convert.ToDouble(db.tbl_pricelist.Where(x => x.loc_id == sales.loc_id).Select(x => x.door_rate).FirstOrDefault());                                            
                                             sales.commissionable_sales = Convert.ToDouble(cell[9].Replace(",", ""));
                                             sales.commission_plan = cell[3];
@@ -1910,7 +1845,6 @@ namespace SeHubPortal.Controllers
             return RedirectToAction("DataResources", "Settings", new { ack = "DataImported" });
         }
 
-
         public ActionResult UploadTemperatureReading()
         {
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
@@ -1922,7 +1856,6 @@ namespace SeHubPortal.Controllers
                 if (file.Contains(".csv"))
                 {
                     string filePath = "C:\\Users\\Sri Harsha\\Downloads\\" + file.Split('\\')[file.Split('\\').Length-1];
-                    //Trace.WriteLine(filePath);
                     string csvData = System.IO.File.ReadAllText(filePath);
                     foreach (string row in csvData.Split('\n'))
                     {
@@ -1952,59 +1885,11 @@ namespace SeHubPortal.Controllers
             return RedirectToAction("DataResources", "Settings");
         }
 
-        /*
-         
-            public JsonResult GetAttendanceDates(string empid)
-        {
-
-            //Trace.WriteLine("This is the employee ID " + empid);
-
-            var itemslist = new List<string>();
-            var itemslist1 = new List<string>();
-
-            using (CityTireAndAutoEntities dc = new CityTireAndAutoEntities())
-            {
-                DateTime nDaysAgo = Convert.ToDateTime("2018-01-01");
-
-                string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-                using (SqlConnection con = new SqlConnection(constr))
-                {
-                    string query = "select time_stamp, loc_id from tbl_attendance_log where employee_id = '" + empid +"'" + "order by time_stamp asc";
-                    //Debug.WriteLine(query);
-                    using (SqlCommand cmd = new SqlCommand(query))
-                    {
-                        cmd.Connection = con;
-                        con.Open();
-                        using (SqlDataReader sdr = cmd.ExecuteReader())
-                        {
-
-                            while (sdr.Read())
-                            {
-                                string timeStamp;
-                                string locID;
-                                timeStamp = Convert.ToString(sdr["time_stamp"]);
-                                locID = Convert.ToString(sdr["loc_id"]);
-                                itemslist.Add(timeStamp.Split(' ')[0] + ";" + locID);
-                            }
-
-                        }
-                        con.Close();
-                    }
-                }
-            }
-
-            var finalTimeStampList = itemslist.ToList();
-
-            return new JsonResult { Data = finalTimeStampList, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-        }
-             
-             */
-
         public JsonResult GetAttendanceDates(string empid, int mon, int yar)
         {
             string startDate = yar.ToString() + "-" + mon.ToString() + "-" + "1";
             string endDate = yar.ToString() + "-" + mon.ToString() + "-" + System.DateTime.DaysInMonth(yar, mon) + " 23:00:00.000";
-            Trace.WriteLine(empid + "-" + yar);
+            
             var itemslist = new List<string>();
 
             using (CityTireAndAutoEntities dc = new CityTireAndAutoEntities())
@@ -2041,59 +1926,8 @@ namespace SeHubPortal.Controllers
             return new JsonResult { Data = finalTimeStampList, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
 
-        /*
-         
-            public JsonResult GetSwipDetails(string date, string empid)
-        {
-            //Trace.WriteLine("This is the date " + date + "This is the employee_id " + empid);
-            //Trace.WriteLine("This is the employee ID " + empid);
-
-            var itemslist = new List<string>();
-            var itemslist1 = new List<string>();
-
-            using (CityTireAndAutoEntities dc = new CityTireAndAutoEntities())
-            {
-                DateTime nDaysAgo = Convert.ToDateTime("2018-01-01");
-
-                string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-                using (SqlConnection con = new SqlConnection(constr))
-                {
-                    string query = "select time_stamp, event_id from tbl_attendance_log where time_stamp > '" + date + "'" + "and time_stamp < '" + date + " 23:59:00.000" + "'" + "and employee_id = '" + empid + "'" + "and loc_id = '" + empid + "'" + "  order by time_stamp asc";
-                    //Debug.WriteLine(query);
-                    using (SqlCommand cmd = new SqlCommand(query))
-                    {
-                        cmd.Connection = con;
-                        con.Open();
-                        using (SqlDataReader sdr = cmd.ExecuteReader())
-                        {
-
-                            while (sdr.Read())
-                            {
-                                string timeStamp;
-                                string eventID;
-                                timeStamp = Convert.ToString(sdr["time_stamp"]);
-                                eventID = Convert.ToString(sdr["event_id"]);
-                                itemslist.Add(timeStamp + ">" + eventID);
-                            }
-
-                        }
-                        con.Close();
-                    }
-                }
-            }
-
-            var finalTimeStampList = itemslist.ToList();
-
-            return new JsonResult { Data = finalTimeStampList, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-        }
-             
-             */
-
         public JsonResult GetSwipDetails(string date, string empid, string locid)
         {
-            //Trace.WriteLine("This is the date " + date + "This is the employee_id " + empid, "This is the locid" + locid);
-            //Trace.WriteLine("This is the employee ID " + empid);
-
             var itemslist = new List<string>();
             var itemslist1 = new List<string>();
 
@@ -2177,7 +2011,7 @@ namespace SeHubPortal.Controllers
             using (SqlConnection con = new SqlConnection(constr))
             {
                 string query = "select distinct a.employee_id, b.full_name, b.status from tbl_attendance_log a, tbl_employee b where a.loc_id = '" + location + "'" + " and a.employee_id = b.employee_id and time_stamp > '" + current + "' and time_stamp < '" + current.AddDays(28) + "'";
-                //Trace.WriteLine(query);
+                
                 using (SqlCommand cmd = new SqlCommand(query))
                 {
                     cmd.Connection = con;
@@ -2186,7 +2020,6 @@ namespace SeHubPortal.Controllers
                     {
                         while (sdr.Read())
                         {
-                            //Trace.WriteLine("Reached till 2");
                             int emp;
                             string fulnam;
                             string status;
@@ -2202,11 +2035,8 @@ namespace SeHubPortal.Controllers
 
                             emp = Convert.ToInt32(sdr["employee_id"]);
                             fulnam = Convert.ToString(sdr["full_name"]) + ";" + status;
-
-                            //Trace.WriteLine("This is the emp ID " + emp + " This is the full name" + fulnam);
-
+                            
                             keyValuePair.Add(new KeyValuePair<int, string>(emp, fulnam));
-                            //Trace.WriteLine("Reached till 3");
                         }
 
                     }
@@ -2269,7 +2099,6 @@ namespace SeHubPortal.Controllers
 
             foreach (var val in itemslist)
             {
-                //Trace.WriteLine(val);
                 EmployeeAttendanceListModel empchlococat = new EmployeeAttendanceListModel();
                 if (val != 0)
                 {
@@ -2287,7 +2116,7 @@ namespace SeHubPortal.Controllers
                             using (SqlConnection con = new SqlConnection(constr))
                             {
                                 string query = "select top 1 * from tbl_attendance_log where employee_id = '" + val + "' order by time_stamp desc ";
-                                //Debug.WriteLine(query);
+                                
                                 using (SqlCommand cmd = new SqlCommand(query))
                                 {
                                     cmd.Connection = con;
@@ -2321,7 +2150,6 @@ namespace SeHubPortal.Controllers
 
             }
 
-            //Trace.WriteLine("Reached");
             model.employeeListChangeLocation = empchlococatList;
             model.employeeList = emplyAttList.OrderBy(x => x.fullName).ToList();
 
@@ -2333,9 +2161,7 @@ namespace SeHubPortal.Controllers
             {
                 employeeId = keyValuePair.OrderBy(x => x.Value).Select(x => x.Key).FirstOrDefault().ToString();
             }
-
-            //Trace.WriteLine("First Emp with emp ID" + employeeId);
-
+            
             if (employeeId is null)
             {
 
@@ -2387,7 +2213,6 @@ namespace SeHubPortal.Controllers
 
             return View(model);
         }
-
 
         private static List<SelectListItem> populateLocationsPermissions(int empId)
         {
@@ -2518,9 +2343,7 @@ namespace SeHubPortal.Controllers
             DateTime CurrentDay = DateTime.Today.AddDays(-(db.tbl_payroll_settings.Where(x => x.ID == 1).Select(x => x.payroll_submission).FirstOrDefault().Value)); //-(14 + db.tbl_payroll_settings.Where(x => x.ID == 1).Select(x => x.payroll_submission).FirstOrDefault().Value)
 
             int CurrentPayrollId = db.tbl_employee_payroll_dates.Where(x => x.start_date <= CurrentDay && x.end_date >= CurrentDay).Select(x => x.payroll_Id).FirstOrDefault();
-
-            //Trace.WriteLine(CurrentPayrollId + "This is the current payroll");
-
+            
             var currentPayroll = db.tbl_employee_payroll_dates.Where(x => x.start_date <= CurrentDay && x.end_date >= CurrentDay).FirstOrDefault();
 
             if (year == null)
@@ -2559,10 +2382,10 @@ namespace SeHubPortal.Controllers
                 {
                     DateTime anual_production_start = Convert.ToDateTime(year + "-01-01");
                     DateTime anual_production_end = System.DateTime.Now;
-                    FileUrl.ytd_barcode = db.tbl_treadtracker_barcode.Where(x => x.final_inspection_date > start && x.final_inspection_result == "GOOD").Count();
-                    FileUrl.ytd_barcode_prev_year = db.tbl_treadtracker_barcode.Where(x => x.final_inspection_date > start && x.final_inspection_result == "GOOD").Count();
+                    FileUrl.ytd_barcode = db.tbl_treadtracker_barcode.Where(x => x.TT600_date > start && x.TT600_result == "GOOD").Count();
+                    FileUrl.ytd_barcode_prev_year = db.tbl_treadtracker_barcode.Where(x => x.TT600_date > start && x.TT600_result == "GOOD").Count();
                     
-                    FileUrl.ytd_tech_production = db.tbl_treadtracker_barcode.Where(x => x.final_inspection_date > start && x.final_inspection_date < currentPayroll.start_date && x.final_inspection_result == "GOOD").Count();
+                    FileUrl.ytd_tech_production = db.tbl_treadtracker_barcode.Where(x => x.TT600_date > start && x.TT600_date < currentPayroll.start_date && x.TT600_result == "GOOD").Count();
                     FileUrl.anual_production = FileUrl.ytd_barcode*(360 / ((anual_production_end - anual_production_start).TotalDays));
 
                     var efficiency = (FileUrl.ytd_tech_minutes * 60) / FileUrl.ytd_tech_production;
@@ -2572,7 +2395,7 @@ namespace SeHubPortal.Controllers
                 {
                     DateTime anual_production_start = Convert.ToDateTime(year + "-01-01");
                     DateTime anual_production_end = Convert.ToDateTime(year + "-" + System.DateTime.Now.Month + "-" + System.DateTime.Now.Day); ;
-                    FileUrl.ytd_barcode = db.tbl_treadtracker_barcode.Where(x => x.final_inspection_date > start && x.final_inspection_date < end && x.final_inspection_result == "GOOD").Count();
+                    FileUrl.ytd_barcode = db.tbl_treadtracker_barcode.Where(x => x.TT600_date > start && x.TT600_date < end && x.TT600_result == "GOOD").Count();
                     FileUrl.ytd_tech_production = FileUrl.ytd_barcode;
                     FileUrl.anual_production = FileUrl.ytd_barcode * (360 / ((anual_production_end - anual_production_start).TotalDays));
                 }
@@ -2631,8 +2454,7 @@ namespace SeHubPortal.Controllers
                             }
                             else
                             {
-                                technicianInfo.RegularHours = "0";
-                                
+                                technicianInfo.RegularHours = "0";                                
                             }
                         }
                         
@@ -2725,7 +2547,6 @@ namespace SeHubPortal.Controllers
                         technicianInfo.OverallEfficiency = (Convert.ToDouble(technicianInfo.ComissionableSalesDue) / (0.38 * Convert.ToDouble(technicianInfo.Doorrate))).ToString();
                         
 
-
                         if (db.tbl_employee_payroll_submission.Where(x => x.payroll_id.ToString().StartsWith(year.Substring(year.Length - 2))).Select(x => x.payroll_id).Distinct().Count() == 1)
                         {
                             technicianInfo.BilledHoursPayroll = technicianInfo.OverallEfficiency;
@@ -2785,17 +2606,13 @@ namespace SeHubPortal.Controllers
             //var blobList = blockBlob.ToList();
 
             var URLNames = new List<KeyValuePair<string, string>>();
-
-            //Trace.WriteLine(location);
-
+            
             foreach (var blob in blockBlob)
             {
                 var newUri = new Uri(blob.Uri.AbsoluteUri);
                 var blobFileName = blob.Uri.Segments.Last();
                 blobFileName = blobFileName.Replace("%20", " ");
                 blobFileName = blobFileName.Replace(".pdf", " ");
-
-                //Trace.WriteLine(blobFileName);
 
                 if (blobFileName.Contains(FileUrl.Location_ID)) // 
                 {
@@ -2810,8 +2627,6 @@ namespace SeHubPortal.Controllers
                 var blobFileName1 = blob1.Uri.Segments.Last();
                 blobFileName1 = blobFileName1.Replace("%20", " ");
                 blobFileName1 = blobFileName1.Replace(".pdf", " ");
-
-                //Trace.WriteLine(blobFileName);
 
                 if (blobFileName1.Contains("New Hire Package")) // 
                 {
@@ -2835,7 +2650,6 @@ namespace SeHubPortal.Controllers
 
         public string TechnicianEfficiency(int emp, string year)
         {
-            //Trace.WriteLine("Reached TechnicianEfficiency");
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
 
             DateTime CurrentDay = DateTime.Today.AddDays(-(db.tbl_payroll_settings.Where(x => x.ID == 1).Select(x => x.payroll_submission).FirstOrDefault().Value)); //-(14 + db.tbl_payroll_settings.Where(x => x.ID == 1).Select(x => x.payroll_submission).FirstOrDefault().Value)
@@ -2971,9 +2785,9 @@ namespace SeHubPortal.Controllers
                 technicianInfo.BilledHoursPayroll = technicianInfo.OverallEfficiency;
                 technicianInfo.RegularHours = temp1;
                 technicianInfo.OtHours = temp2;
-                double ytdHrsBilled = 0;
-                double prlHrsAdjusted = 0;
-                double TechnicianEfficiency = 0;
+                //double ytdHrsBilled = 0;
+                //double prlHrsAdjusted = 0;
+                //double TechnicianEfficiency = 0;
                 double paidhrspayroll = 0;
                 if (technicianInfo.RegularHours != "" && technicianInfo.OtHours != "")
                 {
@@ -3000,28 +2814,23 @@ namespace SeHubPortal.Controllers
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             var payrollIDs = db.tbl_employee_payroll_dates.Where(x => x.payroll_Id.ToString().StartsWith(year.Substring(2, 2))).Select(x => x.payroll_Id).ToList();
             string percentages = "";
-            //Trace.WriteLine("TechnicianEfficiencyPerPayroll");
             foreach (var pid in payrollIDs)
             {
                 percentages = percentages + pid + ";";
             }
-            //Trace.WriteLine("TechnicianEfficiencyPerPayroll 1");
             percentages = percentages + "~";
 
             foreach (var pid in payrollIDs)
             {
                 var commissionData = db.tbl_Efficiancy_Technician_Commissions.Where(x => x.employee_id == emp && x.payroll_id == pid.ToString()).FirstOrDefault();
                 var payrollInfo = db.tbl_employee_payroll_submission.Where(x => x.employee_id == emp && x.payroll_id == pid).FirstOrDefault();
-                //Trace.WriteLine("TechnicianEfficiencyPerPayroll 5");
+               
                 if (commissionData != null && payrollInfo != null)
                 {
                     double regular = 0;
                     double OT = 0;
-                    //Trace.WriteLine("TechnicianEfficiencyPerPayroll 6");
                     double commissionDollars = commissionData.commissionable_sales.Value;
-                    //Trace.WriteLine("TechnicianEfficiencyPerPayroll 7");
                     double doorRate = commissionData.door_rate;
-                    //Trace.WriteLine("TechnicianEfficiencyPerPayroll 8");
                     if (payrollInfo.regular.HasValue)
                     {
                         regular = payrollInfo.regular.Value;
@@ -3031,11 +2840,8 @@ namespace SeHubPortal.Controllers
                     {
                         OT = payrollInfo.ot.Value;
                     }
-                    //Trace.WriteLine("TechnicianEfficiencyPerPayroll 9");
                      
-                    //Trace.WriteLine("TechnicianEfficiencyPerPayroll 10");
                     double eff = ((commissionDollars / (0.38 * doorRate)) / (regular + OT)) * 100;
-                    //Trace.WriteLine("TechnicianEfficiencyPerPayroll 11");
                     percentages = percentages + eff.ToString("N2") + ";";
                 }
                 else
@@ -3074,7 +2880,6 @@ namespace SeHubPortal.Controllers
 
         public string TechnicianEfficiencyPerPayrollAll(string loc, string year, string tech)
         {
-            //Trace.WriteLine("This is " + tech);
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             var pids = db.tbl_employee_payroll_dates.Where(x => x.payroll_Id.ToString().StartsWith(year.Substring(2, 2))).OrderBy(x => x.payroll_Id).Select(x => x.payroll_Id).ToList();
             List<int> payrollIDs = new List<int>();
@@ -3151,14 +2956,12 @@ namespace SeHubPortal.Controllers
                                     }
                                     else
                                     {
-                                        //Trace.WriteLine("emp " + emp + " pid " + pid);
                                         regular = db.tbl_employee_payroll_summary.Where(x => x.employee_id == emp && x.regular != null && x.regular != 0).Average(x => x.regular).Value;
                                     }
 
                                 }
                                 else
                                 {
-                                    //Trace.WriteLine("emp " + emp + " pid " + pid);
                                     regular = db.tbl_employee_payroll_summary.Where(x => x.employee_id == emp && x.regular != null && x.regular != 0).Average(x => x.regular).Value;
                                 }
 
@@ -3289,8 +3092,6 @@ namespace SeHubPortal.Controllers
             
         }
 
-
-
         [HttpPost]
         public ActionResult DashboardChangeLocation(FileURL model)
         {                      
@@ -3310,7 +3111,6 @@ namespace SeHubPortal.Controllers
             }
             return RedirectToAction("Dashboard", new { loc_id = model.Location_ID });
         }     
-
 
         [HttpGet]
         public ActionResult Dashboard(string loc_id)
@@ -3380,18 +3180,14 @@ namespace SeHubPortal.Controllers
             //var blobList = blockBlob.ToList();
 
             var URLNames = new List<KeyValuePair<string, string>>();
-
-            //Trace.WriteLine(location);
-
+            
             foreach (var blob in blockBlob)
             {
                 var newUri = new Uri(blob.Uri.AbsoluteUri);
                 var blobFileName = blob.Uri.Segments.Last();
                 blobFileName = blobFileName.Replace("%20", " ");
                 blobFileName = blobFileName.Replace(".pdf", " ");
-
-                //Trace.WriteLine(blobFileName);
-
+                
                 if (blobFileName.Contains(model.Location_ID)) // 
                 {
                     URLNames.Add(new KeyValuePair<string, string>(newUri.ToString(), blobFileName));
@@ -3405,8 +3201,6 @@ namespace SeHubPortal.Controllers
                 var blobFileName1 = blob1.Uri.Segments.Last();
                 blobFileName1 = blobFileName1.Replace("%20", " ");
                 blobFileName1 = blobFileName1.Replace(".pdf", " ");
-
-                //Trace.WriteLine(blobFileName);
 
                 if (blobFileName1.Contains("New Hire Package")) // 
                 {
@@ -3429,8 +3223,6 @@ namespace SeHubPortal.Controllers
         {
             return RedirectToAction("Dashboard", new { loc_id = model.Location_ID });
         }
-
-
 
         [HttpGet]
         public string getSalesOfLocation(string loc, string yar)
@@ -3596,8 +3388,6 @@ namespace SeHubPortal.Controllers
             return janS + ";" + febS + ";" + marS + ";" + aprS + ";" + mayS + ";" + junS + ";" + julS + ";" + augS + ";" + sepS + ";" + octS + ";" + novS + ";" + decS + "~" + janSP + ";" + febSP + ";" + marSP + ";" + aprSP + ";" + maySP + ";" + junSP + ";" + julSP + ";" + augSP + ";" + sepSP + ";" + octSP + ";" + novSP + ";" + decSP;
         }
 
-
-
         [HttpPost]
         public ActionResult DashboardChangeYear(FileURL model)
         {
@@ -3623,7 +3413,6 @@ namespace SeHubPortal.Controllers
             model.employeeVacList = db.tbl_employee.ToList();
             model.SortBy = SortBy;
 
-            //Trace.WriteLine("This is the sort " + model.SortBy);
 
             if(model.SortBy == null)
             {
@@ -3667,46 +3456,16 @@ namespace SeHubPortal.Controllers
             return empDetails;
         }
 
-        // GET: Management
         public ActionResult Index()
         {
             return View();
         }
 
-        //[HttpGet]
-        //public ActionResult AddEmployeePermisssions(string value)
-        //{
-        //    Debug.WriteLine("In AddEmployeePermisssions");
-        //    AddNewPermissions obj = new AddNewPermissions();
-
-        //    obj.MatchedLocsCred = populateLocations();
-        //    obj.MatchedEmployeeNameCred = "Select";
-        //    return PartialView(obj);
-        //}
-        //[HttpPost]
-        //public ActionResult AddEmployeePermisssions(AddNewPermissions modal)
-        //{
-        //    int employeeId = Convert.ToInt32(modal.MatchedEmployeeIdCred);
-        //    CityTireAndAutoEntities db = new CityTireAndAutoEntities();
-        //    var employeeDetails = db.tbl_employee.Where(x => x.employee_id == employeeId).FirstOrDefault();
-        //    if (employeeDetails != null)
-        //    {
-        //        employeeDetails.rfid_number = modal.RFIDCred;
-
-        //    }
-        //    modal.SehubAccess.employee_id = employeeId;
-        //    db.tbl_sehub_access.Add(modal.SehubAccess);
-        //    db.SaveChanges();
-        //    return RedirectToAction("EmployeePermissions", new { locId = "" });
-        //}
-
         [HttpPost]
         public string PayrollBranchTotals(string payrollID, string locationID)
         {
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
-
-            //Trace.WriteLine("The PayrollID is " + payrollID + " and the locationID is " + locationID);
-
+            
             int payID = Convert.ToInt32(payrollID);
 
             var db1 = (from a in db.tbl_employee_payroll_biweekly.Where(x => x.loc_id == locationID && x.payroll_id == payID) select a).ToList();
@@ -3840,7 +3599,6 @@ namespace SeHubPortal.Controllers
         public ActionResult NewLeave(FileURL modal)
         {
             int empId = Convert.ToInt32(Session["userID"].ToString());
-            //Trace.WriteLine(modal.newLeave.start_date + " **** " + modal.newLeave.end_date + " **** "+ modal.newLeave.comments);
 
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
 
@@ -3865,11 +3623,7 @@ namespace SeHubPortal.Controllers
 
         public ActionResult EditLeave(FileURL modal)
         {
-            //Trace.WriteLine(modal.newLeave.start_date + " **** " + modal.newLeave.end_date + " **** "+ modal.newLeave.comments);
-
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
-
-            //Trace.WriteLine("This is the employee ID " + modal.editVacationEmployee + " This is the start date " + modal.EditLeave.start_date);
 
             var editLeave = db.tbl_vacation_schedule.Where(x => x.empid == modal.editVacationEmployee && x.start_date == modal.EditLeave.start_date).FirstOrDefault();
 
@@ -3889,11 +3643,7 @@ namespace SeHubPortal.Controllers
         public ActionResult DeleteLeave(FileURL modal)
         {
 
-            //Trace.WriteLine(modal.newLeave.start_date + " **** " + modal.newLeave.end_date + " **** "+ modal.newLeave.comments);
-
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
-
-            //Trace.WriteLine("This is the employee ID " + modal.editVacationEmployee + " This is the start date " + modal.EditLeave.start_date);
 
             var editLeave = db.tbl_vacation_schedule.Where(x => x.empid == modal.editVacationEmployee && x.start_date == modal.EditLeave.start_date).FirstOrDefault();
 
@@ -3914,8 +3664,6 @@ namespace SeHubPortal.Controllers
         public string PayrollCorporateTotals(string payrollID)
         {
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
-
-            //Trace.WriteLine("The PayrollID is " + payrollID + " and the locationID is " + locationID);
 
             int payID = Convert.ToInt32(payrollID);
 
@@ -4059,8 +3807,6 @@ namespace SeHubPortal.Controllers
             int payID = Convert.ToInt32(model.SelectedPayrollId.Split(';')[0]);
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             foreach (var item in model.ValidationAdjustmentList) {
-                //Trace.WriteLine(" This is the location ID - " + item.loc_ID);
-                //Trace.WriteLine("This is the form submission adjustment pay - " + item.Adjustment_pay + " adjustment pay1 - " + item.Adjustment_pay1 + " Category - " + item.Category + " Category1 - " + item.Category1 + " plus minus " + item.plusMinus + " plus1 " + item.plusMinus1);
                 string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
                 int empid = Convert.ToInt32(model.SelectedEmployeeId);
@@ -4506,9 +4252,6 @@ namespace SeHubPortal.Controllers
             return items;
         }
 
-
-
-
         private static List<SelectListItem> populateLocationsIncludingAll()
         {
             List<SelectListItem> items = new List<SelectListItem>();
@@ -4527,8 +4270,6 @@ namespace SeHubPortal.Controllers
             }
             return items;
         }
-
-
 
         private static List<SelectListItem> populateYears()
         {
@@ -4585,7 +4326,7 @@ namespace SeHubPortal.Controllers
             using (SqlConnection con = new SqlConnection(constr))
             {
                 string query = "select distinct employee_id from tbl_attendance_log where time_stamp > '" + Payroll.start_date + "' and time_stamp < '" + Payroll.end_date + "' and loc_id = '" + location + "'";
-                //Trace.WriteLine(query);
+               
                 using (SqlCommand cmd = new SqlCommand(query))
                 {
                     cmd.Connection = con;
@@ -5217,7 +4958,7 @@ namespace SeHubPortal.Controllers
             CloudBlobContainer container = blobClient.GetContainerReference(ContainerNameManagementTraining);
 
             // Retrieve reference to a blob ie "picture.jpg".
-            var blockBlob = container.ListBlobs();
+            //var blockBlob = container.ListBlobs();
 
             //var blobList = blockBlob.ToList();
 
@@ -5441,8 +5182,6 @@ namespace SeHubPortal.Controllers
                     }
 
 
-                    //Trace.WriteLine(" This is the Total " + regularTotal);
-
                     EmployeePayrollListModel empvalid = new EmployeePayrollListModel();
                     empvalid.employeeId = emp.employee_id.ToString();
                     empvalid.fullName = emp.full_name;
@@ -5540,8 +5279,6 @@ namespace SeHubPortal.Controllers
             {
                 locID = model.MatchedLocID;
             }
-
-            //Trace.WriteLine(locID);
 
             if (payrollID == null)
             {
@@ -5929,15 +5666,11 @@ namespace SeHubPortal.Controllers
                 {
                     payrollBiWeekDetails.mon_1_sel_id = 1;
 
-                    //Trace.WriteLine("This is the Test 1" + payrollBiWeekDetails.mon_1_sel_id);
-
                 }
                 else
                 {
                     var mon1details = db.tbl_payroll_category_selection.Where(x => x.category == payrollBiweekly.mon_1_sel).FirstOrDefault();
                     payrollBiWeekDetails.mon_1_sel_id = mon1details.category_id;
-
-                    //Trace.WriteLine("This is the Test 2" + payrollBiWeekDetails.mon_1_sel_id);
 
                 }
 
@@ -6074,8 +5807,6 @@ namespace SeHubPortal.Controllers
             int empID = Convert.ToInt32(model.SelectedEmployeeId); //model.employeepayroll.payBiweek.employee_id
             int payrollId = Convert.ToInt32(model.SelectedPayrollId.Split(';')[0]); //model.employeepayroll.payBiweek.payroll_id
             //Debug.WriteLine("The Payroll-ID that was obtained properly is" + payrollId);
-
-            //Trace.WriteLine("On Payroll Load:" + locid + ":" + empID + ":" + payrollId);
 
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             var BiWeekDetails = db.tbl_employee_payroll_biweekly.Where(x => x.employee_id == empID && x.payroll_id == payrollId && x.loc_id == locid).FirstOrDefault();
@@ -6244,7 +5975,6 @@ namespace SeHubPortal.Controllers
             }
             else
             {
-                //Trace.WriteLine("No Record");
             }
             db.SaveChanges();
             ViewData["submit_payroll_confirmation"] = "yes";
@@ -6490,7 +6220,7 @@ namespace SeHubPortal.Controllers
 
             MailMessage msg = new MailMessage();
             msg.To.Add(new MailAddress("payroll@citytire.com", "IT Team")); //jordan.blackwood     harsha.yerramsetty     payroll
-            msg.From = new MailAddress("noreply@citytire.com", "Sehub");
+            msg.From = new MailAddress("no_reply@citytire.com", "Sehub");
             msg.Subject = "Corporate Payroll Submission";
             msg.Body = "<i><u><b>Corporate Payroll Submission</b></u></i>" +
                 "<br /><br />" +
@@ -6507,7 +6237,7 @@ namespace SeHubPortal.Controllers
 
             SmtpClient client = new SmtpClient();
             client.UseDefaultCredentials = false;
-            client.Credentials = new System.Net.NetworkCredential("noreply@citytire.com", "U8LH>WpBdXg}");
+            client.Credentials = new System.Net.NetworkCredential("no_reply@citytire.com", "U@dx/Z8Ry{");
             client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
             client.Host = "smtp.office365.com";
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
@@ -6541,8 +6271,6 @@ namespace SeHubPortal.Controllers
             int payrollId = Convert.ToInt32(model.SelectedPayrollId.Split(';')[0]); //model.employeepayroll.payBiweek.payroll_id
 
             tbl_payroll_submission_branch objCourse1 = new tbl_payroll_submission_branch();
-
-            //Trace.WriteLine(" This is the employee ID : " + empID + "and this is the payrollID : " + payrollId);
 
             var PayrollCorporateSbmissionDetails = db.tbl_employee_payroll_submission.Where(x => x.employee_id == empID && x.payroll_id == payrollId && x.location_id == locId).FirstOrDefault();
             var PayrollCorporateSbmissionDetailsFinal = db.tbl_employee_payroll_final.Where(x => x.employee_id == empID && x.payroll_id == payrollId && x.location_id == locId).FirstOrDefault();
@@ -6648,14 +6376,7 @@ namespace SeHubPortal.Controllers
                     PayrollCorporateSbmissionDetailsFinal.RegularPay_H = 0 + checkAdjustments("Regular Pay", typeForCheck, type1ForCheck, type2ForCheck, pmForCheck, pm1ForCheck, pm2ForCheck, adjForCheck, adj1ForCheck, adj2ForCheck);
                 }
                   
-                //Trace.WriteLine("This is the Other Pay" + model.employeepayrollSubmission.otherPay);
-                //Trace.WriteLine("This is the adjusted Other pay " + checkAdjustments("Other Pay", typeForCheck, type1ForCheck, type2ForCheck, pmForCheck, pm1ForCheck, pm2ForCheck, adjForCheck, adj1ForCheck, adj2ForCheck));
-
                 PayrollCorporateSbmissionDetailsFinal.OvertimePay_H = model.employeepayrollSubmission.ot + checkAdjustments("Over Time", typeForCheck, type1ForCheck, type2ForCheck, pmForCheck, pm1ForCheck, pm2ForCheck, adjForCheck, adj1ForCheck, adj2ForCheck);
-
-                //Trace.WriteLine( "This is the adjustment " + checkAdjustments("Over Time", typeForCheck, type1ForCheck, type2ForCheck, pmForCheck, pm1ForCheck, pm2ForCheck, adjForCheck, adj1ForCheck, adj2ForCheck));
-
-                //Trace.WriteLine("This is the OT corp " + model.employeepayrollSubmission.ot + " and the final OT is " + PayrollCorporateSbmissionDetailsFinal.OvertimePay_H);
 
                 PayrollCorporateSbmissionDetailsFinal.OtherPay_D = model.employeepayrollSubmission.otherPay + checkAdjustments("Other Pay", typeForCheck, type1ForCheck, type2ForCheck, pmForCheck, pm1ForCheck, pm2ForCheck, adjForCheck, adj1ForCheck, adj2ForCheck);
                 PayrollCorporateSbmissionDetailsFinal.SickLeave_H = model.employeepayrollSubmission.sickTime + checkAdjustments("Sick Time", typeForCheck, type1ForCheck, type2ForCheck, pmForCheck, pm1ForCheck, pm2ForCheck, adjForCheck, adj1ForCheck, adj2ForCheck);
@@ -6725,9 +6446,6 @@ namespace SeHubPortal.Controllers
                 {
                     final_table.RegularPay_H = 0 + checkAdjustments("Regular Pay", typeForCheck, type1ForCheck, type2ForCheck, pmForCheck, pm1ForCheck, pm2ForCheck, adjForCheck, adj1ForCheck, adj2ForCheck);
                 }
-
-                //Trace.WriteLine("This is the Other Pay" + model.employeepayrollSubmission.otherPay);
-                //Trace.WriteLine("This is the adjusted Other pay " + checkAdjustments("Other Pay", typeForCheck, type1ForCheck, type2ForCheck, pmForCheck, pm1ForCheck, pm2ForCheck, adjForCheck, adj1ForCheck, adj2ForCheck));
 
                 final_table.OvertimePay_H = model.employeepayrollSubmission.ot + checkAdjustments("Over Time", typeForCheck, type1ForCheck, type2ForCheck, pmForCheck, pm1ForCheck, pm2ForCheck, adjForCheck, adj1ForCheck, adj2ForCheck);
                 final_table.OtherPay_D = model.employeepayrollSubmission.otherPay + checkAdjustments("Other Pay", typeForCheck, type1ForCheck, type2ForCheck, pmForCheck, pm1ForCheck, pm2ForCheck, adjForCheck, adj1ForCheck, adj2ForCheck);
@@ -7151,7 +6869,7 @@ namespace SeHubPortal.Controllers
 
             MailMessage msg = new MailMessage();
             msg.To.Add(new MailAddress("payroll@citytire.com", "IT Team")); //jordan.blackwood      harsha.yerramsetty      payroll
-            msg.From = new MailAddress("noreply@citytire.com", "Sehub");
+            msg.From = new MailAddress("no_reply@citytire.com", "Sehub");
             msg.CC.Add(new MailAddress(db.tbl_cta_location_info.Where(x => x.loc_id == locId).Select(x => x.management_email).FirstOrDefault()));
             msg.Subject = "Branch Payroll Submission – " + locId;
             msg.Body = "<i><u><b>Branch Payroll Submission</b></u></i>" +
@@ -7166,7 +6884,7 @@ namespace SeHubPortal.Controllers
 
             SmtpClient client = new SmtpClient();
             client.UseDefaultCredentials = false;
-            client.Credentials = new System.Net.NetworkCredential("noreply@citytire.com", "U8LH>WpBdXg}");
+            client.Credentials = new System.Net.NetworkCredential("no_reply@citytire.com", "U@dx/Z8Ry{");
             client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
             client.Host = "smtp.office365.com";
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
@@ -7206,8 +6924,6 @@ namespace SeHubPortal.Controllers
 
         public string SelectedCategoryValue(int value)
         {
-
-            //Trace.WriteLine("This is the value of category" + value);
 
             string returnvalue = null;
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
@@ -7274,8 +6990,6 @@ namespace SeHubPortal.Controllers
 
         private void LoadAttendanceHelper(string management_emp_id, string sdate, string edate, string currPayId, string locID)
         {
-
-            //Trace.WriteLine(currPayId);
 
             double totalDays = (DateTime.Today - Convert.ToDateTime(sdate)).TotalDays;
             string startDate = sdate;
@@ -7529,8 +7243,6 @@ namespace SeHubPortal.Controllers
             }
             return RedirectToAction("Training", new { loc = model.location});
         }
-
-
 
         [HttpGet]
         public ActionResult NewHire()
@@ -8379,7 +8091,6 @@ namespace SeHubPortal.Controllers
 
         private void LoadPayroll(string management_emp_id, string sdate, string edate, string currPayId , string location_id)
         {
-            //Trace.WriteLine(" This is the Location" + location_id);  
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();            
 
 
@@ -8777,8 +8488,6 @@ namespace SeHubPortal.Controllers
             int emid = Convert.ToInt32(management_emp_id);
             int pyid = Convert.ToInt32(payrollid);
 
-            //Trace.WriteLine("employee_id is " + emid +" payroll_id is " + pyid + " loc_id is "  + location_id);
-
             var recordFlag = db.tbl_employee_payroll_biweekly.Where(x => x.employee_id == emid && x.payroll_id == pyid && x.loc_id == location_id).FirstOrDefault();
             //Debug.WriteLine("is there any values in tbl_employee_payroll_biweekly :" + recordFlag);
             //End of checking
@@ -8787,11 +8496,9 @@ namespace SeHubPortal.Controllers
             //If there is no record, then insert null values to the database upon opening the employee and if there is any record try to fetch details of the employee.
             if (recordFlag != null) //
             {
-                //Trace.WriteLine("*********** The record  exist ************");
             }
             else
             {
-                //Trace.WriteLine("*********************** The record doesnt exist ***********************");
 
                 tbl_employee_payroll_biweekly newbiweekly = new tbl_employee_payroll_biweekly();
                 newbiweekly.employee_id = Convert.ToInt32(emid);
@@ -9072,7 +8779,7 @@ namespace SeHubPortal.Controllers
             DateTime startDate = new DateTime(2019, 01, 01);
 
             var clkins = db.tbl_attendance_log.Where(x => x.event_id == "clockIN" && x.time_stamp < date && x.time_stamp > startDate).ToList();
-            //Trace.WriteLine(clkins.Count());
+            
             foreach (var evnt in clkins)
             {
                 DateTime evnt_start = evnt.time_stamp.Date;

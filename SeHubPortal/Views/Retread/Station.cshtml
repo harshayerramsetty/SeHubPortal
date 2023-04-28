@@ -18,82 +18,6 @@
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 
-    @*
-        
-        @if (Model.SehubAccess.tools > 0)
-    {
-        <style>
-            #toolsClicked {
-                display: block !important;
-            }
-        </style>
-    }
-
-    @if (Model.SehubAccess.management > 0)
-    {
-        <style>
-            #ManagementClicked {
-                display: block !important;
-            }
-        </style>
-    }
-
-    @if (Model.SehubAccess.settings > 0)
-    {
-        <style>
-            #SettingsClicked {
-                display: block !important;
-            }
-        </style>
-    }
-
-    @if (Model.SehubAccess.payroll > 0)
-    {
-        <style>
-            #PayrollClicked {
-                display: block !important;
-            }
-        </style>
-    }
-
-    @if (Model.SehubAccess.main > 0)
-    {
-        <style>
-            #mainClicked {
-                display: block !important;
-            }
-        </style>
-    }
-
-    @if (Model.SehubAccess.fleetTVT > 0)
-    {
-        <style>
-            #FleetTVTClicked {
-                display: block !important;
-            }
-        </style>
-    }
-
-    @if (Model.SehubAccess.treadTracker > 0)
-    {
-        <style>
-            #treadTrackereClicked {
-                display: block !important;
-            }
-        </style>
-    }
-
-    @if (Model.SehubAccess.library_access > 0)
-    {
-        <style>
-            #libraryClicked {
-                display: block !important;
-            }
-        </style>
-    }
-    
-        *@
-
     <style>
         .breadCrumb{
             background-color:white;
@@ -277,13 +201,7 @@
                         <div class="text-center" style="padding:0px 10px; border:2px solid black; font-weight:bold; width:100%; font-size: 14vw">
                             @Model.barcodeInfo.casing_size
                         </div>
-                        <div class="text-center" style="        background-color: black;
-        color: white;
-        padding: 0px;
-        border: 2px solid black;
-        font-weight: bold;
-        font-size: 14vw;
-        margin-bottom: 8vw">
+                        <div class="text-center" style="background-color: black;color: white;padding: 0px;border: 2px solid black;font-weight: bold;font-size: 14vw;margin-bottom: 8vw">
                             @if (Model.barcodeInfo.line_code == 5)
                             {
                                 <span>SECTION</span>
@@ -320,7 +238,6 @@
                                     TBD
                                 </span>
                             }
-
                             <span style="font-weight:bold; font-size:13px; width:50%; border:1px solid black; padding:2px">@Model.barcodeInfo.cap_count</span>
                         </div>
 
@@ -402,7 +319,7 @@
                             </div>
                         </div>
 
-                        <div class="row" style="margin-bottom:20px">
+                        <div class="row">
                             <div class="col-md-12 text-center" style="color:black; font-size:50px">
                                 <div class="row" style="margin-bottom:10px">
                                     <div class="col-md-12 text-center" style="padding-right:7px; font-weight:bold">
@@ -429,8 +346,8 @@
                                 <div class="row" style="margin-bottom:10px">
                                     <div class="col-md-12 text-center" style="padding-right:7px; font-weight:bold">
                                         Inspection Date: <span style="font-size:70px; font-weight:bolder">
-                                            @if (Model.barcodeInfo.preliminary_inspection_date.HasValue)
-                                            {@Model.barcodeInfo.preliminary_inspection_date.Value.ToString("yyyy-MM-dd")}
+                                            @if (Model.barcodeInfo.TT050_date.HasValue)
+                                            {@Model.barcodeInfo.TT050_date.Value.ToString("yyyy-MM-dd")}
                                         </span>
                                     </div>
                                 </div>
@@ -524,11 +441,11 @@
                                                                     }
                                                                     else if (Model.station == "Repair")
                                                                     {
-                                                                        @Html.EditorFor(m => m.barcodeInfo.TT300_result, new { htmlAttributes = new { @readonly = true, @autocomplete = "off", @style = "text-align:center; font-size:30px; font-weight:bold; width:100%", @id = "statusInput" } })
+                                                                        @Html.EditorFor(m => m.barcodeInfo.TT300_result, new { htmlAttributes = new { @disabled = true, @autocomplete = "off", @style = "text-align:center; font-size:30px; font-weight:bold; width:100%", @id = "statusInput" } })
                                                                     }
                                                                     else if (Model.station == "Builder")
                                                                     {
-                                                                        @Html.EditorFor(m => m.barcodeInfo.TT400_result, new { htmlAttributes = new { @readonly = true, @autocomplete = "off", @style = "text-align:center; font-size:30px; font-weight:bold; width:100%", @id = "statusInput" } })
+                                                                        @Html.EditorFor(m => m.barcodeInfo.TT400_result, new { htmlAttributes = new { @disabled = true, @autocomplete = "off", @style = "text-align:center; font-size:30px; font-weight:bold; width:100%", @id = "statusInput" } })
                                                                     }
                                                                     else if (Model.station == "Chamber")
                                                                     {
@@ -664,16 +581,14 @@
                                                             <table class="table table-bordered text-center">
                                                                 <thead class="text-center" style="background-color:#c0c2c4; color:white">
                                                                     <tr>
-                                                                        <th style="font-size:10px; width:25%; padding:0px">Work Order#</th>
-                                                                        <th style="font-size:10px; width:25%; padding:0px">Serial Dot</th>
-                                                                        <th style="font-size: 10px; width: 25%; padding: 0px">Location</th>
-                                                                        <th style="        font-size: 10px;
-        width: 25%;
-        padding: 0px">Code</th>
+                                                                        <th style="font-size:10px; width: 20%; padding:0px">Work Order#</th>
+                                                                        <th style="font-size:10px; width: 20%; padding:0px">Serial Dot</th>
+                                                                        <th style="font-size: 10px; width: 20%; padding: 0px">Location</th>
+                                                                        <th style="font-size: 10px; width: 20%; padding: 0px">Code</th>
+                                                                        <th style="font-size: 10px; width: 20%; padding: 0px">Envelope ID</th>
                                                                     </tr>
                                                                 </thead>
-                                                                <tbody style="        font-size: 20px;
-        font-weight: bold">
+                                                                <tbody style="font-size: 20px; font-weight: bold">
                                                                     <tr>
                                                                         <td style="padding:3px">
                                                                             @Model.workOrderInfo.retread_workorder
@@ -686,6 +601,9 @@
                                                                         </td>
                                                                         <td style="padding:3px">
                                                                             @Model.barcodeInfo.line_code
+                                                                        </td>
+                                                                        <td style="padding:3px">
+                                                                            @Html.EditorFor(m => m.barcodeInfo.envelope_id, new { htmlAttributes = new { @readonly = true, @id = "envelopInput", @style = "font-weight:bold; background-color:transparent; text-align:center; border:none; outline:none" } })
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>
@@ -1182,25 +1100,38 @@
 
                                             </div>
 
-                                            <div class="row" style="margin-bottom:10px; height:10vh">
-
-                                                @if (Model.reprint == 1 && Model.barcodeInfo.TT600_result == "GOOD")
-                                                {
-                                                    <button id="btnPrint" style="display:flex; flex-direction:column; justify-content:center; align-items:center; outline: none;border-radius: 5px; width:100%; height:100%; background-color:white">
-                                                        <img class="btn" src="~/Content/reprint.png" style="height:70%; margin:0px" />
-                                                        <b>Print</b>
+                                            @if (@Model.station == "Builder")
+                                            {
+                                                <div class="row" style="margin-bottom:10px; height:10vh">
+                                                    <button onclick="$('#envelop_id').val($('#envelopInput').val())" data-toggle="modal" data-target="#envelopeModal" style="display:flex; flex-direction:column; justify-content:center; align-items:center; outline: none;border-radius: 5px; width:100%; height:100%; background-color:white">
+                                                        <img class="btn" src="https://cdn-icons-png.flaticon.com/512/4946/4946005.png" style="height:70%; margin:0px" />
+                                                        <b>Envelope</b>
                                                     </button>
-                                                }
-                                                else
-                                                {
-                                                    <button disabled style="opacity:0.2; display:flex; flex-direction:column; justify-content:center; align-items:center; outline: none;border-radius: 5px; width:100%; height:100%">
-                                                        <img class="btn" src="~/Content/reprint.png" style="height:70%; margin:0px; opacity:0.2" />
-                                                        <b>Print</b>
-                                                    </button>
-                                                }
+                                                </div>
+                                            }
 
-                                            </div>
-                                            
+                                            @if (@Model.station == "Final")
+                                            {
+                                                <div class="row" style="margin-bottom:10px; height:10vh">
+
+                                                    @if (Model.reprint == 1 && Model.barcodeInfo.TT600_result == "GOOD")
+                                                    {
+                                                        <button id="btnPrint" style="display:flex; flex-direction:column; justify-content:center; align-items:center; outline: none;border-radius: 5px; width:100%; height:100%; background-color:white">
+                                                            <img class="btn" src="~/Content/reprint.png" style="height:70%; margin:0px" />
+                                                            <b>Print</b>
+                                                        </button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button disabled style="opacity:0.2; display:flex; flex-direction:column; justify-content:center; align-items:center; outline: none;border-radius: 5px; width:100%; height:100%">
+                                                            <img class="btn" src="~/Content/reprint.png" style="height:70%; margin:0px; opacity:0.2" />
+                                                            <b>Print</b>
+                                                        </button>
+                                                    }
+
+                                                </div>
+                                            }
+
                                         </div>
                                     </div>
 
@@ -1507,6 +1438,35 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" data-backdrop="static" id="envelopeModal" tabindex="-1" role="dialog" aria-labelledby="envelopeLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width:400px">
+                <div class="modal-header" style="padding: 5px 15px">
+                    <h5 class="modal-title" style="color:black"><strong>Envelope Information</strong></h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12" style="display:flex; justify-content:center; align-items:center">
+                            <div>
+                                <JavaBlink><p style="font-weight:bold ; font-size:20px ; color:#acadad;">-- Scan Envelop --</p></JavaBlink>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12" style="display: flex; justify-content: center; align-items: center; padding: 10px 40px">
+                            <input id="envelop_id" autocomplete="off" type="text" style="font-weight:bold; font-size:30px; text-align:center; width: 100%" name="name" value="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:2px 15px">
+                    <button data-dismiss="modal" onclick="$('#envelop_id').val('')" class="btn btn-danger" style="padding:0px 13px">Cancel</button>
+                    <button onclick="if ($('#envelop_id').val() != '' && $('#envelop_id').val().startsWith('E')) { $('#envelopInput').val($('#envelop_id').val()); $('#SubmitButton').removeAttr('disabled').removeClass('btn-secondary').addClass('btn-success').addClass('alerts-border'); $('#envelopeModal').hide(); $('.modal-backdrop').remove(); }" class="btn btn-success" style="padding:0px 20px">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <div class="modal fade " data-backdrop="static" id="StatusModal" tabindex="-1" role="dialog" aria-labelledby="IncorrectBarcodeLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content " style="width:900px">
@@ -1624,7 +1584,7 @@
         {
             Text = "Select"
         });
-
+                     
         foreach (var PN in partnumbers)
         {
             if (PN.type == "Cushion Gum")
@@ -1651,6 +1611,7 @@
                     Value = PN.part_number
                 });
             }
+            
         }
 
         foreach (var PN in partnumbersTreadRubber)
@@ -1679,7 +1640,7 @@
                             <div class="col-md-12">
                                 <div style="display:flex; align-items:center">
                                     <div style="flex:2; display:flex; justify-content:space-evenly; align-items: center">
-                                        <input id="cushion_gum_checkbox" type="checkbox" onchange="if ($(this).prop('checked') == true) { $('.cushion_items').removeAttr('disabled'); $('#cushion_row').css('opacity', '1'); $('#partNumberDropdown_cushion_gum').addClass('required_field'); $('#cushion_gum_quantity').val('1') } else { $('.cushion_items').attr('disabled', 'disabled'); $('#cushion_row').css('opacity', '0.3'); $('#partNumberDropdown_cushion_gum').removeClass('required_field').val('Select'); $('#cushion_gum_quantity').val('0') }; checkRequiredField()" checked style="width:30px; height:30px" name="name" value="" />
+                                        <input id="cushion_gum_checkbox" type="checkbox" onchange="if ($(this).prop('checked') == true) { $('.cushion_items').removeAttr('disabled'); $('#cushion_row').css('opacity', '1'); $('#partNumberDropdown_cushion_gum').addClass('required_field'); $('#cushion_gum_quantity').val('1') } else { $('.cushion_items').attr('disabled', 'disabled'); $('#cushion_row').css('opacity', '0.3'); $('#partNumberDropdown_cushion_gum').removeClass('required_field').val('Select'); $('#cushion_gum_quantity').val('0') }; checkRequiredField()" style="width:30px; height:30px" name="name" value="" />
                                         <img style="width:100px; margin:20px; object-fit:contain;" src="https://ctasehub.blob.core.windows.net/sehub-content/cushion_consumables.png" alt="Alternate Text" />
                                     </div>
                                     <div style="flex:4; display:flex; justify-content:space-evenly; align-items: center" onclick="">
@@ -1688,7 +1649,7 @@
                                             <span>GUM</span>
                                         </div>
                                     </div>
-                                    <div id="cushion_row" style="flex:8; display:flex; flex-direction:column">
+                                    <div id="cushion_row" style="flex:8; display:flex; flex-direction:column; opacity:0.3">
                                         <div style="margin-bottom:5px; display:flex; justify-content:space-between; align-items:center">
                                             <span style="flex:4; font-size:20px; color:#878787"><b>Part Number</b></span>
                                             @Html.DropDownListFor(m => m.PartnumberConsumables, cushionGumDropdownList, new { @class = "required_field cushion_items", @onchange = "checkRequiredField(); if(this.value == 'Select'){$('#cushion_gum_quantity').val('0')}", @id = "partNumberDropdown_cushion_gum", @style = "flex:5; text-align-last:center; margin-top: 0px; width:71%;height:35px;font-size:20px" })
@@ -1711,7 +1672,7 @@
                             <div class="col-md-12">
                                 <div style="display:flex; align-items:center">
                                     <div style="flex:2; display:flex; justify-content:space-evenly; align-items: center">
-                                        <input id="strip_rubber_checkbox" type="checkbox" onchange="if ($(this).prop('checked') == true) {$('.strip_items').removeAttr('disabled'); $('#strip_row').css('opacity', '1');; $('#partNumberDropdown_strip_rubber').addClass( 'required_field' ) } else { $('.strip_items').attr('disabled', 'disabled'); $('#strip_row').css('opacity', '0.3');; $('#partNumberDropdown_strip_rubber').removeClass( 'required_field' ).val('Select'); $('#strip_rubber_quantity').val('0') }; checkRequiredField()" checked style="width:30px; height:30px" name="name" value="" />
+                                        <input id="strip_rubber_checkbox" type="checkbox" onchange="if ($(this).prop('checked') == true) {$('.strip_items').removeAttr('disabled'); $('#strip_row').css('opacity', '1');; $('#partNumberDropdown_strip_rubber').addClass( 'required_field' ) } else { $('.strip_items').attr('disabled', 'disabled'); $('#strip_row').css('opacity', '0.3');; $('#partNumberDropdown_strip_rubber').removeClass( 'required_field' ).val('Select'); $('#strip_rubber_quantity').val('0') }; checkRequiredField()" style="width:30px; height:30px" name="name" value="" />
                                         <img style="width:100px; margin:20px; object-fit:contain;" src="https://ctasehub.blob.core.windows.net/sehub-content/strip_consumables.png" alt="Alternate Text" />
                                     </div>
                                     <div style="flex:4; display:flex; justify-content:space-evenly; align-items: center">
@@ -1720,7 +1681,7 @@
                                             <span>RUBBER</span>
                                         </div>
                                     </div>
-                                    <div id="strip_row" style="flex:8; display:flex; flex-direction:column">
+                                    <div id="strip_row" style="flex:8; display:flex; flex-direction:column; opacity:0.3">
                                         <div style="margin-bottom:5px; display:flex; justify-content:space-between; align-items:center">
                                             <span style="flex:4; font-size:20px; color:#878787"><b>Part Number</b></span>
                                             @Html.DropDownListFor(m => m.PartnumberConsumables, stripRubberDropdownList, new { @class = "required_field strip_items", @onchange = "checkRequiredField(); if(this.value == 'Select'){$('#strip_rubber_quantity').val('0')}", @id = "partNumberDropdown_strip_rubber", @style = "flex:5; text-align-last:center; margin-top: 0px; width:71%;height:35px;font-size:20px" })
@@ -1746,7 +1707,7 @@
                             <div class="col-md-12">
                                 <div style="display:flex; align-items:center">
                                     <div style="flex:2; display:flex; justify-content:space-evenly; align-items: center">
-                                        <input id="tread_rubber_checkbox" type="checkbox" onchange="if ($(this).prop('checked') == true) { $('.tread_items').removeAttr('disabled'); $('#tread_row').css('opacity', '1'); $('#partNumberDropdown_tread_rubber').addClass('required_field'); $('#tread_rubber_quantity').val('1') } else { $('.tread_items').attr('disabled', 'disabled'); $('#tread_row').css('opacity', '0.3'); $('#partNumberDropdown_tread_rubber').removeClass( 'required_field' ).val('Select'); $('#tread_rubber_quantity').val('0') }; checkRequiredField()" checked style="width:30px; height:30px" name="name" value="" />
+                                        <input id="tread_rubber_checkbox" type="checkbox" onchange="if ($(this).prop('checked') == true) { $('.tread_items').removeAttr('disabled'); $('#tread_row').css('opacity', '1'); $('#partNumberDropdown_tread_rubber').addClass('required_field'); $('#tread_rubber_quantity').val('1') } else { $('.tread_items').attr('disabled', 'disabled'); $('#tread_row').css('opacity', '0.3'); $('#partNumberDropdown_tread_rubber').removeClass( 'required_field' ).val('Select'); $('#tread_rubber_quantity').val('0') }; checkRequiredField()" style="width:30px; height:30px" name="name" value="" />
                                         <img style="width:100px; margin:20px; object-fit:contain;" src="https://ctasehub.blob.core.windows.net/sehub-content/tread_consumables.png" alt="Alternate Text" />
                                     </div>
                                     <div style="flex:4; display:flex; justify-content:space-evenly; align-items: center">
@@ -1755,7 +1716,7 @@
                                             <span>RUBBER</span>
                                         </div>
                                     </div>
-                                    <div id="tread_row" style="flex:8; display:flex; flex-direction:column">
+                                    <div id="tread_row" style="flex:8; display:flex; flex-direction:column; opacity:0.3">
                                         <div style="margin-bottom:5px; display:flex; justify-content:space-between; align-items:center">
                                             <span style="flex:4; font-size:20px; color:#878787"><b>Part Number</b></span>
                                             @Html.DropDownListFor(m => m.PartnumberConsumables, treadRubberDropdownList, new { @class = "required_field tread_items", @onchange = "checkRequiredField(); if(this.value == 'Select'){$('#tread_rubber_quantity').val('0')}", @id = "partNumberDropdown_tread_rubber", @style = "flex:5; text-align-last:center; margin-top: 0px; width:200px;height:35px;font-size:20px" })
@@ -1778,7 +1739,7 @@
                             <div class="col-md-12">
                                 <div style="display:flex; align-items:center">
                                     <div style="flex:2; display:flex; justify-content:space-evenly; align-items: center">
-                                        <input id="rope_rubber_checkbox" type="checkbox" onchange="if ($(this).prop('checked') == true) { $('.rope_items').removeAttr('disabled'); $('#rope_row').css('opacity', '1'); $('#partNumberDropdown_rope_rubber').addClass( 'required_field' ) } else { $('.rope_items').attr('disabled', 'disabled'); $('#rope_row').css('opacity', '0.3');  $('#partNumberDropdown_rope_rubber').removeClass( 'required_field' ).val('Select'); $('#rope_rubber_quantity').val('0') }; checkRequiredField()" checked style="width:30px; height:30px" name="name" value="" />
+                                        <input id="rope_rubber_checkbox" type="checkbox" onchange="if ($(this).prop('checked') == true) { $('.rope_items').removeAttr('disabled'); $('#rope_row').css('opacity', '1'); $('#partNumberDropdown_rope_rubber').addClass( 'required_field' ) } else { $('.rope_items').attr('disabled', 'disabled'); $('#rope_row').css('opacity', '0.3');  $('#partNumberDropdown_rope_rubber').removeClass( 'required_field' ).val('Select'); $('#rope_rubber_quantity').val('0') }; checkRequiredField()" style="width:30px; height:30px" name="name" value="" />
                                         <img style="width:100px; margin:20px; object-fit:contain;" src="https://ctasehub.blob.core.windows.net/sehub-content/rope_consumables.png" alt="Alternate Text" />
                                     </div>
                                     <div style="flex:4; display:flex; justify-content:space-evenly; align-items: center">
@@ -1787,7 +1748,7 @@
                                             <span>RUBBER</span>
                                         </div>
                                     </div>
-                                    <div id="rope_row" style="flex:8; display:flex; flex-direction:column">
+                                    <div id="rope_row" style="flex:8; display:flex; flex-direction:column; opacity:0.3">
                                         <div style="margin-bottom:5px; display:flex; justify-content:space-between; align-items:center">
                                             <span style="flex:4; font-size:20px; color:#878787"><b>Part Number</b></span>
                                             @Html.DropDownListFor(m => m.PartnumberConsumables, ropeRubberDropdownList, new { @class = "required_field rope_items", @onchange = "checkRequiredField(); if(this.value == 'Select'){$('#rope_rubber_quantity').val('0')}", @id = "partNumberDropdown_rope_rubber", @style = "flex:5; text-align-last:center; margin-top: 0px; width:71%;height:35px;font-size:20px" })
@@ -1816,10 +1777,16 @@
     {
 
         List<SelectListItem> ropeRubberDropdownList = new List<SelectListItem>();
+        List<SelectListItem> patchDropdownList = new List<SelectListItem>();
 
         var partnumbers = Model.nonTreadRubber.ToList();
 
         ropeRubberDropdownList.Add(new SelectListItem
+        {
+            Text = "Select"
+        });
+
+        patchDropdownList.Add(new SelectListItem
         {
             Text = "Select"
         });
@@ -1830,6 +1797,14 @@
             if (PN.type == "Rope Rubber")
             {
                 ropeRubberDropdownList.Add(new SelectListItem
+                {
+                    Text = PN.part_number,
+                    Value = PN.part_number
+                });
+            }
+            else if (PN.type == "Patch")
+            {
+                patchDropdownList.Add(new SelectListItem
                 {
                     Text = PN.part_number,
                     Value = PN.part_number
@@ -1853,7 +1828,7 @@
                             <div class="col-md-12">
                                 <div style="display:flex; align-items:center">
                                     <div style="flex:2; display:flex; justify-content:space-evenly; align-items: center">
-                                        <input id="rope_rubber_repair_checkbox" type="checkbox" onchange="if ($(this).prop('checked') == true) { $('.rope_repair_items').removeAttr('disabled'); $('#rope_repair_row').css('opacity', '1'); $('#partNumberDropdown_rope_repair_rubber').addClass( 'required_field_repair' ) } else { $('.rope_repair_items').attr('disabled', 'disabled'); $('#rope_repair_row').css('opacity', '0.3');  $('#partNumberDropdown_rope_repair_rubber').removeClass( 'required_field_repair' ).val('Select'); $('#rope_repair_rubber_quantity').val('0') }; checkRequiredFieldRepair()" checked style="width:30px; height:30px" name="name" value="" />
+                                        <input id="rope_rubber_repair_checkbox" type="checkbox" onchange="if ($(this).prop('checked') == true) { $('.rope_repair_items').removeAttr('disabled'); $('#rope_repair_row').css('opacity', '1'); $('#partNumberDropdown_rope_repair_rubber').addClass( 'required_field_repair' ) } else { $('.rope_repair_items').attr('disabled', 'disabled'); $('#rope_repair_row').css('opacity', '0.3');  $('#partNumberDropdown_rope_repair_rubber').removeClass( 'required_field_repair' ).val('Select'); $('#rope_repair_rubber_quantity').val('0') }; checkRequiredFieldRepair()" style="width:30px; height:30px" name="name" value="" />
                                         <img style="width:100px; margin:20px; object-fit:contain;" src="https://ctasehub.blob.core.windows.net/sehub-content/rope_consumables.png" alt="Alternate Text" />
                                     </div>
                                     <div style="flex:4; display:flex; justify-content:space-evenly; align-items: center">
@@ -1862,10 +1837,20 @@
                                             <span>RUBBER</span>
                                         </div>
                                     </div>
-                                    <div id="rope_repair_row" style="flex:8; display:flex; flex-direction:column">
+                                    <div id="rope_repair_row" style="flex:8; display:flex; flex-direction:column; opacity:0.3">
                                         <div style="margin-bottom:5px; display:flex; justify-content:space-between; align-items:center">
                                             <span style="flex:4; font-size:20px; color:#878787"><b>Part Number</b></span>
-                                            @Html.DropDownListFor(m => m.PartnumberConsumables, ropeRubberDropdownList, new { @class = "required_field_repair rope_repair_items", @onchange = "checkRequiredFieldRepair(); if(this.value == 'Select'){$('#rope_repair_rubber_quantity').val('0')}", @id = "partNumberDropdown_rope_repair_rubber", @style = "flex:5; text-align-last:center; margin-top: 0px; width:71%;height:35px;font-size:20px" })
+
+                                            @if (ropeRubberDropdownList.Count <= 2)
+                                            {
+                                                @Html.EditorFor(m => m.PartnumberConsumables, new { htmlAttributes = new { @class = "rope_repair_items", @onchange = "checkRequiredFieldRepair(); if(this.value == 'Select'){$('#rope_repair_rubber_quantity').val('0')}", @id = "partNumberDropdown_rope_repair_rubber", @style = "flex:5; text-align-last:center; margin-top: 0px; width:71%;height:35px;font-size:20px", @Value=ropeRubberDropdownList.Where(x => x.Text != "Select").Select(x => x.Value).FirstOrDefault()} })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownListFor(m => m.PartnumberConsumables, ropeRubberDropdownList, new { @class = "rope_repair_items", @onchange = "checkRequiredFieldRepair(); if(this.value == 'Select'){$('#rope_repair_rubber_quantity').val('0')}", @id = "partNumberDropdown_rope_repair_rubber", @style = "flex:5; text-align-last:center; margin-top: 0px; width:71%;height:35px;font-size:20px" })
+                                            }
+
+
                                         </div>
                                         <div style="padding:0px; display:flex; justify-content:space-between; align-items:center">
                                             <span style="flex:4; font-size:20px; color:#878787"><b>Quantity</b></span>
@@ -1884,7 +1869,14 @@
                             <div class="col-md-12">
                                 <div style="display:flex; align-items:center">
                                     <div style="flex:2; display:flex; justify-content:space-evenly; align-items: center">
-                                        <input id="patch_checkbox_0" type="checkbox" onchange="if ($(this).prop('checked') == true) { $('.patch_items').removeAttr('disabled'); $('#patch_row_0').css('opacity', '1'); $('#partNumberDropdown_patch_0').addClass('required_field_repair'); $('#patch_quantity_0').val('1') } else { $('.patch_items').attr('disabled', 'disabled'); $('#patch_row_0').css('opacity', '0.3'); $('#partNumberDropdown_patch_0').removeClass( 'required_field_repair' ).val('Select'); $('#patch_quantity_0').val('0') }; checkRequiredFieldRepair()" checked style="width:30px; height:30px" name="name" value="" />
+                                        @if (patchDropdownList.Count == 1)
+                                        {
+                                            <input disabled id="patch_checkbox_0" type="checkbox" onchange="if ($(this).prop('checked') == true) { $('.patch_items').removeAttr('disabled'); $('#patch_row_0').css('opacity', '1'); $('#partNumberDropdown_patch_0').addClass('required_field_repair'); } else { $('.patch_items').attr('disabled', 'disabled'); $('#patch_row_0').css('opacity', '0.3'); $('#partNumberDropdown_patch_0').removeClass( 'required_field_repair' ).val('Select'); $('#patch_quantity_0').val('0') }; checkRequiredFieldRepair()" style="width:30px; height:30px" name="name" value="" />
+                                        }
+                                        else
+                                        {
+                                            <input id="patch_checkbox_0" type="checkbox" onchange="if ($(this).prop('checked') == true) { $('.patch_items').removeAttr('disabled'); $('#patch_row_0').css('opacity', '1'); $('#partNumberDropdown_patch_0').addClass('required_field_repair'); } else { $('.patch_items').attr('disabled', 'disabled'); $('#patch_row_0').css('opacity', '0.3'); $('#partNumberDropdown_patch_0').removeClass( 'required_field_repair' ).val('Select'); $('#patch_quantity_0').val('0') }; checkRequiredFieldRepair()" style="width:30px; height:30px" name="name" value="" />
+                                        }
                                         <img style="width:100px; margin:20px; object-fit:contain;" src="https://ctasehub.blob.core.windows.net/sehub-content/patch_consumables.png" alt="Alternate Text" />
                                     </div>
                                     <div style="flex:4; display:flex; justify-content:space-evenly; align-items: center">
@@ -1892,17 +1884,17 @@
                                             <span>PATCH</span>
                                         </div>
                                     </div>
-                                    <div id="patch_row_0" style="flex:8; display:flex; flex-direction:column">
+                                    <div id="patch_row_0" style="flex:8; display:flex; flex-direction:column; opacity:0.3">
                                         <div style="margin-bottom:5px; display:flex; justify-content:space-between; align-items:center">
                                             <span style="flex:4; font-size:20px; color:#878787"><b>Part Number</b></span>
-                                            @Html.DropDownListFor(m => m.PartnumberConsumables, ropeRubberDropdownList, new { @class = "required_field_repair patch_items", @onchange = "checkRequiredFieldRepair(); if(this.value == 'Select'){$('#patch_quantity_0').val('0')}", @id = "partNumberDropdown_patch_0", @style = "flex:5; text-align-last:center; margin-top: 0px; width:200px;height:35px;font-size:20px" })
+                                            @Html.DropDownListFor(m => m.PartnumberConsumables, patchDropdownList, new { @class = "patch_items", @onchange = "checkRequiredFieldRepair(); if(this.value == 'Select'){$('#patch_quantity_0').val('0')}", @id = "partNumberDropdown_patch_0", @style = "flex:5; text-align-last:center; margin-top: 0px; width:200px;height:35px;font-size:20px" })
                                         </div>
                                         <div style="padding:0px; display:flex; justify-content:space-between; align-items:center">
                                             <span style="flex:4; font-size:20px; color:#878787"><b>Quantity</b></span>
                                             <div style="flex:5; display:flex; justify-content:space-between; align-items:center">
-                                                <button disabled onclick="if ($('#partNumberDropdown_patch_0').val() != 'Select') { $('#patch_quantity_0').val(parseInt($('#patch_quantity_0').val()) + 1) } else { $('#patch_quantity_0').val('0') }" class="btn btn-primary" style="font-weight:bold; font-size:25px; padding:10px 20px">+</button>
-                                                <input class="patch_items" id="patch_quantity_0" readonly style="font-size:20px; text-align:center; width:80px; height:60px" name="name" value="1" />
-                                                <button disabled onclick="if ($('#patch_quantity_0').val() != 0) {$('#patch_quantity_0').val(parseInt($('#patch_quantity_0').val())-1)}" class="btn btn-primary" style="font-weight:bold; font-size:25px; padding:10px 25px">-</button>
+                                                <button onclick="if ($('#partNumberDropdown_patch_0').val() != 'Select') { $('#patch_quantity_0').val(parseInt($('#patch_quantity_0').val()) + 1) } else { $('#patch_quantity_0').val('0') }" class="btn btn-primary" style="font-weight:bold; font-size:25px; padding:10px 20px">+</button>
+                                                <input class="patch_items" id="patch_quantity_0" readonly style="font-size:20px; text-align:center; width:80px; height:60px" name="name" value="0" />
+                                                <button onclick="if ($('#patch_quantity_0').val() != 0) {$('#patch_quantity_0').val(parseInt($('#patch_quantity_0').val())-1)}" class="btn btn-primary" style="font-weight:bold; font-size:25px; padding:10px 25px">-</button>
                                             </div>
                                         </div>
                                     </div>
@@ -1914,7 +1906,14 @@
                             <div class="col-md-12">
                                 <div style="display:flex; align-items:center">
                                     <div style="flex:2; display:flex; justify-content:space-evenly; align-items: center">
-                                        <input id="patch_checkbox_1" type="checkbox" onchange="if ($(this).prop('checked') == true) { $('.patch_items_1').removeAttr('disabled'); $('#patch_row_1').css('opacity', '1'); $('#partNumberDropdown_patch_1').addClass('required_field_repair'); $('#patch_quantity_1').val('1') } else { $('.patch_items_1').attr('disabled', 'disabled'); $('#patch_row_1').css('opacity', '0.3'); $('#partNumberDropdown_patch_1').removeClass( 'required_field_repair' ).val('Select'); $('#patch_quantity_1').val('0') }; checkRequiredFieldRepair()" checked style="width:30px; height:30px" name="name" value="" />
+                                        @if (patchDropdownList.Count == 1)
+                                        {
+                                            <input disabled id="patch_checkbox_1" type="checkbox" onchange="if ($(this).prop('checked') == true) { $('.patch_items_1').removeAttr('disabled'); $('#patch_row_1').css('opacity', '1'); $('#partNumberDropdown_patch_1').addClass('required_field_repair'); } else { $('.patch_items_1').attr('disabled', 'disabled'); $('#patch_row_1').css('opacity', '0.3'); $('#partNumberDropdown_patch_1').removeClass( 'required_field_repair' ).val('Select'); $('#patch_quantity_1').val('0') }; checkRequiredFieldRepair()" style="width:30px; height:30px" name="name" value="" />
+                                        }
+                                        else
+                                        {
+                                            <input id="patch_checkbox_1" type="checkbox" onchange="if ($(this).prop('checked') == true) { $('.patch_items_1').removeAttr('disabled'); $('#patch_row_1').css('opacity', '1'); $('#partNumberDropdown_patch_1').addClass('required_field_repair'); } else { $('.patch_items_1').attr('disabled', 'disabled'); $('#patch_row_1').css('opacity', '0.3'); $('#partNumberDropdown_patch_1').removeClass( 'required_field_repair' ).val('Select'); $('#patch_quantity_1').val('0') }; checkRequiredFieldRepair()" style="width:30px; height:30px" name="name" value="" />
+                                        }
                                         <img style="width:100px; margin:20px; object-fit:contain;" src="https://ctasehub.blob.core.windows.net/sehub-content/patch_consumables.png" alt="Alternate Text" />
                                     </div>
                                     <div style="flex:4; display:flex; justify-content:space-evenly; align-items: center">
@@ -1922,17 +1921,17 @@
                                             <span>PATCH</span>
                                         </div>
                                     </div>
-                                    <div id="patch_row_1" style="flex:8; display:flex; flex-direction:column">
+                                    <div id="patch_row_1" style="flex:8; display:flex; flex-direction:column; opacity:0.3">
                                         <div style="margin-bottom:5px; display:flex; justify-content:space-between; align-items:center">
                                             <span style="flex:4; font-size:20px; color:#878787"><b>Part Number</b></span>
-                                            @Html.DropDownListFor(m => m.PartnumberConsumables, ropeRubberDropdownList, new { @class = "required_field_repair patch_items_1", @onchange = "checkRequiredFieldRepair(); if(this.value == 'Select'){$('#patch_quantity_1').val('0')}", @id = "partNumberDropdown_patch_1", @style = "flex:5; text-align-last:center; margin-top: 0px; width:200px;height:35px;font-size:20px" })
+                                            @Html.DropDownListFor(m => m.PartnumberConsumables, patchDropdownList, new { @class = "patch_items_1", @onchange = "checkRequiredFieldRepair(); if(this.value == 'Select'){$('#patch_quantity_1').val('0')}", @id = "partNumberDropdown_patch_1", @style = "flex:5; text-align-last:center; margin-top: 0px; width:200px;height:35px;font-size:20px" })
                                         </div>
                                         <div style="padding:0px; display:flex; justify-content:space-between; align-items:center">
                                             <span style="flex:4; font-size:20px; color:#878787"><b>Quantity</b></span>
                                             <div style="flex:5; display:flex; justify-content:space-between; align-items:center">
-                                                <button disabled onclick="if ($('#partNumberDropdown_patch_1').val() != 'Select') { $('#patch_quantity_1').val(parseInt($('#patch_quantity_1').val()) + 1) } else { $('#patch_quantity_1').val('0') }" class="btn btn-primary" style="font-weight:bold; font-size:25px; padding:10px 20px">+</button>
-                                                <input class="patch_items_1" id="patch_quantity_1" readonly style="font-size:20px; text-align:center; width:80px; height:60px" name="name" value="1" />
-                                                <button disabled onclick="if ($('#patch_quantity_1').val() != 0) {$('#patch_quantity_1').val(parseInt($('#patch_quantity_1').val())-1)}" class="btn btn-primary" style="font-weight:bold; font-size:25px; padding:10px 25px">-</button>
+                                                <button onclick="if ($('#partNumberDropdown_patch_1').val() != 'Select') { $('#patch_quantity_1').val(parseInt($('#patch_quantity_1').val()) + 1) } else { $('#patch_quantity_1').val('0') }" class="btn btn-primary" style="font-weight:bold; font-size:25px; padding:10px 20px">+</button>
+                                                <input class="patch_items_1" id="patch_quantity_1" readonly style="font-size:20px; text-align:center; width:80px; height:60px" name="name" value="0" />
+                                                <button onclick="if ($('#patch_quantity_1').val() != 0) {$('#patch_quantity_1').val(parseInt($('#patch_quantity_1').val())-1)}" class="btn btn-primary" style="font-weight:bold; font-size:25px; padding:10px 25px">-</button>
                                             </div>
                                         </div>
                                     </div>
@@ -1944,7 +1943,14 @@
                             <div class="col-md-12">
                                 <div style="display:flex; align-items:center">
                                     <div style="flex:2; display:flex; justify-content:space-evenly; align-items: center">
-                                        <input id="patch_checkbox_2" type="checkbox" onchange="if ($(this).prop('checked') == true) { $('.patch_items_2').removeAttr('disabled'); $('#patch_row_2').css('opacity', '1'); $('#partNumberDropdown_patch_2').addClass('required_field_repair'); $('#patch_quantity_2').val('1') } else { $('.patch_items_2').attr('disabled', 'disabled'); $('#patch_row_2').css('opacity', '0.3'); $('#partNumberDropdown_patch_2').removeClass( 'required_field_repair' ).val('Select'); $('#patch_quantity_2').val('0') }; checkRequiredFieldRepair()" checked style="width:30px; height:30px" name="name" value="" />
+                                        @if (patchDropdownList.Count == 1)
+                                        {
+                                            <input disabled id="patch_checkbox_2" type="checkbox" onchange="if ($(this).prop('checked') == true) { $('.patch_items_2').removeAttr('disabled'); $('#patch_row_2').css('opacity', '1'); $('#partNumberDropdown_patch_2').addClass('required_field_repair'); } else { $('.patch_items_2').attr('disabled', 'disabled'); $('#patch_row_2').css('opacity', '0.3'); $('#partNumberDropdown_patch_2').removeClass( 'required_field_repair' ).val('Select'); $('#patch_quantity_2').val('0') }; checkRequiredFieldRepair()" style="width:30px; height:30px" name="name" value="" />
+                                        }
+                                        else
+                                        {
+                                            <input id="patch_checkbox_2" type="checkbox" onchange="if ($(this).prop('checked') == true) { $('.patch_items_2').removeAttr('disabled'); $('#patch_row_2').css('opacity', '1'); $('#partNumberDropdown_patch_2').addClass('required_field_repair'); } else { $('.patch_items_2').attr('disabled', 'disabled'); $('#patch_row_2').css('opacity', '0.3'); $('#partNumberDropdown_patch_2').removeClass( 'required_field_repair' ).val('Select'); $('#patch_quantity_2').val('0') }; checkRequiredFieldRepair()" style="width:30px; height:30px" name="name" value="" />
+                                        }
                                         <img style="width:100px; margin:20px; object-fit:contain;" src="https://ctasehub.blob.core.windows.net/sehub-content/patch_consumables.png" alt="Alternate Text" />
                                     </div>
                                     <div style="flex:4; display:flex; justify-content:space-evenly; align-items: center">
@@ -1952,17 +1958,17 @@
                                             <span>PATCH</span>
                                         </div>
                                     </div>
-                                    <div id="patch_row_2" style="flex:8; display:flex; flex-direction:column">
+                                    <div id="patch_row_2" style="flex:8; display:flex; flex-direction:column; opacity:0.3">
                                         <div style="margin-bottom:5px; display:flex; justify-content:space-between; align-items:center">
                                             <span style="flex:4; font-size:20px; color:#878787"><b>Part Number</b></span>
-                                            @Html.DropDownListFor(m => m.PartnumberConsumables, ropeRubberDropdownList, new { @class = "required_field_repair patch_items_2", @onchange = "checkRequiredFieldRepair(); if(this.value == 'Select'){$('#patch_quantity_2').val('0')}", @id = "partNumberDropdown_patch_2", @style = "flex:5; text-align-last:center; margin-top: 0px; width:200px;height:35px;font-size:20px" })
+                                            @Html.DropDownListFor(m => m.PartnumberConsumables, patchDropdownList, new { @class = "patch_items_2", @onchange = "checkRequiredFieldRepair(); if(this.value == 'Select'){$('#patch_quantity_2').val('0')}", @id = "partNumberDropdown_patch_2", @style = "flex:5; text-align-last:center; margin-top: 0px; width:200px;height:35px;font-size:20px" })
                                         </div>
                                         <div style="padding:0px; display:flex; justify-content:space-between; align-items:center">
                                             <span style="flex:4; font-size:20px; color:#878787"><b>Quantity</b></span>
                                             <div style="flex:5; display:flex; justify-content:space-between; align-items:center">
-                                                <button disabled onclick="if ($('#partNumberDropdown_patch_2').val() != 'Select') { $('#patch_quantity_2').val(parseInt($('#patch_quantity_2').val()) + 1) } else { $('#patch_quantity_2').val('0') }" class="btn btn-primary" style="font-weight:bold; font-size:25px; padding:10px 20px">+</button>
-                                                <input class="patch_items_2" id="patch_quantity_2" readonly style="font-size:20px; text-align:center; width:80px; height:60px" name="name" value="1" />
-                                                <button disabled onclick="if ($('#patch_quantity_2').val() != 0) {$('#patch_quantity_2').val(parseInt($('#patch_quantity_2').val())-1)}" class="btn btn-primary" style="font-weight:bold; font-size:25px; padding:10px 25px">-</button>
+                                                <button onclick="if ($('#partNumberDropdown_patch_2').val() != 'Select') { $('#patch_quantity_2').val(parseInt($('#patch_quantity_2').val()) + 1) } else { $('#patch_quantity_2').val('0') }" class="btn btn-primary" style="font-weight:bold; font-size:25px; padding:10px 20px">+</button>
+                                                <input class="patch_items_2" id="patch_quantity_2" readonly style="font-size:20px; text-align:center; width:80px; height:60px" name="name" value="0" />
+                                                <button onclick="if ($('#patch_quantity_2').val() != 0) {$('#patch_quantity_2').val(parseInt($('#patch_quantity_2').val())-1)}" class="btn btn-primary" style="font-weight:bold; font-size:25px; padding:10px 25px">-</button>
                                             </div>
                                         </div>
                                     </div>
@@ -2360,12 +2366,12 @@
 
     <SCRIPT type="text/javascript">
         function JavaBlink() {
-            var blinks = document.getElementsByClassName('blinkClass');;
+            var blinks = document.getElementsByTagName('JavaBlink');
             for (var i = blinks.length - 1; i >= 0; i--) {
                 var s = blinks[i];
                 s.style.visibility = (s.style.visibility === 'visible') ? 'hidden' : 'visible';
             }
-            window.setTimeout(JavaBlink, 1500);
+            window.setTimeout(JavaBlink, 1000);
         }
         if (document.addEventListener) document.addEventListener("DOMContentLoaded", JavaBlink, false);
         else if (window.addEventListener) window.addEventListener("load", JavaBlink, false);
@@ -2446,7 +2452,7 @@
         }
 
         function SaveConsumablesRepair() {
-            if ($('#partNumberDropdown_rope_repair_rubber').val() != 'Select') {
+            if ($('#partNumberDropdown_rope_repair_rubber').val() != 'Select' && $('#rope_rubber_repair_checkbox').prop('checked') == true) {
                 $('#CRRR').val($('#partNumberDropdown_rope_repair_rubber').val() + '(x' + $('#rope_repair_rubber_quantity').val() + ')')
             }
             else {
@@ -2515,15 +2521,23 @@
 
 
         function openConsumables() {
+
+            if (($('#CBCG').val() != 'n/a' && $('#CBCG').val() != '') || ($('#CBSR').val() != 'n/a' && $('#CBSR').val() != '') || ($('#CBTR').val() != 'n/a' && $('#CBTR').val() != '') || ($('#CBRR').val() != 'n/a' && $('#CBRR').val() != '')) {
+                $('#consumablesOk').css('visibility', 'visible')
+            }
+            else {
+                $('#consumablesOk').css('visibility', 'hidden')
+            }
+
             if ($('#CBCG').val() == 'n/a' || $('#CBCG').val() == '') {
                 $('#partNumberDropdown_cushion_gum').val('Select')
                 $('#cushion_gum_quantity').val('0')
                 $('#cushion_gum_checkbox').prop('checked', false);
                 $('#cushion_row').css('opacity', '0.3');
                 if ($('#CBCG').val() == '') {
-                    $('#cushion_gum_checkbox').prop('checked', true);
-                    $('#cushion_row').css('opacity', '1');
-                    $('#cushion_gum_quantity').val('1')
+                    $('#cushion_gum_checkbox').prop('checked', false);
+                    $('#cushion_row').css('opacity', '0.3');
+                    $('#cushion_gum_quantity').val('0')
                 }
             }
             else {
@@ -2539,8 +2553,8 @@
                 $('#strip_rubber_checkbox').prop('checked', false);
                 $('#strip_row').css('opacity', '0.3');
                 if ($('#CBSR').val() == '') {
-                    $('#strip_rubber_checkbox').prop('checked', true);
-                    $('#strip_row').css('opacity', '1');
+                    $('#strip_rubber_checkbox').prop('checked', false);
+                    $('#strip_row').css('opacity', '0.3');
                 }
             }
             else {
@@ -2556,9 +2570,9 @@
                 $('#tread_rubber_checkbox').prop('checked', false);
                 $('#tread_row').css('opacity', '0.3');
                 if ($('#CBTR').val() == '') {
-                    $('#tread_rubber_checkbox').prop('checked', true);
-                    $('#tread_rubber_quantity').val('1')
-                    $('#tread_row').css('opacity', '1');
+                    $('#tread_rubber_checkbox').prop('checked', false);
+                    $('#tread_rubber_quantity').val('0')
+                    $('#tread_row').css('opacity', '0.3');
                 }
             }
             else {
@@ -2574,8 +2588,8 @@
                 $('#rope_rubber_checkbox').prop('checked', false);
                 $('#rope_row').css('opacity', '0.3');
                 if ($('#CBRR').val() == '') {
-                    $('#rope_rubber_checkbox').prop('checked', true);
-                    $('#rope_row').css('opacity', '1');
+                    $('#rope_rubber_checkbox').prop('checked', false);
+                    $('#rope_row').css('opacity', '0.3');
                 }
             }
             else {
@@ -2587,14 +2601,22 @@
         }
 
         function openConsumablesRepair() {
+
+            if (($('#CRRR').val() != 'n/a' && $('#CRRR').val() != '') || ($('#CRP').val() != '')) {
+                $('#consumablesOkRepair').css('visibility', 'visible')
+            }
+            else {
+                $('#consumablesOkRepair').css('visibility', 'hidden')
+            }
+
             if ($('#CRRR').val() == 'n/a' || $('#CRRR').val() == '') {
-                $('#partNumberDropdown_rope_repair_rubber').val('Select')
+                //$('#partNumberDropdown_rope_repair_rubber').val('Select')
                 $('#rope_repair_rubber_quantity').val('0')
                 $('#rope_rubber_repair_checkbox').prop('checked', false);
                 $('#rope_repair_row').css('opacity', '0.3');
                 if ($('#CRRR').val() == '') {
-                    $('#rope_rubber_repair_checkbox').prop('checked', true);
-                    $('#rope_repair_row').css('opacity', '1');
+                    $('#rope_rubber_repair_checkbox').prop('checked', false);
+                    $('#rope_repair_row').css('opacity', '0.3');
                 }
             }
             else {
@@ -2617,8 +2639,8 @@
                         $('#patch_checkbox' + '_' + i).prop('checked', false);
                         $('#patch_row' + '_' + i).css('opacity', '0.3');
                         if (l == '') {
-                            $('#patch_checkbox' + '_' + i).prop('checked', true);
-                            $('#patch_row' + '_' + i).css('opacity', '1');
+                            $('#patch_checkbox' + '_' + i).prop('checked', false);
+                            $('#patch_row' + '_' + i).css('opacity', '0.3');
                         }
                     }
                     else {
@@ -2725,7 +2747,12 @@
             }
             else
             {
-                $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
+                if ($('#stationInput').val() == "Builder" || $('#stationInput').val() == "Repair") {
+
+                }
+                else {
+                    $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
+                }                
             }
         }
 
@@ -2740,7 +2767,12 @@
             }
             else
             {
-                $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
+                if ($('#stationInput').val() == "Builder" || $('#stationInput').val() == "Repair") {
+
+                }
+                else {
+                    $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
+                }                
             }
         }
 
@@ -2755,7 +2787,12 @@
             }
             else
             {
-                $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
+                if ($('#stationInput').val() == "Builder" || $('#stationInput').val() == "Repair") {
+
+                }
+                else {
+                    $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
+                }                
             }
         }
 
@@ -2770,18 +2807,16 @@
             }
             else
             {
-                $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
+                if ($('#stationInput').val() == "Builder" || $('#stationInput').val() == "Repair") {
+
+                }
+                else {
+                    $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
+                }                
             }
 
         }
-
-        function SaveToTempCapCount(val, id) {
-            $('.commonCapCountClass').css('border', '2px solid dimgray').css('color', 'dimgray').css('background-color', 'transparent')
-            $('#' + id).css('background-color', '#007bff').css('color', 'white').css('border', 'dimgray')
-            $('#tempCapCount').val(val)
-            $('#tempCapCount').css("display", "block")
-        }
-
+               
         function SaveCapCount(val) {
             $('#capCountInput').val(val);
             $('#casing_cap_count_td').css('border', 'none');
@@ -2793,9 +2828,22 @@
             }
             else
             {
-                $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
+                if ($('#stationInput').val() == "Builder" || $('#stationInput').val() == "Repair") {
+
+                }
+                else {
+                    $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
+                }                
             }
         }
+
+        function SaveToTempCapCount(val, id) {
+            $('.commonCapCountClass').css('border', '2px solid dimgray').css('color', 'dimgray').css('background-color', 'transparent')
+            $('#' + id).css('background-color', '#007bff').css('color', 'white').css('border', 'dimgray')
+            $('#tempCapCount').val(val)
+            $('#tempCapCount').css("display", "block")
+        }
+        
 
         $(document).ready(function () {
             function getUrlVars() {

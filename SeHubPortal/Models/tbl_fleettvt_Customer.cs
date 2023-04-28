@@ -25,5 +25,6 @@ namespace SeHubPortal.Models
         public Nullable<double> pull_point_2 { get; set; }
         public Nullable<double> pull_point_3 { get; set; }
         public Nullable<int> exp_date_required { get; set; }
+        public Nullable<double> pull_point_4 { get; set; }
     }
 }

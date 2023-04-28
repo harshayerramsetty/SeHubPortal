@@ -520,15 +520,25 @@
                                 <input id="searchInput" onkeyup="filterOnClass('box', this.value)" style="width:200px;border-radius:4px; float:right " type="text" placeholder="Search with name" title="Type in a name">
                             </div>
 
-                            <div style="flex:3; display:flex; justify-content:space-between; align-items:center">
+                            <div st yle="flex:3; display:flex; justify-content:space-between; align-items:center">
                                 <div></div>
                                 <div style="display:flex; align-items:center">
                                     <label>Location</label>
                                     @using (Html.BeginForm("ChangeLocTimeClockEvent", "ManagementHarpoon", FormMethod.Post))
                                     {
                                         <div>
-                                            @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "Select", new { @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:150px;height:23px;font-size:15px;margin-left:6px;" })
-                                            <noscript><input style="display:none" class="btn btn-success" type="submit" value="Search" /></noscript>
+
+                                            @if (Model.userProfile == "Administrator" || Model.userProfile == "Global Manager")
+                                            {
+                                                @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "All", new { @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:150px;height:23px;font-size:15px;margin-left:6px;" })
+                                                <noscript><input style="display:none" class="btn btn-success" type="submit" value="Search" /></noscript>
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, new { @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:150px;height:23px;font-size:15px;margin-left:6px;" })
+                                                <noscript><input style="display:none" class="btn btn-success" type="submit" value="Search" /></noscript>
+                                            }
+
                                         </div>
                                     }
                                 </div>
@@ -1141,8 +1151,6 @@
                                 <span class="profileName"></span>
                             </div>
                         </div>
-
-
                         <div class="row" style="margin-bottom:10px">
                             <div class="col-lg-4 text-right">
                                 Location ID
@@ -1151,8 +1159,6 @@
                                 @Html.DropDownListFor(m => m.CreateEvent.auto_loc_id, Model.MatchedLocs, "Select Location", new { @class = "auto_loc_id", @id = "auto_loc_id_in", @style = "width:100%", @onchange = "CheckRequired(this.value)" })
                             </div>
                         </div>
-
-
                         <div class="row" style="margin-bottom: 10px; display:none">
                             <div class="col-lg-4 text-right">
                                 Auto Emp ID
@@ -1182,10 +1188,8 @@
                                 {
                                     @Html.EditorFor(m => m.CreateEvent.time_stamp, new { htmlAttributes = new { @required = true, @type = "time", @class = "time_stamp", @style = "width:100%", @readonly = true } })
                                 }
-
                             </div>
                         </div>
-
                         <div class="row" style="margin-bottom:10px">
                             <div class="col-lg-4 text-right">
                                 Comments

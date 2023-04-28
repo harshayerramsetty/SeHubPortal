@@ -364,6 +364,35 @@ namespace SeHubPortal.Controllers
         }
 
         [HttpPost]
+        public ActionResult addAdminEvent(AttendanceModel model)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            Trace.WriteLine("This is the date " + model.addAdminEventDateTime);
+            Trace.WriteLine("This is the employee " + model.addAdminEventemp);
+            Trace.WriteLine("This is the event " + model.addAdminEventEvent);
+
+            tbl_harpoon_attendance_log addLog = new tbl_harpoon_attendance_log();
+
+            string uesrEmail = Session["userID"].ToString();
+            var user = db.tbl_harpoon_users.Where(x => x.email == uesrEmail).FirstOrDefault();
+            var clientID = user.client_id;
+
+            addLog.auto_loc_id = db.tbl_harpoon_employee.Where(x => x.auto_emp_id == model.addAdminEventemp).Select(x => x.auto_loc_id).FirstOrDefault().Value.ToString();
+            addLog.auto_emp_id = model.addAdminEventemp;
+            addLog.event_id = model.addAdminEventEvent;
+            addLog.time_stamp = model.addAdminEventDateTime;
+            addLog.client_id = clientID;
+
+            db.tbl_harpoon_attendance_log.Add(addLog);
+            db.SaveChanges();
+
+            return RedirectToAction("Attendance");
+        }
+
+
+
+        [HttpPost]
         public ActionResult CloseJob(AttendanceModel model)
         {
             string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
@@ -687,37 +716,18 @@ namespace SeHubPortal.Controllers
 
         public JsonResult GetAttendanceDates(string empid, int mon, int yar)
         {
-            string startDate = yar.ToString() + "-" + mon.ToString() + "-" + "1";
-            string endDate = yar.ToString() + "-" + mon.ToString() + "-" + System.DateTime.DaysInMonth(yar, mon) + " 23:00:00.000";
-            Trace.WriteLine(endDate + " isthe end date");
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            DateTime startDate = new DateTime(yar, mon, 1).AddDays(-6); 
+            DateTime endDate = new DateTime(yar, mon, System.DateTime.DaysInMonth(yar, mon)).AddDays(6); 
+
             var itemslist = new List<string>();
 
-            using (CityTireAndAutoEntities dc = new CityTireAndAutoEntities())
+            var events = db.tbl_harpoon_attendance_log.Where(x => x.auto_emp_id.ToString() == empid && x.time_stamp > startDate && x.time_stamp < endDate).OrderBy(x => x.time_stamp);
+
+            foreach (var evnt in events)
             {
-
-                string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-                using (SqlConnection con = new SqlConnection(constr))
-                {
-                    string query = "select time_stamp, event_id, auto_loc_id from tbl_harpoon_attendance_log where auto_emp_id = '" + empid + "'" + " and time_stamp > '" + startDate + "'" + " and time_stamp < '" + endDate + "'" + " order by time_stamp asc";
-
-                    using (SqlCommand cmd = new SqlCommand(query))
-                    {
-                        cmd.Connection = con;
-                        con.Open();
-                        using (SqlDataReader sdr = cmd.ExecuteReader())
-                        {
-                            while (sdr.Read())
-                            {
-                                string timeStamp;
-                                string locID;
-                                timeStamp = Convert.ToString(sdr["time_stamp"]);
-                                locID = Convert.ToString(sdr["auto_loc_id"]);
-                                itemslist.Add(timeStamp.Split(' ')[0] + ";" + locID);
-                            }
-                        }
-                        con.Close();
-                    }
-                }
+                itemslist.Add(evnt.time_stamp.Date + ";" + evnt.auto_loc_id);
             }
 
             var finalTimeStampList = itemslist.Distinct().ToList();
@@ -776,8 +786,7 @@ namespace SeHubPortal.Controllers
             var locationDetails = db.tbl_harpoon_employee.Where(x => x.client_id == user.client_id).FirstOrDefault();
             string location = "AHO";
 
-
-            
+            model.userProfile = user.profile;
 
             if (locId is null)
             {
@@ -1213,128 +1222,35 @@ namespace SeHubPortal.Controllers
 
             string constr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
-            if ((user.profile == "Administrator" || user.profile == "Global Manager") && loc != null)
+            List<int> employees = new List<int>();
+
+            if (loc != "")
             {
-                using (SqlConnection con = new SqlConnection(constr))
-                {
-                    string query = "select distinct a.auto_emp_id, b.first_name, b.last_name, b.status from tbl_harpoon_attendance_log a, tbl_harpoon_employee b where a.client_id = '" + user.client_id + "' and b.auto_loc_id = '" + loc + "' and a.auto_emp_id = b.auto_emp_id and time_stamp > '" + date + "' and time_stamp < '" + lastDay + "'";
-
-                    using (SqlCommand cmd = new SqlCommand(query))
-                    {
-                        cmd.Connection = con;
-                        con.Open();
-                        using (SqlDataReader sdr = cmd.ExecuteReader())
-                        {
-                            while (sdr.Read())
-                            {
-                                int emp;
-                                string fulnam;
-                                string status;
-
-                                if (sdr["status"].ToString() == "1")
-                                {
-                                    status = "Active";
-                                }
-                                else
-                                {
-                                    status = "InActive";
-                                }
-
-                                emp = Convert.ToInt32(sdr["auto_emp_id"]);
-                                fulnam = Convert.ToString(sdr["last_name"]) + ", " + Convert.ToString(sdr["first_name"]) + ";" + status;
-
-
-                                keyValuePair.Add(new KeyValuePair<int, string>(emp, fulnam));
-                            }
-
-                        }
-                        con.Close();
-                    }
-                }
+                Trace.WriteLine(employees.Count + " This is the count of employees");
+                employees = db.tbl_harpoon_attendance_log.Where(x => x.client_id == user.client_id && x.auto_loc_id == loc && x.time_stamp > date && x.time_stamp < lastDay).Select(x => x.auto_emp_id).Distinct().ToList();
             }
             else
             {
-                using (SqlConnection con = new SqlConnection(constr))
-                {
-                    string query = "select distinct a.auto_emp_id, b.first_name, b.last_name, b.status from tbl_harpoon_attendance_log a, tbl_harpoon_employee b where a.client_id = '" + user.client_id + "' and a.auto_emp_id = b.auto_emp_id and time_stamp > '" + date + "' and time_stamp < '" + lastDay + "'";
-        
-                    using (SqlCommand cmd = new SqlCommand(query))
-                    {
-                        cmd.Connection = con;
-                        con.Open();
-                        using (SqlDataReader sdr = cmd.ExecuteReader())
-                        {
-                            while (sdr.Read())
-                            {
-                                int emp;
-                                string fulnam;
-                                string status;
-
-                                if (sdr["status"].ToString() == "1")
-                                {
-                                    status = "Active";
-                                }
-                                else
-                                {
-                                    status = "InActive";
-                                }
-
-                                emp = Convert.ToInt32(sdr["auto_emp_id"]);
-                                fulnam = Convert.ToString(sdr["last_name"]) + ", " + Convert.ToString(sdr["first_name"]) + ";" + status;
-
-                                keyValuePair.Add(new KeyValuePair<int, string>(emp, fulnam));
-                            }
-
-                        }
-                        con.Close();
-                    }
-                }
+                Trace.WriteLine("Reched no loc");
+                Trace.WriteLine("Client ID " + user.client_id);
+                Trace.WriteLine("Start " + date);
+                Trace.WriteLine("End " + lastDay);
+                employees = db.tbl_harpoon_attendance_log.Where(x => x.client_id == user.client_id && x.time_stamp > date && x.time_stamp < lastDay).Select(x => x.auto_emp_id).Distinct().ToList();
             }
-
-            var clientID = user.client_id;
 
             
-            using (SqlConnection con = new SqlConnection(constr))
+
+            foreach(int emp in employees)
             {
-                string query = "select distinct a.auto_emp_id, b.first_name, b.last_name, b.status from tbl_harpoon_attendance_log a, tbl_harpoon_employee b where a.auto_loc_id = '"+ loc +"' and a.auto_emp_id = b.auto_emp_id and time_stamp > '" + date + "' and time_stamp < '" + lastDay + "'";
-      
-                using (SqlCommand cmd = new SqlCommand(query))
-                {
-                    cmd.Connection = con;
-                    con.Open();
-                    using (SqlDataReader sdr = cmd.ExecuteReader())
-                    {
-                        while (sdr.Read())
-                        {
-                            int emp;
-                            string fulnam;
-                            string status;
-
-                            if (sdr["status"].ToString() == "1")
-                            {
-                                status = "Active";
-                            }
-                            else
-                            {
-                                status = "InActive";
-                            }
-
-                            emp = Convert.ToInt32(sdr["auto_emp_id"]);
-                            fulnam = Convert.ToString(sdr["last_name"]) + ", " + Convert.ToString(sdr["first_name"]) + ";" + status;
-
-                            keyValuePair.Add(new KeyValuePair<int, string>(emp, fulnam));
-                        }
-
-                    }
-                    con.Close();
-                }
+                var empl = db.tbl_harpoon_employee.Where(x => x.auto_emp_id == emp).FirstOrDefault();
+                keyValuePair.Add(new KeyValuePair<int, string>(emp, empl.last_name + "," + empl.first_name + ";" + empl.status));
             }
-
+                       
             return Json(keyValuePair.Select(x => new
             {
                 value = x.Key,
                 text = x.Value
-            }).OrderBy(x => x.text).Distinct().ToList(), JsonRequestBehavior.AllowGet);
+            }).OrderBy(x => x.text).ToList(), JsonRequestBehavior.AllowGet);
         }
 
         public string populateEmployeeDetails(int auto_id)

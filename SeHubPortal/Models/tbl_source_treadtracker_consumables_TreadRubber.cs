@@ -23,5 +23,6 @@ namespace SeHubPortal.Models
         public Nullable<int> tread_depth { get; set; }
         public Nullable<bool> active { get; set; }
         public Nullable<double> weight_per_foot { get; set; }
+        public string compatible_widths { get; set; }
     }
 }

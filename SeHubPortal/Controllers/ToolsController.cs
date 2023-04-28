@@ -662,7 +662,7 @@ namespace SeHubPortal.Controllers
 
                 MailMessage msg = new MailMessage();
                 msg.To.Add(new MailAddress("service" + locId + "@citytire", "IT Team")); //jordan.blackwood      harsha.yerramsetty      payroll
-                msg.From = new MailAddress("noreply@citytire.com", "Sehub");
+                msg.From = new MailAddress("no_reply@citytire.com", "Sehub");
                 msg.Subject = "Tire Adjustment : " + data.Tire_Adjustment_id;
                 msg.Body = "<i><u><b>Tire Adjustment Submission</b></u></i>" +
                     "<br /><br />" +
@@ -676,7 +676,7 @@ namespace SeHubPortal.Controllers
 
                 SmtpClient client = new SmtpClient();
                 client.UseDefaultCredentials = false;
-                client.Credentials = new System.Net.NetworkCredential("noreply@citytire.com", "U8LH>WpBdXg}");
+                client.Credentials = new System.Net.NetworkCredential("no_reply@citytire.com", "U@dx/Z8Ry{");
                 client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
                 client.Host = "smtp.office365.com";
                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
@@ -1024,7 +1024,7 @@ namespace SeHubPortal.Controllers
 
             MailMessage msg = new MailMessage();
             msg.To.Add(new MailAddress(userEmailID, "IT Team")); //jordan.blackwood     harsha.yerramsetty     payroll
-            msg.From = new MailAddress("noreply@citytire.com", "Sehub");
+            msg.From = new MailAddress("no_reply@citytire.com", "Sehub");
             msg.Subject = "Expense Claim";
             msg.Body = "";
             msg.IsBodyHtml = true;
@@ -1034,7 +1034,7 @@ namespace SeHubPortal.Controllers
 
             SmtpClient client = new SmtpClient();
             client.UseDefaultCredentials = false;
-            client.Credentials = new System.Net.NetworkCredential("noreply@citytire.com", "U8LH>WpBdXg}");
+            client.Credentials = new System.Net.NetworkCredential("no_reply@citytire.com", "U@dx/Z8Ry{");
             client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
             client.Host = "smtp.office365.com";
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
@@ -1117,20 +1117,10 @@ namespace SeHubPortal.Controllers
                 VehicleDetails = db.tbl_vehicle_info.Where(x => x.loc_id == locationid && x.vehicle_status == 1).OrderBy(x => x.vehicle_short_id).ToList();
             }
 
-            if(VIN != null)
-            {
-                model.MatchedLocs = populateLocationsPermissions(empId);
-                var empDetail = db.tbl_employee.Where(x => x.employee_id == empId).FirstOrDefault();
-
-                if (loc != null && loc != "")
-                {
-                    model.MatchedLocID = loc;
-                }
-                else
-                {
-                    model.MatchedLocID = empDetail.loc_ID;
-                }
-            }
+            //Trace.WriteLine(VIN + "This is the VIN");
+            model.MatchedLocs = populateLocationsPermissions(empId);
+            model.MatchedLocID = loc;
+            //Trace.WriteLine(model.MatchedLocID + "This is the matched location");
 
             model.vehicleInfoList = VehicleDetails.ToList();
             return View(model);
@@ -1565,46 +1555,6 @@ namespace SeHubPortal.Controllers
                 model.MatchedLocID = locId;
                 location = locId;
             }
-
-            //var employeeList =
-            //            (from employee in db.tbl_employee
-            //             join credentials in db.tbl_employee_credentials on employee.employee_id equals credentials.employee_id
-            //             where employee.loc_ID.Contains(location)
-            //             orderby employee.full_name
-            //             select new
-            //             {
-            //                 employee.employee_id,
-            //                 employee.first_name,
-            //                 employee.middle_initial,
-            //                 employee.last_name,
-            //                 employee.cta_email,
-            //                 employee.cta_cell,
-            //                 employee.cta_position,
-            //                 employee.loc_ID,
-            //                 employee.rfid_number,
-            //                 employee.sales_id,
-            //                 employee.full_name,
-            //                 employee.cta_direct_phone,
-            //                 employee.Date_of_birth,
-            //                 employee.status,
-            //                 employee.pic_status,
-            //                 employee.profile_pic
-            //             }).ToList();
-            //List<tbl_employee> emplyAttList = new List<tbl_employee>();
-            //foreach (var item in employeeList)
-            //{
-            //    tbl_employee obj = new tbl_employee(); // ViewModel
-
-            //    if (item.status == 1)
-            //    {
-            //        obj.employee_id = item.employee_id;
-            //        obj.full_name = item.full_name;
-            //        obj.cta_email = item.cta_email;
-            //        obj.cta_position = item.cta_position;
-            //        obj.profile_pic = item.profile_pic;
-            //        emplyAttList.Add(obj);
-            //    }
-            //}
             var employeeList = db.tbl_employee.Where(x => (x.loc_ID.Contains(location) && x.status == 1) || x.status == null ).OrderBy(x => x.employee_id).ToList();
             model.EmployeesList = employeeList;
             model.MatchedLocs = populateLocationsPermissions(empId);

@@ -1,0 +1,3268 @@
+﻿@model SeHubPortal.ViewModel.Field_Survey_Edit_Account
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+
+
+
+    <style>
+
+        #mainNavBar{
+            display:none !important;
+        }
+
+        input [type=text] {
+            autocomplete: "off";
+        }
+
+
+        div.a {
+            white-space: nowrap;
+            width: 60px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .noselect {
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                          supported by Chrome and Opera */
+        }
+
+        .breadCrumb {
+            background-color: white;
+        }
+
+        .fleetTVTBtn {
+            color: black;
+            font-weight: bold;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            padding: 0px !important;
+            margin: 0px !important;
+        }
+
+
+        .card-header h6 {
+            color: black;
+        }
+
+        #fullDate,
+        #datepicker:focus {
+            outline: none;
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .custDetailsRow::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .custDetailsRow {
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+
+        .nav-tabs > li > a {
+            /* adjust padding for height*/
+            padding-top: 1px;
+            padding-bottom: 1px;
+        }
+
+        .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a {
+            margin-top: 1px;
+        }
+
+        .nav-tabs > li {
+            margin-bottom: 0px;
+        }
+
+            .nav-tabs > li.active {
+                margin-bottom: -1px;
+            }
+
+
+        .left {
+            color: #797a7a;
+        }
+
+        .right {
+            font-weight: bold
+        }
+
+        .ClearOnUnitChange {
+            font-weight: bold
+        }
+
+        .inputFields {
+            display: none
+        }
+
+        .dropdownFields {
+            display: block
+        }
+    </style>
+</head>
+<body style="overflow-y: hidden; ">
+
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5vw 1vw; background-color:white; margin:0.5vw; font-size:0.8vw">
+        <div>FleetTVT/ <a href="@Url.Action("NewSurvey", "FleetTVT")">New Survey</a></div>
+        <div style="display:flex; justify-content:space-between; align-items:center">
+            <div style="margin-right:0.3vw">Location</div>
+            @Html.DropDownListFor(m => m.Location, Model.LocationList, new { @id = "locval", @style = "text-align-last:center", @onchange = "changeLocation(this.value)" })
+        </div>
+    </div>
+
+    <div style="display:flex; margin:0.5vw">
+        <div style="flex:1; display:flex; flex-direction:column">
+            <div class="card" style="border:2px solid #aeafb0; margin-bottom:0.5vw">
+                <div class="card-header" style="padding:0.2vw 1vw">
+                    <div style="display:flex; justify-content:space-between; align-items:center">
+                        <div>
+                            <button style="border-radius:50%; background-color: gray; color: white; border: 3px solid white; font-weight: bold; font-size:1.3vw; width:2.5vw">
+                                1
+                            </button>
+                        </div>
+                        <div style="font-weight:bolder; font-size:1.5vw; color:white">
+                            Survey Date
+                        </div>
+                        <div>
+                            <input type="date" style="text-align:center;  background-color:transparent; border-color:transparent; width:1.3vw; height:2vw" id="datepicker" />
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body" style="padding:0.2vw; display:flex; justify-content:center; align-items:center">
+                    <input type="text" readonly style="border-color: transparent; font-size: 1.6vw; font-weight:bold; text-align: center; width: 100%; height: 50px " id="fullDate" name="name" value="" />
+                </div>
+            </div>
+            <div id="Step2" style="visibility:hidden">
+                <div class="card" style="border:2px solid #aeafb0; margin-bottom:0.5vw">
+                    <div class="card-header" style="padding:0.2vw 1vw">
+                        <div style="display:flex; justify-content:space-between; align-items:center">
+                            <div>
+                                <button style="border-radius:50%; background-color: gray; color: white; border: 3px solid white; font-weight: bold; font-size:1.3vw; width:2.5vw">
+                                    2
+                                </button>
+                            </div>
+                            <div style="font-weight:bolder; font-size:1.5vw; color:white">
+                                Select Customer
+                            </div>
+                            <div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding:0.2vw 1.5vw">
+                        <div style="margin:0.5vw 0">
+                            @Html.DropDownListFor(m => m.Customer, Model.CustomerList, new { @class = "text", @style = "text-align-last: center; width:100%; font-size:0.8vw; height:2vw", @required = "required", @id = "customer", @onchange = "InitiateStep3(this.value)" })
+                        </div>
+                        <div class="custDetailsRow" id="custDetailsDiv" style="display:flex; flex-direction:column; overflow-x:hidden; overflow-y:auto; font-size:0.7vw; display:none">
+                            <div style="display:flex; margin-bottom:0.2vw">
+                                <div style="flex:4; color:darkgray">
+                                    Customer Number
+                                </div>
+                                <div style="flex:7; font-weight:bold" id="Customer_Number">
+
+                                </div>
+                            </div>
+                            <div style="display:flex; margin-bottom:0.2vw">
+                                <div style="flex:4; color:darkgray">
+                                    Customer Name
+                                </div>
+                                <div style="flex:7; font-weight:bold" id="Customer_Name">
+
+                                </div>
+                            </div>
+
+                            <div style="display:flex; margin-bottom:0.2vw">
+                                <div style="flex:4; color:darkgray">
+                                    Reporting Contact
+                                </div>
+                                <div style="flex:7; font-weight:bold" id="Reporting_Contact">
+
+                                </div>
+                            </div>
+
+                            <div style="display:flex; margin-bottom:0.2vw">
+                                <div style="flex:4; color:darkgray">
+                                    Reporting Email
+                                </div>
+                                <div style="flex:7; font-weight:bold" id="Reporting_Email">
+
+                                </div>
+                            </div>
+
+                            <div style="display:flex; margin-bottom:0.2vw">
+                                <div style="flex:4; color:darkgray">
+                                    Reporting Frequency
+                                </div>
+                                <div style="flex:7; font-weight:bold" id="Reporting_Frequency">
+
+                                </div>
+                            </div>
+
+                            <div style="display:flex; margin-bottom:0.2vw">
+                                <div style="flex:4; color:darkgray">
+                                    Mileage Required
+                                </div>
+                                <div style="flex:7; font-weight:bold" id="Mileage_Required">
+
+                                </div>
+                            </div>
+
+                            <div style="display:flex; margin-bottom:0.2vw">
+                                <div style="flex:4; color:darkgray">
+                                    Fleet Size
+                                </div>
+                                <div style="flex:7; font-weight:bold" id="Fleet_Size">
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="Step3" style="visibility:hidden">
+                <div class="card" style="border:2px solid #aeafb0; margin-bottom:0.5vw">
+                    <div class="card-header" style="padding:0.2vw 1vw">
+                        <div style="display:flex; justify-content:space-between; align-items:center">
+                            <div>
+                                <button style="border-radius:50%; background-color: gray; color: white; border: 3px solid white; font-weight: bold; font-size:1.3vw; width:2.5vw">
+                                    3
+                                </button>
+                            </div>
+                            <div style="font-weight:bolder; font-size:1.5vw; color:white">
+                                Select Equipment
+                            </div>
+                            <div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding:0.2vw 1.5vw">
+                        <div style="display:flex; flex-direction:column">
+                            <div style="display:flex; margin-bottom:0.2vw; align-items:center">
+                                <div style="flex:4; color:darkgray; font-size:0.7vw">
+                                    Unit Number
+                                </div>
+                                <div style="flex:7; font-weight:bold" id="Fleet_Size">
+                                    <select onchange="pullUnitInfo(this.value)" style="text-align-last: center; width:100%; font-size:0.8vw; height:2vw" id="UnitsDropdown" name="UnitsDropdown"></select>
+                                </div>
+                            </div>
+                            <div class="custDetailsRow" style="display:flex; flex-direction:column; overflow-x:hidden; overflow-y:auto; font-size:0.7vw; visibility:hidden;" id="unitDetails">
+                                <div style="display:flex; margin-bottom:0.2vw">
+                                    <div style="flex:4; color:darkgray">
+                                        Name
+                                    </div>
+                                    <div style="flex:7; font-weight:bold" id="unitName">
+
+                                    </div>
+                                </div>
+
+                                <div style="display:flex; margin-bottom:0.2vw">
+                                    <div style="flex:4; color:darkgray">
+                                        Survey Type
+                                    </div>
+                                    <div style="flex:7; font-weight:bold" id="surveyType">
+
+                                    </div>
+                                </div>
+
+                                <div style="display:flex; margin-bottom:0.2vw">
+                                    <div style="flex:4; color:darkgray">
+                                        Configuration
+                                    </div>
+                                    <div style="flex:7; font-weight:bold" id="configuration">
+
+                                    </div>
+                                </div>
+
+                                <div style="display:flex; margin-bottom:0.2vw">
+                                    <div style="flex:4; color:darkgray">
+                                        Plate Number
+                                    </div>
+                                    <div style="flex:7; font-weight:bold" id="plateNumber">
+
+                                    </div>
+                                </div>
+
+                                <div style="display:flex; margin-bottom:0.2vw">
+                                    <div style="flex:4; color:darkgray">
+                                        Year
+                                    </div>
+                                    <div style="flex:7; font-weight:bold" id="year">
+
+                                    </div>
+                                </div>
+
+                                <div style="display:flex; margin-bottom:0.2vw">
+                                    <div style="flex:4; color:darkgray">
+                                        Date Expired
+                                    </div>
+                                    <div style="flex:7; font-weight:bold" id="dateExpired">
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="Step4" style="visibility:hidden">
+                <div class="card" style="border:2px solid #aeafb0; margin-bottom:0.5vw">
+                    <div class="card-header" style="padding:0.2vw 1vw">
+                        <div style="display:flex; justify-content:space-between; align-items:center">
+                            <div>
+                                <button style="border-radius:50%; background-color: gray; color: white; border: 3px solid white; font-weight: bold; font-size:1.3vw; width:2.5vw">
+                                    4
+                                </button>
+                            </div>
+                            <div style="font-weight:bolder; font-size:1.5vw; color:white">
+                                Submit Survey
+                            </div>
+                            <div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding:0.5vw 1.5vw">
+                        <div style="display:flex; flex-direction:column">
+                            <div style="display:flex; margin-bottom:0.5vw">
+                                <div style="flex:4; color:darkgray; font-size:0.7vw">
+                                    Equipment Survey
+                                </div>
+                                <div style="flex:7">
+                                    <div class="progress">
+                                        <div class="progress-bar unitProgress progress-bar-success progress-bar-striped" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>                                    
+                                </div>
+                            </div>
+                            <div style="display:flex; margin-bottom:0.2vw">
+                                <div style="flex:4; color:darkgray; font-size:0.7vw">
+                                    Tire Survey
+                                </div>
+                                <div style="flex:7">
+                                    <div class="progress">
+                                        <div class="progress-bar tireProgress progress-bar-success progress-bar-striped" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>                                    
+                                </div>
+                            </div>
+                            <div style="display:flex; justify-content:center; align-items:center; margin-bottom:0.2vw">
+                                <input style="visibility:hidden; margin-left: auto; margin-right: auto; width: 70%" id="submiSurvey" class="btn btn-success" readonly type="text" name="name" value="Submit Field Survey" />
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+
+            
+
+        </div>
+        <div style="flex: 2; padding:0 0.5vw">
+            <ul class="nav nav-tabs" id="myTab" role="tablist" style="font-size:0.8vw">
+                <li class="nav-item" id="unitTab">
+                    <a style="width:9vw" class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Equipment Survey</a>
+                </li>
+                <li class="nav-item" id="tireTab">
+                    <a style="width:9vw" class="nav-link disabled" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Tire Survey</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent" style="background-color:white">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <div style="height:85vh; font-size:0.7vw">
+                        <div id="equipmentSurveyDiv" style="visibility:hidden; padding:2vw; display:flex; flex-direction:column">
+                            <div style="display:flex; margin-bottom:1.5vw; font-size:1.1vw">
+                                <div style="flex:3; color:darkgray">
+                                    Customer Name
+                                </div>
+                                <div style="flex:8; font-weight:bold" id="customerNameEquipSurvey">
+
+                                </div>
+                            </div>
+
+                            <div style="display:flex; margin-bottom:1.5vw; font-size:1.1vw">
+                                <div style="flex:3; color:darkgray">
+                                    Customer Number
+                                </div>
+                                <div style="flex:8; font-weight:bold" id="customerNumberEquipSurvey">
+
+                                </div>
+                            </div>
+
+                            <div style="display:flex; margin-bottom:1.5vw; font-size:1.1vw">
+                                <div style="flex:3; color:darkgray">
+                                    Unit Number
+                                </div>
+                                <div style="flex:8; font-weight:bold" id="unitNumberEquipSurvey">
+
+                                </div>
+                            </div>
+                            <div style="border-bottom:0.1vw solid #e6e6e6; margin-bottom:1.5vw"></div>
+                            <div id="UnitReqDiv">
+                                <div style="display:flex; margin-bottom:1.5vw; font-size:1.1vw">
+                                    <div style="flex:3; color:darkgray">
+                                        Survey Location *
+                                    </div>
+                                    <div style="flex:8; font-weight:bold" id="unitNumberEquipSurvey">
+                                        <input id="surveyLocationUnit" onfocusout="check_requiredFileds_unit()" type="text" name="name" value="" style="width:50%; height:2vw" />
+                                    </div>
+                                </div>
+
+                                <div style="display:flex; margin-bottom:2vw; font-size:1.1vw">
+                                    <div style="flex:3; color:darkgray">
+                                        Technician *
+                                    </div>
+                                    <div style="flex:8; font-weight:bold" id="unitNumberEquipSurvey">
+                                        <select onchange="check_requiredFileds_unit()" style="width:50%; height:2vw" id="EmpsDropdown" name="EmpsDropdown"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="font-size:1.1vw; color:darkgray">
+                                Comments
+                            </div>
+                            <div>
+                                <textarea id="unitSurveyComments" style="width:100%; height:30vh"></textarea>
+                            </div>
+                            <div style="color:red">
+                                ** fields with asterisk are required **
+                            </div>
+                            <div style="display:flex; justify-content:space-between">
+                                <div></div>
+                                <div>
+                                    <button id="Next" clear style="visibility:hidden; margin-right:0.5vw; padding:0.1vw 1vw; font-size:1vw" class="btn btn-primary">Next</button>
+                                    <button id="clearEquipmentSurvey" clear style="padding:0.1vw 1vw; font-size:1vw" class="btn btn-primary">Clear</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                </div>
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <div class="row" style="color:#8f9294; margin:0px 1px 0px 1px;background-color:white">
+                        <div class="col-lg-12" style="display:flex; flex-direction:column">
+
+                            <div style="display:flex; padding:1vw">
+                                <div style="flex:3; display:flex; cursor:pointer">
+                                    <div class="1c clearBackgroundColorOnUnitChange" onclick="tireClickFunction(1)" id="1t" style="flex:5; display:flex; flex-direction:column; border:2px solid darkgray; border-radius:0.5vw; padding:0.5vw; font-size:0.6vw; visibility:hidden">
+                                        <table class="table-bordered">
+                                            <thead style="background-color:#b3b7bb; color:white">
+                                                <tr>
+                                                    <th style="text-align:center">PSI (<span id="PSIspan6">TBD</span>)</th>
+                                                    <th style="text-align:center">32nds</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire1_pressure"></th>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire1_depth"></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div style="display:flex; margin-top:0.5vw">
+                                            <div style="flex:4">
+                                                Brand
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire1_brand"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Model
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire1_model"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Size
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire1_size"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Wear
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire1_wear"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Comments
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire1_comments"></div>
+                                        </div>
+
+                                    </div>
+                                    <div class="1c" style="flex:2" onclick="tireClickFunction(1)">
+                                        <img src="~/Content/field.png" id="1c" style="padding:0 0.3vw; opacity: 0.3; width:100%; height:100%" alt="Alternate Text" />
+                                    </div>
+                                </div>
+                                <div style="flex:3; display:flex; cursor:pointer">
+                                    <div class="2c" style="flex:2" onclick="tireClickFunction(2)">
+                                        <img src="~/Content/field.png" id="2c" style="padding:0 0.3vw; opacity: 0.3; width:100%; height:100%" alt="Alternate Text" />
+                                    </div>
+                                    <div class="2c clearBackgroundColorOnUnitChange" onclick="tireClickFunction(2)" id="2t" style="flex:5; display:flex; flex-direction:column; border:2px solid darkgray; border-radius:0.5vw; padding:0.5vw; font-size:0.6vw; visibility:hidden">
+                                        <table class="table-bordered">
+                                            <thead style="background-color:#b3b7bb; color:white">
+                                                <tr>
+                                                    <th style="text-align:center">PSI (<span id="PSIspan6">TBD</span>)</th>
+                                                    <th style="text-align:center">32nds</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire2_pressure"></th>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire2_depth"></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div style="display:flex; margin-top:0.5vw">
+                                            <div style="flex:4">
+                                                Brand
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire2_brand"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Model
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire2_model"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Size
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire2_size"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Wear
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire2_wear"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Comments
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire2_comments"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="flex:2"></div>
+                                <div style="flex:3; display:flex; cursor:pointer">
+                                    <div class="3c clearBackgroundColorOnUnitChange" onclick="tireClickFunction(3)" id="3t" style="flex:5; display:flex; flex-direction:column; border:2px solid darkgray; border-radius:0.5vw; padding:0.5vw; font-size:0.6vw; visibility:hidden">
+                                        <table class="table-bordered">
+                                            <thead style="background-color:#b3b7bb; color:white">
+                                                <tr>
+                                                    <th style="text-align:center">PSI (<span id="PSIspan6">TBD</span>)</th>
+                                                    <th style="text-align:center">32nds</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire3_pressure"></th>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire3_depth"></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div style="display:flex; margin-top:0.5vw">
+                                            <div style="flex:4">
+                                                Brand
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire3_brand"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Model
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire3_model"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Size
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire3_size"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Wear
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire3_wear"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Comments
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire3_comments"></div>
+                                        </div>
+                                    </div>
+                                    <div class="3c" style="flex:2" onclick="tireClickFunction(3)">
+                                        <img src="~/Content/field.png" id="3c" style="padding:0 0.3vw; opacity: 0.3; width:100%; height:100%" alt="Alternate Text" />
+                                    </div>
+                                </div>
+                                <div style="flex:3; display:flex; cursor:pointer">
+                                    <div class="4c" style="flex:2" onclick="tireClickFunction(4)">
+                                        <img src="~/Content/field.png" id="4c" style="padding:0 0.3vw; opacity: 0.3; width:100%; height:100%" alt="Alternate Text" />
+                                    </div>
+                                    <div class="4c clearBackgroundColorOnUnitChange" onclick="tireClickFunction(4)" id="4t" style="flex:5; display:flex; flex-direction:column; border:2px solid darkgray; border-radius:0.5vw; padding:0.5vw; font-size:0.6vw; visibility:hidden">
+                                        <table class="table-bordered">
+                                            <thead style="background-color:#b3b7bb; color:white">
+                                                <tr>
+                                                    <th style="text-align:center">PSI (<span id="PSIspan6">TBD</span>)</th>
+                                                    <th style="text-align:center">32nds</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire4_pressure"></th>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire4_depth"></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div style="display:flex; margin-top:0.5vw">
+                                            <div style="flex:4">
+                                                Brand
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire4_brand"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Model
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire4_model"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Size
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire4_size"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Wear
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire4_wear"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Comments
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire4_comments"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display:flex; padding:1vw">
+                                <div style="flex:3; display:flex; cursor:pointer">
+                                    <div class="5c clearBackgroundColorOnUnitChange" onclick="tireClickFunction(5)" id="5t" style="flex:5; display:flex; flex-direction:column; border:2px solid darkgray; border-radius:0.5vw; padding:0.5vw; font-size:0.6vw; visibility:hidden">
+                                        <table class="table-bordered">
+                                            <thead style="background-color:#b3b7bb; color:white">
+                                                <tr>
+                                                    <th style="text-align:center">PSI (<span id="PSIspan6">TBD</span>)</th>
+                                                    <th style="text-align:center">32nds</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire5_pressure"></th>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire5_depth"></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div style="display:flex; margin-top:0.5vw">
+                                            <div style="flex:4">
+                                                Brand
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire5_brand"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Model
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire5_model"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Size
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire5_size"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Wear
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire5_wear"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Comments
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire5_comments"></div>
+                                        </div>
+
+                                    </div>
+                                    <div class="5c" style="flex:2" onclick="tireClickFunction(5)">
+                                        <img src="~/Content/field.png" id="5c" style="padding:0 0.3vw; opacity: 0.3; width:100%; height:100%" alt="Alternate Text" />
+                                    </div>
+                                </div>
+                                <div style="flex:3; display:flex; cursor:pointer">
+                                    <div class="6c" style="flex:2" onclick="tireClickFunction(6)">
+                                        <img src="~/Content/field.png" id="6c" style="padding:0 0.3vw; opacity: 0.3; width:100%; height:100%" alt="Alternate Text" />
+                                    </div>
+                                    <div class="6c clearBackgroundColorOnUnitChange" onclick="tireClickFunction(6)" id="6t" style="flex:5; display:flex; flex-direction:column; border:2px solid darkgray; border-radius:0.5vw; padding:0.5vw; font-size:0.6vw; visibility:hidden">
+                                        <table class="table-bordered">
+                                            <thead style="background-color:#b3b7bb; color:white">
+                                                <tr>
+                                                    <th style="text-align:center">PSI (<span id="PSIspan6">TBD</span>)</th>
+                                                    <th style="text-align:center">32nds</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire6_pressure"></th>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire6_depth"></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div style="display:flex; margin-top:0.5vw">
+                                            <div style="flex:4">
+                                                Brand
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire6_brand"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Model
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire6_model"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Size
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire6_size"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Wear
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire6_wear"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Comments
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire6_comments"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="flex:2"></div>
+                                <div style="flex:3; display:flex; cursor:pointer">
+                                    <div class="7c clearBackgroundColorOnUnitChange" onclick="tireClickFunction(7)" id="7t" style="flex:5; display:flex; flex-direction:column; border:2px solid darkgray; border-radius:0.5vw; padding:0.5vw; font-size:0.6vw; visibility:hidden">
+                                        <table class="table-bordered">
+                                            <thead style="background-color:#b3b7bb; color:white">
+                                                <tr>
+                                                    <th style="text-align:center">PSI (<span id="PSIspan6">TBD</span>)</th>
+                                                    <th style="text-align:center">32nds</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire7_pressure"></th>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire7_depth"></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div style="display:flex; margin-top:0.5vw">
+                                            <div style="flex:4">
+                                                Brand
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire7_brand"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Model
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire7_model"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Size
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire7_size"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Wear
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire7_wear"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Comments
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire7_comments"></div>
+                                        </div>
+                                    </div>
+                                    <div class="7c" style="flex:2" onclick="tireClickFunction(7)">
+                                        <img src="~/Content/field.png" id="7c" style="padding:0 0.3vw; opacity: 0.3; width:100%; height:100%" alt="Alternate Text" />
+                                    </div>
+                                </div>
+                                <div style="flex:3; display:flex; cursor:pointer">
+                                    <div class="8c" style="flex:2" onclick="tireClickFunction(8)">
+                                        <img src="~/Content/field.png" id="8c" style="padding:0 0.3vw; opacity: 0.3; width:100%; height:100%" alt="Alternate Text" />
+                                    </div>
+                                    <div class="8c clearBackgroundColorOnUnitChange" onclick="tireClickFunction(8)" id="8t" style="flex:5; display:flex; flex-direction:column; border:2px solid darkgray; border-radius:0.5vw; padding:0.5vw; font-size:0.6vw; visibility:hidden">
+                                        <table class="table-bordered">
+                                            <thead style="background-color:#b3b7bb; color:white">
+                                                <tr>
+                                                    <th style="text-align:center">PSI (<span id="PSIspan6">TBD</span>)</th>
+                                                    <th style="text-align:center">32nds</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire8_pressure"></th>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire8_depth"></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div style="display:flex; margin-top:0.5vw">
+                                            <div style="flex:4">
+                                                Brand
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire8_brand"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Model
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire8_model"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Size
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire8_size"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Wear
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire8_wear"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Comments
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire8_comments"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display:flex; padding:1vw">
+                                <div style="flex:3; display:flex; cursor:pointer">
+                                    <div class="9c clearBackgroundColorOnUnitChange" onclick="tireClickFunction(9)" id="9t" style="flex:5; display:flex; flex-direction:column; border:2px solid darkgray; border-radius:0.5vw; padding:0.5vw; font-size:0.6vw; visibility:hidden">
+                                        <table class="table-bordered">
+                                            <thead style="background-color:#b3b7bb; color:white">
+                                                <tr>
+                                                    <th style="text-align:center">PSI (<span id="PSIspan6">TBD</span>)</th>
+                                                    <th style="text-align:center">32nds</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire9_pressure"></th>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire9_depth"></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div style="display:flex; margin-top:0.5vw">
+                                            <div style="flex:4">
+                                                Brand
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire9_brand"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Model
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire9_model"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Size
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire9_size"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Wear
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire9_wear"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Comments
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire9_comments"></div>
+                                        </div>
+
+                                    </div>
+                                    <div class="9c" style="flex:2" onclick="tireClickFunction(9)">
+                                        <img src="~/Content/field.png" id="9c" style="padding:0 0.3vw; opacity: 0.3; width:100%; height:100%" alt="Alternate Text" />
+                                    </div>
+                                </div>
+                                <div style="flex:3; display:flex; cursor:pointer">
+                                    <div class="10c" style="flex:2" onclick="tireClickFunction(10)">
+                                        <img src="~/Content/field.png" id="10c" style="padding:0 0.3vw; opacity: 0.3; width:100%; height:100%" alt="Alternate Text" />
+                                    </div>
+                                    <div class="10c clearBackgroundColorOnUnitChange" onclick="tireClickFunction(10)" id="10t" style="flex:5; display:flex; flex-direction:column; border:2px solid darkgray; border-radius:0.5vw; padding:0.5vw; font-size:0.6vw; visibility:hidden">
+                                        <table class="table-bordered">
+                                            <thead style="background-color:#b3b7bb; color:white">
+                                                <tr>
+                                                    <th style="text-align:center">PSI (<span id="PSIspan6">TBD</span>)</th>
+                                                    <th style="text-align:center">32nds</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire10_pressure"></th>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire10_depth"></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div style="display:flex; margin-top:0.5vw">
+                                            <div style="flex:4">
+                                                Brand
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire10_brand"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Model
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire10_model"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Size
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire10_size"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Wear
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire10_wear"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Comments
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire10_comments"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="flex:2"></div>
+                                <div style="flex:3; display:flex; cursor:pointer">
+                                    <div class="11c clearBackgroundColorOnUnitChange" onclick="tireClickFunction(11)" id="11t" style="flex:5; display:flex; flex-direction:column; border:2px solid darkgray; border-radius:0.5vw; padding:0.5vw; font-size:0.6vw; visibility:hidden">
+                                        <table class="table-bordered">
+                                            <thead style="background-color:#b3b7bb; color:white">
+                                                <tr>
+                                                    <th style="text-align:center">PSI (<span id="PSIspan6">TBD</span>)</th>
+                                                    <th style="text-align:center">32nds</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire11_pressure"></th>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire11_depth"></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div style="display:flex; margin-top:0.5vw">
+                                            <div style="flex:4">
+                                                Brand
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire11_brand"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Model
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire11_model"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Size
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire11_size"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Wear
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire11_wear"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Comments
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire11_comments"></div>
+                                        </div>
+                                    </div>
+                                    <div class="11c" style="flex:2" onclick="tireClickFunction(11)">
+                                        <img src="~/Content/field.png" id="11c" style="padding:0 0.3vw; opacity: 0.3; width:100%; height:100%" alt="Alternate Text" />
+                                    </div>
+                                </div>
+                                <div style="flex:3; display:flex; cursor:pointer">
+                                    <div class="12c" style="flex:2" onclick="tireClickFunction(12)">
+                                        <img src="~/Content/field.png" id="12c" style="padding:0 0.3vw; opacity: 0.3; width:100%; height:100%" alt="Alternate Text" />
+                                    </div>
+                                    <div class="12c clearBackgroundColorOnUnitChange" onclick="tireClickFunction(12)" id="12t" style="flex:5; display:flex; flex-direction:column; border:2px solid darkgray; border-radius:0.5vw; padding:0.5vw; font-size:0.6vw; visibility:hidden">
+                                        <table class="table-bordered">
+                                            <thead style="background-color:#b3b7bb; color:white">
+                                                <tr>
+                                                    <th style="text-align:center">PSI (<span id="PSIspan6">TBD</span>)</th>
+                                                    <th style="text-align:center">32nds</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire12_pressure"></th>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire12_depth"></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div style="display:flex; margin-top:0.5vw">
+                                            <div style="flex:4">
+                                                Brand
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire12_brand"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Model
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire12_model"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Size
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire12_size"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Wear
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire12_wear"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Comments
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire12_comments"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display:flex; padding:1vw">
+                                <div style="flex:3; display:flex; cursor:pointer">
+                                    <div class="13c clearBackgroundColorOnUnitChange" onclick="tireClickFunction(13)" id="13t" style="flex:5; display:flex; flex-direction:column; border:2px solid darkgray; border-radius:0.5vw; padding:0.5vw; font-size:0.6vw; visibility:hidden">
+                                        <table class="table-bordered">
+                                            <thead style="background-color:#b3b7bb; color:white">
+                                                <tr>
+                                                    <th style="text-align:center">PSI (<span id="PSIspan6">TBD</span>)</th>
+                                                    <th style="text-align:center">32nds</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire13_pressure"></th>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire13_depth"></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div style="display:flex; margin-top:0.5vw">
+                                            <div style="flex:4">
+                                                Brand
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire13_brand"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Model
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire13_model"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Size
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire13_size"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Wear
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire13_wear"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Comments
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire13_comments"></div>
+                                        </div>
+
+                                    </div>
+                                    <div class="13c" style="flex:2" onclick="tireClickFunction(13)">
+                                        <img src="~/Content/field.png" id="13c" style="padding:0 0.3vw; opacity: 0.3; width:100%; height:100%" alt="Alternate Text" />
+                                    </div>
+                                </div>
+                                <div style="flex:3; display:flex; cursor:pointer">
+                                    <div class="14c" style="flex:2" onclick="tireClickFunction(14)">
+                                        <img src="~/Content/field.png" id="14c" style="padding:0 0.3vw; opacity: 0.3; width:100%; height:100%" alt="Alternate Text" />
+                                    </div>
+                                    <div class="14c clearBackgroundColorOnUnitChange" onclick="tireClickFunction(14)" id="14t" style="flex:5; display:flex; flex-direction:column; border:2px solid darkgray; border-radius:0.5vw; padding:0.5vw; font-size:0.6vw; visibility:hidden">
+                                        <table class="table-bordered">
+                                            <thead style="background-color:#b3b7bb; color:white">
+                                                <tr>
+                                                    <th style="text-align:center">PSI (<span id="PSIspan6">TBD</span>)</th>
+                                                    <th style="text-align:center">32nds</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire14_pressure"></th>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire14_depth"></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div style="display:flex; margin-top:0.5vw">
+                                            <div style="flex:4">
+                                                Brand
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire14_brand"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Model
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire14_model"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Size
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire14_size"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Wear
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire14_wear"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Comments
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire14_comments"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="flex:2"></div>
+                                <div style="flex:3; display:flex; cursor:pointer">
+                                    <div class="15c clearBackgroundColorOnUnitChange" onclick="tireClickFunction(15)" id="15t" style="flex:5; display:flex; flex-direction:column; border:2px solid darkgray; border-radius:0.5vw; padding:0.5vw; font-size:0.6vw; visibility:hidden">
+                                        <table class="table-bordered">
+                                            <thead style="background-color:#b3b7bb; color:white">
+                                                <tr>
+                                                    <th style="text-align:center">PSI (<span id="PSIspan6">TBD</span>)</th>
+                                                    <th style="text-align:center">32nds</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire15_pressure"></th>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire15_depth"></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div style="display:flex; margin-top:0.5vw">
+                                            <div style="flex:4">
+                                                Brand
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire15_brand"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Model
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire15_model"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Size
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire15_size"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Wear
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire15_wear"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Comments
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire15_comments"></div>
+                                        </div>
+                                    </div>
+                                    <div class="15c" style="flex:2" onclick="tireClickFunction(15)">
+                                        <img src="~/Content/field.png" id="15c" style="padding:0 0.3vw; opacity: 0.3; width:100%; height:100%" alt="Alternate Text" />
+                                    </div>
+                                </div>
+                                <div style="flex:3; display:flex; cursor:pointer">
+                                    <div class="16c" style="flex:2" onclick="tireClickFunction(16)">
+                                        <img src="~/Content/field.png" id="16c" style="padding:0 0.3vw; opacity: 0.3; width:100%; height:100%" alt="Alternate Text" />
+                                    </div>
+                                    <div class="16c clearBackgroundColorOnUnitChange" onclick="tireClickFunction(16)" id="16t" style="flex:5; display:flex; flex-direction:column; border:2px solid darkgray; border-radius:0.5vw; padding:0.5vw; font-size:0.6vw; visibility:hidden">
+                                        <table class="table-bordered">
+                                            <thead style="background-color:#b3b7bb; color:white">
+                                                <tr>
+                                                    <th style="text-align:center">PSI (<span id="PSIspan6">TBD</span>)</th>
+                                                    <th style="text-align:center">32nds</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire16_pressure"></th>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire16_depth"></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div style="display:flex; margin-top:0.5vw">
+                                            <div style="flex:4">
+                                                Brand
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire16_brand"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Model
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire16_model"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Size
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire16_size"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Wear
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire16_wear"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Comments
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire16_comments"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display:flex; padding:1vw">
+                                <div style="flex:3; display:flex; cursor:pointer">
+                                    <div class="17c clearBackgroundColorOnUnitChange" onclick="tireClickFunction(17)" id="17t" style="flex:5; display:flex; flex-direction:column; border:2px solid darkgray; border-radius:0.5vw; padding:0.5vw; font-size:0.6vw; visibility:hidden">
+                                        <table class="table-bordered">
+                                            <thead style="background-color:#b3b7bb; color:white">
+                                                <tr>
+                                                    <th style="text-align:center">PSI (<span id="PSIspan6">TBD</span>)</th>
+                                                    <th style="text-align:center">32nds</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire17_pressure"></th>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire17_depth"></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div style="display:flex; margin-top:0.5vw">
+                                            <div style="flex:4">
+                                                Brand
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire17_brand"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Model
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire17_model"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Size
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire17_size"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Wear
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire17_wear"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Comments
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire17_comments"></div>
+                                        </div>
+
+                                    </div>
+                                    <div class="17c" style="flex:2" onclick="tireClickFunction(17)">
+                                        <img src="~/Content/field.png" id="17c" style="padding:0 0.3vw; opacity: 0.3; width:100%; height:100%" alt="Alternate Text" />
+                                    </div>
+                                </div>
+                                <div style="flex:3; display:flex; cursor:pointer">
+                                    <div class="18c" style="flex:2" onclick="tireClickFunction(18)">
+                                        <img src="~/Content/field.png" id="18c" style="padding:0 0.3vw; opacity: 0.3; width:100%; height:100%" alt="Alternate Text" />
+                                    </div>
+                                    <div class="18c clearBackgroundColorOnUnitChange" onclick="tireClickFunction(18)" id="18t" style="flex:5; display:flex; flex-direction:column; border:2px solid darkgray; border-radius:0.5vw; padding:0.5vw; font-size:0.6vw; visibility:hidden">
+                                        <table class="table-bordered">
+                                            <thead style="background-color:#b3b7bb; color:white">
+                                                <tr>
+                                                    <th style="text-align:center">PSI (<span id="PSIspan6">TBD</span>)</th>
+                                                    <th style="text-align:center">32nds</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire18_pressure"></th>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire18_depth"></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div style="display:flex; margin-top:0.5vw">
+                                            <div style="flex:4">
+                                                Brand
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire18_brand"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Model
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire18_model"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Size
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire18_size"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Wear
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire18_wear"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Comments
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire18_comments"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="flex:2"></div>
+                                <div style="flex:3; display:flex; cursor:pointer">
+                                    <div class="19c clearBackgroundColorOnUnitChange" onclick="tireClickFunction(19)" id="19t" style="flex:5; display:flex; flex-direction:column; border:2px solid darkgray; border-radius:0.5vw; padding:0.5vw; font-size:0.6vw; visibility:hidden">
+                                        <table class="table-bordered">
+                                            <thead style="background-color:#b3b7bb; color:white">
+                                                <tr>
+                                                    <th style="text-align:center">PSI (<span id="PSIspan6">TBD</span>)</th>
+                                                    <th style="text-align:center">32nds</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire19_pressure"></th>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire19_depth"></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div style="display:flex; margin-top:0.5vw">
+                                            <div style="flex:4">
+                                                Brand
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire19_brand"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Model
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire19_model"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Size
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire19_size"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Wear
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire19_wear"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Comments
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire19_comments"></div>
+                                        </div>
+                                    </div>
+                                    <div class="19c" style="flex:2" onclick="tireClickFunction(19)">
+                                        <img src="~/Content/field.png" id="19c" style="padding:0 0.3vw; opacity: 0.3; width:100%; height:100%" alt="Alternate Text" />
+                                    </div>
+                                </div>
+                                <div style="flex:3; display:flex; cursor:pointer">
+                                    <div class="20c" style="flex:2" onclick="tireClickFunction(20)">
+                                        <img src="~/Content/field.png" id="20c" style="padding:0 0.3vw; opacity: 0.3; width:100%; height:100%" alt="Alternate Text" />
+                                    </div>
+                                    <div class="20c clearBackgroundColorOnUnitChange" onclick="tireClickFunction(20)" id="20t" style="flex:5; display:flex; flex-direction:column; border:2px solid darkgray; border-radius:0.5vw; padding:0.5vw; font-size:0.6vw; visibility:hidden">
+                                        <table class="table-bordered">
+                                            <thead style="background-color:#b3b7bb; color:white">
+                                                <tr>
+                                                    <th style="text-align:center">PSI (<span id="PSIspan6">TBD</span>)</th>
+                                                    <th style="text-align:center">32nds</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire20_pressure"></th>
+                                                    <th class=" ClearOnUnitChange" style="font-size:0.7vw; height:25px; text-align:center" id="centre_tire20_depth"></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div style="display:flex; margin-top:0.5vw">
+                                            <div style="flex:4">
+                                                Brand
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire20_brand"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Model
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire20_model"></div>
+                                        </div>
+                                        <div style="display:flex">
+                                            <div style="flex:4">
+                                                Size
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire20_size"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Wear
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire20_wear"></div>
+                                        </div>
+                                        <div style="display:none">
+                                            <div style="flex:4">
+                                                Comments
+                                            </div>
+                                            <div class="ClearOnUnitChange" style="flex:7" id="centre_tire20_comments"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="flex:1; font-size:0.9vw">
+            <datalist id="brandList">
+                @foreach (var item in Model.BrandList)
+                {
+                    <option value=@item.Value />
+                }
+            </datalist>
+
+            <datalist id="sizeList">
+                @foreach (var item in Model.SizeList)
+                {
+                    <option value=@item.Value />
+                }
+            </datalist>
+
+            <datalist id="modelList">
+                @foreach (var item in Model.ModelList)
+                {
+                    <option value=@item.Value />
+                }
+            </datalist>
+
+            @for (int i = 1; i <= 20; i++)
+            {
+
+                string pressure = "right_tire" + i + "_pressure";
+                string pressure_check = "right_tire" + i + "_pressure_check";
+                string depth = "right_tire" + i + "_depth";
+                string wear = "right_tire" + i + "_wear";
+                string brand = "right_tire" + i + "_brand";
+                string size = "right_tire" + i + "_size";
+                string modelid = "right_tire" + i + "_model";
+                string comments = "right_tire" + i + "_comments";
+
+                string brand_freight = brand + "_freight";
+                string size_freight = size + "_freight";
+                string modelid_freight = modelid + "_freight";
+
+                string save = "right_tire" + i + "_save";
+                string cancel = "right_tire" + i + "_cancel";
+
+                string brand_other = "t" + i + "b";
+                string size_other = "t" + i + "s";
+
+                <div class="card @i" style="display:none; width:100%; height:90vh">
+                    <div class="card-header" style="padding: 0.2vw 1vw">
+                        <div style="display:flex; justify-content:space-between; align-items:center">
+                            <div style="font-weight:bolder; font-size:1.5vw; color:white">
+                                @i Lo - Assembly Information
+                            </div>
+                            <div></div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+                        <div style="display:flex; flex-direction:column">
+                            <div style="display:flex; margin-bottom:0.9vw">
+                                <div style="flex:6">
+                                    <label>Pressure <span style="color:red"></span> (PSI)</label>
+                                </div>
+                                <div style="flex:6">
+                                    <input autocomplete="off" onkeypress="return isNumberKey(event)" style="width:100%" onfocusout="check_required_fields_tire(this.id.split('right_tire')[1].split('_pressure')[0])" id="@pressure" type="text" name="name" value="" />
+                                </div>
+                            </div>
+
+                            <div style="display:flex; margin-bottom:0.6vw">
+                                <div style="flex:6">
+                                    <label style="font-size:10px"><i>Unable to confirm PSI</i></label>
+                                </div>
+                                <div style="flex:6">
+                                    <input type="checkbox" onclick=" let id = this.id.split('right_tire')[1].split('_pressure_check')[0];
+                                                                             if ($(this).is(':checked')) {
+                                                                                 $('#right_tire' + id + '_pressure').val('n/a')
+                                                                                 $('#right_tire' + id + '_pressure').prop('readonly', true);
+                                                                                 $('#right_tire' + id + '_pressure').css('background-color', '#f8f8f8');
+                                                                             }
+                                                                             else {
+                                                                                 $('#right_tire' + id + '_pressure').val('')
+                                                                                 $('#right_tire' + id + '_pressure').prop('readonly', false);
+                                                                                 $('#right_tire' + id + '_pressure').css('background-color', 'white');
+                                                                                 $('#right_tire' + id + '_pressure').focus();
+                                                                             }
+                                                 " style="        width: 1.5vw;
+        height: 1.5vw" id="@pressure_check" name="name" value="" />
+                                </div>
+                            </div>
+
+                            <div style="display:flex; margin-bottom:1vw">
+                                <div style="flex:6">
+                                    <label>Tread Depth<span style="color:red"></span> (32nds)</label>
+                                </div>
+                                <div style="flex:6">
+                                    <input autocomplete="off" onkeypress="return isNumberKey(event)" style="width:100%" onfocusout="check_required_fields_tire(this.id.split('right_tire')[1].split('_depth')[0])" id="@depth" type="text" name="name" value="" />
+                                </div>
+                            </div>
+
+                            <div style="display:flex">
+                                <div style="flex:6">
+                                    <label>Wear <span style="color:red"></span></label>
+                                </div>
+                                <div style="flex:6">
+                                    @Html.DropDownListFor(m => m.Wear, Model.WearList, new { @onchange = "check_required_fields_tire(this.id.split('right_tire')[1].split('_wear')[0])", @id = @wear, @style = "width:100%; height:30px" })
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <div style="display:flex">
+                                <div style="flex:6">
+                                    <label>Brand <span style="color:red"></span></label>
+                                </div>
+                                <div style="flex:6">
+                                    @Html.DropDownListFor(m => m.Brand, Model.BrandList, new { @class = "dropdownFields", @onchange = "checkOtherBrand(this.id.split('right_tire')[1].split('_brand')[0])", @id = brand, @style = "width:100%; height:30px" })
+                                    <input class="inputFields" list="brandList" id="@brand_freight" style="width:100%; height:30px" onchange="checkOtherBrand(this.id.split('right_tire')[1].split('_brand')[0])" />
+                                </div>
+                            </div>
+
+                            <div style="display:flex; margin-bottom:1vw">
+                                <div style="flex:12; color:red; font-weight:bold; font-size:0.5vw" id="@brand_other">
+                                </div>
+                            </div>
+
+                            <div style="display:flex">
+                                <div style="flex:6">
+                                    <label>Size <span style="color:red"></span></label>
+                                </div>
+                                <div style="flex:6">
+                                    @Html.DropDownListFor(m => m.Size, Model.SizeList, new { @class = "dropdownFields", @onchange = "check_required_fields_tire(this.id.split('right_tire')[1].split('_size')[0])", @id = size, @style = "width:100%; height:30px" })
+                                    <input class="inputFields" list="sizeList" id="@size_freight" style="width:100%; height:30px" onchange="check_required_fields_tire(this.id.split('right_tire')[1].split('_size')[0])" />
+                                </div>
+                            </div>
+
+                            <div style="display:flex; margin-bottom:1vw">
+                                <div style="flex:12; color:red; font-weight:bold; font-size:0.5vw" id="@size_other">
+                                </div>
+                            </div>
+
+                            <div style="display:flex">
+                                <div style="flex:6">
+                                    <label>Model <span style="color:red"></span></label>
+                                </div>
+                                <div style="flex:6">
+                                    @Html.DropDownListFor(m => m.model, Model.ModelList, new { @class = "dropdownFields", @onchange = "check_required_fields_tire(this.id.split('right_tire')[1].split('_model')[0])", @id = modelid, @style = "width:100%; height:30px" })
+                                    <input class="inputFields" list="modelList" id="@modelid_freight" style="width:100%; height:30px" onchange="check_required_fields_tire(this.id.split('right_tire')[1].split('_model')[0])" />
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <div style="display:flex">
+                                <div style="flex:12; font-weight:bold">
+                                    <label>Comments (Optional)</label>
+                                </div>
+                            </div>
+
+                            <div style="display:flex; margin-bottom:1vw">
+                                <div style="flex:12; font-weight:bold">
+                                    <textarea id="@comments" style="width:100%; height:30vh"></textarea>
+                                </div>
+                            </div>
+
+                            <div style="display:flex; justify-content:space-between">
+                                <div>
+                                    <button style="border:none; outline:none; background-color:transparent" data-toggle="modal" data-target="#copyModal" class="right_tire${@i}_save" onclick="copyToTemp($('#right_tire'+@i+'_pressure').val(), $('#right_tire'+@i+'_depth').val(), $('#right_tire'+@i+'_wear').val(), $('#right_tire'+@i+'_brand').val(), $('#right_tire'+@i+'_size').val(), $('#right_tire'+@i+'_model').val()); $('#pos_copy_input').val(@i)"><img style="width:15px" src="https://ctasehub.blob.core.windows.net/sehub-content/CopyIcon.PNG" alt="Alternate Text" /></button>
+                                </div>
+                                <div style="display:flex">
+                                    <button class="btn btn-success save" id="@save" onclick="tire_update(this.id)" style="visibility:hidden; padding:0.1vw 1.2vw; font-size:0.8vw; margin-right:0.3vw">Save</button>
+                                    <button class="btn btn-danger" id="@cancel" onclick="tire_cancel(this.id.split('right_tire')[1].split('_cancel')[0])" style="padding:0.1vw 0.7vw; font-size:0.8vw">Cancel</button>
+                                </div>
+                            </div>
+                        </div>                       
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+
+    <div class="modal SavedSuccessfully" id="SavedSuccessfully">
+        <div class="modal-dialog" style="width:300px">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#66c46c; padding:5px 2px 0px 2px">
+                    <h5 style="margin-left:auto; margin-right:auto">Acknowledgment</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="margin-bottom: 20px">
+                        <div class="col-lg-12 text-center"> <h6>Field Submission Complete</h6> </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row" style="margin-bottom:10px">
+                                <input data-dismiss="modal" style="margin-left: auto; margin-right: auto; width: 200px" class="btn btn-primary" readonly type="text" name="name" value="Return To Survey" />
+                            </div>
+                            <div class="row">
+                                <input id="NewSurvey" onclick="location.reload();" style="margin-left: auto; margin-right: auto; width: 200px" class="btn btn-primary" readonly type="text" name="name" value="New Survey" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="copyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:3px">
+                    <h5 style="margin-left:auto; margin-right:auto" class="modal-title" id="exampleModalLabel"><b>Copy Tire Survey</b></h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3" style="border-right:2px solid dimgray">
+                            <div class="row">
+                                <div onclick="$('#tempCop').val('hub'); $('.commonCopyClass').addClass( 'btn-secondary' ).removeClass( 'btn-primary' ); $(this).removeClass( 'btn-secondary' ).addClass( 'btn-primary' ); $('#copyTypeImage').attr('src', 'https://ctasehub.blob.core.windows.net/sehub-content/Tire Survey_copy hub.png')" class="btn btn-primary commonCopyClass" style="margin:10px; display:flex; flex-direction:column; margin-left:auto; margin-right:auto; font-weight:bold">
+                                    <span>HUB</span>
+                                    <span>ONLY</span>
+                                </div>
+                                <div onclick="$('#tempCop').val('axle'); $('.commonCopyClass').addClass( 'btn-secondary' ).removeClass( 'btn-primary' ); $(this).removeClass( 'btn-secondary' ).addClass( 'btn-primary' ); $('#copyTypeImage').attr('src', 'https://ctasehub.blob.core.windows.net/sehub-content/Tire Survey_copy axle.png')" " class="btn btn-secondary commonCopyClass" style="margin:10px; display:flex; flex-direction:column; margin-left:auto; margin-right:auto; font-weight:bold">
+                                    <span>AXLE</span>
+                                    <span>ONLY</span>
+                                </div>
+                                <div onclick="$('#tempCop').val('type'); $('.commonCopyClass').addClass( 'btn-secondary' ).removeClass( 'btn-primary' ); $(this).removeClass( 'btn-secondary' ).addClass( 'btn-primary' ); $('#copyTypeImage').attr('src', 'https://ctasehub.blob.core.windows.net/sehub-content/Tire Survey_copy type.png')" " class="btn btn-secondary commonCopyClass" style="margin:10px; display:flex; flex-direction:column; margin-left:auto; margin-right:auto; font-weight:bold">
+                                    <span>TYPE</span>
+                                    <span>ONLY</span>
+                                </div>
+                                <input style="display:none" id="tempCop" type="text" name="name" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <img id="copyTypeImage" src="https://ctasehub.blob.core.windows.net/sehub-content/Tire Survey_copy hub.png" alt="Alternate Text" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:3px">
+                    <button type="button" style="padding:1px 10px" class="btn btn-success" data-dismiss="modal" onclick="copyTo($('#tempCop').val())">Confirm</button>
+                    <button type="button" data-dismiss="modal" style="padding:1px 15px" class="btn btn-danger">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div style="display:none">
+        <input type="text" id="pressure_copy" name="name" value="" />
+        <input type="text" id="treadDepth_copy" name="name" value="" />
+        <input type="text" id="wear_copy" name="name" value="" />
+        <input type="text" id="brand_copy" name="name" value="" />
+        <input type="text" id="size_copy" name="name" value="" />
+        <input type="text" id="model_copy" name="name" value="" />
+        <input type="text" id="pos_copy_input" name="name" value="" />
+    </div>
+
+
+    <script>
+
+        function copyToTemp(pre, treDep, wear, brnd, sz, mdl) {
+            $('#pressure_copy').val(pre);
+            $('#treadDepth_copy').val(treDep);
+            $('#wear_copy').val(wear);
+            $('#brand_copy').val(brnd);
+            $('#size_copy').val(sz);
+            $('#model_copy').val(mdl);
+        }
+
+        function copyTo(val) {
+            if (val == "hub") {
+                const postn = {
+                    "1": "2",
+                    "2": "1",
+                    "3": "4",
+                    "4": "3",
+                    "5": "6",
+                    "6": "5",
+                    "7": "8",
+                    "8": "7",
+                    "9": "10",
+                    "10": "9",
+                    "11": "12",
+                    "12": "11",
+                    "13": "14",
+                    "14": "13",
+                    "15": "16",
+                    "16": "15",
+                    "17": "18",
+                    "18": "17",
+                    "19": "20",
+                    "20": "19",
+                };
+
+                var updt = postn[$('#pos_copy_input').val()]
+
+                $("#centre_tire" + updt + "_pressure").html($("#pressure_copy").val());
+                $("#centre_tire" + updt + "_depth").html($("#treadDepth_copy").val());
+                $("#centre_tire" + updt + "_brand").html($("#brand_copy").val());
+                $("#centre_tire" + updt + "_model").html($("#model_copy").val());
+                $("#centre_tire" + updt + "_size").html($("#size_copy").val());
+                $("#centre_tire" + updt + "_wear").html($("#wear_copy").val());
+
+            }
+            else if (val == "axle") {
+                const postn = {
+                    "1": "2_3_4",
+                    "2": "1_3_4",
+                    "3": "1_2_4",
+                    "4": "1_2_3",
+                    "5": "6_7_8",
+                    "6": "5_7_8",
+                    "7": "5_6_8",
+                    "8": "5_6_7",
+                    "9": "10_11_12",
+                    "10": "9_11_12",
+                    "11": "9_10_12",
+                    "12": "9_10_11",
+                    "13": "14_15_16",
+                    "14": "13_15_16",
+                    "15": "13_14_16",
+                    "16": "13_14_15",
+                    "17": "18_19_20",
+                    "18": "17_19_20",
+                    "19": "17_18_20",
+                    "20": "17_18_19",
+                };
+
+                var arr = postn[$('#pos_copy_input').val()].split('_')
+
+
+                arr.forEach(function (element) {
+                    $("#centre_tire" + element + "_pressure").html($("#pressure_copy").val());
+                    $("#centre_tire" + element + "_depth").html($("#treadDepth_copy").val());
+                    $("#centre_tire" + element + "_brand").html($("#brand_copy").val());
+                    $("#centre_tire" + element + "_model").html($("#model_copy").val());
+                    $("#centre_tire" + element + "_size").html($("#size_copy").val());
+                    $("#centre_tire" + element + "_wear").html($("#wear_copy").val());
+                });
+
+            }
+            else if (val == "type") {
+                arr = ['5', '6', '7', '8', '9', '10', '11', '12']
+
+                arr.forEach(function (element) {
+                    $("#centre_tire" + element + "_pressure").html($("#pressure_copy").val());
+                    $("#centre_tire" + element + "_depth").html($("#treadDepth_copy").val());
+                    $("#centre_tire" + element + "_brand").html($("#brand_copy").val());
+                    $("#centre_tire" + element + "_model").html($("#model_copy").val());
+                    $("#centre_tire" + element + "_size").html($("#size_copy").val());
+                    $("#centre_tire" + element + "_wear").html($("#wear_copy").val());
+                });
+            }
+        }
+
+        var myFunc = function(thisObj, property) {console.log(obj[property])};
+
+        function checkOtherBrand(val) {
+            if ($('#right_tire'+val+'_brand').val() == "Other") {
+                $('#t' + val + 'b').html("Please fill comments");
+                $('#right_tire' + val + '_model').val("Other");
+            }
+            else {
+                $('#t'+val+'b').html("");
+                selectModel($('#right_tire'+val+'_brand').val(), $('#right_tire'+val+'_size').val(), val);
+            }
+            check_required_fields_tire(val);
+        }
+
+        function checkOtherSize(val) {
+
+            if ($('#right_tire'+val+'_size').val() == "Other") {
+                $('#t'+val+'s').html("Please fill comments");
+            }
+            else {
+                $('#t'+val+'s').html("");
+                selectModel($('#right_tire'+val+'_brand').val(), $('#right_tire'+val+'_size').val(), val);
+            }
+            check_required_fields_tire(val);
+
+        }
+
+        function selectModel(br, sz, po) {
+
+            $.ajax({
+                url: '@Url.Action("SelectModel", "FleetTVT")',
+                data: { brand: br, size: sz},
+                success: function (data) {
+                    var listModels = JSON.parse(data);
+
+                    if (listModels[0] != "Other") {
+                        var s = '';
+                        for (var i = 0; i < listModels.length; i++) {
+                            s += '<option value="' + listModels[i] + '">' + listModels[i] + '</option>';
+                        }
+                        $('#right_tire' + po + '_model').html(s);
+                    }
+
+                }
+            });
+        }
+
+        $.ajax({
+            url: '@Url.Action("PullEmployeesChangeLocation", "FleetTVT")',
+            data: { loc: $('#locval').val() },
+            type: "POST",
+            success: function (data) {
+                var s = '<option value="-1">Select Technician</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].value + '">' + data[i].text + '</option>';
+                    console.log('<option value="' + data[i].value + '">' + data[i].text + '</option>');
+                }
+                $("#EmpsDropdown").html(s);
+            }
+        });
+
+        $('#Next').click(function(e){
+            $("#profile-tab").removeClass("disabled");
+            e.preventDefault();
+            $('#myTab a:last').tab('show');
+        })
+
+        function check_requiredFileds_unit() {
+
+            var actualCount = 2;
+            var count = 0;
+
+            if ($('#surveyLocationUnit').val() != "") {
+                count = count + 1;
+            }
+            if ($('#EmpsDropdown').val() != -1) {
+                count = count + 1;
+            }
+            unitPercentage = (count / actualCount) * 100
+
+
+            var percentageStr = unitPercentage.toString();
+
+            if (unitPercentage == 100) {
+                $('#Next').css('visibility', 'visible');
+            }
+
+            percentageStr = percentageStr + '%'
+
+
+            $('.unitProgress').css('width', percentageStr).text(percentageStr);
+
+        }
+
+        function changeLocation(value1) {
+
+            $.ajax({
+                url: '@Url.Action("PullEmployeesChangeLocation", "FleetTVT")',
+                data: { loc: value1 },
+                type: "POST",
+                success: function (data) {
+                    var s = '<option value="-1">Select Technician</option>';
+                    for (var i = 0; i < data.length; i++) {
+                        s += '<option value="' + data[i].value + '">' + data[i].text + '</option>';
+                        console.log('<option value="' + data[i].value + '">' + data[i].text + '</option>');
+                    }
+                    $("#EmpsDropdown").html(s);
+                }
+            });
+        }
+
+        datepicker.max = new Date().toISOString().split("T")[0];
+
+
+        function addDays(date, days) {
+          var result = new Date(date);
+          result.setDate(result.getDate() + days);
+          return result;
+        }
+
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode != 46 && charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+            return true;
+        }
+
+
+        $('#unitTab').click(function () {
+            deselectEverything();
+        });
+
+        $('#clearEquipmentSurvey').click(function () {
+            $('#surveyLocationUnit').val("");
+            $("#EmpsDropdown").val("Select Technician");
+            $('.unitProgress').css('width', "0%").text("");
+            $('#Next').css('visibility', 'hidden');
+            $("#profile-tab").addClass("disabled");
+        });
+
+        $('#submiSurvey').click(function () {
+
+            var Type = document.getElementById("surveyType").innerHTML;
+
+            var value = document.getElementById("configuration").innerHTML;
+
+            $.ajax({
+                url: '@Url.Action("GetConfigurationDetails", "FleetTVT")',
+                data: { type: Type, config: value },
+                type: 'POST',
+                success: function (data) {
+                    var ConfigDetails = JSON.parse(data);
+
+
+                    if (ConfigDetails.one_lo != 0) {
+                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "1_lo", "centre_tire1_pressure", "centre_tire1_depth", "centre_tire1_wear", "centre_tire1_brand", "centre_tire1_model", "centre_tire1_size", "centre_tire1_comments");
+                    }
+
+                    if (ConfigDetails.one_li != 0) {
+                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "1_li", "centre_tire2_pressure", "centre_tire2_depth", "centre_tire2_wear", "centre_tire2_brand", "centre_tire2_model", "centre_tire2_size", "centre_tire2_comments");
+                    }
+
+                    if (ConfigDetails.one_ri != 0) {
+                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "1_ri", "centre_tire3_pressure", "centre_tire3_depth", "centre_tire3_wear", "centre_tire3_brand", "centre_tire3_model", "centre_tire3_size", "centre_tire3_comments");
+                    }
+
+                    if (ConfigDetails.one_ro != 0) {
+                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "1_ro", "centre_tire4_pressure", "centre_tire4_depth", "centre_tire4_wear", "centre_tire4_brand", "centre_tire4_model", "centre_tire4_size", "centre_tire4_comments");
+                    }
+
+                    if (ConfigDetails.two_lo != 0) {
+                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "2_lo", "centre_tire5_pressure", "centre_tire5_depth", "centre_tire5_wear", "centre_tire5_brand", "centre_tire5_model", "centre_tire5_size", "centre_tire5_comments");
+                    }
+
+                    if (ConfigDetails.two_li != 0) {
+                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "2_li", "centre_tire6_pressure", "centre_tire6_depth", "centre_tire6_wear", "centre_tire6_brand", "centre_tire6_model", "centre_tire6_size", "centre_tire6_comments");
+                    }
+
+                    if (ConfigDetails.two_ri != 0) {
+                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "2_ri", "centre_tire7_pressure", "centre_tire7_depth", "centre_tire7_wear", "centre_tire7_brand", "centre_tire7_model", "centre_tire7_size", "centre_tire7_comments");
+                    }
+
+                    if (ConfigDetails.two_ro != 0) {
+                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "2_ro", "centre_tire8_pressure", "centre_tire8_depth", "centre_tire8_wear", "centre_tire8_brand", "centre_tire8_model", "centre_tire8_size", "centre_tire8_comments");
+                    }
+
+                    if (ConfigDetails.three_lo != 0) {
+                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "3_lo", "centre_tire9_pressure", "centre_tire9_depth", "centre_tire9_wear", "centre_tire9_brand", "centre_tire9_model", "centre_tire9_size", "centre_tire9_comments");
+                    }
+
+                    if (ConfigDetails.three_li != 0) {
+                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "3_li", "centre_tire10_pressure", "centre_tire10_depth", "centre_tire10_wear", "centre_tire10_brand", "centre_tire10_model", "centre_tire10_size", "centre_tire10_comments");
+                    }
+
+                    if (ConfigDetails.three_ri != 0) {
+                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "3_ri", "centre_tire11_pressure", "centre_tire11_depth", "centre_tire11_wear", "centre_tire11_brand", "centre_tire11_model", "centre_tire11_size", "centre_tire11_comments");
+                    }
+
+                    if (ConfigDetails.three_ro != 0) {
+                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "3_ro", "centre_tire12_pressure", "centre_tire12_depth", "centre_tire12_wear", "centre_tire12_brand", "centre_tire12_model", "centre_tire12_size", "centre_tire12_comments");
+                    }
+
+                    if (ConfigDetails.four_lo != 0) {
+                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "4_lo", "centre_tire13_pressure", "centre_tire13_depth", "centre_tire13_wear", "centre_tire13_brand", "centre_tire13_model", "centre_tire13_size", "centre_tire13_comments");
+                    }
+
+                    if (ConfigDetails.four_li != 0) {
+                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "4_li", "centre_tire14_pressure", "centre_tire14_depth", "centre_tire14_wear", "centre_tire14_brand", "centre_tire14_model", "centre_tire14_size", "centre_tire14_comments");
+                    }
+
+                    if (ConfigDetails.four_ri != 0) {
+                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "4_ri", "centre_tire15_pressure", "centre_tire15_depth", "centre_tire15_wear", "centre_tire15_brand", "centre_tire15_model", "centre_tire15_size", "centre_tire15_comments");
+                    }
+
+                    if (ConfigDetails.four_ro != 0) {
+                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "4_ro", "centre_tire16_pressure", "centre_tire16_depth", "centre_tire16_wear", "centre_tire16_brand", "centre_tire16_model", "centre_tire16_size", "centre_tire16_comments");
+                    }
+
+                    if (ConfigDetails.five_lo != 0) {
+                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "5_lo", "centre_tire17_pressure", "centre_tire17_depth", "centre_tire17_wear", "centre_tire17_brand", "centre_tire17_model", "centre_tire17_size", "centre_tire17_comments");
+                    }
+
+                    if (ConfigDetails.five_li != 0) {
+                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "5_li", "centre_tire18_pressure", "centre_tire18_depth", "centre_tire18_wear", "centre_tire18_brand", "centre_tire18_model", "centre_tire18_size", "centre_tire18_comments");
+                    }
+
+                    if (ConfigDetails.five_ri != 0) {
+                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "5_ri", "centre_tire19_pressure", "centre_tire19_depth", "centre_tire19_wear", "centre_tire19_brand", "centre_tire19_model", "centre_tire19_size", "centre_tire19_comments");
+                    }
+
+
+                    if (ConfigDetails.five_ro != 0) {
+                        InsertRecordToFleetSurveyTire("customer", "UnitsDropdown", "datepicker", "5_ro", "centre_tire20_pressure", "centre_tire20_depth", "centre_tire20_wear", "centre_tire20_brand", "centre_tire20_model", "centre_tire20_size", "centre_tire20_comments");
+                    }
+
+                    var cust = document.getElementById("customerNumberEquipSurvey").innerHTML
+                    var unit = document.getElementById("unitNumberEquipSurvey").innerHTML
+                    //var mileage = $('#mileageInput').val()
+                    var surveyLocation = $('#surveyLocationUnit').val()
+                    //var expDate = $('#dateExpiredUnitSurvey').val()
+                    var emp = document.getElementById('EmpsDropdown').value
+                    var comments = $("#unitSurveyComments").val()
+                    var surveyDate = $("#datepicker").val()
+
+
+                    $.ajax({
+                        url: '@Url.Action("InsertRecordToFleetSurveyUnit", "FleetTVT")',
+                        data: { cu: cust, un: unit, loct: surveyLocation, empl: emp, cmts: comments, sdat: surveyDate},
+                        type: 'POST',
+                        success: function (data) {
+
+                        }
+                    });
+
+                    $('#SavedSuccessfully').modal();
+
+                }
+            });
+
+        });
+
+        function InsertRecordToFleetSurveyTire(customerID, unitID, dateID, position, pressureID, trdDepthID, wearID, brandID, modelID, sizeID, commentsID) {
+
+            var customer = document.getElementById(customerID).value;
+            var unit = document.getElementById(unitID).value;
+            var date = document.getElementById(dateID).value;
+            var pstn = position;
+
+            var pressure = document.getElementById(pressureID).innerHTML;
+            var trdDepth = document.getElementById(trdDepthID).innerHTML;
+            var wear = document.getElementById(wearID).innerHTML
+            var brand = document.getElementById(brandID).innerHTML
+            var model = document.getElementById(modelID).innerHTML
+            var size = document.getElementById(sizeID).innerHTML
+            var comments = document.getElementById(commentsID).innerHTML
+
+
+            $.ajax({
+                url: '@Url.Action("InsertRecordToFleetSurveyTire", "FleetTVT")',
+                data: { cust: customer, unt: unit, dat: date, pn: pstn, pres: pressure, trdDpth: trdDepth, wr: wear, brnd: brand, mdl: model, sze: size, com: comments },
+                type: 'POST',
+                success: function (data) {
+                }
+            });
+
+
+        }
+
+        function pullUnitInfo(unitNum) {
+
+            var str = $("#customer option:selected").text();
+            var res = str.replace("(" + document.getElementById('customer').value + ")", "");
+
+            $("#customerNameEquipSurvey").text(res);
+            $("#customerNumberEquipSurvey").text(document.getElementById('customer').value);
+            $("#unitNumberEquipSurvey").text(document.getElementById('UnitsDropdown').value);
+
+
+            $("#unitDetails").css('visibility', 'visible');
+
+            $("#equipmentSurveyDiv").css('visibility', 'visible');
+
+            $('.tireProgress').css('width', "0%").text("");
+
+            $(".ClearOnUnitChange").html("");
+
+            $(".clearBackgroundColorOnUnitChange").css("background-color", "white");
+            $("#Step4").css('visibility', 'visible');
+
+
+            deselectEverything();
+
+
+            $.ajax({
+                url: '@Url.Action("pullUnitInfo", "FleetTVT")',
+                data: { value: unitNum },
+                type: 'POST',
+                success: function (data) {
+                    var UnitDetails = JSON.parse(data);
+
+
+                    $("#unitName").html(UnitDetails.unit_name);
+                    $("#surveyType").html(UnitDetails.survey_type);
+
+                    if (UnitDetails.survey_type == "Forklift") {
+                        $('.inputFields').css('display', 'block')
+                        $('.dropdownFields').css('display', 'none')
+                    }
+                    else {
+                        $('.dropdownFields').css('display', 'block')
+                        $('.inputFields').css('display', 'none')
+                    }
+
+                    jsFunction(UnitDetails.survey_configuration, UnitDetails.spec_psi_1, UnitDetails.spec_psi_2, UnitDetails.spec_psi_3);
+
+                    $("#configuration").html(UnitDetails.survey_configuration);
+                    $("#plateNumber").html(UnitDetails.plate_number);
+                    $("#year").html(UnitDetails.year);
+                    var num = UnitDetails.date_expired.match(/\d+/g);
+                    var date = new Date(parseFloat(num)); //converting to date
+                    $("#dateExpired").html(date.getMonth() + 1 + "-" + date.getDate() + '-' + date.getFullYear());
+
+                }
+
+            });
+
+
+
+        }
+
+        function deselectEverything() {
+            for (let i = 1; i <= 20; i++) {
+                $('#' + i + 't').css("border", "2px solid #cdcfd1");
+                $('#' + i + 'c').css("opacity", "0.3");
+                $('.' + i).css("display", "none");
+                //document.getElementById("1c").style.opacity = "0.3";
+            }
+        }
+
+        $('#datepicker').change(function () {
+
+            $("#Step2").css('visibility', 'visible');
+
+            deselectEverything()
+
+            var d = new Date($('#datepicker').val());
+            d = addDays(d, 1);
+            date = d.toString();
+
+            var shortDay = date.substring(0, 3);
+            var longDay = "";
+
+            if (shortDay == "Mon") {
+                longDay = "Monday"
+            }
+            else if (shortDay == "Tue")
+            {
+                longDay = "Tuesday"
+            }
+            else if (shortDay == "Wed")
+            {
+                longDay = "Wednesday"
+            }
+            else if (shortDay == "Thu")
+            {
+                longDay = "Thursday"
+            }
+            else if (shortDay == "Fri")
+            {
+                longDay = "Friday"
+            }
+            else if (shortDay == "Sat")
+            {
+                longDay = "Saturday"
+            }
+            else if (shortDay == "Sun")
+            {
+                longDay = "Sunday"
+            }
+
+            var month = date.substring(4, 7);
+
+            var dateNum = date.substring(8, 10);
+
+            var yearNum = date.substring(11, 15);
+
+
+            $("#fullDate").val(longDay + " - " + month + " " + dateNum + ", " + yearNum);
+            $("#custDetailsDiv").css("display", "none");
+            $("#Step3").css('visibility', 'hidden');
+            $("#Step4").css('visibility', 'hidden');
+            $("#unitDetails").css('visibility', 'hidden');
+            $("#customer").val("Please Select Customer")
+
+            visibility()
+
+        });
+
+        function InitiateStep3(value1) {
+            $('.unitProgress').css('width', '0').text('0%');
+
+            //$('#mileageInput').val("");
+            //$('#dateExpiredUnitSurvey').val(null);
+            $('#fullDateEquipmentSurvey').val(null);
+            $('#surveyLocationUnit').val("");
+            $('#EmpsDropdown').val("-1");
+
+            $('.tireProgress').css('width', "0%").text("");
+
+            $("#equipmentSurveyDiv").css('visibility', 'hidden');
+
+            deselectEverything()
+
+            $.ajax({
+                url: '@Url.Action("PullUnits", "FleetTVT")',
+                data: { value: value1 },
+                type: "POST",
+                success: function (data) {
+                    var s = '<option value="-1">Select Unit Number</option>';
+                    for (var i = 0; i < data.length; i++) {
+                        s += '<option value="' + data[i].value + '">' + data[i].text + '</option>';
+                        console.log('<option value="' + data[i].value + '">' + data[i].text + '</option>');
+                    }
+                    $("#UnitsDropdown").html(s);
+                }
+            });
+
+            $("#UnitsDropdown").val("Please Select Customer")
+
+            $("#Step3").css('visibility', 'visible');
+            $("#unitDetails").css('visibility', 'hidden');
+            $.ajax({
+                url: '@Url.Action("PullCustomerInfo", "FleetTVT")',
+                data: { value: $("#customer").val() },
+                type: 'POST',
+                success: function (data) {
+                    $("#custDetailsDiv").css("display", "block");
+                    var CustDetails = JSON.parse(data);
+                    $("#Customer_Number").html($("#customer").val());
+                    $("#Customer_Name").html(CustDetails.customer_number);
+                    $("#Reporting_Contact").html(CustDetails.reporting_contact);
+                    $("#Reporting_Email").html(CustDetails.reporting_email);
+                    $("#Reporting_Frequency").html(CustDetails.reporting_frequency);
+
+                    if (CustDetails.mileage_required == 1) {
+                        $("#Mileage_Required").html("True");
+                        //$("#mileageInput").prop({ disabled: false});
+                    }
+                    else {
+                        $("#Mileage_Required").html("False");
+                        //$("#mileageInput").prop({ disabled: true});
+                    }
+
+                    /*
+
+                     if (CustDetails.exp_date_required == 1) {
+                        $("#dateExpiredUnitSurvey").prop({ disabled: false});
+                        $("#fullDateEquipmentSurvey").prop({ disabled: false});
+                    }
+                    else {
+                        $("#dateExpiredUnitSurvey").prop({ disabled: true});
+                        $("#fullDateEquipmentSurvey").prop({ disabled: true});
+                    }
+
+                     */
+
+                    $("#Fleet_Size").html(CustDetails.fleet_size);
+                }
+            });
+            $("#Step4").css('visibility', 'hidden');
+            visibility()
+        }
+
+        function visibility() {
+            for (let i = 1; i <=20 ; i++) {
+                $('.'+i+'c').css('visibility', 'hidden');
+            }
+
+            $('.A').css('visibility', 'hidden');
+            $('.B').css('visibility', 'hidden');
+            $('.C').css('visibility', 'hidden');
+            $('.D').css('visibility', 'hidden');
+            $('.E').css('visibility', 'hidden');
+
+        }
+
+        function tire_update(val) {
+
+            let id = val.split("right_tire")[1].split("_save")[0]
+
+            $("#centre_tire" + id + "_pressure").html($("#right_tire" + id + "_pressure").val());
+            $("#centre_tire" + id + "_depth").html($("#right_tire" + id + "_depth").val());
+            if ($('#surveyType').html() == "Forklift") {
+                $("#centre_tire" + id + "_brand").html($("#right_tire" + id + "_brand_freight").val());
+                $("#centre_tire" + id + "_model").html($("#right_tire" + id + "_model_freight").val());
+                $("#centre_tire" + id + "_size").html($("#right_tire" + id + "_size_freight").val());
+            }
+            else {
+                $("#centre_tire" + id + "_brand").html($("#right_tire" + id + "_brand").val());
+                $("#centre_tire" + id + "_model").html($("#right_tire" + id + "_model").val());
+                $("#centre_tire" + id + "_size").html($("#right_tire" + id + "_size").val());
+            }
+            $("#centre_tire" + id + "_wear").html($("#right_tire" + id + "_wear").val());
+
+            $("#centre_tire" + id + "_comments").html($("#right_tire" + id + "_comments").val());
+
+            $('.' + id).css("display", "none");
+            $('#'+id+'t').css("background-color", "#9ff09c");
+
+
+        }
+
+        function check_required_fields_tire(id) {
+
+            if ($('#surveyType').html() == "Forklift") {
+                if ($("#right_tire"+id+"_depth").val() && $("#right_tire"+id+"_brand_freight").val() && $("#right_tire"+id+"_size_freight").val()) {
+
+                    $("#right_tire"+id+"_save").css('visibility', 'visible');
+
+                }
+                else {
+                    $("#right_tire"+id+"_save").css('visibility', 'hidden');
+
+                }
+            }
+            else {
+                if ($("#right_tire"+id+"_pressure").val() && $("#right_tire"+id+"_depth").val() && $("#right_tire"+id+"_brand").val() && $("#right_tire"+id+"_model").val() && $("#right_tire"+id+"_size").val() && $("#right_tire"+id+"_wear").val()) {
+
+                    $("#right_tire"+id+"_save").css('visibility', 'visible');
+
+                }
+                else {
+                    $("#right_tire"+id+"_save").css('visibility', 'hidden');
+
+                }
+            }
+
+
+        }
+
+        function tire_cancel(id) {
+            $('.' + id).css("display", "none");
+            $('.' + id + 'c').css("opacity", "0.3");
+            $('#' + id + 't').css("border", "2px solid #cdcfd1");
+        }
+
+        $(document).ready(function () {
+            $('#clickThis').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+
+        function selectOnlyOneExceptRest() {
+
+            for (let i = 1; i <= 20; i++) {
+                $('#' + i + 'c').css("opacity", "0.3");
+                $('#' + i + 't').css("border", "2px solid #cdcfd1");
+                $('.' + i).css("display", "none");
+            }
+
+        }
+
+        function tireClickFunction(i){
+            $("#right_tire" + i + "_pressure").val($("#centre_tire" + i + "_pressure").html());
+            if ($("#centre_tire" + i + "_pressure").html() == 'n/a') {
+                $("#right_tire" + i + "_pressure_check").prop('checked', true);
+            }
+            else {
+                $("#right_tire" + i + "_pressure_check").prop('checked', false);
+            }
+            $("#right_tire" + i + "_depth").val($("#centre_tire" + i + "_depth").html());
+
+            if ($('#surveyType').html() == "Forklift") {
+                $("#right_tire" + i + "_brand_freight").val($("#centre_tire" + i + "_brand").html());
+                $("#right_tire" + i + "_model_freight").val($("#centre_tire" + i + "_model").html());
+                $("#right_tire" + i + "_size_freight").val($("#centre_tire" + i + "_size").html())
+            }
+            else {
+                $("#right_tire" + i + "_brand").val($("#centre_tire" + i + "_brand").html());
+                $("#right_tire" + i + "_model").val($("#centre_tire" + i + "_model").html());
+                $("#right_tire" + i + "_size").val($("#centre_tire" + i + "_size").html())
+            }
+
+            $("#right_tire" + i + "_wear").val($("#centre_tire" + i + "_wear").html())
+            $("#right_tire" + i + "_comments").val($("#centre_tire" + i + "_comments").html())
+            selectOnlyOneExceptRest();
+
+            $('#' + i + 'c').css("opacity", "1");
+            $('#' + i + 't').css("border", "2px solid black");
+            $('.' + i).fadeIn();
+        }
+
+        function jsFunction(value, psi1, psi2, psi3) {
+
+            visibility();
+
+            $("#Step4").css('visibility', 'Visible');
+
+            var Type = document.getElementById("surveyType").innerHTML;
+
+            //alert(Type);
+
+            $.ajax({
+                url: '@Url.Action("GetConfigurationDetails", "FleetTVT")',
+                data: { type: Type, config: value },
+                type: 'POST',
+                success: function (data) {
+                    var ConfigDetails = JSON.parse(data);
+
+                    var unit_num = $("#UnitsDropdown option:selected").text();
+
+                    $.ajax({
+			            url: '@Url.Action("GetLatestSurvey", "FleetTVT")',
+			            data: { unit: unit_num},
+			            type: 'POST',
+                        success: function (data) {
+                            var LatestSurveyDetails = JSON.parse(data);
+
+
+                            if (ConfigDetails.one_lo != 0) {
+                                var returnedData = $.grep(LatestSurveyDetails, function (element, index) {
+                                    return element.position == "1_lo";
+                                });
+                                $('#centre_tire1_brand').html(returnedData[0].brand);
+                                $('#centre_tire1_model').html(returnedData[0].model);
+                                $('#centre_tire1_size').html(returnedData[0].size);
+                            }
+
+                            if (ConfigDetails.one_li != 0) {
+                                var returnedData = $.grep(LatestSurveyDetails, function (element, index) {
+                                    return element.position == "1_li";
+                                });
+                                $('#centre_tire2_brand').html(returnedData[0].brand);
+                                $('#centre_tire2_model').html(returnedData[0].model);
+                                $('#centre_tire2_size').html(returnedData[0].size);
+                                //$('#right_tire2_brand').text(returnedData[0].brand);
+                            }
+
+                            if (ConfigDetails.one_ri != 0) {
+                                var returnedData = $.grep(LatestSurveyDetails, function (element, index) {
+                                    return element.position == "1_ri";
+                                });
+                                $('#centre_tire3_brand').html(returnedData[0].brand);
+                                $('#centre_tire3_model').html(returnedData[0].model);
+                                $('#centre_tire3_size').html(returnedData[0].size);
+                            }
+
+                            if (ConfigDetails.one_ro != 0) {
+                                var returnedData = $.grep(LatestSurveyDetails, function (element, index) {
+                                    return element.position == "1_ro";
+                                });
+                                $('#centre_tire4_brand').html(returnedData[0].brand);
+                                $('#centre_tire4_model').html(returnedData[0].model);
+                                $('#centre_tire4_size').html(returnedData[0].size);
+                            }
+
+                            if (ConfigDetails.two_lo != 0) {
+                                var returnedData = $.grep(LatestSurveyDetails, function (element, index) {
+                                    return element.position == "2_lo";
+                                });
+                                $('#centre_tire5_brand').html(returnedData[0].brand);
+                                $('#centre_tire5_model').html(returnedData[0].model);
+                                $('#centre_tire5_size').html(returnedData[0].size);
+                            }
+
+                            if (ConfigDetails.two_li != 0) {
+                                var returnedData = $.grep(LatestSurveyDetails, function (element, index) {
+                                    return element.position == "2_li";
+                                });
+                                $('#centre_tire6_brand').html(returnedData[0].brand);
+                                $('#centre_tire6_model').html(returnedData[0].model);
+                                $('#centre_tire6_size').html(returnedData[0].size);
+                            }
+
+                            if (ConfigDetails.two_ri != 0) {
+                                var returnedData = $.grep(LatestSurveyDetails, function (element, index) {
+                                    return element.position == "2_ri";
+                                });
+                                $('#centre_tire7_brand').html(returnedData[0].brand);
+                                $('#centre_tire7_model').html(returnedData[0].model);
+                                $('#centre_tire7_size').html(returnedData[0].size);
+                            }
+
+                            if (ConfigDetails.two_ro != 0) {
+                                var returnedData = $.grep(LatestSurveyDetails, function (element, index) {
+                                    return element.position == "2_ro";
+                                });
+                                $('#centre_tire8_brand').html(returnedData[0].brand);
+                                $('#centre_tire8_model').html(returnedData[0].model);
+                                $('#centre_tire8_size').html(returnedData[0].size);
+                            }
+
+                            if (ConfigDetails.three_lo != 0) {
+                                var returnedData = $.grep(LatestSurveyDetails, function (element, index) {
+                                    return element.position == "3_lo";
+                                });
+                                $('#centre_tire9_brand').html(returnedData[0].brand);
+                                $('#centre_tire9_model').html(returnedData[0].model);
+                                $('#centre_tire9_size').html(returnedData[0].size);
+                            }
+
+                            if (ConfigDetails.three_li != 0) {
+                                var returnedData = $.grep(LatestSurveyDetails, function (element, index) {
+                                    return element.position == "3_li";
+                                });
+                                $('#centre_tire10_brand').html(returnedData[0].brand);
+                                $('#centre_tire10_model').html(returnedData[0].model);
+                                $('#centre_tire10_size').html(returnedData[0].size);
+                            }
+
+                            if (ConfigDetails.three_ri != 0) {
+                                var returnedData = $.grep(LatestSurveyDetails, function (element, index) {
+                                    return element.position == "3_ri";
+                                });
+                                $('#centre_tire11_brand').html(returnedData[0].brand);
+                                $('#centre_tire11_model').html(returnedData[0].model);
+                                $('#centre_tire11_size').html(returnedData[0].size);
+                            }
+
+                            if (ConfigDetails.three_ro != 0) {
+                                var returnedData = $.grep(LatestSurveyDetails, function (element, index) {
+                                    return element.position == "3_ro";
+                                });
+                                $('#centre_tire12_brand').html(returnedData[0].brand);
+                                $('#centre_tire12_model').html(returnedData[0].model);
+                                $('#centre_tire12_size').html(returnedData[0].size);
+                            }
+
+                            if (ConfigDetails.four_lo != 0) {
+                                var returnedData = $.grep(LatestSurveyDetails, function (element, index) {
+                                    return element.position == "4_lo";
+                                });
+                                $('#centre_tire13_brand').html(returnedData[0].brand);
+                                $('#centre_tire13_model').html(returnedData[0].model);
+                                $('#centre_tire13_size').html(returnedData[0].size);
+                            }
+
+                            if (ConfigDetails.four_li != 0) {
+                                var returnedData = $.grep(LatestSurveyDetails, function (element, index) {
+                                    return element.position == "4_li";
+                                });
+                                $('#centre_tire14_brand').html(returnedData[0].brand);
+                                $('#centre_tire14_model').html(returnedData[0].model);
+                                $('#centre_tire14_size').html(returnedData[0].size);
+                            }
+
+                            if (ConfigDetails.four_ri != 0) {
+                                var returnedData = $.grep(LatestSurveyDetails, function (element, index) {
+                                    return element.position == "4_ri";
+                                });
+                                $('#centre_tire15_brand').html(returnedData[0].brand);
+                                $('#centre_tire15_model').html(returnedData[0].model);
+                                $('#centre_tire15_size').html(returnedData[0].size);
+                            }
+
+                            if (ConfigDetails.four_ro != 0) {
+                                var returnedData = $.grep(LatestSurveyDetails, function (element, index) {
+                                    return element.position == "4_ro";
+                                });
+                                $('#centre_tire16_brand').html(returnedData[0].brand);
+                                $('#centre_tire16_model').html(returnedData[0].model);
+                                $('#centre_tire16_size').html(returnedData[0].size);
+                            }
+
+                            if (ConfigDetails.five_lo != 0) {
+                                var returnedData = $.grep(LatestSurveyDetails, function (element, index) {
+                                    return element.position == "5_lo";
+                                });
+                                $('#centre_tire17_brand').html(returnedData[0].brand);
+                                $('#centre_tire17_model').html(returnedData[0].model);
+                                $('#centre_tire17_size').html(returnedData[0].size);
+                            }
+
+                            if (ConfigDetails.five_li != 0) {
+                                var returnedData = $.grep(LatestSurveyDetails, function (element, index) {
+                                    return element.position == "5_li";
+                                });
+                                $('#centre_tire18_brand').html(returnedData[0].brand);
+                                $('#centre_tire18_model').html(returnedData[0].model);
+                                $('#centre_tire18_size').html(returnedData[0].size);
+                            }
+
+                            if (ConfigDetails.five_ri != 0) {
+                                var returnedData = $.grep(LatestSurveyDetails, function (element, index) {
+                                    return element.position == "5_ri";
+                                });
+                                $('#centre_tire19_brand').html(returnedData[0].brand);
+                                $('#centre_tire19_model').html(returnedData[0].model);
+                                $('#centre_tire19_size').html(returnedData[0].size);
+                            }
+
+                            if (ConfigDetails.five_ro != 0) {
+                                var returnedData = $.grep(LatestSurveyDetails, function (element, index) {
+                                    return element.position == "5_ro";
+                                });
+                                $('#centre_tire20_brand').html(returnedData[0].brand);
+                                $('#centre_tire20_model').html(returnedData[0].model);
+                                $('#centre_tire20_size').html(returnedData[0].size);
+                            }
+
+
+
+			            }
+		            });
+
+                    deselectEverything();
+
+                    if (ConfigDetails.one_lo != 0) {
+                        $('.1c').css('visibility', 'visible');
+                        if (ConfigDetails.one_lo == 2) {
+                            $("#1c").attr("src", "/Content/driveTire.png");
+                            if (psi2 != null) {
+                                $('#PSIspan1').html(psi2)
+                            }
+                        }
+                        else if (ConfigDetails.one_lo == 1 || ConfigDetails.one_lo == 3) {
+                            $("#1c").attr("src", "/Content/steerTire.png");
+                            if (ConfigDetails.one_lo == 1 && psi1 != null) {
+                                $('#PSIspan1').html(psi1)
+                            }
+                            else if (ConfigDetails.one_lo == 3 && psi3 != null) {
+                                $('#PSIspan1').html(psi3)
+                            }
+                        }
+                    }
+
+                    if (ConfigDetails.one_li != 0) {
+                        $('.2c').css('visibility', 'visible');
+                        if (ConfigDetails.one_li == 2) {
+                            $("#2c").attr("src", "/Content/driveTire.png");
+                            if (psi2 != null) {
+                                $('#PSIspan2').html(psi2)
+                            }
+                        }
+                        else if (ConfigDetails.one_li == 1 || ConfigDetails.one_li == 3) {
+                            $("#2c").attr("src", "/Content/steerTire.png");
+                            if (ConfigDetails.one_li == 1 && psi1 != null) {
+                                $('#PSIspan2').html(psi1)
+                            }
+                            else if (ConfigDetails.one_li == 3 && psi3 != null) {
+                                $('#PSIspan2').html(psi3)
+                            }
+                        }
+                    }
+
+                    if (ConfigDetails.one_ri != 0) {
+                        $('.3c').css('visibility', 'visible');
+                        if (ConfigDetails.one_ri == 2) {
+                            $("#3c").attr("src", "/Content/driveTire.png");
+                            if (psi2 != null) {
+                                $('#PSIspan3').html(psi2)
+                            }
+                        }
+                        else if (ConfigDetails.one_ri == 1 || ConfigDetails.one_ri == 3) {
+                            $("#3c").attr("src", "/Content/steerTire.png");
+                            if (ConfigDetails.one_ri == 1 && psi1 != null) {
+                                $('#PSIspan3').html(psi1)
+                            }
+                            else if (ConfigDetails.one_ri == 3 && psi3 != null) {
+                                $('#PSIspan3').html(psi3)
+                            }
+                        }
+                    }
+
+                    if (ConfigDetails.one_ro != 0) {
+                        $('.4c').css('visibility', 'visible');
+                        if (ConfigDetails.one_ro == 2) {
+                            $("#4c").attr("src", "/Content/driveTire.png");
+                            if (psi2 != null) {
+                                $('#PSIspan4').html(psi2)
+                            }
+                        }
+                        else if (ConfigDetails.one_ro == 1 || ConfigDetails.one_ro == 3) {
+                            $("#4c").attr("src", "/Content/steerTire.png");
+                            if (ConfigDetails.one_ro == 1 && psi1 != null) {
+                                $('#PSIspan4').html(psi1)
+                            }
+                            else if (ConfigDetails.one_ro == 3 && psi3 != null) {
+                                $('#PSIspan4').html(psi3)
+                            }
+                        }
+                    }
+
+                    if (ConfigDetails.two_lo != 0) {
+                        $('.5c').css('visibility', 'visible');
+                        if (ConfigDetails.two_lo == 2) {
+                            $("#5c").attr("src", "/Content/driveTire.png");
+                            if (psi2 != null) {
+                                $('#PSIspan5').html(psi2)
+                            }
+                        }
+                        else if (ConfigDetails.two_lo == 1 || ConfigDetails.two_lo == 3) {
+                            $("#5c").attr("src", "/Content/steerTire.png");
+                            if (ConfigDetails.two_lo == 1 && psi1 != null) {
+                                $('#PSIspan5').html(psi1)
+                            }
+                            else if (ConfigDetails.two_lo == 3 && psi3 != null) {
+                                $('#PSIspan5').html(psi3)
+                            }
+                        }
+                    }
+
+                    if (ConfigDetails.two_li != 0) {
+                        $('.6c').css('visibility', 'visible');
+                        if (ConfigDetails.two_li == 2) {
+                            $("#6c").attr("src", "/Content/driveTire.png");
+                            if (psi2 != null) {
+                                $('#PSIspan6').html(psi2)
+                            }
+                        }
+                        else if (ConfigDetails.two_li == 1 || ConfigDetails.two_li == 3) {
+                            $("#6c").attr("src", "/Content/steerTire.png");
+                            if (ConfigDetails.two_li == 1 && psi1 != null) {
+                                $('#PSIspan6').html(psi1)
+                            }
+                            else if (ConfigDetails.two_li == 3 && psi3 != null) {
+                                $('#PSIspan6').html(psi3)
+                            }
+                        }
+                    }
+
+                    if (ConfigDetails.two_ri != 0) {
+                        $('.7c').css('visibility', 'visible');
+                        if (ConfigDetails.two_ri == 2) {
+                            $("#7c").attr("src", "/Content/driveTire.png");
+                            if (psi2 != null) {
+                                $('#PSIspan7').html(psi2)
+                            }
+                        }
+                        else if (ConfigDetails.two_ri == 1 || ConfigDetails.two_ri == 3) {
+                            $("#7c").attr("src", "/Content/steerTire.png");
+                            if (ConfigDetails.two_ri == 1 && psi1 != null) {
+                                $('#PSIspan7').html(psi1)
+                            }
+                            else if (ConfigDetails.two_ri == 3 && psi3 != null) {
+                                $('#PSIspan7').html(psi3)
+                            }
+                        }
+                    }
+
+                    if (ConfigDetails.two_ro != 0) {
+                        $('.8c').css('visibility', 'visible');
+                        if (ConfigDetails.two_ro == 2) {
+                            $("#8c").attr("src", "/Content/driveTire.png");
+                            if (psi2 != null) {
+                                $('#PSIspan8').html(psi2)
+                            }
+                        }
+                        else if (ConfigDetails.two_ro == 1 || ConfigDetails.two_ro == 3) {
+                            $("#8c").attr("src", "/Content/steerTire.png");
+                            if (ConfigDetails.two_ro == 1 && psi1 != null) {
+                                $('#PSIspan8').html(psi1)
+                            }
+                            else if (ConfigDetails.two_ro == 3 && psi3 != null) {
+                                $('#PSIspan8').html(psi3)
+                            }
+                        }
+                    }
+
+                    if (ConfigDetails.three_lo != 0) {
+                        $('.9c').css('visibility', 'visible');
+                        if (ConfigDetails.three_lo == 2) {
+                            $("#9c").attr("src", "/Content/driveTire.png");
+                            if (psi2 != null) {
+                                $('#PSIspan9').html(psi2)
+                            }
+
+                        }
+                        else if (ConfigDetails.three_lo == 1 || ConfigDetails.three_lo == 3) {
+                            $("#9c").attr("src", "/Content/steerTire.png");
+                            if (ConfigDetails.three_lo == 1 && psi1 != null) {
+                                $('#PSIspan9').html(psi1)
+                            }
+                            else if (ConfigDetails.three_lo == 3 && psi3 != null) {
+                                $('#PSIspan9').html(psi3)
+                            }
+                        }
+                    }
+
+                    if (ConfigDetails.three_li != 0) {
+                        $('.10c').css('visibility', 'visible');
+                        if (ConfigDetails.three_li == 2) {
+                            $("#10c").attr("src", "/Content/driveTire.png");
+                            if (psi2 != null) {
+                                $('#PSIspan10').html(psi2)
+                            }
+                        }
+                        else if (ConfigDetails.three_li == 1 || ConfigDetails.three_li == 3) {
+                            $("#10c").attr("src", "/Content/steerTire.png");
+                            if (ConfigDetails.three_li == 1 && psi1 != null) {
+                                $('#PSIspan10').html(psi1)
+                            }
+                            else if (ConfigDetails.three_li == 3 && psi3 != null) {
+                                $('#PSIspan10').html(psi3)
+                            }
+                        }
+                    }
+
+                    if (ConfigDetails.three_ri != 0) {
+                        $('.11c').css('visibility', 'visible');
+                        if (ConfigDetails.three_ri == 2) {
+                            $("#11c").attr("src", "/Content/driveTire.png");
+                            if (psi2 != null) {
+                                $('#PSIspan11').html(psi2)
+                            }
+                        }
+                        else if (ConfigDetails.three_ri == 1 || ConfigDetails.three_ri == 3) {
+                            $("#11c").attr("src", "/Content/steerTire.png");
+                            if (ConfigDetails.three_ri == 1 && psi1 != null) {
+                                $('#PSIspan11').html(psi1)
+                            }
+                            else if (ConfigDetails.three_ri == 3 && psi3 != null) {
+                                $('#PSIspan11').html(psi3)
+                            }
+                        }
+                    }
+
+                    if (ConfigDetails.three_ro != 0) {
+                        $('.12c').css('visibility', 'visible');
+                        if (ConfigDetails.three_ro == 2) {
+                            $("#12c").attr("src", "/Content/driveTire.png");
+                            if (psi2 != null) {
+                                $('#PSIspan12').html(psi2)
+                            }
+                        }
+                        else if (ConfigDetails.three_ro == 1 || ConfigDetails.three_ro == 3) {
+                            $("#12c").attr("src", "/Content/steerTire.png");
+                            if (ConfigDetails.three_ro == 1 && psi1 != null) {
+                                $('#PSIspan12').html(psi1)
+                            }
+                            else if (ConfigDetails.three_ro == 3 && psi3 != null) {
+                                $('#PSIspan12').html(psi3)
+                            }
+                        }
+                    }
+
+                    if (ConfigDetails.four_lo != 0) {
+                        $('.13c').css('visibility', 'visible');
+                        if (ConfigDetails.four_lo == 2) {
+                            $("#13c").attr("src", "/Content/driveTire.png");
+                            if (psi2 != null) {
+                                $('#PSIspan13').html(psi2)
+                            }
+                        }
+                        else if (ConfigDetails.four_lo == 1 || ConfigDetails.four_lo == 3) {
+                            $("#13c").attr("src", "/Content/steerTire.png");
+                            if (ConfigDetails.four_lo == 1 && psi1 != null) {
+                                $('#PSIspan13').html(psi1)
+                            }
+                            else if (ConfigDetails.four_lo == 3 && psi3 != null) {
+                                $('#PSIspan13').html(psi3)
+                            }
+                        }
+                    }
+
+                    if (ConfigDetails.four_li != 0) {
+                        $('.14c').css('visibility', 'visible');
+                        if (ConfigDetails.four_li == 2) {
+                            $("#14c").attr("src", "/Content/driveTire.png");
+                            if (psi2 != null) {
+                                $('#PSIspan14').html(psi2)
+                            }
+                        }
+                        else if (ConfigDetails.four_li == 1 || ConfigDetails.four_li == 3) {
+                            $("#14c").attr("src", "/Content/steerTire.png");
+                            if (ConfigDetails.four_li == 1 && psi1 != null) {
+                                $('#PSIspan14').html(psi1)
+                            }
+                            else if (ConfigDetails.four_li == 3 && psi3 != null) {
+                                $('#PSIspan14').html(psi3)
+                            }
+                        }
+                    }
+
+                    if (ConfigDetails.four_ri != 0) {
+                        $('.15c').css('visibility', 'visible');
+                        if (ConfigDetails.four_ri == 2) {
+                            $("#15c").attr("src", "/Content/driveTire.png");
+                            if (psi2 != null) {
+                                $('#PSIspan15').html(psi2)
+                            }
+                        }
+                        else if (ConfigDetails.four_ri == 1 || ConfigDetails.four_ri == 3) {
+                            $("#15c").attr("src", "/Content/steerTire.png");
+                            if (ConfigDetails.four_ri == 1 && psi1 != null) {
+                                $('#PSIspan15').html(psi1)
+                            }
+                            else if (ConfigDetails.four_ri == 3 && psi3 != null) {
+                                $('#PSIspan15').html(psi3)
+                            }
+                        }
+                    }
+
+                    if (ConfigDetails.four_ro != 0) {
+                        $('.16c').css('visibility', 'visible');
+                        if (ConfigDetails.four_ro == 2) {
+                            $("#16c").attr("src", "/Content/driveTire.png");
+                            if (psi2 != null) {
+                                $('#PSIspan16').html(psi2)
+                            }
+                        }
+                        else if (ConfigDetails.four_ro == 1 || ConfigDetails.four_ro == 3) {
+                            $("#16c").attr("src", "/Content/steerTire.png");
+                            if (ConfigDetails.four_ro == 1 && psi1 != null) {
+                                $('#PSIspan16').html(psi1)
+                            }
+                            else if (ConfigDetails.four_ro == 3 && psi3 != null) {
+                                $('#PSIspan16').html(psi3)
+                            }
+                        }
+                    }
+
+                    if (ConfigDetails.five_lo != 0) {
+                        $('.17c').css('visibility', 'visible');
+                        if (ConfigDetails.five_lo == 2) {
+                            $("#17c").attr("src", "/Content/driveTire.png");
+                            if (psi2 != null) {
+                                $('#PSIspan17').html(psi2)
+                            }
+                        }
+                        else if (ConfigDetails.five_lo == 1 || ConfigDetails.five_lo == 3) {
+                            $("#17c").attr("src", "/Content/steerTire.png");
+                            if (ConfigDetails.five_lo == 1 && psi1 != null) {
+                                $('#PSIspan17').html(psi1)
+                            }
+                            else if (ConfigDetails.five_lo == 3 && psi3 != null) {
+                                $('#PSIspan17').html(psi3)
+                            }
+                        }
+                    }
+
+                    if (ConfigDetails.five_li != 0) {
+                        $('.18c').css('visibility', 'visible');
+                        if (ConfigDetails.five_li == 2) {
+                            $("#18c").attr("src", "/Content/driveTire.png");
+                            if (psi2 != null) {
+                                $('#PSIspan18').html(psi2)
+                            }
+                        }
+                        else if (ConfigDetails.five_li == 1 || ConfigDetails.five_li == 3) {
+                            $("#18c").attr("src", "/Content/steerTire.png");
+                            if (ConfigDetails.five_li == 1 && psi1 != null) {
+                                $('#PSIspan18').html(psi1)
+                            }
+                            else if (ConfigDetails.five_li == 3 && psi3 != null) {
+                                $('#PSIspan18').html(psi3)
+                            }
+                        }
+                    }
+
+                    if (ConfigDetails.five_ri != 0) {
+                        $('.19c').css('visibility', 'visible');
+                        if (ConfigDetails.five_ri == 2) {
+                            $("#19c").attr("src", "/Content/driveTire.png");
+                            if (psi2 != null) {
+                                $('#PSIspan19').html(psi2)
+                            }
+                        }
+                        else if (ConfigDetails.five_ri == 1 || ConfigDetails.five_ri == 3) {
+                            $("#19c").attr("src", "/Content/steerTire.png");
+                            if (ConfigDetails.five_ri == 1 && psi1 != null) {
+                                $('#PSIspan19').html(psi1)
+                            }
+                            else if (ConfigDetails.five_ri == 3 && psi3 != null) {
+                                $('#PSIspan19').html(psi3)
+                            }
+                        }
+                    }
+
+                    if (ConfigDetails.five_ro != 0) {
+                        $('.20c').css('visibility', 'visible');
+                        if (ConfigDetails.five_ro == 2) {
+                            $("#20c").attr("src", "/Content/driveTire.png");
+                            if (psi2 != null) {
+                                $('#PSIspan20').html(psi2)
+                            }
+
+                        }
+                        else if (ConfigDetails.five_ro == 1 || ConfigDetails.five_ro == 3) {
+                            $("#20c").attr("src", "/Content/steerTire.png");
+                            if (ConfigDetails.five_ro == 1 && psi1 != null) {
+                                $('#PSIspan20').html(psi1)
+                            }
+                            else if (ConfigDetails.five_ro == 3 && psi3 != null) {
+                                $('#PSIspan20').html(psi3)
+                            }
+                        }
+                    }
+
+                }
+            });
+
+        }
+
+        $(".save").click(function () {
+
+            var Type = document.getElementById("surveyType").innerHTML;
+
+            var value = document.getElementById("configuration").innerHTML;
+
+            $.ajax({
+                url: '@Url.Action("GetConfigurationDetails", "FleetTVT")',
+                data: { type: Type, config: value },
+                type: 'POST',
+                success: function (data) {
+                    var ConfigDetails = JSON.parse(data);
+
+                    var actualCount = 0;
+                    var count = 0;
+
+                    if (ConfigDetails.one_lo != 0) {
+                        actualCount = actualCount + 1;
+                        if (document.getElementById("centre_tire1_depth").innerHTML != "") {
+                            count = count + 1;
+                        }
+                    }
+
+                    if (ConfigDetails.one_li != 0) {
+                        actualCount = actualCount + 1;
+                        if (document.getElementById("centre_tire2_depth").innerHTML != "") {
+                            count = count + 1;
+                        }
+                    }
+
+                    if (ConfigDetails.one_ri != 0) {
+                        actualCount = actualCount + 1;
+                        if (document.getElementById("centre_tire3_depth").innerHTML != "") {
+                            count = count + 1;
+                        }
+                    }
+
+                    if (ConfigDetails.one_ro != 0) {
+                        actualCount = actualCount + 1;
+                        if (document.getElementById("centre_tire4_depth").innerHTML != "") {
+                            count = count + 1;
+                        }
+                    }
+
+                    if (ConfigDetails.two_lo != 0) {
+                        actualCount = actualCount + 1;
+                        if (document.getElementById("centre_tire5_depth").innerHTML != "") {
+                            count = count + 1;
+                        }
+                    }
+
+                    if (ConfigDetails.two_li != 0) {
+                        actualCount = actualCount + 1;
+                        if (document.getElementById("centre_tire6_depth").innerHTML != "") {
+                            count = count + 1;
+                        }
+                    }
+
+                    if (ConfigDetails.two_ri != 0) {
+                        actualCount = actualCount + 1;
+                        if (document.getElementById("centre_tire7_depth").innerHTML != "") {
+                            count = count + 1;
+                        }
+                    }
+
+                    if (ConfigDetails.two_ro != 0) {
+                        actualCount = actualCount + 1;
+                        if (document.getElementById("centre_tire8_depth").innerHTML != "") {
+                            count = count + 1;
+                        }
+                    }
+
+                    if (ConfigDetails.three_lo != 0) {
+                        actualCount = actualCount + 1;
+                        if (document.getElementById("centre_tire9_depth").innerHTML != "") {
+                            count = count + 1;
+                        }
+                    }
+
+                    if (ConfigDetails.three_li != 0) {
+                        actualCount = actualCount + 1;
+                        if (document.getElementById("centre_tire10_depth").innerHTML != "") {
+                            count = count + 1;
+                        }
+                    }
+
+                    if (ConfigDetails.three_ri != 0) {
+                        actualCount = actualCount + 1;
+                        if (document.getElementById("centre_tire11_depth").innerHTML != "") {
+                            count = count + 1;
+                        }
+                    }
+
+                    if (ConfigDetails.three_ro != 0) {
+                        actualCount = actualCount + 1;
+                        if (document.getElementById("centre_tire12_depth").innerHTML != "") {
+                            count = count + 1;
+                        }
+                    }
+
+                    if (ConfigDetails.four_lo != 0) {
+                        actualCount = actualCount + 1;
+                        if (document.getElementById("centre_tire13_depth").innerHTML != "") {
+                            count = count + 1;
+                        }
+                    }
+
+                    if (ConfigDetails.four_li != 0) {
+                        actualCount = actualCount + 1;
+                        if (document.getElementById("centre_tire14_depth").innerHTML != "") {
+                            count = count + 1;
+                        }
+                    }
+
+                    if (ConfigDetails.four_ri != 0) {
+                        actualCount = actualCount + 1;
+                        if (document.getElementById("centre_tire15_depth").innerHTML != "") {
+                            count = count + 1;
+                        }
+                    }
+
+                    if (ConfigDetails.four_ro != 0) {
+                        actualCount = actualCount + 1;
+                        if (document.getElementById("centre_tire16_depth").innerHTML != "") {
+                            count = count + 1;
+                        }
+                    }
+
+                    if (ConfigDetails.five_lo != 0) {
+                        actualCount = actualCount + 1;
+                        if (document.getElementById("centre_tire17_depth").innerHTML != "") {
+                            count = count + 1;
+                        }
+                    }
+
+                    if (ConfigDetails.five_li != 0) {
+                        actualCount = actualCount + 1;
+                        if (document.getElementById("centre_tire18_depth").innerHTML != "") {
+                            count = count + 1;
+                        }
+                    }
+
+                    if (ConfigDetails.five_ri != 0) {
+                        actualCount = actualCount + 1;
+                        if (document.getElementById("centre_tire19_depth").innerHTML != "") {
+                            count = count + 1;
+                        }
+                    }
+
+
+                    if (ConfigDetails.five_ro != 0) {
+                        actualCount = actualCount + 1;
+                        if (document.getElementById("centre_tire20_depth").innerHTML != "") {
+                            count = count + 1;
+                        }
+                    }
+
+                    var percentage = (count / actualCount) * 100;
+
+                    var percentageStr = percentage.toString();
+
+                    percentageStr = percentageStr + '%'
+
+                    $('.tireProgress').css('width', percentageStr).text(percentageStr);
+
+                    if (percentage == 100) {
+
+                        if ($('.unitProgress').text() == "100%") {
+
+                            $('#submiSurvey').css('visibility', 'visible');
+
+                        }
+                        else {
+
+                            $('#submiSurvey').css('visibility', 'hidden');
+
+                        }
+
+                    }
+
+                }
+            });
+        });
+
+    </script>
+
+</body>
+</html>

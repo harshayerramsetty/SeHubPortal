@@ -1,0 +1,714 @@
+﻿@model SeHubPortal.ViewModel.StoryBoardViewModel
+@{
+    ViewBag.Title = "StoryBoard";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/NewOrder.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/NewOrder.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" rel="stylesheet" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.css" rel="stylesheet" media="print" />
+    <link href="~/Content/fullcalendar.css" rel="stylesheet" />
+
+
+    @if (Model.SehubAccess.plant > 0)
+    {
+        <style>
+            #PlantClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.tools > 0)
+    {
+        <style>
+            #toolsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.management > 0)
+    {
+        <style>
+            #ManagementClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.settings > 0)
+    {
+        <style>
+            #SettingsClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.payroll > 0)
+    {
+        <style>
+            #PayrollClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.fleetTVT > 0)
+    {
+        <style>
+            #FleetTVTClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.treadTracker > 0)
+    {
+        <style>
+            #treadTrackereClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+
+    @if (Model.SehubAccess.library_access > 0)
+    {
+        <style>
+            #libraryClicked {
+                display: block !important;
+            }
+        </style>
+    }
+
+    @if (Model.SehubAccess.mainCalendar > 0)
+    {
+        <style>
+            #MainCalendarLink {
+                display: block !important;
+            }
+        </style>
+    }
+
+    <style>
+
+        #MainDashboardLink {
+            display: block !important;
+        }
+
+        #mainClicked {
+            display: block !important;
+        }
+
+        #mainClicked {
+            background-color: #f0f2f5;
+            color: black;
+            font-weight: 600;
+        }
+
+        #mainButton {
+            color: black;
+            font-weight: bold;
+        }
+
+        #StoryBoardLink {
+            color: black;
+            font-weight: bold;
+            background-color: #f0f2f5;
+        }
+
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .heading {
+            margin: 10px 0px 0px 0px;
+        }
+
+            .heading h2 {
+                margin-top: 8px;
+            }
+
+        .card-header {
+            padding: 5px
+        }
+
+            .card-header h6 {
+                color: black;
+            }
+
+        body {
+            overflow-y: hidden !important;
+        }
+
+        .comment {
+          position: relative;
+          padding: 10px;
+          background-color: white;
+          border-radius: 5px;
+          margin-bottom: 10px;
+          box-shadow:0px 0px 14px 3px rgba(0,0,0,0.42)
+        }
+
+        .comment-tag {
+          position: absolute;
+          top: 10px;
+          left: -20px;
+          width: 0;
+          height: 0;
+          border-top: 12px solid transparent;
+          border-bottom: 12px solid transparent;
+          border-right: 20px solid white;
+        }
+
+        .example::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .example {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+
+        .employeeTag {
+            display: flex;
+            background-color: white;
+            border: 2px solid #949494;
+            border-radius: 10px;
+            margin: 0px 30px 0px 0px;
+            padding: 5px 10px 5px 5px;
+            box-shadow: 12px 5px 23px 4px rgba(0,0,0,0.26)
+        }
+
+        #reply{
+            padding-right:16vw
+        }
+
+        ::-webkit-file-upload-button {
+           display: none;
+        }
+
+        ::file-selector-button {
+          display: none;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div class="row heading">
+        <div class="col" style="margin:0px 5px 15px 15px; padding:10px; background-color:white">
+
+            <div style="display: flex; justify-content: space-between; align-items: center">
+                <div style="flex:3">
+                    <a href="@Url.Action("StoryBoard", "Main")">Main </a>/ Story Board
+                </div>
+
+                <button data-target="#add" onclick="$('div textarea').val(''); $('#AddBody').css('height', '100px'); $('#selectedFile').html(''); $('#addAttachment').val('')" data-toggle="modal" class="btn btn-success" style="font-weight:bold; padding:0px 20px">
+                    Add Post
+                </button>
+
+                <div style="flex:3; display:flex; justify-content:space-between; align-items:center">
+                    <div></div>
+                    <div style="display:flex; align-items:center">
+                        <label>Location</label>
+                        @using (Html.BeginForm("ChangeLocTimeClockEvent", "ManagementHarpoon", FormMethod.Post))
+                        {
+                            <div>
+                                @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, new { @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:6px;" })
+                                <noscript><input style="display:none" class="btn btn-success" type="submit" value="Search" /></noscript>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" id="clickThis" class="btn" style="margin-bottom:14px;">
+            <i class="fa fa-bars" style="font-size:25px"></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+
+    <div class="example" style="height: 80vh; overflow-y: auto; padding: 10px 0px">
+        @if (Model.Posts != null)
+        {
+            foreach (var post in Model.Posts.Where(x => !x.post_id.Contains('_')).ToList())
+            {
+                string replyClass = post.post_id + "_";
+                string replyClassHide = post.post_id + "_hide";
+                string replySubject = post.post_id + "_sub";
+                string replybtn = post.post_id + "_reply";
+
+                <div class="row" style="padding:0px 15px">
+                    <div class="col-md-12" style="display:flex">
+                        @{
+                            string source_pst = "";
+
+                            if (post.auther_img != null && post.auther_img != "")
+                            {
+                                source_pst = "data:image/png;base64," + post.auther_img;
+                            }
+                        }
+
+                        <div style="flex:2.7">
+                            <div class="employeeTag">
+                                @if (source_pst == "")
+                                {
+                                    <img src="~/Content/profilepic.jpg" alt="Alternate Text" style="border-radius:50%; width:2.5vw; margin-right:10px" />
+                                }
+                                else
+                                {
+                                    <img src="@source_pst" alt="Alternate Text" style="border-radius: 50%; width: 2.5vw; margin-right: 10px" />
+                                }
+                                <div style="display: flex; flex-direction: column; justify-content: center; color: dimgray">
+                                    <span style="font-size: 0.6vw; font-weight: bold ">
+                                        @post.auther
+                                    </span>
+                                    <span style="font-size:0.6vw; font-weight:bold">
+                                        @post.auther_position
+                                    </span>
+                                    <span style="font-size:0.6vw; font-weight:bold">
+                                        @post.loc_id
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comment" style="flex:13.5; margin-bottom:0px">
+                            <div class="comment-tag"></div>
+                            <div class="comment-body" style="display:flex; align-items:center; flex-direction:column">
+                                <div style="display:flex; width:100%; font-weight:bold; font-size:0.5vw; justify-content:flex-end; margin-bottom:10px">
+                                    @post.date.ToString("dddd MMM dd yyyy hh:mm tt")
+                                </div>
+                                <div style="display:flex; margin-bottom:5px; width:100%; color: dimgray; font-size:0.6vw; font-weight:bold; border-radius:5px">
+                                    <div style="margin-right:5px; background-color:white; padding:3px 10px; border-radius:5px; border:1px solid dimgray">
+                                        @post.catgory
+                                    </div>
+                                    <div style="width:100%; background-color:#dcf1fa; padding:3px 10px; border-radius:5px; " id="@replySubject">
+                                        @post.subject
+                                    </div>
+                                </div>
+                                <div style="width:100%; background-color:#f5f5f5; color: dimgray; font-size:0.6vw; font-weight:bold; padding:3px 10px; border-radius:5px">
+                                    @Html.Raw(post.details.Replace(Environment.NewLine, "<br />"))
+                                </div>
+                                <div style="width:100%; display:flex; justify-content:space-between; margin-top:0.3vw">
+                                    <div></div>
+                                    <div style="display:flex; justify-content:space-between; align-items:center">
+                                        @{
+                                            foreach (var attachment in post.attachments)
+                                            {
+                                                <div onclick="PopulateAttachment(this.id)" style="cursor:pointer; font-weight:bold; font-size:0.6vw; margin:0px 3px; border:1px solid darkgray; padding:0px 10px; background-color:#f5f5f5; border-radius:10px" id=@attachment.Value>
+                                                    @attachment.Key
+                                                </div>
+                                            }
+                                        }
+
+                                        <img src="https://cdn-icons-png.flaticon.com/512/237/237510.png" style="cursor:pointer; width: 15px; height:15px" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row @replyClassHide commonContributors">
+                    <div class="col-md-12" style="display:flex; padding:0px">
+                        <div style="flex:2.7"></div>
+                        <div style="flex:13.5;font-weight:bold; font-size:0.5vw; margin-top:10px; padding-left:20px; padding-bottom:5px; display:flex; justify-content:space-between">
+                            <div style="display:flex; flex:4">
+                                <span style="margin-right:20px">Contributors (@Model.Posts.Where(x => x.post_id.StartsWith(replyClass)).Count())</span>
+
+                                @if (Model.Posts.Where(x => x.post_id.StartsWith(replyClass)).Count() > 6)
+                                {
+                                    for (int i = 0; i < 7; i++)
+                                    {
+                                        <div style="display: flex; flex-direction:column; margin-right:10px; justify-content:space-between">
+                                            @{
+                                                string source_cntr = "";
+
+                                                if (Model.Posts.Where(x => x.post_id.StartsWith(replyClass)).ToList()[i].auther_img != null && Model.Posts.Where(x => x.post_id.StartsWith(replyClass)).ToList()[i].auther_img != "")
+                                                {
+                                                    source_cntr = "data:image/png;base64," + Model.Posts.Where(x => x.post_id.StartsWith(replyClass)).ToList()[i].auther_img;
+                                                }
+                                            }
+                                            @if (source_cntr == "")
+                                            {
+                                                <img src="~/Content/profilepic.jpg" alt="Alternate Text" style="border-radius:50%; width:1.5vw; margin-right:10px; border:1px solid #cacbcc" />
+
+                                            }
+                                            else
+                                            {
+                                                <img src="@source_cntr" alt="Alternate Text" style="border-radius:50%; width:1.5vw; margin-right:10px; border:1px solid #cacbcc" />
+                                            }
+                                            <span style="font-weight:bold; font-size:0.5vw">
+                                                @Model.Posts.Where(x => x.post_id.StartsWith(replyClass)).ToList()[i].auther_shrtName
+                                            </span>
+                                        </div>
+                                    }
+                                    <span style="font-size:1vw; font-weight:bold">...Other</span>
+                                }
+                                else
+                                {
+                                    foreach (var comment in Model.Posts.Where(x => x.post_id.StartsWith(replyClass)))
+                                    {
+                                        <div style="display: flex; flex-direction:column; margin-right:10px; justify-content:space-between">
+                                            @{
+                                                string source_cntr = "";
+
+                                                if (comment.auther_img != null && comment.auther_img != "")
+                                                {
+                                                    source_cntr = "data:image/png;base64," + comment.auther_img;
+                                                }
+                                            }
+                                            @if (source_cntr == "")
+                                            {
+                                                <img src="~/Content/profilepic.jpg" alt="Alternate Text" style="border-radius:50%; width:1.5vw; margin-right:10px; border:1px solid #cacbcc" />
+
+                                            }
+                                            else
+                                            {
+                                                <img src="@source_cntr" alt="Alternate Text" style="border-radius:50%; width:1.5vw; margin-right:10px; border:1px solid #cacbcc" />
+                                            }
+                                            <span style="font-weight:bold; font-size:0.5vw">
+                                                @comment.auther_shrtName
+                                            </span>
+                                        </div>
+
+                                    }
+                                }
+
+
+
+                            </div>
+                            <div style="flex:2; display:flex; justify-content:center">
+                                @if (Model.Posts.Where(x => x.post_id.StartsWith(replyClass)).Count() != 0)
+                                {
+                                    <div class="commonReplyClass" style="cursor:pointer" id="@replyClass"
+                                         onclick="$('.commonComments').css('display', 'none');
+                                                $('.commonReplyClass').css('display', 'block');
+                                                $('.commonReplyClassHide').css('display', 'none');
+                                                $('.commonContributors').css('display', 'block');
+                                                let clsnam = this.id; $('.' + clsnam).fadeIn();
+                                                $(this).css('display', 'none');
+                                                $('#' + clsnam + 'hide').css('display', 'block');
+                                                $('.' + clsnam + 'hide').css('display', 'none');">
+                                        <div style="display:flex; justify-content:space-between; align-items:center">
+                                            <img class="exp1" src="https://ctasehub.blob.core.windows.net/sehub-content/exp1.png" style="display:none; width:1vw; object-fit:contain" alt="Alternate Text" />
+                                            <img class="exp2" src="https://ctasehub.blob.core.windows.net/sehub-content/exp2.png" style="width:1vw; object-fit:contain" alt="Alternate Text" />
+                                            <img class="exp3" src="https://ctasehub.blob.core.windows.net/sehub-content/exp3.png" style="display:none; width:1vw; object-fit:contain" alt="Alternate Text" />
+                                            <span style="margin:0px 5px; font-size:0.7vw; font-weight:bold; color:#7e7f80">Expand</span>
+                                            <img class="exp1" src="https://ctasehub.blob.core.windows.net/sehub-content/exp1.png" style="display:none; width:1vw; object-fit:contain" alt="Alternate Text" />
+                                            <img class="exp2" src="https://ctasehub.blob.core.windows.net/sehub-content/exp2.png" style="width:1vw; object-fit:contain" alt="Alternate Text" />
+                                            <img class="exp3" src="https://ctasehub.blob.core.windows.net/sehub-content/exp3.png" style="display:none; width:1vw; object-fit:contain" alt="Alternate Text" />
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div style="flex:4"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row @replyClass commonComments" style="display:none; margin-top:10px">
+                    <div class="col-md-12" style="display:flex">
+                        <div style="flex:2.7"></div>
+                        <div style="flex:13.5">
+                            @foreach (var comment in Model.Posts.Where(x => x.post_id.StartsWith(replyClass)))
+                            {
+                                <div class="row" style="padding:0px 15px 0px 8px">
+                                    <div class="col-md-12" style="display:flex">
+
+                                        @{
+                                            string source = "";
+
+                                            if (comment.auther_img != null && comment.auther_img != "")
+                                            {
+                                                source = "data:image/png;base64," + comment.auther_img;
+                                            }
+                                        }
+
+                                        <div style="flex:2.7">
+                                            <div class="employeeTag">
+                                                @if (source == "")
+                                                {
+                                                    <img src="~/Content/profilepic.jpg" alt="Alternate Text" style="border-radius:50%; width:2.5vw; margin-right:10px" />
+                                                }
+                                                else
+                                                {
+                                                    <img src="@source" alt="Alternate Text" style="border-radius:50%; width:2.5vw; margin-right:10px" />
+                                                }
+
+                                                <div style="display:flex; flex-direction:column; justify-content:center; color:dimgray">
+                                                    <span style="font-size:0.6vw; font-weight:bold">
+                                                        @comment.auther
+                                                    </span>
+                                                    <span style="font-size:0.6vw; font-weight:bold">
+                                                        @comment.auther_position
+                                                    </span>
+                                                    <span style="font-size:0.6vw; font-weight:bold">
+                                                        @comment.loc_id
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="comment" style="flex:11.5">
+                                            <div class="comment-tag"></div>
+                                            <div class="comment-body" style="display:flex; align-items:center; flex-direction:column">
+                                                <div style="display:flex; width:100%; font-weight:bold; font-size:0.5vw; justify-content:flex-end; margin-bottom:10px">
+                                                    @comment.date.ToString("dddd MMM dd yyyy hh:mm tt")
+                                                </div>
+                                                <div style="width: 100%; background-color: #f5f5f5; color: dimgray; font-size: 0.6vw; font-weight: bold;padding: 3px 10px;border-radius: 5px">
+                                                    @Html.Raw(comment.details.Replace(Environment.NewLine, "<br />"))
+                                                </div>
+                                                <div style="width:100%; display:flex; justify-content:space-between; margin-top:0.3vw">
+                                                    <div></div>
+                                                    <div style="display:flex; justify-content:space-between; align-items:center">
+                                                        @{
+                                                            foreach (var attachment_comment in comment.attachments)
+                                                            {
+                                                                <div onclick="PopulateAttachment(this.id)" style="cursor:pointer; font-weight:bold; font-size:0.6vw; margin:0px 3px; border:1px solid darkgray; padding:0px 10px; background-color:#f5f5f5; border-radius:10px" id=@attachment_comment.Value>
+                                                                    @attachment_comment.Key
+                                                                </div>
+                                                            }
+                                                        }
+
+                                                        <img src="https://cdn-icons-png.flaticon.com/512/237/237510.png" style="cursor:pointer; width: 15px; height:15px" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="padding:0px 15px; margin-bottom:40px">
+                    <div class="col-md-12" style="display:flex">
+                        <div style="flex:2.7"></div>
+                        <div style="flex:13.5; display:flex; justify-content:space-between">
+                            <div></div>
+                            <div class="commonReplyClassHide" style="cursor:pointer; display:none" id="@replyClassHide"
+                                 onclick="let clsnam = this.id.split('hide')[0];
+                                                $('.' + clsnam).css('display', 'none');
+                                                $(this).css('display', 'none');
+                                                $('#' + clsnam).css('display', 'block');
+                                                $('.' + this.id).fadeIn()">
+                                <div style="display:flex; justify-content:space-between; align-items:center">
+                                    <img class="exp1" src="https://ctasehub.blob.core.windows.net/sehub-content/exp1.png" style="transform:rotate(180deg); display:none; width:1vw; object-fit:contain" alt="Alternate Text" />
+                                    <img class="exp2" src="https://ctasehub.blob.core.windows.net/sehub-content/exp2.png" style="transform:rotate(180deg); width:1vw; object-fit:contain" alt="Alternate Text" />
+                                    <img class="exp3" src="https://ctasehub.blob.core.windows.net/sehub-content/exp3.png" style="transform:rotate(180deg); display:none; width:1vw; object-fit:contain" alt="Alternate Text" />
+                                    <span style="margin:0px 5px; font-size:0.7vw; font-weight:bold; color:#7e7f80">Collapse</span>
+                                    <img class="exp1" src="https://ctasehub.blob.core.windows.net/sehub-content/exp1.png" style="transform:rotate(180deg); display:none; width:1vw; object-fit:contain" alt="Alternate Text" />
+                                    <img class="exp2" src="https://ctasehub.blob.core.windows.net/sehub-content/exp2.png" style="transform:rotate(180deg); width:1vw; object-fit:contain" alt="Alternate Text" />
+                                    <img class="exp3" src="https://ctasehub.blob.core.windows.net/sehub-content/exp3.png" style="transform:rotate(180deg); display:none; width:1vw; object-fit:contain" alt="Alternate Text" />
+                                </div>
+
+                            </div>
+                            @if (Model.Posts.Where(x => x.post_id.StartsWith(replyClass)).Count() > 0)
+                            {
+                                <div>
+                                    <button data-target="#reply" data-toggle="modal" id="@replybtn" onclick="populateReplyModal(this.id.split('_reply')[0])" class="btn btn-success @replyClass commonComments" style="display:none; font-weight: bold; padding: 0px 20px">Reply</button>
+                                    @*<img data-target="#reply" data-toggle="modal" id="@replybtn" onclick="populateReplyModal(this.id.split('_reply')[0])" src="https://ctasehub.blob.core.windows.net/sehub-content/reply.png" style="cursor:pointer; background-color:white; border-radius:4px; width:1.5vw; height:1.5vw" alt="Alternate Text" />*@
+                                </div>
+                            }
+                            else
+                            {
+                                <div>
+                                    <button data-target="#reply" data-toggle="modal" id="@replybtn" onclick="populateReplyModal(this.id.split('_reply')[0])" class="btn btn-success" style="font-weight: bold; padding: 0px 20px">Reply</button>
+                                    @*<img data-target="#reply" data-toggle="modal" id="@replybtn" onclick="populateReplyModal(this.id.split('_reply')[0])" src="https://ctasehub.blob.core.windows.net/sehub-content/reply.png" style="cursor:pointer; background-color:white; border-radius:4px; width:1.5vw; height:1.5vw" alt="Alternate Text" />*@
+                                </div>
+                            }
+
+
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+    </div>
+
+    <div class="modal fade" id="reply" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document" id="replyModalBody">
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            @using (Html.BeginForm("AddPost", "Main", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="modal-content" style="width:600px">
+                    <div class="modal-header" style="padding:3px 15px">
+                        <h5 class="modal-title">Add Post</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" style="padding:0px">
+                            <div class="col-md-12" style="display:flex">
+
+                                @{
+                                    string source_add = "";
+
+                                    if (Model.AddEmpImage != null && Model.AddEmpImage != "")
+                                    {
+                                        source_add = "data:image/png;base64," + Model.AddEmpImage;
+                                    }
+                                }
+
+                                <div style="flex:4">
+                                    <div class="employeeTag">
+                                        @if (source_add == "")
+                                        {
+                                            <img src="~/Content/profilepic.jpg" alt="Alternate Text" style="border-radius:50%; width:2.5vw; margin-right:10px" />
+
+                                        }
+                                        else
+                                        {
+                                            <img src="@source_add" alt="Alternate Text" style="border-radius:50%; width:2.5vw; margin-right:10px" />
+                                        }
+
+                                        <div style="display:flex; flex-direction:column; justify-content:center; color:dimgray">
+                                            <span style="font-size:0.4vw; font-weight:bold">
+                                                @Model.AddEmpName
+                                            </span>
+                                            <span style="font-size:0.4vw; font-weight:bold">
+                                                @Model.AddPosition
+                                            </span>
+                                            <span style="font-size:0.4vw; font-weight:bold">
+                                                @Model.AddLoc
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="comment" style="flex:8">
+                                    <div class="comment-tag"></div>
+                                    <div class="comment-body" style="display:flex; align-items:center; flex-direction:column">
+                                        <div style="display:flex; justify-content:flex-start; width:100%; font-size:12px; font-weight:bold; margin-bottom:10px; align-items:center">
+                                            <label style="margin-right:5px">Category</label>
+                                            @Html.DropDownListFor(m => m.AddCategory, Model.Categories, new { @type = "text", @style = "text-align-last: center;width:100%;height:23px;font-size:12px;" })
+                                        </div>
+                                        @Html.TextAreaFor(model => model.AddSubject, new { @placeholder = "Subject", @class = "example", @required = "required", @style = "padding-left:10px; margin-bottom:10px; width:100%; height:30px", oninput = "if(this.value == ''){this.style.height = '30px'}else{this.style.height = (this.scrollHeight) + 'px';}" })
+                                        @Html.TextAreaFor(model => model.AddDetails, new { @id = "AddBody", @class = "example", @required = "required", @style = "max-height:400px; overflow-y:auto; padding-left:10px; padding-right:10px; width:100%; height:100px", oninput = "if(this.value == ''){this.style.height = '100px'}else{ if(this.scrollHeight > 100){ this.style.height = (this.scrollHeight) + 'px';}}" })
+                                        <div style="display:flex; width:100%; font-size:12px; font-weight:bold; margin-top:10px;">
+                                            <div>
+                                                <img src="https://cdn-icons-png.flaticon.com/512/237/237510.png" onclick="$('#addAttachment').click()" style="cursor:pointer; width:15px" alt="Alternate Text" />
+                                                <input multiple style="display:none" type="file" id="addAttachment" name="addAttachment" value="" />
+                                            </div>
+                                            <div id="selectedFile" style="margin-left:10px">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="padding:3px 10px">
+                        <button type="button" data-dismiss="modal" class="btn btn-danger" style="padding:0px 10px">Cancel</button>
+                        <button type="submit" class="btn btn-success" style="padding:0px 20px">Post</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="attachmentView" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body" style="padding:0px">
+                    <div>
+                        <iframe class="example" id="modal_content" src="" style="width:100%;height:880px;"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+
+        function PopulateAttachment(val) {
+            $('#modal_content').attr('src', val);
+            $('#attachmentView').modal()
+        }
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#addAttachment').on('change', function (event) {
+                let selectedFiles = event.target.files;
+                for (let i = 0; i < selectedFiles.length; i++) {
+                    $('#selectedFile').html(selectedFiles[i].name + "<br/>" + $('#selectedFile').html());
+                }
+            });
+        });
+    </script>
+
+    <script>
+        function populateReplyModal(id) {
+            $.ajax({
+                url: '@Url.Action("ReplyToPost", "Main")',
+                data: { parent_id: id },
+                type: 'GET',
+                async: false,
+                success: function (data) {
+                    $("#replyModalBody").html(data);
+                }
+            });
+        }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            toggle()
+        });
+
+        function toggle() {
+            var count = 1;
+
+            setInterval(function () {
+                if (count == 1) {
+                    $('.exp1').css('display', 'block');
+                    $('.exp2').css('display', 'none');
+                    $('.exp3').css('display', 'none');
+                    count++
+                } else if (count == 2) {
+                    $('.exp1').css('display', 'none');
+                    $('.exp2').css('display', 'block');
+                    $('.exp3').css('display', 'none');
+                    count++
+                }
+                else {
+                    $('.exp1').css('display', 'none');
+                    $('.exp2').css('display', 'none');
+                    $('.exp3').css('display', 'block');
+                    count = 1
+                }
+
+            }, 300);
+        }
+
+    </script>
+
+    
+</body> 
+
+</html>
+

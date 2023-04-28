@@ -471,7 +471,7 @@
                                                         <input class="barcode" type="text" id="barcode1" onfocusout="validateBarcode(this.value, '#barcode1')" name="barcode1" maxlength="8" onkeypress="return onlyNumberKey(event)">
                                                     </td>
                                                     <td style="padding:5px 0px; vertical-align:middle">
-                                                        <input class="serialDot" type="text" id="serial1" name="serial1" maxlength="9" style="text-transform:uppercase" onfocusout="line1SerialOut(this.value, this.id)">
+                                                        <input class="serialDot" type="text" id="serial1" name="serial1" maxlength="8" style="text-transform:uppercase" onfocusout="line1SerialOut(this.value, this.id)">
                                                     </td>
                                                     <td style="padding:5px 0px; vertical-align:middle">
                                                         <div id="casing1Div"></div>
@@ -963,6 +963,11 @@
     <script>
         $(".serialDot").focusout(function () {
 
+            if ($(this).val().length < 8 || !Number.isInteger(parseInt($(this).val().substr(4, 4)))) {
+                $(this).focus();
+                return
+            }
+
             $('#lodWheel').css('display', 'block')
             $('#contentTable').css('opacity', '0.1')
 
@@ -979,9 +984,7 @@
              Below code is for checking if the serial dot is older than 7 years and changing the line code and other features.
              */
 
-            /*
-             
-             if (parseInt(year.substr(year.length - 2)) - parseInt($(this).val().substr($(this).val().length - 2)) >= 7) {
+            if (parseInt(year.substr(year.length - 2)) - parseInt($(this).val().substr($(this).val().length - 2)) >= 7) {
                 $('#' + lineNum).val(6);
 
                 let element = document.getElementById(lineNumTread);
@@ -994,9 +997,9 @@
 
                 $('#' + lineNumTread).prop('disabled', true);
             }
-             
-             */
-
+            else {
+                $('#' + lineNumTread).prop('disabled', false);
+            }
 
             $.ajax({
                 url: '@Url.Action("getDropdownOptions", "Tools")',

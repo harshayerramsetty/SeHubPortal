@@ -147,6 +147,12 @@
             display: none;
         }
 
+        .Forklift {
+            display: none;
+        }
+
+
+
         #FleetTVTDashboardClicked {
             background-color: #f0f2f5;
             color: black;
@@ -257,6 +263,12 @@
                                     Text = "Trailer",
                                     Value = "Trailer"
                                 });
+
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "Forklift",
+                                    Value = "Forklift"
+                                });
                             }
                             @Html.DropDownListFor(m => m.Type, listItems, new { @id = "Type", @class = "text-center", @style = "text-align-last: center; width:110px; height:30px; margin-left:0px", @required = "required", @onchange = "jsFunction(this.value);" })
 
@@ -265,8 +277,24 @@
                     <div class="row" style="padding:0px 10px 0px 10px; margin-top:10px">
                         <div class="col-md-12" style="display:flex; justify-content:space-between">
                             <label>Configuration </label>
-                            @Html.DropDownListFor(m => m.Configuration, Model.ConfigurationsListTractor, new { @id = "Tractor_config", @class = "text Tractor", @style = "text-align-last: center; width:110px; height:30px", @required = "required", @onchange = "jsFunction(this.value);" })
-                            @Html.DropDownListFor(m => m.Configuration, Model.ConfigurationsListTrailer, new { @id = "Trailer_config", @class = "text Trailer", @style = "text-align-last: center; width:110px; height:30px", @required = "required", @onchange = "jsFunction(this.value);" })
+                            @Html.DropDownListFor(m => m.Configuration, Model.ConfigurationsListTractor, new { @id = "Tractor_config", @class = "text commonClass Tractor", @style = "text-align-last: center; width:110px; height:30px", @required = "required", @onchange = "jsFunction(this.value);" })
+                            @Html.DropDownListFor(m => m.Configuration, Model.ConfigurationsListTrailer, new { @id = "Trailer_config", @class = "text commonClass Trailer", @style = "text-align-last: center; width:110px; height:30px", @required = "required", @onchange = "jsFunction(this.value);" })
+
+                            @{
+                                List
+                                <SelectListItem>
+                                listItems1 = new List
+                                <SelectListItem>
+                                ();
+
+                                listItems1.Add(new SelectListItem
+                                {
+                                    Text = "2A/4T",
+                                    Value = "2A/4T"
+                                });
+                            }
+
+                            @Html.DropDownListFor(m => m.Configuration, listItems1, new { @id = "Forklift_config", @class = "text commonClass Forklift", @style = "text-align-last: center; width:110px; height:30px", @required = "required", @onchange = "jsFunction(this.value);" })
                         </div>
                     </div>
 
@@ -632,12 +660,16 @@
             var Type = document.getElementById("Type").value;
 
             if (Type == "Tractor") {
-                $('#Trailer_config').css("display", "none");
+                $('.commonClass').css("display", "none");
                 $('#Tractor_config').css("display", "block");
             }
-            if (Type == "Trailer") {
-                $('#Tractor_config').css("display", "none");
+            else if (Type == "Trailer") {
+                $('.commonClass').css("display", "none");
                 $('#Trailer_config').css("display", "block");
+            }
+            else if (Type == "Forklift") {
+                $('.commonClass').css("display", "none");
+                $('#Forklift_config').css("display", "block");
             }
         });
 

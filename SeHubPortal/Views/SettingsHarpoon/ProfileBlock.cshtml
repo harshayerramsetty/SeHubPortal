@@ -5,25 +5,23 @@
         <title></title>
     </head>
     <body>
-        <div class="row" style="padding:0px; width:12vw; ">
+        <div style="display:flex; align-items:center">
+            <div style="margin-right:0.6vw">
+                @{
+                    string base64ProfilePic = "";
 
-            @{
-                string base64ProfilePic = "";
-
-                if(Model.client != null)
-                {
-                    if (Model.client.client_logo is null)
+                    if (Model.client != null)
                     {
-                        base64ProfilePic = "";
-                    }
-                    else
-                    {
-                        base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(Model.client.client_logo);
+                        if (Model.client.client_logo is null)
+                        {
+                            base64ProfilePic = "";
+                        }
+                        else
+                        {
+                            base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(Model.client.client_logo);
+                        }
                     }
                 }
-            }
-
-            <div class="col-lg-3" style="padding:0px">
 
                 @if (base64ProfilePic == "")
                 {
@@ -34,35 +32,36 @@
                     <img class="imageClass" data-toggle="modal" data-target="#upload" style="margin:0px; border-radius:50%; width:3vw; height:3vw" alt="profilePic" src="@base64ProfilePic" />
                 }
 
-
             </div>
-            <div class="col-lg-9 text-left" style="display:flex; align-items:center; padding:0px 0px 0px 10px">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <p style="margin:0px; font-size:0.7vw"><span><b>@Model.user.profile</b></span></p>
-                        <p style="margin:0px; font-size:0.7vw">
-                            @if (@Model.user.email.Length <= 29)
-                            {
-                                @Model.user.email
-                            }
-                            else
-                            {
-                                @Model.user.email.Substring(0, 29)
-                            }
-                        </p>
-                        <p style="margin:0px; font-size:0.8vw">
-                            <b>
-                                @if (Model.client != null)
-                                {
-                                    @Model.client.client_name
-                                }
-                            </b>
-                        </p>
-                    </div>
-                </div>
+            <div style="display:flex; flex-direction:column; margin-right:0.6vw">
+                <span style="margin:0px; font-size:0.7vw"><b>@Model.user.profile</b></span>
+                <span style="margin:0px; font-size:0.7vw">
+                    @if (@Model.user.email.Length <= 29)
+                    {
+                        @Model.user.email
+                    }
+                    else
+                    {
+                        @Model.user.email.Substring(0, 29)
+                    }
+                </span>
+                <span style="margin:0px; font-size:0.8vw">
+                    <b>
+                        @if (Model.client != null)
+                        {
+                            @Model.client.client_name
+                        }
+                    </b>
+                </span>
             </div>
-
-
+            <div style="display:flex; flex-direction:column">
+                <a style="padding:0; margin:0" href="@Url.Action("HarpoonLogin", "Login")" class="btn">
+                    <img style="width: 1.4vw" src="~/Content/power.png" />
+                </a>
+                <a style="padding:0; margin:0" data-toggle="modal" data-target="#ResetProfilePassword" class="btn">
+                    <img style="width: 1.4vw" src="~/Content/profile.png" />
+                </a>
+            </div>
         </div>
         <input id="base64string" type="text" style="display:none" name="name" value="@base64ProfilePic" />
         <script>

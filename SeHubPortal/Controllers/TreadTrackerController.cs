@@ -235,7 +235,7 @@ namespace SeHubPortal.Controllers
 
             DateTime initialDate = new DateTime(2022, 01, 01);
 
-            var workorders = db.tbl_treadtracker_barcode.Where(x => (x.line_code == 1 || x.line_code == 5 || x.line_code == 10 || x.line_code == 11) && (x.preliminary_inspection_result == "GOOD" && (x.ndt_machine_result == "GOOD" || x.ndt_machine_result == null) && (x.buffer_builder_result == "GOOD" || x.buffer_builder_result == null) && x.final_inspection_result == null && x.preliminary_inspection_date > initialDate)).Select(x => x.retread_workorder).Distinct().ToList();
+            var workorders = db.tbl_treadtracker_barcode.Where(x => (x.line_code == 1 || x.line_code == 5 || x.line_code == 10 || x.line_code == 11) && (x.TT050_result == "GOOD" && (x.TT100_result == "GOOD" || x.TT100_result == null) && (x.TT200_result == "GOOD" || x.TT200_result == null) && x.TT600_result == null && x.TT050_date > initialDate)).Select(x => x.retread_workorder).Distinct().ToList();
 
             List<tbl_production_schedule> lineItems = new List<tbl_production_schedule>();
 
@@ -248,7 +248,6 @@ namespace SeHubPortal.Controllers
                 lineItem.production_date = workOrder.creation_date;
                 lineItem.size = String.Join(", ", barcodes.Select(x => x.casing_size).Distinct().ToList());
                 lineItem.tread = String.Join(", ", barcodes.Select(x => x.retread_design).Distinct().ToList());
-                lineItem.virgin = String.Join(", ", barcodes.Select(x => x.virgin).Distinct().ToList());
 
                 string partNumber = "";
 
@@ -270,31 +269,11 @@ namespace SeHubPortal.Controllers
                     lineItem.part_no = db.tbl_source_retread_part_number.Where(x => x.size == lineItem.size && x.tread == lineItem.tread).Select(x => x.part_number).FirstOrDefault();
                 }
 
-                if (lineItem.virgin.Contains(','))
-                {
-                    int virginCount = 0;
-                    int nonVirginCount = 0;
-                    foreach (var bar in barcodes)
-                    {
-                        if (bar.virgin != null)
-                        {
-                            if(bar.virgin != 1)
-                            {
-                                nonVirginCount += 1;
-                            }
-                            else
-                            {
-                                virginCount += 1;
-                            }
-                        }
-                    }
-                    lineItem.virgin = virginCount.ToString() + ";" + nonVirginCount.ToString();
-                }
 
                 lineItem.quantity = barcodes.Count();
                 lineItem.shipTo = workOrder.loc_Id + ";" + db.tbl_cta_customers.Where(x => x.CustomerCode.ToString() == workOrder.customer_number).Select(x => x.CustomerName).FirstOrDefault(); ;
-                lineItem.quantity_complete = barcodes.Where(x => x.final_inspection_result == "GOOD").Count();
-                lineItem.failure_codes = barcodes.Where(x => x.preliminary_inspection_result != null && x.preliminary_inspection_result != "GOOD" && x.preliminary_inspection_result != "Good").Count().ToString();
+                lineItem.quantity_complete = barcodes.Where(x => x.TT600_result == "GOOD").Count();
+                lineItem.failure_codes = barcodes.Where(x => x.TT050_result != null && x.TT050_result != "GOOD" && x.TT050_result != "Good").Count().ToString();
 
                 lineItems.Add(lineItem);
             }
@@ -510,7 +489,7 @@ namespace SeHubPortal.Controllers
             {
                 WorkOrderInfoViewModel workOrder = new WorkOrderInfoViewModel();
                 workOrder.WorkOrderNumber = item.retread_workorder;
-                workOrder.closedBarcodes = db.tbl_treadtracker_barcode.Where(x => x.retread_workorder == item.retread_workorder && x.preliminary_inspection_result == "GOOD" && x.ndt_machine_result == "GOOD" && x.buffer_builder_result == "GOOD" && x.final_inspection_result == "GOOD").Count();
+                workOrder.closedBarcodes = db.tbl_treadtracker_barcode.Where(x => x.retread_workorder == item.retread_workorder && x.TT050_result == "GOOD" && x.TT100_result == "GOOD" && x.TT200_result == "GOOD" && x.TT600_result == "GOOD").Count();
                 workOrder.openBarcodes = db.tbl_treadtracker_workorder.Where(x => x.retread_workorder == item.retread_workorder).Count() - workOrder.openBarcodes;
                 workOrders.Add(workOrder);
             }
@@ -556,7 +535,7 @@ namespace SeHubPortal.Controllers
 
             var units = db.tbl_treadtracker_barcode.Where(x => x.barcode == value).FirstOrDefault();
 
-            string status = units.preliminary_inspection_result + ";" + units.ndt_machine_result + ";" + units.buffer_builder_result + ";" + units.final_inspection_result;
+            string status = units.TT050_result + ";" + units.TT100_result + ";" + units.TT200_result + ";" + units.TT600_result;
 
             return status;
         }
@@ -569,8 +548,6 @@ namespace SeHubPortal.Controllers
 
                 var events = dc.tbl_treadtracker_barcode.Where(x => x.TT600_date > nDaysAgo).Select(x => x.TT600_date).Distinct().ToList();
 
-                //Trace.WriteLine(events.preliminary_inspection_date);
-                
                 return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }
         }
@@ -587,13 +564,34 @@ namespace SeHubPortal.Controllers
             }
         }
 
+
+        public JsonResult GetConsumptionDates()
+        {
+            DateTime startDate = new DateTime(2023, 3, 1);
+            DateTime currentDate = DateTime.Now;
+
+            List<DateTime> dates = new List<DateTime>();
+
+            while (startDate <= currentDate)
+            {
+                if (startDate.DayOfWeek == DayOfWeek.Monday)
+                {
+                    dates.Add(startDate);
+                }
+                startDate = startDate.AddDays(1);
+            }
+
+            return new JsonResult { Data = dates, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+
         public JsonResult PopulateFinishedBarcodes(int pid)
         {
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
 
             if (db.tbl_treadtracker_barcode.Where(x => x.retread_workorder == pid.ToString()).Count() > 0)
             {
-                var barcodes = db.tbl_treadtracker_barcode.Where(x => x.retread_workorder == pid.ToString() && x.final_inspection_result == "GOOD").ToList();
+                var barcodes = db.tbl_treadtracker_barcode.Where(x => x.retread_workorder == pid.ToString() && x.TT600_result == "GOOD").ToList();
                 return new JsonResult { Data = barcodes, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }
             else
@@ -690,7 +688,7 @@ namespace SeHubPortal.Controllers
 
                 MailMessage msg = new MailMessage();
                 msg.To.Add(new MailAddress(empDetails.cta_email, "IT Team")); //payroll     harsha.yerramsetty
-                msg.From = new MailAddress("noreply@citytire.com", "Sehub");
+                msg.From = new MailAddress("no_reply@citytire.com", "Sehub");
                 msg.Subject = "Testing";
                 msg.Body = "Mail for tread tracker open order";
                 msg.IsBodyHtml = true;
@@ -699,7 +697,7 @@ namespace SeHubPortal.Controllers
 
                 SmtpClient client = new SmtpClient();
                 client.UseDefaultCredentials = false;
-                client.Credentials = new System.Net.NetworkCredential("noreply@citytire.com", "U8LH>WpBdXg}");
+                client.Credentials = new System.Net.NetworkCredential("no_reply@citytire.com", "U@dx/Z8Ry{");
                 client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
                 client.Host = "smtp.office365.com";
                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
@@ -904,7 +902,7 @@ namespace SeHubPortal.Controllers
 
             DateTime startDate = Convert.ToDateTime("2018-01-01");
 
-            model.barcodeInfo = db.tbl_treadtracker_barcode.Where(x => x.preliminary_inspection_date > startDate && ((x.preliminary_inspection_result != "Good" && x.preliminary_inspection_result != null) || (x.ndt_machine_result != "GOOD" && x.ndt_machine_result != null) || (x.buffer_builder_result != "GOOD" && x.buffer_builder_result != null) || (x.final_inspection_result != "GOOD" && x.final_inspection_result != null))).ToList();
+            model.barcodeInfo = db.tbl_treadtracker_barcode.Where(x => x.TT050_date > startDate && ((x.TT050_result != "Good" && x.TT050_result != null) || (x.TT100_result != "GOOD" && x.TT100_result != null) || (x.TT200_result != "GOOD" && x.TT200_result != null) || (x.TT600_result != "GOOD" && x.TT600_result != null))).ToList();
             model.workOrderInfo = db.tbl_treadtracker_workorder.Where(x => x.creation_date > startDate).ToList();
 
             return View(model);
@@ -1088,47 +1086,37 @@ namespace SeHubPortal.Controllers
                     Debug.WriteLine(Request["barcode" + i.ToString()]);
 
                     tbl_treadtracker_barcode newBarcode = new tbl_treadtracker_barcode();
+                    tbl_treadtracker_production_log logEvent = new tbl_treadtracker_production_log();
 
                     newBarcode.barcode = Request["barcode" + i.ToString()];
                     newBarcode.retread_workorder = model.workOrder;
                     newBarcode.line_number = i;
                     newBarcode.line_code = Convert.ToInt32(Request["line" + i.ToString()]);
-                    newBarcode.serial_dot = Request["serial" + i.ToString()];
+                    newBarcode.serial_dot = Request["serial" + i.ToString()]; 
                     newBarcode.casing_size = Request["casing" + i.ToString()];
                     newBarcode.casing_brand = Request["brand" + i.ToString()];
                     newBarcode.cap_count = Request["capCount" + i.ToString()];
-
-                    /*
-
-                    if(Request["virgin" + i.ToString()] == "on")
-                    {
-                        newBarcode.virgin = 1;
-                    }
-                    else
-                    {
-                        newBarcode.virgin = 0;
-                    } 
-                     
-                     */
-
                     newBarcode.retread_design = Request["tread" + i.ToString()]; //"TBD" "--Select--"
                     newBarcode.unit_ID = Request["unit" + i.ToString()];
                     if (Request["status" + i.ToString()] != "")
                     {
-                        newBarcode.preliminary_inspection_result = Request["status" + i.ToString()];
                         newBarcode.TT050_result = Request["status" + i.ToString()];
                     }
                     else
                     {
-                        newBarcode.preliminary_inspection_result = "GOOD";
                         newBarcode.TT050_result = "GOOD";
                     }
-                    newBarcode.preliminary_inspection_date = model.InspectionDate;
                     newBarcode.TT050_date = model.InspectionDate;
                     newBarcode.ship_to_location = loc;
-                    Trace.WriteLine("Test");
-                    Trace.WriteLine("This is the prelim result" + newBarcode.preliminary_inspection_result + "Ths is the TT050 result" + newBarcode.TT050_result);
+
+                    logEvent.barcode = newBarcode.barcode;
+                    logEvent.work_station = "TT050";
+                    logEvent.timestamp = System.DateTime.Now;
+                    logEvent.status = newBarcode.TT050_result;
+                    logEvent.details = "Tread -> "+ newBarcode.retread_design + " ; Size -> "+ newBarcode.casing_size + " ; Brand -> " + newBarcode.casing_brand + " ; Loc -> "+ newBarcode.ship_to_location + " ; Cap -> " + newBarcode.cap_count + " ; Serial Dot -> " + newBarcode.serial_dot;
+
                     db.tbl_treadtracker_barcode.Add(newBarcode);
+                    db.tbl_treadtracker_production_log.Add(logEvent);
                     db.SaveChanges();
 
 
@@ -1315,9 +1303,122 @@ namespace SeHubPortal.Controllers
             ProdReportList.creditSchedule_revision = db.tbl_source_treadtracker_creditSchedule_revision.ToList();
             ProdReportList.freightSchedule_revision = db.tbl_source_treadtracker_freightSchedule_revision.ToList();
             ProdReportList.casingTire = db.tbl_source_treadtracker_casingTire.ToList();
-            ProdReportList.customerProfile = db.tbl_treadtracker_customer_retread_spec.ToList();
+            //ProdReportList.customerProfile = db.tbl_treadtracker_customer_retread_spec.ToList();
 
             return PartialView(ProdReportList);
+        }
+
+        public ActionResult PopulateConsumptionReport(DateTime inspDate)
+        {
+            
+            List<ConsumablesViewModel> consumables = new List<ConsumablesViewModel>();
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            string loc = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
+
+            PopulateProductionReport ConsumablesReport = new PopulateProductionReport();
+            ConsumablesReport.locInfo = db.tbl_cta_location_info.Where(x => x.loc_id == loc).FirstOrDefault();
+            DateTime StartDate = inspDate.AddDays(-8);
+
+            ConsumablesReport.startDateConsumables = StartDate;
+            ConsumablesReport.endDateConsumables = inspDate.AddDays(-2);
+            
+            while (StartDate <= inspDate.AddDays(-2))
+            {
+                var barcodes = db.tbl_treadtracker_barcode.Where(x => x.TT600_date == StartDate).ToList();
+
+                foreach(var barcode in barcodes)
+                {
+                    var circumfrance = db.tbl_source_truckTire_sizes.Where(x => x.tire_size == barcode.casing_size).Select(x => x.circumference).FirstOrDefault();
+                    if (barcode.TT400_tread != "n/a" && barcode.TT400_tread != null && barcode.TT400_tread != "")
+                    {
+                        ConsumablesViewModel consumable = new ConsumablesViewModel();
+                        consumable.type = "Tread";
+                        string shortDesc = barcode.TT400_tread.Split('(')[0];
+                        consumable.PartNumber = db.tbl_source_treadtracker_consumables_TreadRubber.Where(x => x.short_description == shortDesc).Select(x => x.part_number).FirstOrDefault();
+
+                        var treadRubber = db.tbl_source_treadtracker_consumables_TreadRubber.Where(x => x.part_number == consumable.PartNumber).FirstOrDefault();
+                        if (treadRubber != null)
+                        {
+                            consumable.Description = treadRubber.description;                            
+                            if (circumfrance != null)
+                            {                                
+                                consumable.ftConsumed = Convert.ToDouble(circumfrance) * Convert.ToDouble(barcode.TT400_tread.Split('(')[1].Split('x')[1].Split(')')[0]);
+                            }                            
+                            consumable.lbPerFt = Convert.ToDouble(treadRubber.weight_per_foot);
+                            consumable.lbsConsumed = consumable.ftConsumed * consumable.lbPerFt;
+                            consumables.Add(consumable);
+                        }
+                        
+                    }
+                    if (barcode.TT400_cushion != "n/a" && barcode.TT400_cushion != null && barcode.TT400_cushion != "")
+                    {
+                        ConsumablesViewModel consumable = new ConsumablesViewModel();
+                        consumable.type = "Cushion";
+                        consumable.PartNumber = barcode.TT400_cushion.Split('(')[0];
+                        Trace.WriteLine(consumable.PartNumber + "*");
+                        var treadRubber = db.tbl_source_treadtracker_consumables_nonTreadRubber.Where(x => x.part_number == consumable.PartNumber).FirstOrDefault();
+                        if (treadRubber != null)
+                        {
+                            consumable.Description = treadRubber.description;
+                            if (circumfrance != null)
+                            {
+                                consumable.ftConsumed = Convert.ToDouble(circumfrance) * Convert.ToDouble(barcode.TT400_cushion.Split('(')[1].Split('x')[1].Split(')')[0]);
+                            }
+                            consumable.lbPerFt = Convert.ToDouble(treadRubber.lb_per_ft);
+                            consumable.lbsConsumed = consumable.ftConsumed * consumable.lbPerFt;
+                            consumables.Add(consumable);
+                        }
+
+                    }
+                    if (barcode.TT400_strip != "n/a" && barcode.TT400_strip != null && barcode.TT400_strip != "")
+                    {
+                        ConsumablesViewModel consumable = new ConsumablesViewModel();
+                        consumable.type = "Strip";
+                        consumable.PartNumber = barcode.TT400_strip.Split('(')[0];
+
+                        var treadRubber = db.tbl_source_treadtracker_consumables_nonTreadRubber.Where(x => x.part_number == consumable.PartNumber).FirstOrDefault();
+                        if (treadRubber != null)
+                        {
+                            consumable.Description = treadRubber.description;
+                            if (circumfrance != null)
+                            {
+                                consumable.ftConsumed = Convert.ToDouble(circumfrance) * Convert.ToDouble(barcode.TT400_strip.Split('(')[1].Split('x')[1].Split(')')[0]);
+                            }
+                            consumable.lbPerFt = Convert.ToDouble(treadRubber.lb_per_ft);
+                            consumable.lbsConsumed = consumable.ftConsumed * consumable.lbPerFt;
+                            consumables.Add(consumable);
+                        }
+
+                    }
+                    if (barcode.TT400_rope != "n/a" && barcode.TT400_rope != null && barcode.TT400_rope != "")
+                    {
+                        ConsumablesViewModel consumable = new ConsumablesViewModel();
+                        consumable.type = "Rope";
+                        consumable.PartNumber = barcode.TT400_rope.Split('(')[0];
+
+                        var treadRubber = db.tbl_source_treadtracker_consumables_nonTreadRubber.Where(x => x.part_number == consumable.PartNumber).FirstOrDefault();
+                        if (treadRubber != null)
+                        {
+                            consumable.Description = treadRubber.description;
+                            consumable.ftConsumed = Convert.ToDouble(barcode.TT400_rope.Split('(')[1].Split('x')[1].Split(')')[0]);
+                            consumable.lbPerFt = Convert.ToDouble(treadRubber.lb_per_ft);
+                            consumable.lbsConsumed = consumable.ftConsumed * consumable.lbPerFt;
+                            consumables.Add(consumable);
+                        }
+
+                    }
+
+
+                }
+                StartDate = StartDate.AddDays(1);
+            }
+
+            ConsumablesReport.consumables = consumables;
+
+            return PartialView(ConsumablesReport);
         }
 
         //private OpenOrderModel openOrder = new OpenOrderModel();
@@ -1664,17 +1765,6 @@ namespace SeHubPortal.Controllers
                 objcvm.cap_count = capCountList.Where(x => x.casing_brand == item.cap_count).Select(x => x.brand_id).FirstOrDefault().ToString();
 
                 
-                //objcvm.ship_to_location = item.ship_to_location;
-
-                if (item.virgin == 1)
-                {
-                    objcvm.virgin = true;
-                }
-                else
-                {
-                    objcvm.virgin = false;
-                }
-
 
                 objcvm.size_id = db.tbl_treadtracker_casing_sizes.Where(x => x.casing_size == item.casing_size).Select(x => x.size_id).FirstOrDefault();
 
@@ -1820,24 +1910,12 @@ namespace SeHubPortal.Controllers
 
                 objcvm.cap_count = item.cap_count;
 
-                if(item.virgin == 1)
-                {
-                    objcvm.virgin = true;
-                }
-                else
-                {
-                    objcvm.virgin = false;
-                }
-                
-
 
                 objcvm.size_id = db.tbl_treadtracker_casing_sizes.Where(x => x.casing_size == item.casing_size).Select(x => x.size_id).FirstOrDefault();
 
                 objcvm.brand_id = db.tbl_treadtracker_casing_brands.Where(x => x.casing_brand == item.casing_brand).Select(x => x.brand_id).FirstOrDefault();
 
                 //objcvm.tread_id = db.tbl_source_retread_tread.Where(x => x.tread_design == item.retread_design).Select(x => x.tread_id).FirstOrDefault();
-
-                
 
                 BarcodeInfoVMlist.Add(objcvm);
 
@@ -1847,10 +1925,6 @@ namespace SeHubPortal.Controllers
 
             var custInfo = db.tbl_treadtracker_customer_retread_spec.Where(x => x.customer_number.ToString() == custNumber).FirstOrDefault();
             var custInfoDetails = db.tbl_tread_tracker_customers.Where(x => x.customer_number.ToString() == custNumber).FirstOrDefault();
-
-            
-
-            Debug.WriteLine("custNameValue:" + custNameValue + "hkjhkh");
 
             List<SelectListItem> custListItems = PopulateCustomers(custNameValue);
 
@@ -1997,6 +2071,7 @@ namespace SeHubPortal.Controllers
                     if (changedBarcode != null && changedBarcode != "" && result != null)
                     {
                         var result1 = new tbl_treadtracker_barcode();
+                        var logEvent = new tbl_treadtracker_production_log();
 
                         result1.barcode = changedBarcode;
                         result1.retread_workorder = result.retread_workorder;
@@ -2008,26 +2083,26 @@ namespace SeHubPortal.Controllers
                         result1.casing_brand = casingBrand;
                         result1.retread_design = casingTread;
                         result1.unit_ID = items.unit_ID;
-                        result1.preliminary_inspection_result = result.preliminary_inspection_result;
                         result1.TT050_result = result.TT050_result;
-                        result1.preliminary_inspection_date = result.preliminary_inspection_date;
                         result1.TT050_date = result.TT050_date;
-                        result1.ndt_machine_result = result.ndt_machine_result;
                         result1.TT100_result = result.TT100_result;
-                        result1.ndt_machine_date = result.ndt_machine_date;
                         result1.TT100_date = result.TT100_date;
-                        result1.buffer_builder_result = result.buffer_builder_result;
                         result1.TT200_result = result.TT200_result;
-                        result1.buffer_builder_date = result.buffer_builder_date;
                         result1.TT200_date = result.TT200_date;
-                        result1.final_inspection_result = result.final_inspection_result;
                         result1.TT600_result = result.TT600_result;
-                        result1.final_inspection_date = result.final_inspection_date;
                         result1.TT600_date = result.TT600_date;
                         result1.cap_count = capCountList.Where(x => x.brand_id.ToString() == items.cap_count).Select(x => x.casing_brand).FirstOrDefault();
 
                         Trace.WriteLine("This is the cap count result " + result1.cap_count + " for the barcode " + result1.barcode);
                         Trace.WriteLine("This is the Retread design " + items.retread_design + " for the barcode " + result1.barcode);
+
+                        logEvent.barcode = result1.barcode;
+                        logEvent.work_station = "TT050";
+                        logEvent.timestamp = System.DateTime.Now;
+                        logEvent.status = result1.TT050_result;
+                        logEvent.details = "Tread -> " + result1.retread_design + " ; Size -> " + result1.casing_size + " ; Brand -> " + result1.casing_brand + " ; Loc -> " + result1.ship_to_location + " ; Cap -> " + result1.cap_count + " ; Serial Dot -> " + result1.serial_dot;
+
+                        db.tbl_treadtracker_production_log.Add(logEvent);
 
                         db.tbl_treadtracker_barcode.Add(result1);
                         db.tbl_treadtracker_barcode.Remove(result);
@@ -2065,6 +2140,7 @@ namespace SeHubPortal.Controllers
 
                     //var selectedTread = casingTreadList.Find(p => p.tread_id == Convert.ToInt32(items.retread_design));
                     string casingTread = "";
+
                     /*
                      if (selectedTread != null)
                     {
@@ -2078,22 +2154,28 @@ namespace SeHubPortal.Controllers
                     if (changedBarcode != null && changedBarcode != "" && db.tbl_treadtracker_barcode.Where(a => a.barcode.Equals(changedBarcode)).FirstOrDefault() == null)
                     {
                         var result1 = new tbl_treadtracker_barcode();
+                        tbl_treadtracker_production_log logEvent = new tbl_treadtracker_production_log();
 
                         result1.barcode = changedBarcode;
                         result1.retread_workorder = model.WorkOrderInfo.retread_workorder;
                         result1.line_number = db.tbl_treadtracker_barcode.Where(x => x.retread_workorder == model.WorkOrderInfo.retread_workorder).OrderByDescending(x => x.line_number).Select(x => x.line_number).FirstOrDefault()+1;
-
                         result1.line_code = items.line_code;
                         result1.serial_dot = items.serial_dot;
                         result1.casing_size = casingSize;
                         result1.casing_brand = casingBrand;
                         result1.retread_design = casingTread;
                         result1.unit_ID = items.unit_ID;
-                        result1.preliminary_inspection_result = "GOOD";
                         result1.TT050_result = "GOOD";
 
                         Trace.WriteLine("This is the newly added barcode" + result1.barcode);
 
+                        logEvent.barcode = result1.barcode;
+                        logEvent.work_station = "TT050";
+                        logEvent.timestamp = System.DateTime.Now;
+                        logEvent.status = result1.TT050_result;
+                        logEvent.details = "Tread -> " + result1.retread_design + " ; Size -> " + result1.casing_size + " ; Brand -> " + result1.casing_brand + " ; Loc -> " + result1.ship_to_location + " ; Cap -> " + result1.cap_count + " ; Serial Dot -> " + result1.serial_dot;
+
+                        db.tbl_treadtracker_production_log.Add(logEvent);
                         db.tbl_treadtracker_barcode.Add(result1);
                     }
                 }
@@ -2184,6 +2266,37 @@ namespace SeHubPortal.Controllers
                 value = x.tread,
                 text = x.tread
             }).ToList(), JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult PlaceOrderIpad(string custNo, string workOrd)
+        {
+
+            Trace.WriteLine("custNo:" + custNo + "  " + workOrd);
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            
+            var custInfo = db.tbl_treadtracker_customer_retread_spec.Where(x => x.customer_number.ToString() == custNo).FirstOrDefault();
+            var custInfoDetails = db.tbl_tread_tracker_customers.Where(x => x.customer_number.ToString() == custNo).FirstOrDefault();
+
+            NewWorkOrder NewWorkOrderModel = new NewWorkOrder();
+
+            NewWorkOrderModel.customerInfo = db.tbl_cta_customers.Where(x => x.CustomerCode.ToString() == custNo).FirstOrDefault();
+            NewWorkOrderModel.workOrder = workOrd;
+            NewWorkOrderModel.OrderDate = DateTime.Now.ToString("yyyy-MM-dd");
+            //NewWorkOrderModel.SubmittedEmployee = Session["userID"].ToString();
+
+            if (custInfo != null)
+            {
+                NewWorkOrderModel.AgeLimit = custInfo.age_limit;
+                NewWorkOrderModel.BrandRequirements = custInfo.brand_name_only;
+            }
+
+            if (custInfoDetails != null)
+            {
+                NewWorkOrderModel.customerContact = custInfoDetails.reporting_contact;
+                NewWorkOrderModel.reportingEmail = custInfoDetails.reporting_email;
+            }
+
+            return PartialView(NewWorkOrderModel);
         }
 
     }

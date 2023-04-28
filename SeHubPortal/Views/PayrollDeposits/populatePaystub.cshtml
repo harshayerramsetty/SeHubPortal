@@ -1,0 +1,231 @@
+﻿@model SeHubPortal.ViewModel.PaystubViewModel
+
+<div class="modal-dialog" role="document">
+    @using (Html.BeginForm("SavePaystub", "PayrollDeposits", FormMethod.Post))
+    {
+        <div class="modal-content" style="width:570px">
+            <div class="modal-header" style="padding:5px 5px 5px 15px">
+                <h5 style="margin-left:auto; margin-right:auto" class="modal-title">Employee Payroll Deductions</h5>
+            </div>
+            <div class="modal-body" style="padding-bottom:0px; padding-left:30px">
+                <div class="row" style="margin-bottom:15px">
+                    <div class="col-lg-4" style="display:flex; justify-content:center; align-items:center; border:2px solid #808080; border-radius:10px">
+                        <img style="width:80%" src="~/Content/profilepic.jpg" alt="Alternate Text" />
+                    </div>
+                    <div class="col-lg-8 text-left">
+                        <p style="font-size:20px; font-weight:bold; margin:5px">
+                            @Model.name
+                        </p>
+                        <p style="font-size:17px; margin:5px">
+                            @Model.position
+                        </p>
+                        <p style="font-size:17px; margin:5px">
+                            @Model.empid
+                        </p>
+                        <p style="font-size:17px; margin:5px">
+                            @Model.loc
+                        </p>
+                        <p style="font-size:17px; margin:5px">
+                            @Model.email
+                        </p>
+
+                    </div>
+                </div>
+
+                @Html.HiddenFor(m => m.empid, new { htmlAttributes = new { @id = "emp", @style = "text-align:center; width:100%;" } })
+                @Html.HiddenFor(m => m.pid, new { htmlAttributes = new { @id = "pid", @style = "text-align:center; width:100%" } })
+
+
+                <div class="row" style="margin-bottom:10px; font-weight:bold">
+                    <div class="col-md-4 text-center">
+                        Category
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6 text-center">
+                                Current
+                            </div>
+                            <div class="col-md-6 text-center">
+                                Year-To-Date
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-bottom:10px">
+                    <div class="col-md-4 text-center">
+                        Hours Worked <b>(HRS)</b>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.EditorFor(m => m.deductions.hoursWorked, new { htmlAttributes = new { @id = "hw", @readonly = true, @style = "text-align:center; width:100%" } })
+                            </div>
+                            <div class="col-md-6">
+                                @Html.EditorFor(m => m.deductionsYTD.hoursWorked, new { htmlAttributes = new { @readonly = true, @style = "text-align:center; width:100%" } })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:10px">
+                    <div class="col-md-4 text-center">
+                        Gross Earnings <b>($)</b>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.EditorFor(m => m.deductions.gross_earnings, new { htmlAttributes = new { @id = "ge", @readonly = true, @style = "text-align:center; width:100%" } })
+                            </div>
+                            <div class="col-md-6">
+                                @Html.EditorFor(m => m.deductionsYTD.gross_earnings, new { htmlAttributes = new { @readonly = true, @style = "text-align:center; width:100%" } })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:10px">
+                    <div class="col-md-4 text-center">
+                        Federal Tax <b>($)</b>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.EditorFor(m => m.deductions.federal_tax, new { htmlAttributes = new { @id = "ft", @readonly = true, @style = "text-align:center; width:100%" } })
+                            </div>
+                            <div class="col-md-6">
+                                @Html.EditorFor(m => m.deductionsYTD.federal_tax, new { htmlAttributes = new { @readonly = true, @style = "text-align:center; width:100%" } })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:10px">
+                    <div class="col-md-4 text-center">
+                        Provincial Tax <b>($)</b>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.EditorFor(m => m.deductions.provincial_tax, new { htmlAttributes = new { @id = "pt", @readonly = true, @style = "text-align:center; width:100%" } })
+                            </div>
+                            <div class="col-md-6">
+                                @Html.EditorFor(m => m.deductionsYTD.provincial_tax, new { htmlAttributes = new { @readonly = true, @style = "text-align:center; width:100%" } })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:10px">
+                    <div class="col-md-4 text-center">
+                        CPP <b>($)</b>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.EditorFor(m => m.deductions.CPP, new { htmlAttributes = new { @id = "cp", @readonly = true, @style = "text-align:center; width:100%" } })
+                            </div>
+                            <div class="col-md-6">
+                                @Html.EditorFor(m => m.deductionsYTD.CPP, new { htmlAttributes = new { @readonly = true, @style = "text-align:center; width:100%" } })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:10px">
+                    <div class="col-md-4 text-center">
+                        EI <b>($)</b>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.EditorFor(m => m.deductions.EI, new { htmlAttributes = new { @id = "ei", @readonly = true, @style = "text-align:center; width:100%" } })
+                            </div>
+                            <div class="col-md-6">
+                                @Html.EditorFor(m => m.deductionsYTD.EI, new { htmlAttributes = new { @readonly = true, @style = "text-align:center; width:100%" } })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:10px">
+                    <div class="col-md-4 text-center">
+                        Group Insurance <b>($)</b>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.EditorFor(m => m.deductions.group_ins, new { htmlAttributes = new { @id = "gi", @readonly = true, @style = "text-align:center; width:100%" } })
+                            </div>
+                            <div class="col-md-6">
+                                @Html.EditorFor(m => m.deductionsYTD.group_ins, new { htmlAttributes = new { @readonly = true, @style = "text-align:center; width:100%" } })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-bottom:10px">
+                    <div class="col-md-4 text-center">
+                        Pension Plan <b>($)</b>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.EditorFor(m => m.deductions.pension_plan, new { htmlAttributes = new { @id = "gi", @readonly = true, @style = "text-align:center; width:100%" } })
+                            </div>
+                            <div class="col-md-6">
+                                @Html.EditorFor(m => m.deductionsYTD.pension_plan, new { htmlAttributes = new { @readonly = true, @style = "text-align:center; width:100%" } })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-bottom:10px">
+                    <div class="col-md-4 text-center">
+                        Pension Plan <b>($)</b>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.EditorFor(m => m.deductions.other_pension_plan, new { htmlAttributes = new { @id = "gi", @readonly = true, @style = "text-align:center; width:100%" } })
+                            </div>
+                            <div class="col-md-6">
+                                @Html.EditorFor(m => m.deductionsYTD.other_pension_plan, new { htmlAttributes = new { @readonly = true, @style = "text-align:center; width:100%" } })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-bottom:10px">
+                    <div class="col-md-4 text-center">
+                        Total Deductions <b>($)</b>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.EditorFor(m => m.deductions.total_deductions, new { htmlAttributes = new { @id = "td", @readonly = true, @style = "text-align:center; width:100%" } })
+                            </div>
+                            <div class="col-md-6">
+                                @Html.EditorFor(m => m.deductionsYTD.total_deductions, new { htmlAttributes = new { @readonly = true, @style = "text-align:center; width:100%" } })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:10px">
+                    <div class="col-md-4 text-center">
+                        Net Pay <b>($)</b>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.EditorFor(m => m.deductions.net_pay, new { htmlAttributes = new { @id = "np", @readonly = true, @style = "text-align:center; width:100%" } })
+                            </div>
+                            <div class="col-md-6">
+                                @Html.EditorFor(m => m.deductionsYTD.net_pay, new { htmlAttributes = new { @readonly = true, @style = "text-align:center; width:100%" } })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer" style="padding:5px">
+                <button style="padding:3px 30px 3px 30px" class="btn btn-success" type="submit">Save</button>
+                <button data-dismiss="modal" style="padding:3px 25px 3px 25px" class="btn btn-danger" type="button">Close</button>
+            </div>
+        </div>
+    }
+</div>

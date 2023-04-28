@@ -818,7 +818,7 @@
                                                 @{
                                                     var BarcodeWorkOrderJoin1 = (from a in Model.barcodeInfo
                                                                                  join b in Model.workOrderInfo on a.retread_workorder equals b.retread_workorder
-                                                                                 orderby a.preliminary_inspection_date
+                                                                                 orderby a.TT050_date
                                                                                  select new
                                                                                  {
                                                                                      line_code = a.line_code,
@@ -827,37 +827,37 @@
                                                                                      casing_size = a.casing_size,
                                                                                      casing_brand = a.casing_brand,
                                                                                      retread_design = a.retread_design,
-                                                                                     preliminary_inspection_result = a.preliminary_inspection_result,
-                                                                                     ndt_machine_result = a.ndt_machine_result,
-                                                                                     buffer_builder_result = a.buffer_builder_result,
-                                                                                     final_inspection_result = a.final_inspection_result,
+                                                                                     TT050_result = a.TT050_result,
+                                                                                     TT100_result = a.TT100_result,
+                                                                                     TT200_result = a.TT200_result,
+                                                                                     TT600_result = a.TT600_result,
                                                                                      ship_to_location = a.ship_to_location,
                                                                                      loc = b.loc_Id,
-                                                                                     preliminary_inspection_date = a.preliminary_inspection_date,
+                                                                                     TT050_date = a.TT050_date,
                                                                                      customer_number = b.customer_number
                                                                                  }).ToList();
                                                 }
 
                                                 @foreach (var item in BarcodeWorkOrderJoin1)
                                                 {
-                                                    string PrimRes = item.preliminary_inspection_result + "_PR";
-                                                    string NDTRes = item.ndt_machine_result + "_NR";
-                                                    string BuffRes = item.buffer_builder_result + "_BR";
-                                                    string FinalRes = item.final_inspection_result + "_FR";
+                                                    string PrimRes = item.TT050_result + "_PR";
+                                                    string NDTRes = item.TT100_result + "_NR";
+                                                    string BuffRes = item.TT200_result + "_BR";
+                                                    string FinalRes = item.TT600_result + "_FR";
                                                     string Loc = item.loc;
                                                     string CustomerNumber = item.customer_number;
 
-                                                    <tr class="@item.preliminary_inspection_date @Loc @CustomerNumber commonClass @PrimRes @NDTRes @BuffRes @FinalRes" style="display:block;">
+                                                    <tr class="@item.TT050_date @Loc @CustomerNumber commonClass @PrimRes @NDTRes @BuffRes @FinalRes" style="display:block;">
                                                         <td style="width:60px !important; font-size:13px; text-align:center; padding:5px; border-left:1px solid #d7dbde; ">@item.line_code</td>
                                                         <td style="width:100px !important; font-size:13px; text-align:center; padding:5px; ">@item.barcode</td>
                                                         <td style="width:110px !important; font-size:13px; text-align:center; padding:5px">@item.serial_dot</td>
                                                         <td style="width:130px !important; font-size:13px; text-align:center; padding:5px">@item.casing_size</td>
                                                         <td style="width:140px !important; font-size:13px; text-align:center; padding:5px">@item.casing_brand</td>
                                                         <td style="width:70px !important; font-size:13px; text-align:center; padding:5px">@item.retread_design</td>
-                                                        <td style="width:70px !important; font-size:13px; text-align:center; padding:5px">@item.preliminary_inspection_result</td>
-                                                        <td style="width:70px !important; font-size:13px; text-align:center; padding:5px">@item.ndt_machine_result</td>
-                                                        <td style="width:70px !important; font-size:13px; text-align:center; padding:5px">@item.buffer_builder_result</td>
-                                                        <td style="width:70px !important; font-size:13px; text-align:center; padding:5px">@item.final_inspection_result</td>
+                                                        <td style="width:70px !important; font-size:13px; text-align:center; padding:5px">@item.TT050_result</td>
+                                                        <td style="width:70px !important; font-size:13px; text-align:center; padding:5px">@item.TT100_result</td>
+                                                        <td style="width:70px !important; font-size:13px; text-align:center; padding:5px">@item.TT200_result</td>
+                                                        <td style="width:70px !important; font-size:13px; text-align:center; padding:5px">@item.TT600_result</td>
                                                         <td style="width:80px !important; font-size:13px; text-align:center; padding:5px; border-right:1px solid #d7dbde">@item.loc</td>
                                                     </tr>
                                                 }

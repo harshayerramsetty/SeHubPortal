@@ -16,7 +16,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>*@
 
-
     @if (true)
     {
         <style>
@@ -206,11 +205,18 @@
                 <div style="display:flex; justify-content:space-between; align-items:center">
                     <div></div>
                     <div style="display:flex; align-items:center">
+                        <label style="margin-right:10px">Payroll-ID</label>
+                        @using (Html.BeginForm("ChangePayrollID", "PayrollDeposits", FormMethod.Post))
+                        {
+                            @Html.DropDownListFor(m => m.SelectedPayrollId, Model.PayrollIdList, new { @id="payroll_id", @onChange = "this.form.submit()", @style = "text-align:left; margin-top: 0px; width:100px;height:23px;font-size:15px;margin-right:10px;" })
+                            @Html.HiddenFor(m => m.MatchedStaffLocID, new { htmlAttributes = new { @style = "display:none" } })
+                        }
                         <label style="margin-right:10px">Location</label>
                         @using (Html.BeginForm("EmployeeDeductions", "PayrollDeposits", FormMethod.Post))
                         {
                             <div>
-                                @Html.DropDownListFor(m => m.MatchedStaffLocID, Model.MatchedStaffLocs, "All", new { @onChange = "this.form.submit()", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:0px" })
+                                @Html.DropDownListFor(m => m.MatchedStaffLocID, Model.MatchedStaffLocs, "Select", new { @onChange = "this.form.submit()", @style = "text-align-last: center;width:100px;height:23px;font-size:15px;margin-left:0px" })
+                                @Html.HiddenFor(m => m.SelectedPayrollId, new { htmlAttributes = new { @style = "display:none" } })
                                 <noscript> <input class="btn btn-success" type="submit" value="Search" /></noscript>
                             </div>
                         }
@@ -225,126 +231,133 @@
 
     </div>
 
-    <div class="row" style="padding:0px 15px 0px 15px">
+    <div class="row example" style="padding:0px 15px 0px 15px; overflow-y:auto; max-height:800px">
 
-        @foreach (var employee in Model.employeeDetails)
-        {
-            if (employee.status == 1)
+        <div class="col-md-12">
+            <table class="table table-striped table-bordered" style="margin-bottom:0px">
+                <thead style="background-color:gray; color:white">
+                    <tr>
+                        <th style="font-size:10px; padding:0px; text-align:center" scope="col">Employee Name</th>
+                        <th style="font-size:10px; padding:0px; text-align:center" scope="col"> Employee ID</th>
+                        <th style="font-size:10px; padding:0px; text-align:center" scope="col"> Gross Pay</th>
+                        <th style="font-size:10px; padding:0px; text-align:center" scope="col"> Federal Tax</th>
+                        <th style="font-size:10px; padding:0px; text-align:center" scope="col"> Provincial Tax</th>
+                        <th style="font-size:10px; padding:0px; text-align:center" scope="col"> CPP</th>
+                        <th style="font-size:10px; padding:0px; text-align:center" scope="col"> EI</th>
+                        <th style="font-size:10px; padding:0px; text-align:center" scope="col"> Group Ins</th>
+                        <th style="font-size:10px; padding:0px; text-align:center" scope="col"> Pension Plan</th>
+                        <th style="font-size:10px; padding:0px; text-align:center" scope="col"> Other Pension Plan</th>
+                        <th style="font-size:10px; padding:0px; text-align:center" scope="col"> Net Pay</th>
+                        <th style="font-size:10px; padding:0px; text-align:center" scope="col"> Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.Deductions)
+                    {
+                        <tr>
+                            <td style="padding:5px; text-align:center">@item.emp_name</td>
+                            <td style="padding:5px; text-align:center">@item.emp_id</td>
+                            <td style="padding:5px; text-align:center">@item.gross_earnings</td>
+                            <td style="padding:5px; text-align:center">@item.federal_tax.ToString()</td>
+                            <td style="padding:5px; text-align:center">@item.provincial_tax.ToString()</td>
+                            <td style="padding:5px; text-align:center">@item.CPP.ToString()</td>
+                            <td style="padding:5px; text-align:center">@item.EI.ToString()</td>
+                            <td style="padding:5px; text-align:center">@item.group_ins.ToString()</td>
+                            <td style="padding:5px; text-align:center">@item.pension_plan.ToString()</td>
+                            <td style="padding:5px; text-align:center">@item.other_pension_plan.ToString()</td>
+                            <td style="padding:5px; text-align:center">@item.net_pay.ToString()</td>
+                            <td style="padding:5px; text-align:center">
+                                <button onclick="populateTax(@item.emp_id)" data-toggle="modal" data-target="#EmpPayrollDeductions" style="border:none; outline:none; padding:0; background-color:transparent">
+                                    <i class="fa fa-edit" style="font-size:20px;color:black"></i>
+                                </button>                                
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+
+        @*
+            foreach (var employee in Model.employeeDetails)
             {
-                string base64ProfilePic = "";
-                if (@employee.profile_pic is null)
+                if (employee.status == 1)
                 {
-                    base64ProfilePic = "";
-                }
-                else
-                {
-                    base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(@employee.profile_pic);
-                }
-                <div class="col-md-2 col-lg-2 col-xl-2" data-toggle="modal" data-target="#EmpPayrollDeductions">
-                    <div class="card shadow-sm">
-                        <button style="color:Black;background-color:white;text-align:left;border:transparent" data-toggle="modal" data-target="#editEmployeeModal" data-id="@employee.employee_id" class="EditEmployeeBtn">
-                            @*data-toggle="modal" data-target="#editEmployeeModal"*@
-                            @*href="@Url.Action("StaffInfo", "Management", new { values = @employee.employee_id})"*@
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-4 text-center" style="display:flex; justify-content:center; align-items:center">
-                                        @if (base64ProfilePic == "")
-                                        {
-                                            <img class="imageClass" style="width:70px; object-fit:contain" src="~/Content/profilepic.jpg" alt="ProfilePic" />
-                                        }
-                                        else
-                                        {
-                                            <img class="imageClass" style="width:70px; object-fit:contain" alt="profilePic" src="@base64ProfilePic" />
-                                        }
+                    string base64ProfilePic = "";
+                    if (@employee.profile_pic is null)
+                    {
+                        base64ProfilePic = "";
+                    }
+                    else
+                    {
+                        base64ProfilePic = "data:image/png;base64," + Convert.ToBase64String(@employee.profile_pic);
+                    }
+
+                    <div class="col-md-6 col-lg-6 col-xl-4">
+                        <div class="card shadow-sm">
+                            <button onclick="populateTax(@employee.employee_id)" data-toggle="modal" data-target="#EmpPayrollDeductions" style="color:Black;background-color:white;text-align:left;border:transparent">
+                                
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">
+                                            <div class="booking-doc-img">
+
+                                                @if (base64ProfilePic == "")
+                                                {
+                                                    <img style="object-fit:contain" class="imageClass" src="~/Content/profilepic.jpg" alt="ProfilePic" />
+                                                }
+                                                else
+                                                {
+                                                    <img style="object-fit:contain; width:135px; height:135px" class="imageClass" alt="profilePic" src="@base64ProfilePic" />
+                                                }
+
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-8">
+                                            <h4 style="font-weight:bolder">@employee.full_name</h4>
+                                            <h6>@employee.cta_position</h6>
+                                            <div style="display:flex;">
+                                                <span style="margin-right:80px">@employee.employee_id</span>
+                                                <span>@employee.loc_ID</span>
+                                            </div>
+                                            <div>
+                                                <p style="font-size:18px">@employee.cta_email</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-md-8">
-                                        <h6 style="font-size:18px;">@employee.first_name</h6>
-                                        <h6 style="font-size:15px;">@employee.last_name</h6>
-                                        <h6 style="font-size:12px;">@employee.employee_id</h6>
-                                    </div>
+
                                 </div>
+                            </button>
 
-                            </div>
-                        </button>
+                        </div>
+
                     </div>
-                </div>
-            }
+                }
 
-        }
+            }    
+        *@
     </div>
 
     <div class="modal" id="EmpPayrollDeductions" data-backdrop="static" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-
-            <div class="modal-content" style="width:470px">
-                <div class="modal-header" style="padding:5px 5px 5px 15px">
-                    <h5 style="margin-left:auto; margin-right:auto" class="modal-title">Employee Payroll Deductions</h5>
-                </div>
-                <div class="modal-body" style="padding-bottom:0px; padding-left:30px">
-                    <div class="row" style="margin-bottom:15px">
-                        <div class="col-lg-4" style="display:flex; justify-content:center; align-items:center; border:2px solid #808080; border-radius:10px">
-                            <img style="width:80%" src="~/Content/profilepic.jpg" alt="Alternate Text" />
-                        </div>
-                        <div class="col-lg-8 text-left">
-                            <p style="font-size:20px; font-weight:bold; margin:5px">
-                                Blackwood, Jorden (10901)
-                            </p>
-                            <p style="font-size:18px; margin:5px">
-                                6 Waterford Heights South
-                            </p>
-                            <p style="font-size:17px; margin:5px">
-                                St.John's, NL A1E1G4
-                            </p>
-                            <p style="font-size:16px; margin:5px">
-                                Canada
-                            </p>
-                        </div>
-                    </div>
-                    <div class="row" style="margin-bottom:10px">
-                        <div class="col-md-4 text-center">
-                            TD1
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" style="width:100%" name="name" value="" />
-                        </div>
-                    </div>
-                    <div class="row" style="margin-bottom:10px">
-                        <div class="col-md-4 text-center">
-                            Group INS
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" style="width:100%" name="name" value="" />
-                        </div>
-                    </div>
-                    <div class="row" style="margin-bottom:10px">
-                        <div class="col-md-4" style="display:flex; flex-direction:column; justify-content:center; align-items:center">
-                            <div>Pension Plan</div>
-                            <div style="font-size:12px">(Sponcered)</div>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" style="width:100%" name="name" value="" />
-                        </div>
-                    </div>
-                    <div class="row" style="margin-bottom:10px">
-                        <div class="col-md-4" style="display:flex; flex-direction:column; justify-content:center; align-items:center">
-                            <div>Pension Plan</div>
-                            <div style="font-size:12px">(Optional)</div>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" style="width:100%" name="name" value="" />
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer" style="padding:5px">
-                    <button style="padding:3px 30px 3px 30px" class="btn btn-success" type="button">Save</button>
-                    <button data-dismiss="modal" style="padding:3px 25px 3px 25px" class="btn btn-danger" type="button">Close</button>
-                </div>
-            </div>
-
-        </div>
+        
     </div>
 
     <script>
+
+        function populateTax(val) {
+            $.ajax({
+                url: '@Url.Action("populatePaystub", "PayrollDeposits")',
+                data: { emp_id: val, pay_id: $('#payroll_id').val() },
+                type: 'GET',
+                success: function (data) {
+                    $("#EmpPayrollDeductions").html(data);
+                    $("#EmpPayrollDeductions").modal;
+                }
+            });
+        }
+
          $(document).ready(function () {
              $('#profile-tab').css({ "font-weight": "normal", "color": "#24a0ed" });
              $('#home-tab').css({ "font-weight": "bold", "color": "black" });
@@ -359,7 +372,7 @@
              })
 
              $('#clickThis').on('click', function () {
-                 $('#sidebar').toggleClass('active');
+                 $('#sidebar').toggleClass('active'); 
              });
 
 

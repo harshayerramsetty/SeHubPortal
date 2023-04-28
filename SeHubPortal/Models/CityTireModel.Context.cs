@@ -71,7 +71,6 @@ namespace SeHubPortal.Models
         public virtual DbSet<tbl_fuel_log_shopSupplies> tbl_fuel_log_shopSupplies { get; set; }
         public virtual DbSet<tbl_login_log> tbl_login_log { get; set; }
         public virtual DbSet<tbl_source_tire> tbl_source_tire { get; set; }
-        public virtual DbSet<tbl_source_truckTire_sizes> tbl_source_truckTire_sizes { get; set; }
         public virtual DbSet<tbl_customer_reporting_customers> tbl_customer_reporting_customers { get; set; }
         public virtual DbSet<tbl_vacation_schedule> tbl_vacation_schedule { get; set; }
         public virtual DbSet<tbl_expense_claim_account> tbl_expense_claim_account { get; set; }
@@ -126,7 +125,6 @@ namespace SeHubPortal.Models
         public virtual DbSet<tbl_source_treadtracker_cap_count> tbl_source_treadtracker_cap_count { get; set; }
         public virtual DbSet<tbl_source_treadtracker_creditSchedule> tbl_source_treadtracker_creditSchedule { get; set; }
         public virtual DbSet<tbl_source_treadtracker_freightSchedule> tbl_source_treadtracker_freightSchedule { get; set; }
-        public virtual DbSet<tbl_treadtracker_customer_retread_spec> tbl_treadtracker_customer_retread_spec { get; set; }
         public virtual DbSet<tbl_source_labour_rates> tbl_source_labour_rates { get; set; }
         public virtual DbSet<tbl_cta_locations_reporting> tbl_cta_locations_reporting { get; set; }
         public virtual DbSet<tbl_source_treadtracker_consumables_TreadRubber> tbl_source_treadtracker_consumables_TreadRubber { get; set; }
@@ -153,9 +151,7 @@ namespace SeHubPortal.Models
         public virtual DbSet<tblServiceEstimate_new> tblServiceEstimate_new { get; set; }
         public virtual DbSet<tblServiceEstimateLastDay> tblServiceEstimateLastDays { get; set; }
         public virtual DbSet<tbl_reporting_sales_labour_daily> tbl_reporting_sales_labour_daily { get; set; }
-        public virtual DbSet<tbl_treadtracker_barcode> tbl_treadtracker_barcode { get; set; }
         public virtual DbSet<tbl_source_fuelLog_chargeAccount> tbl_source_fuelLog_chargeAccount { get; set; }
-        public virtual DbSet<tbl_source_treadtracker_creditSchedule_revision> tbl_source_treadtracker_creditSchedule_revision { get; set; }
         public virtual DbSet<tbl_source_treadtracker_freightSchedule_revision> tbl_source_treadtracker_freightSchedule_revision { get; set; }
         public virtual DbSet<tbl_source_treadtracker_casingTire> tbl_source_treadtracker_casingTire { get; set; }
         public virtual DbSet<tbl_source_harpoon_timesheet_categories> tbl_source_harpoon_timesheet_categories { get; set; }
@@ -163,5 +159,25 @@ namespace SeHubPortal.Models
         public virtual DbSet<tbl_harpoon_timesheet> tbl_harpoon_timesheet { get; set; }
         public virtual DbSet<tbl_employee_attendance> tbl_employee_attendance { get; set; }
         public virtual DbSet<tbl_treadtracker_production_log> tbl_treadtracker_production_log { get; set; }
+        public virtual DbSet<tbl_source_payroll_cpp_brackets> tbl_source_payroll_cpp_brackets { get; set; }
+        public virtual DbSet<tbl_source_payroll_EI_brackets> tbl_source_payroll_EI_brackets { get; set; }
+        public virtual DbSet<tbl_source_payroll_federal_tax_brackets> tbl_source_payroll_federal_tax_brackets { get; set; }
+        public virtual DbSet<tbl_source_payroll_provincial_tax_brackets> tbl_source_payroll_provincial_tax_brackets { get; set; }
+        public virtual DbSet<tbl_payroll_employee_paystubs> tbl_payroll_employee_paystubs { get; set; }
+        public virtual DbSet<tbl_source_treadtracker_creditSchedule_revision> tbl_source_treadtracker_creditSchedule_revision { get; set; }
+        public virtual DbSet<tbl_treadtracker_customer_retread_spec> tbl_treadtracker_customer_retread_spec { get; set; }
+        public virtual DbSet<tbl_treadtracker_chamber_production> tbl_treadtracker_chamber_production { get; set; }
+        public virtual DbSet<tbl_payroll_employee_specifications> tbl_payroll_employee_specifications { get; set; }
+        public virtual DbSet<tbl_connectionCheck_arduino_decibleMeter> tbl_connectionCheck_arduino_decibleMeter { get; set; }
+        public virtual DbSet<tbl_source_storyBoard_categories> tbl_source_storyBoard_categories { get; set; }
+        public virtual DbSet<tbl_storyBoard_posts_temp> tbl_storyBoard_posts_temp { get; set; }
+        public virtual DbSet<tbl_deviceLog_timeClock> tbl_deviceLog_timeClock { get; set; }
+        public virtual DbSet<tbl_source_payroll_departments> tbl_source_payroll_departments { get; set; }
+        public virtual DbSet<tbl_source_timeclock_displayColors> tbl_source_timeclock_displayColors { get; set; }
+        public virtual DbSet<tbl_treadTracker_Envelope> tbl_treadTracker_Envelope { get; set; }
+        public virtual DbSet<tbl_storyBoard_posts> tbl_storyBoard_posts { get; set; }
+        public virtual DbSet<tbl_tools_decibel_meter> tbl_tools_decibel_meter { get; set; }
+        public virtual DbSet<tbl_source_truckTire_sizes> tbl_source_truckTire_sizes { get; set; }
+        public virtual DbSet<tbl_treadtracker_barcode> tbl_treadtracker_barcode { get; set; }
     }
 }

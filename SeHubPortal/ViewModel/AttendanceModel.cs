@@ -25,5 +25,11 @@ namespace SeHubPortal.ViewModel
 
         public bool AdminClockingEditTime { get; set; }
         public tbl_harpoon_clients client_info { get; set; }
-    }
+
+        public string userProfile { get; set; }
+
+        public int addAdminEventemp { get; set; }
+        public DateTime addAdminEventDateTime { get; set; }
+        public string addAdminEventEvent { get; set; }
+}
 }

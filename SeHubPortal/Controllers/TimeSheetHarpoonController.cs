@@ -300,6 +300,7 @@ namespace SeHubPortal.Controllers
             }
 
             model.SelectedEmployeeId = empId.ToString();
+            model.EmployeeDetails = db.tbl_harpoon_employee.Where(x => x.auto_emp_id == empId).FirstOrDefault();
             model.employeepayrollList = EmpDetailsList.OrderBy(x => x.fullName).ToList();
 
             (model.Categories, model.categories_full) = populateTimesheetCategories(clientID);

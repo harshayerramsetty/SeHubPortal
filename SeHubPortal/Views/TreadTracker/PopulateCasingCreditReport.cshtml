@@ -175,7 +175,7 @@
                                             @if (barcode.cap_count != "" && barcode.cap_count != null)
                                             {
                                                 string columnName_cap = "_capped1";
-                                                int tire = Model.casingTire.Where(x => x.casing_size == "11R22.5").Select(x => x.tire_id).FirstOrDefault();
+                                                int tire = Model.casingTire.Where(x => x.casing_size == barcode.casing_size).Select(x => x.tire_id).FirstOrDefault();
                                                 var items_casingCredit = Model.creditSchedule_revision.Where(x => x.revision_date < Model.date && x.tire_id == tire).OrderByDescending(x => x.revision_date).FirstOrDefault();
 
                                                 if (barcode.cap_count == "Virgin")
@@ -201,6 +201,8 @@
 
                                                 credit = Convert.ToDouble(items_casingCredit.GetType().GetProperty(columnName_cap).GetValue(items_casingCredit).ToString());
 
+                                                /*
+                                                 
                                                 int? custVal = Model.customerProfile.Where(x => x.customer_number.ToString() == work.customer_number).Select(x => x.outdatedCasingValue).FirstOrDefault();
 
                                                 if (barcode.casing_brand == "Chinese-ALL")
@@ -232,6 +234,8 @@
                                                         }
                                                     }
                                                 }
+                                                 
+                                                 */
 
                                                 if (barcode.cap_count == "Capped Prior 2+")
                                                 {
@@ -251,7 +255,15 @@
                                                 string columnName = "freight_" + work.loc_Id;
                                                 var items = Model.freightSchedule_revision.Where(x => x.revision_date < Model.date).OrderByDescending(x => x.revision_date).FirstOrDefault();
 
-                                                freight = Convert.ToDouble(items.GetType().GetProperty(columnName).GetValue(items).ToString());
+                                                if (items != null)
+                                                {
+                                                    if (items.GetType().GetProperty(columnName) != null)
+                                                    {
+                                                        freight = Convert.ToDouble(items.GetType().GetProperty(columnName).GetValue(items).ToString());
+                                                    }
+                                                }                                               
+
+
                                             }
                                             <span>@freight.ToString("N2")</span>
                                         </td>
@@ -289,9 +301,7 @@
                             <input type="text" readonly name="name" value="@total.ToString("N2")" style="font-weight:bolder; font-size:20px; width:135px; outline:none" />
                         </div>
                     </div>
-                </div>
-
-                
+                </div>                
 
             }
 

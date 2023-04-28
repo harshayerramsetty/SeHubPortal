@@ -33,6 +33,11 @@ namespace SeHubPortal.ViewModel
         public string tempDropdown { get; set; }
 
         public List<tbl_source_labour_rates> LabourRatesList { get; set; }
-
+        public List<PayrollDeductionsViewModel> Deductions { get; set; }
+        public List<PayrollDeductionsViewModel> DeductionsYTD { get; set; }
+            
+        public tbl_payroll_employee_paystubs paystub { get; set; }
+        public tbl_payroll_employee_paystubs paystubYTD { get; set; }
+        
     }
 }

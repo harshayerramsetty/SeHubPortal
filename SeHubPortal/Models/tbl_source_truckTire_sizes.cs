@@ -17,8 +17,6 @@ namespace SeHubPortal.Models
         public string tire_size { get; set; }
         public Nullable<int> retread { get; set; }
         public bool casingCredit { get; set; }
-        public Nullable<int> casingCredit_value { get; set; }
-        public Nullable<int> casingCredit_ageLimit { get; set; }
         public string circumference { get; set; }
     }
 }

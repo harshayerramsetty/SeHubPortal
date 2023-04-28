@@ -1,0 +1,221 @@
+﻿
+@model SeHubPortal.ViewModel.PopulateProductionReport
+
+<div class="col-md-12">
+    <table class="text-center" id="dontshow" style="margin-top:10px; width:100%;">
+        <tr>
+            <td style="padding:10px; width:25%">
+            </td>
+            <td style="padding:10px; width:50%">
+                <img src="~/Content/LoginLogo.png" style="width:350px;">
+            </td>
+            <td style="width:25%">
+
+                <div class="row">
+                    <div class="col-lg-12 text-right">
+                        <p style="margin: 0px; padding: 0px; line-height : 10px">
+                            <font size="2">
+                                @Model.locInfo.cta_street1,
+                                @if (Model.locInfo.cta_street2 != null)
+                                {
+                                    @Model.locInfo.cta_street2
+                                }
+                            </font>
+                        </p>
+                        <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">@Model.locInfo.cta_city, @Model.locInfo.cta_province, @Model.locInfo.cta_postal_code</font></p>
+                        <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Phone : @Model.locInfo.cta_phone</font></p>
+                        <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">Fax : @Model.locInfo.cta_fax</font></p>
+                        <p style="margin: 5px 0px 5px 10px; padding: 0px; line-height : 10px"><font size="2">www.citytire.com</font></p>
+
+                    </div>
+
+                </div>
+
+            </td>
+        </tr>
+    </table>
+
+    <table style="margin-top:10px 15px; width:100%; border:1px solid #dee0e3">
+        <tr>
+            <td style="padding:10px; width:5%">
+                <img style="width:80px" src="~/Content/trdIcon.png" alt="Alternate Text" />
+            </td>
+            <td style="padding: 10px; width: 23%">
+                <div class="row">
+                    <div class="col-lg-12 text-left">
+                        <h4>TREAD</h4>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 text-left">
+                        <h4>TRACKER</h4>
+                    </div>
+                </div>
+            </td>
+            <td style="padding:10px; width:33%">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <h4>WEEKLY</h4>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <h4>CONSUMPTION REPORT</h4>
+                    </div>
+                </div>
+            </td>
+            <td style="padding:10px; width:33%">
+                <div class="row">
+                    <div class="col-lg-12 text-right">
+                        <h5 style="text-transform: uppercase;" id="dateText">
+
+                            @{
+                                System.Globalization.CalendarWeekRule weekRule = System.Globalization.CalendarWeekRule.FirstFourDayWeek; // The calendar week rule to use
+                                DayOfWeek firstDayOfWeek = DayOfWeek.Monday; // The first day of the week
+
+                                System.Globalization.Calendar cal = System.Globalization.CultureInfo.CurrentCulture.Calendar; // Create an instance of the Calendar class
+                                int weekNumber = cal.GetWeekOfYear(Model.startDateConsumables, weekRule, firstDayOfWeek); // Get the week number
+                            }
+
+                            Week ID: @Model.startDateConsumables.ToString("yy") - @weekNumber
+                        </h5>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12 text-right">
+                        <h5 style="text-transform: uppercase;" id="dateText">
+                            @Model.startDateConsumables.ToString("MMM dd, yyyy") - @Model.endDateConsumables.ToString("MMM dd, yyyy")
+                        </h5>
+
+                    </div>
+
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+<div class="col-md-12" style="margin:0; margin-top:15px">
+    <h4 style="margin:0; padding:0">TREAD RUBBER</h4>
+</div>
+
+<div class="col-md-12">
+
+    @if (Model.consumables.Where(x => x.type == "Tread").Count() > 0)
+    {
+        <table class="table table-bordered" style="margin-top:15px; border-radius: 5px; width:100%">
+            <thead style="background-color:#84888c; color:white">
+                <tr>
+                    <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:20%" class="text-center">Part Number</th>
+                    <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:30%" class="text-center">Description</th>
+                    <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:16%" class="text-center">Ft Consumed</th>
+                    <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:16%" class="text-center">lb/ft</th>
+                    <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:16%" class="text-center">lbs Consumed</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var items in Model.consumables.Where(x => x.type == "Tread").Select(x => x.PartNumber).Distinct().ToList())
+                {
+                    <tr>
+                        <td style="font-size:15px; text-align:center;">@items</td>
+                        <td style="font-size:15px; text-align:center;">@Model.consumables.Where(x => x.type == "Tread").Where(x => x.PartNumber == items).Select(x => x.Description).FirstOrDefault()</td>
+                        <td style="font-size:15px; text-align:center;">@Model.consumables.Where(x => x.type == "Tread").Where(x => x.PartNumber == items).Sum(x => x.ftConsumed).Value.ToString("N2")</td>
+                        <td style="font-size:15px; text-align:center;">@Model.consumables.Where(x => x.type == "Tread").Where(x => x.PartNumber == items).Select(x => x.lbPerFt).FirstOrDefault().Value.ToString("N2")</td>
+                        <td style="font-size:15px; text-align:center;">@Model.consumables.Where(x => x.type == "Tread").Where(x => x.PartNumber == items).Sum(x => x.lbsConsumed).Value.ToString("N2")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+</div>
+
+<div class="col-md-12" style="margin:0">
+    <h4 style="margin:0; padding:0">CUSHION GUM & STRIP RUBBER</h4>
+</div>
+
+<div class="col-md-12">
+
+    @if (Model.consumables.Where(x => x.type == "Cushion" || x.type == "Strip").Count() > 0)
+    {
+        <table class="table table-bordered" style="margin-top:15px; border-radius: 5px; width:100%">
+            <thead style="background-color:#84888c; color:white">
+                <tr>
+                    <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:20%" class="text-center">Part Number</th>
+                    <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:30%" class="text-center">Description</th>
+                    <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:16%" class="text-center">Ft Consumed</th>
+                    <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:16%" class="text-center">lb/ft</th>
+                    <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:16%" class="text-center">lbs Consumed</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var items in Model.consumables.Where(x => x.type == "Cushion").Select(x => x.PartNumber).Distinct().ToList())
+                {
+                    <tr>
+                        <td style="font-size:15px; text-align:center;">@items</td>
+                        <td style="font-size:15px; text-align:center;">@Model.consumables.Where(x => x.type == "Cushion").Where(x => x.PartNumber == items).Select(x => x.Description).FirstOrDefault()</td>
+                        <td style="font-size:15px; text-align:center;">@Model.consumables.Where(x => x.type == "Cushion").Where(x => x.PartNumber == items).Sum(x => x.ftConsumed).Value.ToString("N2")</td>
+                        <td style="font-size:15px; text-align:center;">@Model.consumables.Where(x => x.type == "Cushion").Where(x => x.PartNumber == items).Select(x => x.lbPerFt).FirstOrDefault().Value.ToString("N2")</td>
+                        <td style="font-size:15px; text-align:center;">@Model.consumables.Where(x => x.type == "Cushion").Where(x => x.PartNumber == items).Sum(x => x.lbsConsumed).Value.ToString("N2")</td>
+                    </tr>
+                }
+                @foreach (var items in Model.consumables.Where(x => x.type == "Strip").Select(x => x.PartNumber).Distinct().ToList())
+                {
+            <tr>
+                <td style="font-size:15px; text-align:center;">@items</td>
+                <td style="font-size:15px; text-align:center;">@Model.consumables.Where(x => x.type == "Strip").Where(x => x.PartNumber == items).Select(x => x.Description).FirstOrDefault()</td>
+                <td style="font-size:15px; text-align:center;">@Model.consumables.Where(x => x.type == "Strip").Where(x => x.PartNumber == items).Sum(x => x.ftConsumed).Value.ToString("N2")</td>
+                <td style="font-size:15px; text-align:center;">@Model.consumables.Where(x => x.type == "Strip").Where(x => x.PartNumber == items).Select(x => x.lbPerFt).FirstOrDefault().Value.ToString("N2")</td>
+                <td style="font-size:15px; text-align:center;">@Model.consumables.Where(x => x.type == "Strip").Where(x => x.PartNumber == items).Sum(x => x.lbsConsumed).Value.ToString("N2")</td>
+            </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+
+
+</div>
+
+<div class="col-md-12" style="margin:0">
+    <h4 style="margin:0; padding:0">ROPE RUBBER & PATCHES</h4>
+</div>
+
+<div class="col-md-12">
+
+    @if (Model.consumables.Where(x => x.type == "Rope").Count() > 0)
+    {
+        <table class="table table-bordered" style="margin-top:15px; border-radius: 5px; width:100%">
+            <thead style="background-color:#84888c; color:white">
+                <tr>
+                    <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:20%" class="text-center">Part Number</th>
+                    <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:30%" class="text-center">Description</th>
+                    <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:16%" class="text-center">Ft Consumed</th>
+                    <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:16%" class="text-center">lb/ft</th>
+                    <th scope="col" style="font-size:10px; padding:0px; margin:0px; width:16%" class="text-center">lbs Consumed</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var items in Model.consumables.Where(x => x.type == "Rope").Select(x => x.PartNumber).Distinct().ToList())
+                {
+                    <tr>
+                        <td style="font-size:15px; text-align:center;">@items</td>
+                        <td style="font-size: 15px; text-align: center;">@Model.consumables.Where(x => x.type == "Rope").Where(x => x.PartNumber == items).Select(x => x.Description).FirstOrDefault()</td>
+                        <td style="font-size:15px; text-align:center;">@Model.consumables.Where(x => x.type == "Rope").Where(x => x.PartNumber == items).Sum(x => x.ftConsumed).Value.ToString("N2")</td>
+                        <td style="font-size:15px; text-align:center;">@Model.consumables.Where(x => x.type == "Rope").Where(x => x.PartNumber == items).Select(x => x.lbPerFt).FirstOrDefault().Value.ToString("N2")</td>
+                        <td style="font-size:15px; text-align:center;">@Model.consumables.Where(x => x.type == "Rope").Where(x => x.PartNumber == items).Sum(x => x.lbsConsumed).Value.ToString("N2")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+
+
+</div>

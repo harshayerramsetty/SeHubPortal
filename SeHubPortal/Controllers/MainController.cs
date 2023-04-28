@@ -11,6 +11,10 @@ using SeHubPortal.ViewModel;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Drawing.Drawing2D;
+using System.Net.Mail;
+using Microsoft.Azure.Storage.Blob;
+using Microsoft.Azure.Storage;
+
 
 namespace SeHubPortal.Controllers
 {
@@ -459,6 +463,362 @@ namespace SeHubPortal.Controllers
 
             db.SaveChanges();
             return RedirectToAction("Dashboard", "Main");
+        }
+
+        public ActionResult StoryBoard(StoryBoardViewModel model)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+            var empDetails = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
+            var posts_db = db.tbl_storyBoard_posts.ToList();
+
+            List<PostViewModel> Posts = new List<PostViewModel>();
+
+            String ContainerName = "message-board-attachments";
+            var readPolicy = new SharedAccessBlobPolicy()
+            {
+                Permissions = SharedAccessBlobPermissions.Read,
+                SharedAccessExpiryTime = DateTime.UtcNow + TimeSpan.FromMinutes(5)
+            };
+            // Your code ------ 
+            // Retrieve storage account from connection string.
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["BlobConnection"].ConnectionString);
+
+            // Create the blob client.
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+
+            // Retrieve reference to a previously created container.
+            CloudBlobContainer container = blobClient.GetContainerReference(ContainerName);
+
+            foreach (var post_db in posts_db)
+            {
+                var emp = db.tbl_employee.Where(x => x.employee_id == post_db.auther).FirstOrDefault();
+                PostViewModel Post = new PostViewModel
+                {
+                    post_id = post_db.post_id,
+                    catgory = post_db.category,
+                    subject = post_db.subject,
+                    details = post_db.details,
+                    auther = emp.full_name,
+                    auther_shrtName = emp.first_name,
+                    auther_position = emp.cta_position,
+                    auther_loc = emp.loc_ID
+                };
+                if (emp.profile_pic is null)
+                {
+                    Post.auther_img = "";
+                }
+                else
+                {
+                    Post.auther_img = Convert.ToBase64String(emp.profile_pic);
+                }
+                Post.date = post_db.date.Value;
+                Post.loc_id = post_db.loc_id;
+
+                List<KeyValuePair<string, string>> attachments = new List<KeyValuePair<string, string>>();
+
+                foreach (string attachment in post_db.attachment_name.Split(';'))
+                {
+                    if (attachment != "" && attachment.Contains("-"))
+                    {
+                        int attachment_id = Convert.ToInt32(attachment.Split('-')[1]);
+
+                        CloudBlockBlob fa_blob = container.GetBlockBlobReference(Post.post_id + '-' + attachment_id);
+                        if (fa_blob.Exists())
+                        {
+                            KeyValuePair<string, string> attach = new KeyValuePair<string, string>(attachment.Split('-')[0], new Uri(fa_blob.Uri.AbsoluteUri).ToString());
+                            attachments.Add(attach);
+                        }
+
+                    }
+                }
+                Post.attachments = attachments;
+                Posts.Add(Post);
+            }
+
+            var add_emp = db.tbl_employee.Where(x => x.employee_id == empId).FirstOrDefault();
+
+            model.AddEmpName = add_emp.full_name;
+            model.AddPosition = add_emp.cta_position;
+            model.AddLoc = add_emp.loc_ID;
+            if (add_emp.profile_pic is null)
+            {
+                model.AddEmpImage = "";
+            }
+            else
+            {
+                model.AddEmpImage = Convert.ToBase64String(add_emp.profile_pic);
+            }
+            model.Categories = populatePostCategories();
+            model.Posts = Posts.OrderByDescending(x => x.date).ToList();
+            model.SehubAccess = empDetails;
+            model.MatchedLocs = populateLocations();
+            return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult ReplyToPost(StoryBoardViewModel model, string parent_id)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+            var reply_emp = db.tbl_employee.Where(x => x.employee_id == empId).FirstOrDefault();
+
+            model.ReplyEmpName = reply_emp.full_name;
+            model.ReplyPosition = reply_emp.cta_position;
+            model.ReplyLoc = reply_emp.loc_ID;
+            if (reply_emp.profile_pic is null)
+            {
+                model.ReplyEmpImage = "";
+            }
+            else
+            {
+                model.ReplyEmpImage = Convert.ToBase64String(reply_emp.profile_pic);
+            }
+
+            List<PostViewModel> Posts = new List<PostViewModel>();
+            var parent_post_db = db.tbl_storyBoard_posts.Where(x => x.post_id == parent_id).FirstOrDefault();
+
+            PostViewModel parent_post = new PostViewModel();
+
+            var emp_parent = db.tbl_employee.Where(x => x.employee_id == parent_post_db.auther).FirstOrDefault();
+            PostViewModel parentPost = new PostViewModel();
+            parentPost.post_id = parent_post_db.post_id;
+            parentPost.catgory = parent_post_db.category;
+            parentPost.subject = parent_post_db.subject;
+            parentPost.details = parent_post_db.details;
+            parentPost.auther = emp_parent.full_name;
+            parentPost.auther_shrtName = emp_parent.first_name;
+            parentPost.auther_position = emp_parent.cta_position;
+            parentPost.auther_loc = emp_parent.loc_ID;
+            if (emp_parent.profile_pic is null)
+            {
+                parentPost.auther_img = "";
+            }
+            else
+            {
+                parentPost.auther_img = Convert.ToBase64String(emp_parent.profile_pic);
+            }
+            parentPost.date = parent_post_db.date.Value;
+            parentPost.loc_id = parent_post_db.loc_id;
+            Posts.Add(parentPost);
+
+            var posts_db = db.tbl_storyBoard_posts.Where(x => x.post_id.StartsWith(parent_id + "_")).ToList();
+
+            foreach (var post_db in posts_db)
+            {
+                var emp = db.tbl_employee.Where(x => x.employee_id == post_db.auther).FirstOrDefault();
+                PostViewModel Post = new PostViewModel();
+                Post.post_id = post_db.post_id;
+                Post.catgory = post_db.category;
+                Post.subject = post_db.subject;
+                Post.details = post_db.details;
+                Post.auther = emp.full_name;
+                Post.auther_shrtName = emp.first_name;
+                Post.auther_position = emp.cta_position;
+                Post.auther_loc = emp.loc_ID;
+                if (emp.profile_pic is null)
+                {
+                    Post.auther_img = "";
+                }
+                else
+                {
+                    Post.auther_img = Convert.ToBase64String(emp.profile_pic);
+                }
+                Post.date = post_db.date.Value;
+                Post.loc_id = post_db.loc_id;
+                Posts.Add(Post);
+            }
+
+            model.Posts = Posts;
+            model.ReplytoID = parent_id;
+            return PartialView(model);
+        }
+
+        [HttpPost]
+        public ActionResult ReplyToPost(StoryBoardViewModel model, IEnumerable<HttpPostedFileBase> addReplyAttachment)
+        {
+            Trace.WriteLine(model.ReplytoID + "This is the reply ID");
+
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+            
+            int id_count = db.tbl_storyBoard_posts.Where(x => x.post_id.StartsWith(model.ReplytoID + "_")).Count()+1;
+
+            tbl_storyBoard_posts newReply = new tbl_storyBoard_posts();
+
+            newReply.post_id = model.ReplytoID + "_" + id_count;
+            newReply.details = model.ReplyDetails;
+            newReply.auther = empId;
+            newReply.date = DateTime.Now;
+            newReply.loc_id = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
+            newReply.attachment_name = "";
+
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["BlobConnection"].ConnectionString);
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            CloudBlobContainer container = blobClient.GetContainerReference("message-board-attachments");
+
+            int i = 0;
+
+            foreach (var file in addReplyAttachment)
+            {
+                if (file != null && file.ContentLength > 0)
+                {
+                    CloudBlockBlob Blob = container.GetBlockBlobReference(newReply.post_id + "-" + i);
+
+                    Blob.Properties.ContentType = file.ContentType;
+
+                    if (file.FileName.Substring(file.FileName.Length - 4) == ".pdf" || file.FileName.Substring(file.FileName.Length - 4) == ".png" || file.FileName.Substring(file.FileName.Length - 4) == ".jpg")
+                    {
+                        Blob.UploadFromStream(file.InputStream);
+                        newReply.attachment_name = file.FileName + "-" + i + ";" + newReply.attachment_name;
+                        i++;
+                    }
+                }
+            }
+
+            db.tbl_storyBoard_posts.Add(newReply);            
+            db.SaveChanges();
+
+            var replyEmps = db.tbl_storyBoard_posts.Where(x => x.post_id.StartsWith(model.ReplytoID + "_") || x.post_id == model.ReplytoID).Select(x => x.auther).Distinct().ToList();
+
+            foreach (var replyEmp in replyEmps)
+            {
+                if (empId != replyEmp)
+                {
+                    string emp_email = db.tbl_employee.Where(x => x.employee_id == replyEmp).Select(x => x.cta_email).FirstOrDefault();
+
+                    MailMessage msg_rep = new MailMessage();
+                    msg_rep.To.Add(emp_email);
+                    msg_rep.From = new MailAddress("no_reply@citytire.com", "Sehub");
+                    msg_rep.Subject = "Reply to the post that you conributed";
+                    msg_rep.Body = "Hi <br /> There is a reply to the post that you have contributed. <br /> Thanks.";
+                    msg_rep.IsBodyHtml = true;
+
+                    SmtpClient client_rep = new SmtpClient();
+                    client_rep.UseDefaultCredentials = false;
+                    client_rep.Credentials = new System.Net.NetworkCredential("no_reply@citytire.com", "U@dx/Z8Ry{");
+                    client_rep.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
+                    client_rep.Host = "smtp.office365.com";
+                    client_rep.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    client_rep.EnableSsl = true;
+                    try
+                    {
+                        client_rep.Send(msg_rep);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                    }
+                }
+                
+            }
+
+            return RedirectToAction("StoryBoard", "Main");
+        }
+
+        [HttpPost]
+        public ActionResult AddPost(StoryBoardViewModel model, IEnumerable<HttpPostedFileBase> addAttachment)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            int empId = Convert.ToInt32(Session["userID"].ToString());
+            
+            int count = db.tbl_storyBoard_posts.Where(x => !x.post_id.Contains("_")).Count();
+
+            string id = (1000 + count).ToString();
+
+            tbl_storyBoard_posts newPost = new tbl_storyBoard_posts();
+
+            newPost.post_id = id;
+            newPost.category = model.AddCategory;
+            newPost.subject = model.AddSubject;
+            newPost.details = model.AddDetails;
+            newPost.auther = empId;
+            newPost.date = DateTime.Now;
+            newPost.loc_id = db.tbl_employee.Where(x => x.employee_id == empId).Select(x => x.loc_ID).FirstOrDefault();
+            newPost.attachment_name = "";
+
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["BlobConnection"].ConnectionString);
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            CloudBlobContainer container = blobClient.GetContainerReference("message-board-attachments");
+
+            int i = 0;
+
+            foreach (var file in addAttachment)
+            {
+                if (file != null && file.ContentLength > 0)
+                {                   
+                    CloudBlockBlob Blob = container.GetBlockBlobReference(id+"-"+i);
+
+                    Blob.Properties.ContentType = file.ContentType;
+
+                    if (file.FileName.Substring(file.FileName.Length - 4) == ".pdf" || file.FileName.Substring(file.FileName.Length - 4) == ".png" || file.FileName.Substring(file.FileName.Length - 4) == ".jpg")
+                    {
+                        Blob.UploadFromStream(file.InputStream);
+                        newPost.attachment_name = file.FileName + "-" + i + ";" + newPost.attachment_name;
+                        i++;
+                    }
+                }
+            }
+
+            
+            db.tbl_storyBoard_posts.Add(newPost);    
+            db.SaveChanges();
+                       
+            MailMessage msg_rep = new MailMessage();
+            msg_rep.To.Add("allstaff@citytire.com"); //harsha.yerramsetty@citytire.com
+            msg_rep.From = new MailAddress("no_reply@citytire.com", "Sehub");
+            msg_rep.Subject = "There is a new post in story board";
+            msg_rep.Body = "Hi, <br /> New post in story board.<br /> Please check it out in the link: https://sehubportal.azurewebsites.net/Main/StoryBoard <br /> Thanks.";
+            msg_rep.IsBodyHtml = true;
+
+            SmtpClient client_rep = new SmtpClient();
+            client_rep.UseDefaultCredentials = false;
+            client_rep.Credentials = new System.Net.NetworkCredential("no_reply@citytire.com", "U@dx/Z8Ry{");
+            client_rep.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
+            client_rep.Host = "smtp.office365.com";
+            client_rep.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client_rep.EnableSsl = true;
+            try
+            {
+                client_rep.Send(msg_rep);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+
+            return RedirectToAction("StoryBoard", "Main");
+        }
+
+        private static List<SelectListItem> populatePostCategories()
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            var emp = db.tbl_source_storyBoard_categories.Select(x => x.category).ToList();
+
+            foreach (var val in emp)
+            {
+
+                items.Add(new SelectListItem
+                {
+                    Text = val,
+                    Value = val
+                });
+            }
+            return items;
+        }
+
+        public void TestArduinoNano(float dbs)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            tbl_tools_decibel_meter record = new tbl_tools_decibel_meter();
+            record.timestamp = DateTime.Now;
+            record.gps_latitude = 1;
+            record.gps_longitude = 2;
+            record.reading_A = dbs;
+            db.tbl_tools_decibel_meter.Add(record);
+            db.SaveChanges();
         }
 
     }

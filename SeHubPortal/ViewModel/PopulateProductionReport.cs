@@ -25,5 +25,10 @@ namespace SeHubPortal.ViewModel
         public List<tbl_source_treadtracker_freightSchedule_revision> freightSchedule_revision { get; set; }
         public List<tbl_source_treadtracker_casingTire> casingTire { get; set; }
         public List<tbl_treadtracker_customer_retread_spec> customerProfile { get; set; }
+
+        public DateTime startDateConsumables { get; set; }
+        public DateTime endDateConsumables { get; set; }        
+        public List<ConsumablesViewModel> consumables { get; set; }        
+
     }
 }

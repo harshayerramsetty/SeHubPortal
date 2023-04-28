@@ -20,9 +20,11 @@ namespace SeHubPortal.ViewModel
         public bool Active { get; set; }
         public int tractorCount { get; set; }
         public int trailerCount { get; set; }
+        public int forkliftCount { get; set; }
         public double SteerTiresCount { get; set; }
         public double DriveTiresCount { get; set; }
         public double trailerTiresCount { get; set; }
+        public double forkliftTiresCount { get; set; }
 
         public tbl_fleetTVT_unit AddUnit { get; set; }
 
@@ -32,6 +34,9 @@ namespace SeHubPortal.ViewModel
         public double pullPointSteer { get; set; }
         public double pullPointDrive { get; set; }
         public double pullPointTrailer { get; set; }
+
+        public double reGroovePointForklift { get; set; }
+
         public bool mileageRequired { get; set; }
         public bool inspectionDateRequired { get; set; }
         public byte[] image { get; set; }
@@ -40,6 +45,8 @@ namespace SeHubPortal.ViewModel
 
         public List<SelectListItem> ConfigurationsListTractor { get; set; }
         public List<SelectListItem> ConfigurationsListTrailer { get; set; }
+        public List<SelectListItem> ConfigurationsListForklift { get; set; }
+        public List<SelectListItem> ConfigurationsType { get; set; }
         public List<SelectListItem> SizesList { get; set; }
 
         public List<tbl_fleetTVT_fieldsurvey_tire> LatestSurvey { get; set; }
@@ -50,5 +57,6 @@ namespace SeHubPortal.ViewModel
         public List<tbl_source_wheel_condition> wheelCondition { get; set; }
         public List<tbl_source_tire_wear> tireWear { get; set; }
 
+        public List<tbl_fleetTVT_fieldsurvey_unit> survyUnits { get; set; }
     }
 }

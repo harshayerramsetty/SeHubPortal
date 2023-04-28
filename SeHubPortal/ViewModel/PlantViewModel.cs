@@ -51,13 +51,15 @@ namespace SeHubPortal.ViewModel
         public float WidthConsumables { get; set; }
 
         public List<SelectListItem> PartnumbersConsumables { get; set; }
-        public float PartnumberConsumables { get; set; }
+        public string PartnumberConsumables { get; set; }
 
         public string customerName { get; set; }
 
         public string buffer_spec { get; set; }
         public int? AgeLimit { get; set; }
         public bool? BrandRequirements { get; set; }
+
+        public string Chamber_production_ID { get; set; }
 
     }
 }

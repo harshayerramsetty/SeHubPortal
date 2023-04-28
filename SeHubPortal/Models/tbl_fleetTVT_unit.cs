@@ -39,5 +39,6 @@ namespace SeHubPortal.Models
         public string tire_size_1 { get; set; }
         public string tire_size_2 { get; set; }
         public string tire_size_3 { get; set; }
+        public string tire_size_4 { get; set; }
     }
 }

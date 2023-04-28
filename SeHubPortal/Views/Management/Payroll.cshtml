@@ -38,7 +38,6 @@
                 $('#BranchDashboard').css('display', 'none');
                 $('#CorporateDashboard').css('display', 'block');
                 $("#ToggleFromBranchToCorporate").prop("checked", true);
-                $('.locationSection').css('display', 'none');
                 $('.locationSectiondisabled').css('display', 'block');
 
                 $('#CorporateText').css('font-weight', '700');
@@ -103,7 +102,6 @@
                 $('#nav-home').tab('show');
                 $('.commonClass').removeClass('active');
                 $('.branchDashboardTotals').addClass('active');
-                $('.locationSection').css('display', 'none');
                 $('.locationSectiondisabled').css('display', 'block');
 
                 $('#CorporateText').css('font-weight', '700');
@@ -133,7 +131,6 @@
                 $('#BranchDashboard').css('display', 'none');
                 $('#CorporateDashboard').css('display', 'block');
                 $("#ToggleFromBranchToCorporate").prop("checked", true);
-                $('.locationSection').css('display', 'none');
                 $('.locationSectiondisabled').css('display', 'block');
 
                 $('#CorporateText').css('font-weight', '700');
@@ -2418,7 +2415,7 @@
                                                                                                     }
                                                                                                     else if (@ViewData["TOT2"] == "")
                                                                                                     {
-                                                                                                        @Html.DropDownListFor(Model => Model.employeepayroll.payBiweek.mon_1_sel_id, new SelectList(ViewBag.TypeSelectionListNoOT, "category_id", "category"), new { @onchange = "Sun1Selection()" })
+                                                                                                        @Html.DropDownListFor(Model => Model.employeepayroll.payBiweek.mon_1_sel_id, new SelectList(ViewBag.TypeSelectionListNoOT, "category_id", "category"), new { @onchange = "Mon1Selection()" })
                                                                                                     }
                                                                                                     else
                                                                                                     {
@@ -2433,7 +2430,7 @@
                                                                                                     }
                                                                                                     else if (@ViewData["TOT3"] == "")
                                                                                                     {
-                                                                                                        @Html.DropDownListFor(Model => Model.employeepayroll.payBiweek.tues_1_sel_id, new SelectList(ViewBag.TypeSelectionListNoOT, "category_id", "category"), new { @onchange = "Sun1Selection()" })
+                                                                                                        @Html.DropDownListFor(Model => Model.employeepayroll.payBiweek.tues_1_sel_id, new SelectList(ViewBag.TypeSelectionListNoOT, "category_id", "category"), new { @onchange = "Tues1Selection()" })
                                                                                                     }
                                                                                                     else
                                                                                                     {
@@ -3649,7 +3646,7 @@
 
 
             function fixTo2decimals(val, id) {
-                alert(val + "  " + id);
+                //alert(val + "  " + id);
                 //document.getElementById(id).value = "10";
                 if ($('#' + id).val() = "") {
                     $('#' + id).val("0.00");
@@ -5983,16 +5980,16 @@
              if ((event.which != 46 || $(this).val().indexOf('.') != -1)&&(event.which < 48 || event.which > 57)) {
              //alert('hello');
          	    if((event.which != 46)){
-           	    alert('Only numbers are allowed');
+           	    //alert('Only numbers are allowed');
                  }
                  else if(($(this).val().indexOf('.') != -1)){
-           	    alert('Multiple Decimals are not allowed');
+           	    //alert('Multiple Decimals are not allowed');
                  }
                event.preventDefault();
              }
 
              if(this.value.indexOf(".")>-1 && (this.value.split('.')[1].length > 1)){
-                 alert('Only two numbers are allowed after decimal point');
+                 //alert('Only two numbers are allowed after decimal point');
                  event.preventDefault();
              }
          });
@@ -6020,7 +6017,6 @@
                  $('.commonClass').removeClass('active');
                  $('.branchDashboardTotals').addClass('active');
                  $('#entirePage').css('display', 'block');
-                 $('.locationSection').css('display', 'none');
                  $('.locationSectiondisabled').css('display', 'block');
                  $('#nav-contact-tab').removeClass('active');
                  $('#CorporateText').css('font-weight', '700');
@@ -6044,7 +6040,6 @@
                  $('#branchMainBody').css('display', 'block');
                  $('#CorporateDashboard').css('display', 'none');
                  $('#BranchDashboard').css('display', 'block');
-                 $('.locationSection').css('display', 'block');
                  $('.locationSectiondisabled').css('display', 'none');
 
                  $('#CorporateText').css('font-weight', '100');
@@ -6321,6 +6316,7 @@
 
 
          function Mon1Selection() {
+             //alert('reached')
              ElementCalculation("employeepayroll_payBiweek_mon_1_sel_id", "employeepayroll_payBiweek_mon_1_reg", "employeepayroll_payBiweek_mon_1_opt", "employeepayroll_payBiweek_mon_1_sum");
          }
         function focusOutMon1Reg() {

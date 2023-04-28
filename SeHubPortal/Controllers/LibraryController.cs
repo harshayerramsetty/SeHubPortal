@@ -552,7 +552,6 @@ namespace SeHubPortal.Controllers
                 });
             }
 
-
             return items;
         }
 
@@ -634,9 +633,7 @@ namespace SeHubPortal.Controllers
 
             // Retrieve reference to a blob ie "picture.jpg".
             var blockBlob = container.ListBlobs();
-
-
-
+                       
             var blobList = blockBlob.ToList();            
 
             var URLNames = new List<KeyValuePair<string, string>>();
@@ -649,7 +646,6 @@ namespace SeHubPortal.Controllers
                 blobFileName = blobFileName.Replace(".pdf", " ");
                 URLNames.Add(new KeyValuePair<string, string>(newUri.ToString(), blobFileName));
             }
-
 
             FileUrl.URLName = URLNames;
             FileUrl.Location_ID = locatId;            

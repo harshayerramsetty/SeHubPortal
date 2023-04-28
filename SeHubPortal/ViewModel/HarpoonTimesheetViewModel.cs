@@ -35,6 +35,7 @@ namespace SeHubPortal.ViewModel
         public tbl_harpoon_settings client_settings { get; set; }
 
         public List<ValidationAdjustment> ValidationAdjustmentList { get; set; }
+        public tbl_harpoon_employee EmployeeDetails { get; set; }
         public List<tbl_source_harpoon_timesheet_categories> categories_full { get; set; }
         public List<ClockEventsOfDayViewModel> AttendanceHelper { get; set; }
         public DateTime timesheet_start { get; set; }

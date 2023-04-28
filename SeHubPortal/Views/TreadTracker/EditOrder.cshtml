@@ -202,16 +202,16 @@
                             <div class="orderMainBody">
                                 @*here i remove class - container*@
                                 @*
-          <div class="row justify-content-end TableTransactions">
-            <input type="submit" class="btn btn-success transcationButtons" style="visibility:visible" value="Save" />
-            &nbsp;
-            <a href="@Url.Action("CanceEditOrderOrder", "TreadTracker", new { workOrder = @Model.WorkOrderInfo.retread_workorder.ToString()})">
-                <input type="button" class="btn btn-danger transcationButtons" style="visibility:visible" value="Cancel" />
-            </a>
-        </div>
+                                      <div class="row justify-content-end TableTransactions">
+                                        <input type="submit" class="btn btn-success transcationButtons" style="visibility:visible" value="Save" />
+                                        &nbsp;
+                                        <a href="@Url.Action("CanceEditOrderOrder", "TreadTracker", new { workOrder = @Model.WorkOrderInfo.retread_workorder.ToString()})">
+                                            <input type="button" class="btn btn-danger transcationButtons" style="visibility:visible" value="Cancel" />
+                                        </a>
+                                    </div>
                                 *@
                                 <div class="row justify-content-between">
-                                    
+
 
 
                                     <div class="col-md-5" style="padding-right:6px">
@@ -247,8 +247,8 @@
                                                                 Creation Date
                                                             </div>
                                                             @*<div class="col-lg-8" style="height:1px; padding:0px !important;">
-                                    @Html.DisplayFor(m => m.WorkOrderInfo.creation_date)
-                                </div>*@
+                                                                    @Html.DisplayFor(m => m.WorkOrderInfo.creation_date)
+                                                                </div>*@
                                                             <div class="col-md-7" style="height:1px; padding:0px !important;">
                                                                 @if (Model.WorkOrderInfo.creation_date.HasValue)
                                                                 {
@@ -265,43 +265,107 @@
                                     <div class="col-md-7" style="padding-left:6px">
                                         <div class="card shadow-sm flex-fill grow" style="margin:10px 0px 0px 0px;">
                                             <div class="card-body" style="padding-top:10px; padding-bottom:10px">
-                                                <div class="row" style="padding:0px 15px 0px 15px">
-                                                    <div class="col-lg-7" style="padding:0px">
+
+                                                <div class="row">
+                                                    <div class="col-md-12" style="display:flex; justify-content:space-between">
                                                         <h4>@Model.CustomerInfo.CustomerName</h4>
-                                                    </div>
-                                                    <div class="col-lg-5 text-right" style="padding:0px">
-                                                        <h4>@Model.CustomerInfo.CustomerCode</h4>
+                                                        <h4 id="customerNumber">@Model.CustomerInfo.CustomerCode</h4>
                                                     </div>
                                                 </div>
+
+                                                @{
+                                                    String address1 = "" + Model.CustomerInfo.Address1 + Model.CustomerInfo.Address2;
+                                                    String address2 = "" + Model.CustomerInfo.Address3 + "," + Model.CustomerInfo.Postcode + "Canada";
+                                                }
                                                 <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <div class="row" style="margin-bottom:5px">
-                                                            <div class="col-lg-6">
-                                                                Contact
-                                                            </div>
-                                                            <div class="col-lg-6">
-
-                                                            </div>
+                                                    <div class="col-md-12" style="display:flex; justify-content:space-between">
+                                                        <div style="display:flex; justify-content:space-between; flex:4">
+                                                            <span>
+                                                                Age Limit (Years)
+                                                            </span>
+                                                            <span>
+                                                                @if (Model.AgeLimit != null)
+                                                                {
+                                                                    <b>@Model.AgeLimit</b>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <b>N/A</b>
+                                                                }
+                                                            </span>
                                                         </div>
-                                                        <div class="row" style="margin-bottom:5px">
-                                                            <div class="col-lg-6">
-                                                                Email
-                                                            </div>
-                                                            <div class="col-lg-6">
-
-                                                            </div>
+                                                        <div style="flex:0.5"></div>
+                                                        <div style="display:flex; justify-content:space-between; flex:4">
+                                                            <span>Contact</span>
+                                                            <span>
+                                                                @if (Model.customerContact != null)
+                                                                {
+                                                                    <b>@Model.customerContact</b>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <b>N/A</b>
+                                                                }
+                                                            </span>
+                                                        </div>
+                                                        <div style="display:flex; justify-content:space-between; flex:5">
+                                                            <span></span>
+                                                            <span>
+                                                                @if (address1.Length > 23)
+                                                                {
+                                                                    <b>@address1.Substring(0, 22)</b>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <b>@address1</b>
+                                                                }
+                                                            </span>
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-6 text-right" style="padding-right:15px">
-                                                        <div class="row" style="margin-bottom:5px">
-                                                            <div class="col-lg-12 text-right">
-                                                                @Model.CustomerInfo.Address1 @Model.CustomerInfo.Address2
-                                                            </div>
+                                                </div>
+                                                <div class="row" style="margin-top:10px">
+                                                    <div class="col-md-12" style="display:flex; justify-content:space-between">
+                                                        <div style="display:flex; justify-content:space-between; flex:4">
+                                                            <span>
+                                                                Brand Name ONLY
+                                                            </span>
+                                                            <span>
+                                                                @if (Model.BrandRequirements != null)
+                                                                {
+                                                                    <b>@Model.BrandRequirements</b>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <b>N/A</b>
+                                                                }
+                                                            </span>
                                                         </div>
-                                                        <div class="row" style="margin-bottom:5px">
-                                                            <div class="col-lg-12 text-right">
-                                                                @Model.CustomerInfo.Address2, @Model.CustomerInfo.Address3 @Model.CustomerInfo.Postcode Canada
-                                                            </div>
+                                                        <div style="flex:0.5"></div>
+                                                        <div style="display:flex; justify-content:space-between; flex:4">
+                                                            <span>Email</span>
+                                                            <span>
+                                                                @if (Model.reportingEmail != null)
+                                                                {
+                                                                    <b>@Model.reportingEmail</b>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <b>N/A</b>
+                                                                }
+                                                            </span>
+                                                        </div>
+                                                        <div style="display:flex; justify-content:space-between; flex:5">
+                                                            <span></span>
+                                                            <span>
+                                                                @if (address2.Length > 23)
+                                                                {
+                                                                    <b>@address2.Substring(0, 22)</b>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <b>@address2</b>
+                                                                }
+                                                            </span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -385,17 +449,17 @@
 
                                                             @if (Model.BarcodeInformation[i].barcode == null)
                                                             {
-                                                                @Html.EditorFor(m => m.BarcodeInformation[i].serial_dot, new { htmlAttributes = new { @id = "serial" + j + "", @class = "SerialValues", @style = "width:120px; visibility: hidden" } })
+                                                                @Html.EditorFor(m => m.BarcodeInformation[i].serial_dot, new { htmlAttributes = new { @id = "serial" + j + "", @class = "SerialValues", @style = "width:120px; visibility: hidden", @maxlength="8" } })
                                                             }
                                                             else
                                                             {
                                                                 if (Model.BarcodeInformation[i].TT600_result != null && Model.BarcodeInformation[i].TT600_result.ToUpper() == "GOOD")
                                                                 {
-                                                                    @Html.EditorFor(m => m.BarcodeInformation[i].serial_dot, new { htmlAttributes = new { @style = "outline:none; background-color:#e6e8eb; border-color:transparent; width:120px", @readonly = "true", @class = "SerialValues", } })
+                                                                    @Html.EditorFor(m => m.BarcodeInformation[i].serial_dot, new { htmlAttributes = new { @style = "outline:none; background-color:#e6e8eb; border-color:transparent; width:120px", @readonly = "true", @class = "SerialValues", @maxlength="8" } })
                                                                 }
                                                                 else
                                                                 {
-                                                                    @Html.EditorFor(m => m.BarcodeInformation[i].serial_dot, new { htmlAttributes = new { @id = "serial" + j + "", @class = "SerialValues", @style = "width:120px" } })
+                                                                    @Html.EditorFor(m => m.BarcodeInformation[i].serial_dot, new { htmlAttributes = new { @id = "serial" + j + "", @class = "SerialValues", @style = "width:120px", @maxlength="8" } })
                                                                 }
                                                             }
 
@@ -485,13 +549,11 @@
                                                                 {
                                                                     @Html.DropDownListFor(m => m.BarcodeInformation[i].retread_design, new SelectList(ViewBag.CasingTreadList, "tread_design", "tread_design", Model.BarcodeInformation[i].retread_design), "Select", new { @id = "tread" + j + "", @class = "text-center", @style = "outline:none; background-color:#e6e8eb; border-color:transparent; outline:none" })
                                                                 }
-                                                                else 
-                                                                { 
+                                                                else
+                                                                {
                                                                     @Html.DropDownListFor(m => m.BarcodeInformation[i].retread_design, new SelectList(ViewBag.CasingTreadList, "tread_design", "tread_design", Model.BarcodeInformation[i].retread_design), "Select", new { @id = "tread" + j + "", @required = "required" })
                                                                 }
                                                             }
-
-
                                                         </td>
                                                         <td style="padding:5px 0px; vertical-align:middle">
                                                             @*<input type="text" id="unit1" name="unit1" onkeypress="return onlyNumberKey(event)">*@
@@ -608,7 +670,8 @@
                                                                         {
                                                                             <span>@Model.BarcodeInformation[i].TT600_date.Value.ToString("MMM dd, yyyy")</span>
                                                                         }
-                                                                        else{
+                                                                        else
+                                                                        {
                                                                             <span>Date Unavailable</span>
                                                                         }
                                                                     }
@@ -657,7 +720,7 @@
                                     </div>
                                     <div class="card-body" style="padding:10px">
                                         <div style="width:100%">
-                                            @Html.TextAreaFor(m => m.WorkOrderInfo.comments, new { @style="width:100%; height:80px", @id="comments"})
+                                            @Html.TextAreaFor(m => m.WorkOrderInfo.comments, new { @style = "width:100%; height:80px", @id = "comments" })
                                         </div>
                                     </div>
                                 </div>
@@ -677,9 +740,30 @@
         </div>
     }
 
+    <script>
+        $(".SerialValues").focusout(function () {
 
+            if ($(this).val().length < 8 || !Number.isInteger(parseInt($(this).val().substr(4, 4)))) {
+                $(this).focus();
+                return
+            }
+
+            var year = new Date().getFullYear().toString();
+            var lineNum = $(this).attr("id").slice(-1)
+            var lineCode = "Line" + lineNum + "Value";
+            var tread = "tread" + lineNum;
+
+            if (parseInt(year.substr(year.length - 2)) - parseInt($(this).val().substr($(this).val().length - 2)) >= 7) {
+                $('#' + lineCode).val(6);
+                $('#' + tread).val("TBD");
+            }
+
+
+        });
+    </script>
 
     <script>
+
 
         $('#Cancelbutton').click(function () {
             //location.reload();
@@ -698,7 +782,7 @@
             });
         });
 
-        $('#submitButton').click(function () { 
+        $('#submitButton').click(function () {
             $("#BarcodeInformation_"+"1"+"__retread_design").prop('disabled', false);
             $("#BarcodeInformation_"+"2"+"__retread_design").prop('disabled', false);
             $("#BarcodeInformation_"+"3"+"__retread_design").prop('disabled', false);
@@ -789,7 +873,7 @@
 
 
         function commonLineFunction(lineNum, lineValue) {
-            
+
             var correctedLineNumber = parseInt(lineNum) - 1;
             var stringcorrectedLineNumber = correctedLineNumber.toString();
 
@@ -800,15 +884,15 @@
             var tread = "tread" + lineNum;
             var unit = "unit" + lineNum;
             var capCount = "capCount" + lineNum;
-            
+
             if (lineValue == 1 || lineValue == 5 || lineValue == 6 || lineValue == 7 || lineValue == 9 || lineValue == 10 || lineValue == 11) {
 
-                
-                
+
+
 
                 if (lineNum != 1) {
                     if (document.getElementById(barcode).value.length == 0) {
-                        var barcodeValue = checkBarcodes();                        
+                        var barcodeValue = checkBarcodes();
                         document.getElementById(barcode).value = barcodeValue;
                     }
                 }
@@ -829,13 +913,13 @@
                     $('#' + casing).css('visibility', 'hidden');
                     $("#"+casing).prop('disabled', true);
                 }
-                
+
 
                 if (lineValue != 1 || lineValue != 11) {
                     if (lineValue == 5) {
                         $("#"+tread).val("REPAIR").prop('disabled', true);
                     }
-                    else if (lineValue == 6) {                        
+                    else if (lineValue == 6) {
                         $("#"+tread).val("TBD").prop('disabled', true);
                     }
                     else if (lineValue == 7) {
@@ -911,7 +995,7 @@
                 return "";
             }
 
-            
+
 
         }
 

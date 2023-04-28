@@ -2,17 +2,10 @@
 using SeHubPortal.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Web.Mvc;
 using System.Data;
-using Newtonsoft.Json;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
 
 namespace SeHubPortal.Controllers
 {
@@ -134,6 +127,7 @@ namespace SeHubPortal.Controllers
                     //model.SehubAccess = db.tbl_sehub_access.Where(x => x.employee_id == empId).FirstOrDefault();
                     model.TreadRubber = db.tbl_source_treadtracker_consumables_TreadRubber.OrderBy(x => x.tread).OrderBy(x => x.width).ToList();
                     model.nonTreadRubber = db.tbl_source_treadtracker_consumables_nonTreadRubber.ToList();
+                    
                     model.paneType = pane;
 
                     if (pane == "barcode")
@@ -273,8 +267,7 @@ namespace SeHubPortal.Controllers
             }
 
         }
-
-
+        
         [HttpPost]
         public double? GetPressureValue(int val)
         {
@@ -363,7 +356,6 @@ namespace SeHubPortal.Controllers
             return finalString;
         }
 
-
         [HttpPost]
         public string GetAllTemperatureValue()
         {
@@ -416,7 +408,6 @@ namespace SeHubPortal.Controllers
             }            
         }
 
-
         public class DataPoint
         {
             public DataPoint(double x, double y)
@@ -432,10 +423,30 @@ namespace SeHubPortal.Controllers
 
         public ActionResult Chamber(PlantViewModel model)
         {
+            Debug.WriteLine("Reached The Debug statement");
             try
             {
                 CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+                DateTime timeUtc = DateTime.UtcNow;
+                TimeZoneInfo cstZone = TimeZoneInfo.FindSystemTimeZoneById("Newfoundland Standard Time");
+                DateTime currentTime = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, cstZone);
+
                 model.chamberSensors = db.tbl_treadTracker_chamber_senser.Where(x => x.status == true).OrderBy(x => x.name).ToList();
+                string production_id_for_date = currentTime.Year.ToString() + currentTime.Month.ToString() + currentTime.Day.ToString();
+
+                string production_id = production_id_for_date + "_1";
+
+                int i = 1;
+
+                while (db.tbl_treadtracker_chamber_production.Where(x => x.production_id == production_id).Count() > 0)
+                {
+                    i++;
+                    production_id = production_id_for_date + "_" + i;
+                }
+
+                model.Chamber_production_ID = production_id;
+
                 return View(model);
             }
             catch
@@ -484,7 +495,7 @@ namespace SeHubPortal.Controllers
                 }
                 else if (model.station == "Repair")
                 {
-                    barcodeInfo.TT300_result = model.barcodeInfo.TT300_result;
+                    barcodeInfo.TT300_result = "GOOD";
                     if (barcodeInfo.TT300_date == null)
                     {
                         barcodeInfo.TT300_date = System.DateTime.Today.Date;                        
@@ -494,7 +505,7 @@ namespace SeHubPortal.Controllers
                 }
                 else if (model.station == "Builder")
                 {
-                    barcodeInfo.TT400_result = model.barcodeInfo.TT400_result;
+                    barcodeInfo.TT400_result = "GOOD";
                     barcodeInfo.TT400_cushion = model.barcodeInfo.TT400_cushion;
                     barcodeInfo.TT400_strip = model.barcodeInfo.TT400_strip;
                     barcodeInfo.TT400_tread = model.barcodeInfo.TT400_tread;
@@ -503,6 +514,11 @@ namespace SeHubPortal.Controllers
                     {
                         barcodeInfo.TT400_date = System.DateTime.Today.Date;                        
                     }
+                    if (model.barcodeInfo.envelope_id != null)
+                    {
+                        barcodeInfo.envelope_id = model.barcodeInfo.envelope_id;                        
+                    }
+
                 }
                 else if (model.station == "Chamber")
                 {
@@ -559,6 +575,70 @@ namespace SeHubPortal.Controllers
             Trace.WriteLine(size);
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
             return db.tbl_treadtracker_casing_sizes.Where(x => x.casing_size == size).Select(x => x.size_id).FirstOrDefault().ToString();
+        }
+
+        public string getChamberProduction()
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            var production = db.tbl_treadtracker_chamber_production.Where(x => x.production_id == "20221102_1").ToList();
+
+            var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            return serializer.Serialize(production);
+        }
+
+        [HttpPost]
+        public void SaveEnvelopsChamber(string envelope, int position)
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            tbl_treadtracker_chamber_production newBarcode = new tbl_treadtracker_chamber_production();
+
+            var barcodeDetails = db.tbl_treadtracker_barcode.Where(x => x.envelope_id == envelope).OrderByDescending(x => x.TT050_date).FirstOrDefault();
+            string custName = "";
+            if (barcodeDetails != null)
+            {
+                var workOrderDetails = db.tbl_treadtracker_workorder.Where(x => x.retread_workorder == barcodeDetails.retread_workorder).FirstOrDefault();
+                if (workOrderDetails != null)
+                {
+                    custName = db.tbl_cta_customers.Where(x => x.CustomerCode.ToString() == workOrderDetails.customer_number).Select(x => x.CustomerName).FirstOrDefault();
+                }
+
+                string production_id = "20221102_1";
+
+                newBarcode.production_id = production_id;
+                newBarcode.envelope_id = barcodeDetails.envelope_id;
+                newBarcode.barcode = barcodeDetails.barcode;
+                newBarcode.position = position;
+                if (custName != "")
+                {
+                    newBarcode.customer_name = custName;
+                }
+                newBarcode.tread = barcodeDetails.retread_design;
+                newBarcode.size = barcodeDetails.casing_size;
+
+                db.tbl_treadtracker_chamber_production.Add(newBarcode);
+                db.SaveChanges();
+
+            }
+        }
+
+        public bool ToggleProduction()
+        {
+            DateTime timeUtc = DateTime.UtcNow;
+            TimeZoneInfo cstZone = TimeZoneInfo.FindSystemTimeZoneById("Newfoundland Standard Time");
+            DateTime currentTime = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, cstZone).AddSeconds(-10);
+
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+
+            if (db.tbl_tread_tracker_chamber_data_logger.Where(x => x.timestamp > currentTime).Count() > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
     }

@@ -11,6 +11,7 @@ namespace SeHubPortal.ViewModel
     {
         public tbl_fleetTVT_unit Unit { get; set; }
         public List<SelectListItem> ConfigurationsList { get; set; }
+        public List<SelectListItem> ConfigurationTypeList { get; set; }
         public List<SelectListItem> SizesList { get; set; }
     }
 }

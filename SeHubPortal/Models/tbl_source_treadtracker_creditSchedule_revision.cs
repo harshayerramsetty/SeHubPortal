@@ -22,7 +22,5 @@ namespace SeHubPortal.Models
         public double creditNonBrand_virgin { get; set; }
         public double creditNonBrand_capped1 { get; set; }
         public double creditNonBrand_capped2plus { get; set; }
-        public Nullable<int> outDated_brand { get; set; }
-        public Nullable<int> outDated_nonBrand { get; set; }
     }
 }

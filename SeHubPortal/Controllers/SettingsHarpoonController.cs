@@ -1026,14 +1026,14 @@ namespace SeHubPortal.Controllers
 
             MailMessage msg = new MailMessage();
             msg.To.Add(new MailAddress(newUser.email, "IT Team"));
-            msg.From = new MailAddress("noreply@citytire.com", "Sehub");
+            msg.From = new MailAddress("no_reply@citytire.com", "Sehub");
             msg.Subject = "Temporary password for User";
             msg.Body = "Temporary password : " + password;
             msg.IsBodyHtml = true;
 
             SmtpClient client = new SmtpClient();
             client.UseDefaultCredentials = false;
-            client.Credentials = new System.Net.NetworkCredential("noreply@citytire.com", "U8LH>WpBdXg}");
+            client.Credentials = new System.Net.NetworkCredential("no_reply@citytire.com", "U@dx/Z8Ry{");
             client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
             client.Host = "smtp.office365.com";
             client.DeliveryMethod = SmtpDeliveryMethod.Network;

@@ -116,10 +116,10 @@
             <div class="navbar-nav" id="TabLinks">
 
                 @*
-                    <div id="mainClicked" onclick="location.href='@Url.Action("Dashboard", "Main")'" style="clear:both; display:flex; flex-direction:column ;justify-content:center; align-items:center; height:80px">
-                        <img src="~/Content/home.png" />
-                        <span id="mainButton">Main</span>
-                    </div>
+        <div id="mainClicked" onclick="location.href='@Url.Action("Dashboard", "Main")'" style="clear:both; display:flex; flex-direction:column ;justify-content:center; align-items:center; height:80px">
+            <img src="~/Content/home.png" />
+            <span id="mainButton">Main</span>
+        </div>
                 *@
 
 
@@ -175,12 +175,15 @@
                     <img style="height:20px;" src="~/Content/settings.png" /><br />
                     <input type="button" id="libraryBtn" class="btn btn-outline my-2 my-sm-0 settingsBtn" style="visibility: visible;border-color: transparent;font-size: 18px;color: black;" value="Settings" />
                 </a>
+
+
                 @*
-                    <a id="DevelopmentClicked" href="@Url.Action("Dashboard_man", "Management")" style="display:block; padding:10px; border-radius:5px" class="text-center commonMainNavigation">
-                        <img style="height:22px;" src="https://ctasehub.blob.core.windows.net/sehub-content/Development.png" /><br />
-                        <input type="button" id="libraryBtn" class="btn btn-outline my-2 my-sm-0 " style="visibility: visible;border-color: transparent;font-size: 18px;color: black;outline: none" value="Development" />
-                    </a>
+        <a id="DevelopmentClicked" href="@Url.Action("Dashboard_man", "Management")" style="display:block; padding:10px; border-radius:5px" class="text-center commonMainNavigation">
+            <img style="height:22px;" src="https://ctasehub.blob.core.windows.net/sehub-content/Development.png" /><br />
+            <input type="button" id="libraryBtn" class="btn btn-outline my-2 my-sm-0 " style="visibility: visible;border-color: transparent;font-size: 18px;color: black;outline: none" value="Development" />
+        </a>
                 *@
+
             </div>
         </div>
 
@@ -198,7 +201,6 @@
     <div class="modal fade" id="upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content" style="width:300px">
-
                 @using (Html.BeginForm("UploadProfileImage", "Main", FormMethod.Post, new { enctype = "multipart/form-data" }))
                 {
                     <div class="modal-header text-center" style="padding:3px 3px 0px 3px">

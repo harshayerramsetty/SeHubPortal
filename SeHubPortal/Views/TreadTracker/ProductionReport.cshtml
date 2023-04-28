@@ -451,7 +451,7 @@
                         $.each(data, function (i, v) {
 
                             events.push({
-                                start: moment(v).add(1, 'days').format("YYYY-MM-DD"),
+                                start: moment(v).add(1, 'days').format("YYYY-MM-DD"), //******************************
                                 color: 'transparent',
                                 description: 'PR',
                                 imageurl: 'https://ctasehub.blob.core.windows.net/sehub-content/tire_production_report.png',
@@ -483,7 +483,7 @@
                         $.each(data, function (i, v) {
                             
                             events.push({
-                                start: moment(v).add(1, 'days').format("YYYY-MM-DD"),
+                                start: moment(v).add(1, 'days').format("YYYY-MM-DD"), //*******************************
                                 color: 'transparent',
                                 description: 'CC',
                                 imageurl: 'https://ctasehub.blob.core.windows.net/sehub-content/credit_production_report.png',
@@ -496,6 +496,29 @@
                         alert('failed');
                     }
                 })
+
+                $.ajax({
+                    type: "GET",
+                    url: "/TreadTracker/GetConsumptionDates",
+                    async: false,
+                    success: function (data) {
+                        $.each(data, function (i, v) {
+                            
+                            events.push({
+                                start: moment(v).add(1, 'days').format("YYYY-MM-DD"), //*******************************
+                                color: 'transparent',
+                                description: 'CN',
+                                imageurl: 'https://ctasehub.blob.core.windows.net/sehub-content/consumables.png',
+                            });
+                        })
+
+                        
+                    },
+                    error: function (error) {
+                        alert('failed');
+                    }
+                })
+
 
                 GenerateCalender(events);
                 
@@ -522,7 +545,7 @@
 
                         eventRender: function(event, eventElement) {
                         if (event.imageurl) {
-                            eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl +"' width='21' height='21'>");
+                            eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl +"' width='21' height='19'>");
                             }
                         },
 
@@ -532,8 +555,7 @@
                             viewdate = new Date(view.start);
 
                             // PREV - force minimum display month to current month
-                            if (new Date(viewdate.getFullYear(), viewdate.getMonth() + 1, 1).getTime() <=
-                                new Date(2018, 0, 1).getTime()){
+                            if (new Date(viewdate.getFullYear(), viewdate.getMonth() + 1, 1).getTime() <= new Date(2018, 0, 1).getTime()){
                                 $('.fc-prev-button').prop('disabled', true);
                                 $('.fc-prev-button').css('opacity', 0.5);
                             } else {
@@ -589,6 +611,17 @@
                                     }
                                 });
                             }
+                            else if (calEvent.description == 'CN') {
+                                $.ajax({
+                                    url: '@Url.Action("PopulateConsumptionReport", "TreadTracker")',
+                                    data: { inspDate: moment(calEvent.start).add(0, 'days').format("YYYY-MM-DD") }, // before publishing make change -1 to 0
+                                    type: 'GET',
+                                    success: function (data) {
+                                        $("#printThis").html(data);
+                                        $('#rightWindow').modal();
+                                    }
+                                });
+                            }
                         },
                     })
 
@@ -612,7 +645,7 @@
 
                         eventRender: function(event, eventElement) {
                         if (event.imageurl) {
-                            eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl +"' width='21' height='21'>");
+                            eventElement.find("div.fc-content").prepend("<img src='" + event.imageurl +"' width='21' height='19'>");
                             }
                         },
 
@@ -672,6 +705,17 @@
                             else if (calEvent.description == 'CC') {
                                 $.ajax({
                                     url: '@Url.Action("PopulateCasingCreditReport", "TreadTracker")',
+                                    data: { inspDate: moment(calEvent.start).add(0, 'days').format("YYYY-MM-DD") }, // before publishing make change -1 to 0
+                                    type: 'GET',
+                                    success: function (data) {
+                                        $("#printThis").html(data);
+                                        $('#rightWindow').modal();
+                                    }
+                                });
+                            }
+                            else if (calEvent.description == 'CN') {
+                                $.ajax({
+                                    url: '@Url.Action("PopulateConsumptionReport", "TreadTracker")',
                                     data: { inspDate: moment(calEvent.start).add(0, 'days').format("YYYY-MM-DD") }, // before publishing make change -1 to 0
                                     type: 'GET',
                                     success: function (data) {

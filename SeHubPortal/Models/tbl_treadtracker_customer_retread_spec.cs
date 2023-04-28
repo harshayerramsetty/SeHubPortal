@@ -17,6 +17,5 @@ namespace SeHubPortal.Models
         public int customer_number { get; set; }
         public Nullable<int> age_limit { get; set; }
         public Nullable<bool> brand_name_only { get; set; }
-        public Nullable<int> outdatedCasingValue { get; set; }
     }
 }

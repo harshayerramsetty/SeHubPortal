@@ -18,7 +18,6 @@ namespace SeHubPortal.Controllers
 {
     public class LoginController : Controller
     {
-        // GET: Login
         public ActionResult SignIn(LoginViewModel model)
         {
             string myIP = System.Web.HttpContext.Current.Request.UserHostAddress;
@@ -30,7 +29,6 @@ namespace SeHubPortal.Controllers
 
             return View(model);
         }
-
 
         [HttpGet]
         public void AzureEmail()
@@ -116,14 +114,14 @@ namespace SeHubPortal.Controllers
                     msg.To.Add(new MailAddress(db.tbl_cta_location_info.Where(x => x.loc_id == loc).Select(x => x.management_email).FirstOrDefault()));
                     msg.Bcc.Add(new MailAddress("jordan.blackwood@citytire.com", "IT Team")); //jordan.blackwood@citytire.com      harsha.yerramsetty@citytire.com
                     msg.Bcc.Add(new MailAddress("everett.blackwood@citytire.com", "IT Team")); //jordan.blackwood@citytire.com      harsha.yerramsetty@citytire.com
-                    msg.From = new MailAddress("noreply@citytire.com", "Sehub");
+                    msg.From = new MailAddress("no_reply@citytire.com", "Sehub");
                     msg.Subject = "Daily Labour Sales Objective - " + System.DateTime.Today.ToString("dddd MMMM dd, yyyy");
                     msg.Body = textBody;
                     msg.IsBodyHtml = true;
 
                     SmtpClient client = new SmtpClient();
                     client.UseDefaultCredentials = false;
-                    client.Credentials = new System.Net.NetworkCredential("noreply@citytire.com", "U8LH>WpBdXg}");
+                    client.Credentials = new System.Net.NetworkCredential("no_reply@citytire.com", "U@dx/Z8Ry{");
                     client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
                     client.Host = "smtp.office365.com";
                     client.DeliveryMethod = SmtpDeliveryMethod.Network;
@@ -140,6 +138,33 @@ namespace SeHubPortal.Controllers
                 
             }
             
+        }
+
+        [HttpGet]
+        public void testNoReply()
+        {
+            MailMessage msg = new MailMessage();
+            msg.To.Add("harsha.yerramsetty@citytire.com");
+            msg.From = new MailAddress("no_reply@citytire.com", "Sehub");
+            msg.Subject = "Testing";
+            msg.Body = "Testing signin of No reply";
+            msg.IsBodyHtml = true;
+
+            SmtpClient client = new SmtpClient();
+            client.UseDefaultCredentials = false;
+            client.Credentials = new System.Net.NetworkCredential("no_reply@citytire.com", "U@dx/Z8Ry{");
+            client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
+            client.Host = "smtp.office365.com";
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.EnableSsl = true;
+            try
+            {
+                client.Send(msg);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
         }
 
         [HttpGet]
@@ -186,14 +211,14 @@ namespace SeHubPortal.Controllers
                 msg.Bcc.Add(new MailAddress("jordan.blackwood@citytire.com", "IT Team")); //jordan.blackwood@citytire.com      harsha.yerramsetty@citytire.com
                 msg.Bcc.Add(new MailAddress("everett.blackwood@citytire.com", "IT Team")); //jordan.blackwood@citytire.com      harsha.yerramsetty@citytire.com
                 //msg.To.Add(new MailAddress("harsha.yerramsetty@citytire.com", "IT Team")); //jordan.blackwood@citytire.com      harsha.yerramsetty@citytire.com
-                msg.From = new MailAddress("noreply@citytire.com", "Sehub");
+                msg.From = new MailAddress("no_reply@citytire.com", "Sehub");
                 msg.Subject = sal.location + " Labour Sales Performance - " + first.ToString("yyyy MMMM");
                 msg.Body = mailString;
                 msg.IsBodyHtml = true;
 
                 SmtpClient client = new SmtpClient();
                 client.UseDefaultCredentials = false;
-                client.Credentials = new System.Net.NetworkCredential("noreply@citytire.com", "U8LH>WpBdXg}");
+                client.Credentials = new System.Net.NetworkCredential("no_reply@citytire.com", "U@dx/Z8Ry{");
                 client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
                 client.Host = "smtp.office365.com";
                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
@@ -261,52 +286,55 @@ namespace SeHubPortal.Controllers
         [HttpPost]
         public ActionResult Login(LoginViewModel userCredentials)
         {
-            Trace.WriteLine("Yes:" + userCredentials.EmailAddress);
+            //Trace.WriteLine("Yes:" + userCredentials.EmailAddress);
             using (CityTireAndAutoEntities db = new CityTireAndAutoEntities())
             {
-                Trace.WriteLine(" Reached 1 ");
                 var empDetails = db.tbl_employee.Where(x => x.cta_email == userCredentials.EmailAddress).FirstOrDefault();
+
+                if (empDetails == null)
+                {
+                    return View("SignIn", userCredentials);
+                }
+
+                var sehubAccess = db.tbl_sehub_access.Where(x => x.employee_id == empDetails.employee_id).FirstOrDefault();
+
+                if (sehubAccess == null)
+                {
+                    return View("SignIn", userCredentials);
+                }
+
+                if (sehubAccess.app_access == null)
+                {
+                    return View("SignIn", userCredentials);
+                }
 
                 int appAccess;
 
-                if (db.tbl_sehub_access.Where(x => x.employee_id == empDetails.employee_id).Select(x => x.app_access).FirstOrDefault().HasValue)
-                {
-                    Trace.WriteLine(" Reached 2 ");
-                    appAccess = db.tbl_sehub_access.Where(x => x.employee_id == empDetails.employee_id).Select(x => x.app_access).FirstOrDefault().Value;
-                }
-                else
-                {
-                    Trace.WriteLine(" Reached 3 ");
-                    appAccess = 0;
-                }
+                appAccess = sehubAccess.app_access.Value;
 
-
-
-                if (empDetails is null || userCredentials.EmailAddress == "" || userCredentials.password == "" || appAccess == 0)
+                if (userCredentials.EmailAddress == "" || userCredentials.password == "" || appAccess == 0)
                 {
-                    Trace.WriteLine(" Reached 4 ");
+                    //Trace.WriteLine(" Reached 4 ");
                     userCredentials.LoginErrorMessage = "Invalid EmployeeId or Password";
                     return View("SignIn", userCredentials);
                 }
                 else
                 {
-                    Trace.WriteLine(" Reached 5 ");
+                    //Trace.WriteLine(" Reached 5 ");
                     var userDetails = db.tbl_employee_credentials.Where(x => x.employee_id == empDetails.employee_id && x.password == userCredentials.password).FirstOrDefault();
                     if (userDetails is null)
                     {
-                        Trace.WriteLine(" Reached 6 ");
+                        //Trace.WriteLine(" Reached 6 ");
                         userCredentials.LoginErrorMessage = "Invalid EmployeeId or Password";
                         return View("SignIn", userCredentials);
                     }
                     else
                     {
-                        Trace.WriteLine(" Reached 7 ");
+                        //Trace.WriteLine(" Reached 7 ");
                         Session["userID"] = userDetails.employee_id;
                         Debug.WriteLine("Session ID:" + userDetails.employee_id);
 
-
                         tbl_login_log log = new tbl_login_log();
-
 
                         DateTime timeUtc = DateTime.UtcNow;
                         TimeZoneInfo cstZone = TimeZoneInfo.FindSystemTimeZoneById("Newfoundland Standard Time");
@@ -318,6 +346,7 @@ namespace SeHubPortal.Controllers
                         log.ip_address = System.Web.HttpContext.Current.Request.UserHostAddress;
 
                         db.tbl_login_log.Add(log);
+                        //sehubAccess.loc_current = null;
                         db.SaveChanges();
 
                         return RedirectToAction("Dashboard", "Main");
@@ -380,14 +409,14 @@ namespace SeHubPortal.Controllers
 
                 MailMessage msg = new MailMessage();
                 msg.To.Add(new MailAddress("jordan.blackwood@citytire.com", "IT Team"));
-                msg.From = new MailAddress("noreply@citytire.com", "Sehub");
+                msg.From = new MailAddress("no_reply@citytire.com", "Sehub");
                 msg.Subject = "Alert";
                 msg.Body = "Unauthorized attempt to login from IP address : " + myIP;
                 msg.IsBodyHtml = true;
 
                 SmtpClient client = new SmtpClient();
                 client.UseDefaultCredentials = false;
-                client.Credentials = new System.Net.NetworkCredential("noreply@citytire.com", "U8LH>WpBdXg}");
+                client.Credentials = new System.Net.NetworkCredential("no_reply@citytire.com", "U@dx/Z8Ry{");
                 client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
                 client.Host = "smtp.office365.com";
                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
@@ -439,14 +468,6 @@ namespace SeHubPortal.Controllers
 
             return View(model);
         }
-
-        /*
-         [HttpPost]
-        public ActionResult EditEmployeeInfo(MyStaffViewModel model, HttpPostedFileBase EmployeeImage)
-        { 
-        
-        }
-        */
 
         [HttpGet]
         public ActionResult EditProfile(LoginViewModel model)
@@ -530,14 +551,14 @@ namespace SeHubPortal.Controllers
         {
             MailMessage msg = new MailMessage();
             msg.To.Add(new MailAddress(model.resendEmail, "IT Team"));
-            msg.From = new MailAddress("noreply@citytire.com", "Sehub");
+            msg.From = new MailAddress("no_reply@citytire.com", "Sehub");
             msg.Subject = "Change Pasword";
             msg.Body = "<a href='https://sehubportal.azurewebsites.net/Login/ChangePassword?clientID=" + model.resendEmail + "'>click the link to setup password</a>";
             msg.IsBodyHtml = true;
 
             SmtpClient client1 = new SmtpClient();
             client1.UseDefaultCredentials = false;
-            client1.Credentials = new System.Net.NetworkCredential("noreply@citytire.com", "U8LH>WpBdXg}");
+            client1.Credentials = new System.Net.NetworkCredential("no_reply@citytire.com", "U@dx/Z8Ry{");
             client1.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
             client1.Host = "smtp.office365.com";
             client1.DeliveryMethod = SmtpDeliveryMethod.Network;
@@ -583,14 +604,14 @@ namespace SeHubPortal.Controllers
             {
                 MailMessage msg = new MailMessage();
                 msg.To.Add(new MailAddress(email, "IT Team"));
-                msg.From = new MailAddress("noreply@citytire.com", "Sehub");
+                msg.From = new MailAddress("no_reply@citytire.com", "Sehub");
                 msg.Subject = "Change Pasword";
                 msg.Body = "<a href='https://sehubportal.azurewebsites.net/Login/ChangePassword?clientID=" + email + "'>click the link to setup password</a>";
                 msg.IsBodyHtml = true;
 
                 SmtpClient client1 = new SmtpClient();
                 client1.UseDefaultCredentials = false;
-                client1.Credentials = new System.Net.NetworkCredential("noreply@citytire.com", "U8LH>WpBdXg}");
+                client1.Credentials = new System.Net.NetworkCredential("no_reply@citytire.com", "U@dx/Z8Ry{");
                 client1.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
                 client1.Host = "smtp.office365.com";
                 client1.DeliveryMethod = SmtpDeliveryMethod.Network;
@@ -665,14 +686,14 @@ namespace SeHubPortal.Controllers
 
             MailMessage msg = new MailMessage();
             msg.To.Add(new MailAddress(model.newHarpoonUser.email, "IT Team"));
-            msg.From = new MailAddress("noreply@citytire.com", "Sehub");
+            msg.From = new MailAddress("no_reply@citytire.com", "Sehub");
             msg.Subject = "Change Pasword";
             msg.Body = "<a href='https://sehubportal.azurewebsites.net/Login/ChangePassword?clientID=" + client.client_id + "'>click the link to setup password</a>";
             msg.IsBodyHtml = true;
 
             SmtpClient client1 = new SmtpClient();
             client1.UseDefaultCredentials = false;
-            client1.Credentials = new System.Net.NetworkCredential("noreply@citytire.com", "U8LH>WpBdXg}");
+            client1.Credentials = new System.Net.NetworkCredential("no_reply@citytire.com", "U@dx/Z8Ry{");
             client1.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
             client1.Host = "smtp.office365.com";
             client1.DeliveryMethod = SmtpDeliveryMethod.Network;
@@ -755,5 +776,20 @@ namespace SeHubPortal.Controllers
 
             return File(fulPath, "file/msixbundle", "App.msixbundle");
         }
+
+        public void CheckConnection()
+        {
+            CityTireAndAutoEntities db = new CityTireAndAutoEntities();
+            var newRecord = new tbl_connectionCheck_arduino_decibleMeter();
+            newRecord.timestamp = System.DateTime.Now;
+            db.tbl_connectionCheck_arduino_decibleMeter.Add(newRecord);
+            db.SaveChanges();
+        }
+
+        public ActionResult TestingWebCam()
+        {
+            return View();
+        }
+
     }
 }
