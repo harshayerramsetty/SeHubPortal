@@ -318,7 +318,6 @@ namespace SeHubPortal.Controllers
                     deductions.Add(deduct);
                     empdetList.Add(empdet);
                 }
-
                 
             }
 

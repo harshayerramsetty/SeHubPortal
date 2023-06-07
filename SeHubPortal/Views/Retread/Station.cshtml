@@ -34,7 +34,6 @@
             display: block !important;
         }
 
-
         #PlantBtn {
             font-weight: bold;
         }
@@ -56,11 +55,10 @@
             padding: 0px !important;
             margin: 0px !important;
         }
-
-
-            .card-header h6 {
-                color: black;
-            }
+        
+        .card-header h6 {
+            color: black;
+        }
 
         #Keyboard {
             padding-top: 6%;
@@ -94,6 +92,10 @@
             border: 3px crimson solid;
             animation: blink 1s;
             animation-iteration-count: 300;
+        }
+
+        .hide {
+            display: none;
         }
 
         @@keyframes blink {
@@ -146,13 +148,11 @@
             }
 
             html, body {
-                height:100vh; 
-                margin: 0 !important; 
+                height: 100vh;
+                margin: 0 !important;
                 padding: 0 !important;
                 overflow: hidden;
             }
-
-
         }
 
     </style>
@@ -225,6 +225,7 @@
                             <span style="font-weight:bold; font-size:7px; width:50%; border:1px solid dimgray; padding:2px">P/N (s)</span>
                             <span style="font-weight:bold; font-size:7px; width:50%; border:1px solid dimgray; padding:2px">Cap Count</span>
                         </div>
+
                         <div class="text-center" style="padding: 0px;font-weight: bold; margin-bottom:3vw; display:flex; justify-content:space-evenly; align-items:center;">
                             @if (Model.barcodeInfo.line_code == 5 || Model.barcodeInfo.line_code == 1 || Model.barcodeInfo.line_code == 6)
                             {
@@ -339,8 +340,6 @@
                             </div>
                         </div>
 
-
-
                         <div class="row" style="margin-bottom:30px">
                             <div class="col-md-12 text-center" style="color:black; font-size:50px">
                                 <div class="row" style="margin-bottom:10px">
@@ -423,10 +422,7 @@
                                                                 <div style="flex:3; display:flex; justify-content:center; align-items:center; padding-right:5px">
                                                                     @Html.EditorFor(m => m.barcodeInfo.barcode, new { htmlAttributes = new { @readonly = true, @autocomplete = "off", @style = "text-align:center; font-weight:bold; font-size:30px; width:100%", @id = "ndt_barcode" } })
                                                                 </div>
-                                                                <div style="        flex: 3;
-        display: flex;
-        justify-content: center;
-        padding: 0px 5px">
+                                                                <div style="flex: 3; display: flex; justify-content: center; padding: 0px 5px">
                                                                     @if (Model.station == "Preliminary")
                                                                     {
                                                                         @Html.EditorFor(m => m.barcodeInfo.TT050_result, new { htmlAttributes = new { @readonly = true, @autocomplete = "off", @style = "text-align:center; font-size:30px; font-weight:bold; width:100%", @id = "statusInput" } })
@@ -533,9 +529,7 @@
                                                                     <tr>
                                                                         <th style="font-size:10px; padding:0px; width:25%">Tread Request</th>
                                                                         <th style="font-size:10px; padding:0px; width:25%">Casing Size</th>
-                                                                        <th style="        font-size: 10px;
-        padding: 0px;
-        width: 25%">Casing Brand</th>
+                                                                        <th style="font-size:10px; padding:0px; width: 25%">Casing Brand</th>
                                                                         <th style="font-size:10px; padding:0px; width:25%">Cap Count</th>
                                                                     </tr>
                                                                 </thead>
@@ -1461,7 +1455,7 @@
                 </div>
                 <div class="modal-footer" style="padding:2px 15px">
                     <button data-dismiss="modal" onclick="$('#envelop_id').val('')" class="btn btn-danger" style="padding:0px 13px">Cancel</button>
-                    <button onclick="if ($('#envelop_id').val() != '' && $('#envelop_id').val().startsWith('E')) { $('#envelopInput').val($('#envelop_id').val()); $('#SubmitButton').removeAttr('disabled').removeClass('btn-secondary').addClass('btn-success').addClass('alerts-border'); $('#envelopeModal').hide(); $('.modal-backdrop').remove(); }" class="btn btn-success" style="padding:0px 20px">Save</button>
+                    <button onclick="if ($('#envelop_id').val() != '' && $('#envelop_id').val().startsWith('E')) { $('#envelopInput').val($('#envelop_id').val()); enableSave(); $('#envelopeModal').hide(); $('.modal-backdrop').remove(); }" class="btn btn-success" style="padding:0px 20px">Save</button>
                 </div>
             </div>
         </div>
@@ -1485,21 +1479,26 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-body example" style="height:820px; overflow-y:auto">
+                <div class="modal-body" style="height:820px; overflow-y:auto">
                     @if (Model.paneType == "barcode")
                     {
-                        <div class="row" style="margin-bottom:5px">
+                        
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input id="searchInput" onkeyup="filterOnClass('box', this.value)" style="font-size:30px; width:100%; border-radius:4px; text-align:center" type="text" placeholder="Search with code" title="Type in a name">
+                            </div>                            
+                        </div>
 
+                        <div class="row box GOOD" style="margin-bottom:5px">
                             <div class="col-md-3 text-center">
                                 <button id="GOOD" class="btn commonStatusClass" onclick="SaveToTempStatus(this.value); $('#'+this.id).css('border', '3px solid #007bff')" style="background-color: transparent; text-align: center; color: forestgreen; padding-left: 10px; font-size: 30px; font-weight: bold; width: 150px; border: none" value="GOOD">GOOD</button>
                             </div>
                             <div class="col-md-8"></div>
-
                         </div>
 
                         foreach (var code in Model.FailureCodes)
                         {
-                            <div class="row" style="margin-bottom:5px">
+                            <div class="row box @code.code" style="margin-bottom:5px">
                                 <div class="col-md-3 text-center">
                                     <button id="@code.code" class="btn commonStatusClass" onclick="SaveToTempStatus(this.value); $('#'+this.id).css('border', '3px solid #007bff')" style="outline: none; background-color: transparent; text-align: center; color: red; padding-left: 10px; font-size: 30px; font-weight: bold; width: 150px; border: none" value="@code.code">@code.code</button>
                                 </div>
@@ -1640,7 +1639,7 @@
                             <div class="col-md-12">
                                 <div style="display:flex; align-items:center">
                                     <div style="flex:2; display:flex; justify-content:space-evenly; align-items: center">
-                                        <input id="cushion_gum_checkbox" type="checkbox" onchange="if ($(this).prop('checked') == true) { $('.cushion_items').removeAttr('disabled'); $('#cushion_row').css('opacity', '1'); $('#partNumberDropdown_cushion_gum').addClass('required_field'); $('#cushion_gum_quantity').val('1') } else { $('.cushion_items').attr('disabled', 'disabled'); $('#cushion_row').css('opacity', '0.3'); $('#partNumberDropdown_cushion_gum').removeClass('required_field').val('Select'); $('#cushion_gum_quantity').val('0') }; checkRequiredField()" style="width:30px; height:30px" name="name" value="" />
+                                        <input id="cushion_gum_checkbox" type="checkbox" onchange="if ($(this).prop('checked') == true) { $(this).prop('checked', true) } else { $(this).prop('checked', true) } ; checkRequiredField()" style="width:30px; height:30px" checked/>
                                         <img style="width:100px; margin:20px; object-fit:contain;" src="https://ctasehub.blob.core.windows.net/sehub-content/cushion_consumables.png" alt="Alternate Text" />
                                     </div>
                                     <div style="flex:4; display:flex; justify-content:space-evenly; align-items: center" onclick="">
@@ -1649,7 +1648,7 @@
                                             <span>GUM</span>
                                         </div>
                                     </div>
-                                    <div id="cushion_row" style="flex:8; display:flex; flex-direction:column; opacity:0.3">
+                                    <div id="cushion_row" style="flex:8; display:flex; flex-direction:column;">
                                         <div style="margin-bottom:5px; display:flex; justify-content:space-between; align-items:center">
                                             <span style="flex:4; font-size:20px; color:#878787"><b>Part Number</b></span>
                                             @Html.DropDownListFor(m => m.PartnumberConsumables, cushionGumDropdownList, new { @class = "required_field cushion_items", @onchange = "checkRequiredField(); if(this.value == 'Select'){$('#cushion_gum_quantity').val('0')}", @id = "partNumberDropdown_cushion_gum", @style = "flex:5; text-align-last:center; margin-top: 0px; width:71%;height:35px;font-size:20px" })
@@ -1707,7 +1706,7 @@
                             <div class="col-md-12">
                                 <div style="display:flex; align-items:center">
                                     <div style="flex:2; display:flex; justify-content:space-evenly; align-items: center">
-                                        <input id="tread_rubber_checkbox" type="checkbox" onchange="if ($(this).prop('checked') == true) { $('.tread_items').removeAttr('disabled'); $('#tread_row').css('opacity', '1'); $('#partNumberDropdown_tread_rubber').addClass('required_field'); $('#tread_rubber_quantity').val('1') } else { $('.tread_items').attr('disabled', 'disabled'); $('#tread_row').css('opacity', '0.3'); $('#partNumberDropdown_tread_rubber').removeClass( 'required_field' ).val('Select'); $('#tread_rubber_quantity').val('0') }; checkRequiredField()" style="width:30px; height:30px" name="name" value="" />
+                                        <input id="tread_rubber_checkbox" checked type="checkbox" onchange="if ($(this).prop('checked') == true) { $(this).prop('checked', true) } else { $(this).prop('checked', true) }; checkRequiredField()" style="width:30px; height:30px" name="name" value="" />
                                         <img style="width:100px; margin:20px; object-fit:contain;" src="https://ctasehub.blob.core.windows.net/sehub-content/tread_consumables.png" alt="Alternate Text" />
                                     </div>
                                     <div style="flex:4; display:flex; justify-content:space-evenly; align-items: center">
@@ -1716,7 +1715,7 @@
                                             <span>RUBBER</span>
                                         </div>
                                     </div>
-                                    <div id="tread_row" style="flex:8; display:flex; flex-direction:column; opacity:0.3">
+                                    <div id="tread_row" style="flex:8; display:flex; flex-direction:column">
                                         <div style="margin-bottom:5px; display:flex; justify-content:space-between; align-items:center">
                                             <span style="flex:4; font-size:20px; color:#878787"><b>Part Number</b></span>
                                             @Html.DropDownListFor(m => m.PartnumberConsumables, treadRubberDropdownList, new { @class = "required_field tread_items", @onchange = "checkRequiredField(); if(this.value == 'Select'){$('#tread_rubber_quantity').val('0')}", @id = "partNumberDropdown_tread_rubber", @style = "flex:5; text-align-last:center; margin-top: 0px; width:200px;height:35px;font-size:20px" })
@@ -2364,6 +2363,24 @@
 
     <input style="display:none" id="stationInput" type="text" name="name" value="@Model.station" />
 
+    <script>
+        function filterOnClass(baseClass, s) {
+            let re = new RegExp(s.trim(), 'i');
+            document.querySelectorAll('.' + baseClass).forEach(node => {
+                let cNames = Array.from(node.classList);
+                // Show all if search string is blank
+                if (s.trim() == '') {
+                    node.classList.remove('hide');
+                    // Otherwise, filter
+                } else if (cNames.some(cName => re.test(cName))) {
+                    node.classList.remove('hide');
+                } else {
+                    node.classList.add('hide');
+                }
+            });  
+        }
+    </script>
+
     <SCRIPT type="text/javascript">
         function JavaBlink() {
             var blinks = document.getElementsByTagName('JavaBlink');
@@ -2441,14 +2458,7 @@
                 $('#CBRR').val('n/a')
             }
 
-            if ($('#stationInput').val() == "NDT") {
-                if ($('#sizeInput').val() != '' && $('#capCountInput').val() != '') {
-                    $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
-                }
-            }
-            else {
-                $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
-            }
+            enableSave();
         }
 
         function SaveConsumablesRepair() {
@@ -2501,15 +2511,7 @@
                 $('#CRPdiv').html('<span>n/a</span>')
             }
 
-
-            if ($('#stationInput').val() == "NDT") {
-                if ($('#sizeInput').val() != '' && $('#capCountInput').val() != '') {
-                    $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
-                }
-            }
-            else {
-                $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
-            }
+            enableSave();
         }
 
 
@@ -2531,20 +2533,10 @@
 
             if ($('#CBCG').val() == 'n/a' || $('#CBCG').val() == '') {
                 $('#partNumberDropdown_cushion_gum').val('Select')
-                $('#cushion_gum_quantity').val('0')
-                $('#cushion_gum_checkbox').prop('checked', false);
-                $('#cushion_row').css('opacity', '0.3');
-                if ($('#CBCG').val() == '') {
-                    $('#cushion_gum_checkbox').prop('checked', false);
-                    $('#cushion_row').css('opacity', '0.3');
-                    $('#cushion_gum_quantity').val('0')
-                }
             }
             else {
                 $('#partNumberDropdown_cushion_gum').val($('#CBCG').val().split('(')[0])
                 $('#cushion_gum_quantity').val($('#CBCG').val().split('x')[1].split(')')[0])
-                $('#cushion_gum_checkbox').prop('checked', true);
-                $('#cushion_row').css('opacity', '1');
             }
 
             if ($('#CBSR').val() == 'n/a' || $('#CBSR').val() == '') {
@@ -2566,20 +2558,10 @@
 
             if ($('#CBTR').val() == 'n/a' || $('#CBTR').val() == '') {
                 $('#partNumberDropdown_tread_rubber').val('Select')
-                $('#tread_rubber_quantity').val('0')
-                $('#tread_rubber_checkbox').prop('checked', false);
-                $('#tread_row').css('opacity', '0.3');
-                if ($('#CBTR').val() == '') {
-                    $('#tread_rubber_checkbox').prop('checked', false);
-                    $('#tread_rubber_quantity').val('0')
-                    $('#tread_row').css('opacity', '0.3');
-                }
             }
             else {
                 $('#partNumberDropdown_tread_rubber').val($('#CBTR').val().split('(')[0])
                 $('#tread_rubber_quantity').val($('#CBTR').val().split('x')[1].split(')')[0])
-                $('#tread_rubber_checkbox').prop('checked', true);
-                $('#tread_row').css('opacity', '1');
             }
 
             if ($('#CBRR').val() == 'n/a' || $('#CBRR').val() == '') {
@@ -2724,117 +2706,37 @@
 
         function StatusInfo(val) {
             $('#statusInput').val(val);
-            if ($('#stationInput').val() == "NDT")
-            {
-                if ($('#sizeInput').val() != '' && $('#capCountInput').val() != '') {
-                    $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
-                }
-            }
-            else
-            {
-                $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
-            }
+            enableSave();           
         }
 
         function SaveTread(val) {
             $('#treadInput').val(val);
             $('#okTread').css("display", "block");
-            if ($('#stationInput').val() == "NDT")
-            {
-                if ($('#sizeInput').val() != '' && $('#capCountInput').val() != '') {
-                    $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
-                }
-            }
-            else
-            {
-                if ($('#stationInput').val() == "Builder" || $('#stationInput').val() == "Repair") {
-
-                }
-                else {
-                    $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
-                }                
-            }
+            enableSave();
         }
 
         function SaveSize(val) {
             $('#sizeInput').val(val);
             $('#casing_size_td').css('border', 'none');
-            if ($('#stationInput').val() == "NDT")
-            {
-                if ($('#sizeInput').val() != '' && $('#capCountInput').val() != '') {
-                    $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
-                }
-            }
-            else
-            {
-                if ($('#stationInput').val() == "Builder" || $('#stationInput').val() == "Repair") {
-
-                }
-                else {
-                    $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
-                }                
-            }
+            enableSave();
         }
 
         function SaveShipto(val) {
             $('#shiptoInput').val(val);
             $('#okShip').css("display", "block");
-            if ($('#stationInput').val() == "NDT")
-            {
-                if ($('#sizeInput').val() != '' && $('#capCountInput').val() != '') {
-                    $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
-                }
-            }
-            else
-            {
-                if ($('#stationInput').val() == "Builder" || $('#stationInput').val() == "Repair") {
-
-                }
-                else {
-                    $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
-                }                
-            }
+            enableSave();
         }
 
         function SaveBrand(val) {
             $('#brandInput').val(val);
             $('#okBrand').css("display", "block");
-            if ($('#stationInput').val() == "NDT")
-            {
-                if ($('#sizeInput').val() != '' && $('#capCountInput').val() != '') {
-                    $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
-                }
-            }
-            else
-            {
-                if ($('#stationInput').val() == "Builder" || $('#stationInput').val() == "Repair") {
-
-                }
-                else {
-                    $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
-                }                
-            }
-
+            enableSave();
         }
                
         function SaveCapCount(val) {
             $('#capCountInput').val(val);
             $('#casing_cap_count_td').css('border', 'none');
-            if ($('#stationInput').val() == "NDT")
-            {
-                if ($('#sizeInput').val() != '' && $('#capCountInput').val() != '') {
-                    $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
-                }
-            }
-            else
-            {
-                if ($('#stationInput').val() == "Builder" || $('#stationInput').val() == "Repair") {
-
-                }
-                else {
-                    $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
-                }                
-            }
+            enableSave();
         }
 
         function SaveToTempCapCount(val, id) {
@@ -2865,6 +2767,23 @@
 
 
         })
+    </script>
+
+    <script>
+        function enableSave() {
+            if ($('#stationInput').val() == "NDT")
+            {
+                if ($('#sizeInput').val() != '' && $('#brandInput').val() != '' && $('#capCountInput').val() != '') {
+                    $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
+                }
+            }
+            else
+            {
+                if ($('#treadInput').val() != '' && $('#sizeInput').val() != '' && $('#brandInput').val() != '' && $('#capCountInput').val() != '') {
+                    $("#SubmitButton").removeAttr('disabled').removeClass("btn-secondary").addClass("btn-success").addClass("alerts-border");
+                }                
+            }
+        }
     </script>
 
     <script>

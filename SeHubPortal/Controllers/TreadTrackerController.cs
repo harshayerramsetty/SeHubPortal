@@ -1974,8 +1974,7 @@ namespace SeHubPortal.Controllers
             {
                 Debug.WriteLine(item.casing_size + "   " + item.size_id);
                 list.Add(new SelectListItem()
-                {
-                    
+                {                    
                     Text = item.casing_size,
                     Value = Convert.ToString(item.size_id)
                 });
@@ -1989,23 +1988,9 @@ namespace SeHubPortal.Controllers
         {
             Debug.WriteLine("Model Values:"+ model.WorkOrderInfo.retread_workorder);
            
-            //This code is to find changed customer number
             model.CustomersList = PopulateCustomers("Nothing");
-            /*
-             var selectedItem = model.CustomersList.Find(p => p.Value == model.ChangedCustomerId.ToString());
-            if (selectedItem != null)
-            {
-               
-                Debug.WriteLine("The selected CustomersList value in the edit button is:"+selectedItem.Text);
-
-            }
-            
-            */
-            //end
-
             CityTireAndAutoEntities db = new CityTireAndAutoEntities();
-
-            
+                        
             var WorkOrderDetails = db.tbl_treadtracker_workorder.Where(x => x.retread_workorder == model.WorkOrderInfo.retread_workorder).FirstOrDefault();
             if (WorkOrderDetails != null)
             {
@@ -2092,10 +2077,7 @@ namespace SeHubPortal.Controllers
                         result1.TT600_result = result.TT600_result;
                         result1.TT600_date = result.TT600_date;
                         result1.cap_count = capCountList.Where(x => x.brand_id.ToString() == items.cap_count).Select(x => x.casing_brand).FirstOrDefault();
-
-                        Trace.WriteLine("This is the cap count result " + result1.cap_count + " for the barcode " + result1.barcode);
-                        Trace.WriteLine("This is the Retread design " + items.retread_design + " for the barcode " + result1.barcode);
-
+                        
                         logEvent.barcode = result1.barcode;
                         logEvent.work_station = "TT050";
                         logEvent.timestamp = System.DateTime.Now;
@@ -2149,16 +2131,15 @@ namespace SeHubPortal.Controllers
                     }
                      */
 
-
-
                     if (changedBarcode != null && changedBarcode != "" && db.tbl_treadtracker_barcode.Where(a => a.barcode.Equals(changedBarcode)).FirstOrDefault() == null)
                     {
+
                         var result1 = new tbl_treadtracker_barcode();
                         tbl_treadtracker_production_log logEvent = new tbl_treadtracker_production_log();
 
                         result1.barcode = changedBarcode;
                         result1.retread_workorder = model.WorkOrderInfo.retread_workorder;
-                        result1.line_number = db.tbl_treadtracker_barcode.Where(x => x.retread_workorder == model.WorkOrderInfo.retread_workorder).OrderByDescending(x => x.line_number).Select(x => x.line_number).FirstOrDefault()+1;
+                        result1.line_number = db.tbl_treadtracker_barcode.Where(x => x.retread_workorder == model.WorkOrderInfo.retread_workorder).Count()+1;
                         result1.line_code = items.line_code;
                         result1.serial_dot = items.serial_dot;
                         result1.casing_size = casingSize;
@@ -2177,6 +2158,8 @@ namespace SeHubPortal.Controllers
 
                         db.tbl_treadtracker_production_log.Add(logEvent);
                         db.tbl_treadtracker_barcode.Add(result1);
+                        db.SaveChanges();
+
                     }
                 }
                 

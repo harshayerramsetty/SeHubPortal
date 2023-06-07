@@ -2975,6 +2975,13 @@ namespace SeHubPortal.Controllers
                                 }
 
                                 double eff = ((commissionDollars / (0.38 * doorRate)) / (regular + OT)) * 100;
+
+
+                                if (emp == 13326)
+                                {
+                                    Trace.WriteLine("This is the payroll-ID " + pid + " This is the commissionDollars " + commissionDollars + " This is the regular " + regular + " This is the OT " + OT);
+                                }
+
                                 if (commissionDollars != 0)
                                 {
                                     avg += eff;

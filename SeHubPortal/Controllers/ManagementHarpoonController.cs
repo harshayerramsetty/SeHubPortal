@@ -1325,10 +1325,7 @@ namespace SeHubPortal.Controllers
 
             if (locId is null)
             {
-                if (locationDetails != null)
-                {
-                    location = locationDetails.auto_loc_id.Value.ToString();
-                }
+                location = "All";
             }
             else
             {
@@ -1340,7 +1337,6 @@ namespace SeHubPortal.Controllers
             if (location == "All")
             {
                 employeeListLocation = db.tbl_harpoon_employee.Where(x => x.client_id == user.client_id).OrderBy(x => x.last_name).ToList();
-
             }
             else
             {
@@ -1395,37 +1391,70 @@ namespace SeHubPortal.Controllers
                     model.EndDate = end.Value;
                     var db1 = (from a in db.tbl_harpoon_attendance_log.Where(x => x.client_id == clientID && x.time_stamp > model.StartDate && x.time_stamp < model.EndDate && x.auto_loc_id == model.MatchedLocID) select a).OrderBy(x => x.time_stamp).ToList();
                     var db2 = (from a in db.tbl_harpoon_employee select a).ToList();
+                    var db3 = (from a in db.tbl_harpoon_attendance_log.Where(x => x.client_id == clientID && x.time_stamp > model.StartDate && x.time_stamp < model.EndDate ) select a).OrderBy(x => x.time_stamp).ToList();
 
-
-                    var attendance = (from a in db1
-                                      join b in db2 on a.auto_emp_id equals b.auto_emp_id
-                                      orderby b.first_name
-                                      select new { emp_id = a.auto_emp_id, ful_name = b.first_name + ' ' + b.last_name, event_id = a.event_id, time_stamp = a.time_stamp, loc_id = a.auto_loc_id, job_ids = a.job_id }).ToList();
-
-
-                    List<HarpoonAttendanceRecordViewModel> AttendanceRecords = new List<HarpoonAttendanceRecordViewModel>();
-
-                    foreach (var item in attendance)
+                    if (location == "All")
                     {
-                        HarpoonAttendanceRecordViewModel record = new HarpoonAttendanceRecordViewModel();
-                        record.auto_emp_id = item.emp_id;
-                        record.ful_name = item.ful_name;
-                        record.event_id = item.event_id;
-                        record.time_stamp = item.time_stamp;
-                        record.loc_id = item.loc_id;
-                        record.job_ids = item.job_ids;
+                        var attendance = (from a in db3
+                                          join b in db2 on a.auto_emp_id equals b.auto_emp_id
+                                          orderby b.first_name
+                                          select new { emp_id = a.auto_emp_id, ful_name = b.first_name + ' ' + b.last_name, event_id = a.event_id, time_stamp = a.time_stamp, loc_id = a.auto_loc_id, job_ids = a.job_id }).ToList();
 
-                        if (item.event_id == "clockIN" || item.event_id == "adminIN")
+                        List<HarpoonAttendanceRecordViewModel> AttendanceRecords = new List<HarpoonAttendanceRecordViewModel>();
+
+                        foreach (var item in attendance)
                         {
-                            DateTime startTim = item.time_stamp.Date;
-                            DateTime endTim = item.time_stamp.Date.AddDays(1);
-                            record.jobs = db.tbl_harpoon_job_log.Where(x => x.auto_emp_id == item.emp_id && x.start_time > startTim && x.end_time < endTim).ToList();
-                        }
-                        //record.totalJobDuration = item.job_ids;
-                        AttendanceRecords.Add(record);
-                    }
+                            HarpoonAttendanceRecordViewModel record = new HarpoonAttendanceRecordViewModel();
+                            record.auto_emp_id = item.emp_id;
+                            record.ful_name = item.ful_name;
+                            record.event_id = item.event_id;
+                            record.time_stamp = item.time_stamp;
+                            record.loc_id = item.loc_id;
+                            record.job_ids = item.job_ids;
 
-                    model.AttendanceList = AttendanceRecords;
+                            if (item.event_id == "clockIN" || item.event_id == "adminIN")
+                            {
+                                DateTime startTim = item.time_stamp.Date;
+                                DateTime endTim = item.time_stamp.Date.AddDays(1);
+                                record.jobs = db.tbl_harpoon_job_log.Where(x => x.auto_emp_id == item.emp_id && x.start_time > startTim && x.end_time < endTim).ToList();
+                            }
+                            //record.totalJobDuration = item.job_ids;
+                            AttendanceRecords.Add(record);
+                        }
+                        model.AttendanceList = AttendanceRecords;
+                    }
+                    else
+                    {
+                        var attendance = (from a in db1
+                                          join b in db2 on a.auto_emp_id equals b.auto_emp_id
+                                          orderby b.first_name
+                                          select new { emp_id = a.auto_emp_id, ful_name = b.first_name + ' ' + b.last_name, event_id = a.event_id, time_stamp = a.time_stamp, loc_id = a.auto_loc_id, job_ids = a.job_id }).ToList();
+
+
+                        List<HarpoonAttendanceRecordViewModel> AttendanceRecords = new List<HarpoonAttendanceRecordViewModel>();
+
+                        foreach (var item in attendance)
+                        {
+                            HarpoonAttendanceRecordViewModel record = new HarpoonAttendanceRecordViewModel();
+                            record.auto_emp_id = item.emp_id;
+                            record.ful_name = item.ful_name;
+                            record.event_id = item.event_id;
+                            record.time_stamp = item.time_stamp;
+                            record.loc_id = item.loc_id;
+                            record.job_ids = item.job_ids;
+
+                            if (item.event_id == "clockIN" || item.event_id == "adminIN")
+                            {
+                                DateTime startTim = item.time_stamp.Date;
+                                DateTime endTim = item.time_stamp.Date.AddDays(1);
+                                record.jobs = db.tbl_harpoon_job_log.Where(x => x.auto_emp_id == item.emp_id && x.start_time > startTim && x.end_time < endTim).ToList();
+                            }
+                            //record.totalJobDuration = item.job_ids;
+                            AttendanceRecords.Add(record);
+                        }
+                        model.AttendanceList = AttendanceRecords;
+                    }                   
+
                 }
 
             }
@@ -1436,8 +1465,9 @@ namespace SeHubPortal.Controllers
         [HttpPost]
         public ActionResult ChangeLocAttendanceReport(AttendanceModel model)
         {
-            return RedirectToAction("AttendanceReport", new { locId = model.MatchedLocID});
+            return RedirectToAction("AttendanceReport", new { locId = model.MatchedLocID, showJob = false });
         }
+
         public FileContentResult ExportList(AttendanceReportViewModel model)
         {
             var csvString = GenerateCSVString(model.MatchedLocID, model.StartDate, model.EndDate, Convert.ToInt32(model.SelectedEmpID), model.ShowJob);

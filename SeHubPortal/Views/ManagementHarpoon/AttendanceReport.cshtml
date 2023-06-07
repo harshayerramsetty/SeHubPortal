@@ -199,7 +199,6 @@
                     {
                         <div>
                             @Html.DropDownListFor(m => m.MatchedLocID, Model.MatchedLocs, "Select", new { @id = "MatchedLocID", @onChange = "this.form.submit()", @type = "text", @style = "text-align-last: center;width:150px;height:23px;font-size:15px;margin-left:6px;" })
-
                             <noscript> <input style="display:none" class="btn btn-success" type="submit" value="Search" /></noscript>
                         </div>
                     }
@@ -275,7 +274,16 @@
             <div class="col-md-12" style="padding:0px 30px 0px 30px">
 
                 <div class="row" style="font-size:40px; font-weight:bold; margin-bottom:10px">
-                    <u>@Model.LocationsList.Where(x => x.auto_loc_id.ToString() == Model.MatchedLocID).Select(x => x.location_name).FirstOrDefault() (@Model.LocationsList.Where(x => x.auto_loc_id.ToString() == Model.MatchedLocID).Select(x => x.location_id).FirstOrDefault())</u>
+
+                    @if (Model.MatchedLocID == "All")
+                    {
+                        <u>ALL</u>
+                    }
+                    else
+                    {
+                        <u>@Model.LocationsList.Where(x => x.auto_loc_id.ToString() == Model.MatchedLocID).Select(x => x.location_name).FirstOrDefault() (@Model.LocationsList.Where(x => x.auto_loc_id.ToString() == Model.MatchedLocID).Select(x => x.location_id).FirstOrDefault())</u>
+                    }
+
                 </div>
 
                 @foreach (var item in Model.emp_list)
